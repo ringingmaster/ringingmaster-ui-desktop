@@ -3,13 +3,10 @@ package com.concurrentperformance.ringingmaster.fxui.desktop;
 import com.concurrentperformance.ringingmaster.fxui.desktop.document.TouchDocument;
 import com.concurrentperformance.ringingmaster.fxui.desktop.panel.TouchPanel;
 import com.concurrentperformance.ringingmaster.fxui.desktop.proof.ProofManager;
-import com.concurrentperformance.fxutils.propertyeditor.PropertyEditor;
-import com.concurrentperformance.fxutils.propertyeditor.SelectionPropertyValue;
-import com.concurrentperformance.fxutils.propertyeditor.TextPropertyValue;
+import com.concurrentperformance.ringingmaster.fxui.desktop.property.PropertyWindow;
 import com.concurrentperformance.ringingmaster.fxui.desktop.statusbar.StatusBar;
 import com.concurrentperformance.ringingmaster.util.ThreadUncaughtExceptionHelper;
 import javafx.application.Application;
-import javafx.collections.FXCollections;
 import javafx.geometry.Orientation;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -37,8 +34,7 @@ import java.io.IOException;
 public class RingingMasterDesktopApp extends Application {
 
 	private final static Logger log = LoggerFactory.getLogger(RingingMasterDesktopApp.class);
-	public static final String SETUP_GROUP_NAME = "Setup";
-	public static final String ADVANCED_SETUP_GROUP_NAME = "Advanced Setup";
+
 
 	private final ProofManager proofManager = new ProofManager();
 
@@ -66,7 +62,7 @@ public class RingingMasterDesktopApp extends Application {
 		Node menuBar = createMenu();
 		Node statusBar = new StatusBar(proofManager);
 		TouchPanel touchPanel =  new TouchPanel();
-		Node propertyWindow = buildPropertyWindow();
+		Node propertyWindow = new PropertyWindow();
 		Node analysis1 = buildAnalysis1();
 
 		SplitPane leftRightSplit = new SplitPane();
@@ -106,22 +102,6 @@ public class RingingMasterDesktopApp extends Application {
 
 		menuBar.setUseSystemMenuBar(true);
 		return menuBar;
-	}
-
-	private Node buildPropertyWindow() {
-		PropertyEditor propertyEditor = new PropertyEditor();
-		propertyEditor.add(SETUP_GROUP_NAME, new TextPropertyValue("Title", "My Touch"));
-		propertyEditor.add(SETUP_GROUP_NAME, new TextPropertyValue("Author", "Stephen"));
-
-		propertyEditor.add(ADVANCED_SETUP_GROUP_NAME, new TextPropertyValue("Wrap Calls", "False"));
-		FXCollections.observableArrayList(
-				"Option 1",
-				"Option 2",
-				"Option 3"
-		);
-		propertyEditor.add(ADVANCED_SETUP_GROUP_NAME, new SelectionPropertyValue("Checking Type", "Single Block"));
-
-		return propertyEditor;
 	}
 
 	private Node buildAnalysis1() {

@@ -1,7 +1,7 @@
 package com.concurrentperformance.ringingmaster.fxui.desktop;
 
-import com.concurrentperformance.ringingmaster.fxui.desktop.document.TouchDocument;
-import com.concurrentperformance.ringingmaster.fxui.desktop.panel.TouchPanel;
+import com.concurrentperformance.ringingmaster.fxui.desktop.documentmodel.TouchDocument;
+import com.concurrentperformance.ringingmaster.fxui.desktop.documentpanel.TouchPanel;
 import com.concurrentperformance.ringingmaster.fxui.desktop.proof.ProofManager;
 import com.concurrentperformance.ringingmaster.fxui.desktop.property.PropertyWindow;
 import com.concurrentperformance.ringingmaster.fxui.desktop.statusbar.StatusBar;

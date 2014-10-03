@@ -10,8 +10,8 @@ import com.concurrentperformance.ringingmaster.engine.touch.TouchType;
 import com.concurrentperformance.ringingmaster.engine.touch.impl.TouchBuilder;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentmodel.definitiongrid.DefinitionGridModel;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentmodel.maingrid.MainGridModel;
-import com.concurrentperformance.ringingmaster.fxui.desktop.proof.ProofManager;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentpanel.grid.model.GridModel;
+import com.concurrentperformance.ringingmaster.fxui.desktop.proof.ProofManager;
 import com.concurrentperformance.ringingmaster.ui.common.TouchStyle;
 import javafx.beans.property.adapter.JavaBeanStringProperty;
 import javafx.beans.property.adapter.JavaBeanStringPropertyBuilder;
@@ -21,8 +21,6 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-
-import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Provides the interface between the engine {@code Touch} and the various
@@ -40,13 +38,10 @@ public class TouchDocument {
 	private MainGridModel mainGridModel = new MainGridModel(this);
 	private final List<GridModel> definitionModels = new ArrayList<>();
 
-	private final ProofManager proofManager;
-
 	private final JavaBeanStringProperty titleProperty;
 
 
-	public TouchDocument(ProofManager proofManager) {
-		this.proofManager = checkNotNull(proofManager);
+	public TouchDocument() {
 
 		//TODO all this must be persisted.
 		touch = createDummyTouch();
@@ -92,7 +87,7 @@ public class TouchDocument {
 	}
 
 	public void parseAndProve() {
-		proofManager.parseAndProve(touch);
+		ProofManager.getInstance().parseAndProve(touch);
 	}
 
 	//TODO remove this

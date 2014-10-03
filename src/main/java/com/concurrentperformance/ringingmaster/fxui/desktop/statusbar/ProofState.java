@@ -22,8 +22,8 @@ public class ProofState extends ImageView implements ProofManagerListener {
 	private final Image proofWait = new Image(this.getClass().getResourceAsStream("/proof_wait.png"));
 	private final Image proofCross = new Image(this.getClass().getResourceAsStream("/proof_cross.png"));
 
-	public ProofState(ProofManager proofManager) {
-		proofManager.registerListener(this);
+	public ProofState() {
+		ProofManager.getInstance().registerListener(this);
 	}
 
 	@Override

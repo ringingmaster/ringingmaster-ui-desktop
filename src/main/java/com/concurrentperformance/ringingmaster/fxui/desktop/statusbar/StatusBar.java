@@ -16,9 +16,9 @@ public class StatusBar extends HBox {
 
 
 
-	public StatusBar(ProofManager proofManager) {
+	public StatusBar() {
 
-		ProofState proofState = new ProofState(proofManager);
+		ProofState proofState = new ProofState();
 
 		Label dummy = new Label("TEST");
 

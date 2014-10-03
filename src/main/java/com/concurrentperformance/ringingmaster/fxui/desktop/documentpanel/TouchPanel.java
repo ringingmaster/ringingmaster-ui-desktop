@@ -1,5 +1,7 @@
 package com.concurrentperformance.ringingmaster.fxui.desktop.documentpanel;
 
+import com.concurrentperformance.ringingmaster.fxui.desktop.documentmanager.DocumentManager;
+import com.concurrentperformance.ringingmaster.fxui.desktop.documentmanager.DocumentManagerListener;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentmodel.TouchDocument;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentpanel.grid.canvas.GridPane;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentpanel.grid.model.GridModel;
@@ -20,7 +22,7 @@ import java.util.List;
  *
  * @author Lake
  */
-public class TouchPanel extends ScrollPane {
+public class TouchPanel extends ScrollPane implements DocumentManagerListener {
 
 	private final Text title = new Text();
 	private final GridPane gridPane = new GridPane("Main");
@@ -40,7 +42,10 @@ public class TouchPanel extends ScrollPane {
 
 		setFitToHeight(true);
 		setFitToWidth(false);
-	//	setStyle(".scroll-pane > .viewport  { -fx-background-color: red; }");
+		setFocusTraversable(false);
+
+		DocumentManager.getInstance().addListener(this);
+
 	}
 
 	@Override
@@ -49,7 +54,8 @@ public class TouchPanel extends ScrollPane {
 		//super.requestFocus();
 	}
 
-	public void bind(TouchDocument document) {
+	@Override
+	public void documentManager_setDocument(TouchDocument document) {
 		title.textProperty().bind(document.getTitleProperty());
 
 		GridModel gridModel = document.getMainGridModel();
@@ -57,8 +63,5 @@ public class TouchPanel extends ScrollPane {
 
 		List<GridModel> gridModels = document.getDefinitionGridModels();
 		definitionPane.setModels(gridModels);
-
-		setFocusTraversable(false);
 	}
-
 }

@@ -1,8 +1,7 @@
 package com.concurrentperformance.ringingmaster.fxui.desktop;
 
-import com.concurrentperformance.ringingmaster.fxui.desktop.documentmodel.TouchDocument;
+import com.concurrentperformance.ringingmaster.fxui.desktop.documentmanager.DocumentManager;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentpanel.TouchPanel;
-import com.concurrentperformance.ringingmaster.fxui.desktop.proof.ProofManager;
 import com.concurrentperformance.ringingmaster.fxui.desktop.property.PropertyWindow;
 import com.concurrentperformance.ringingmaster.fxui.desktop.statusbar.StatusBar;
 import com.concurrentperformance.ringingmaster.util.ThreadUncaughtExceptionHelper;
@@ -35,9 +34,6 @@ public class RingingMasterDesktopApp extends Application {
 
 	private final static Logger log = LoggerFactory.getLogger(RingingMasterDesktopApp.class);
 
-
-	private final ProofManager proofManager = new ProofManager();
-
 	public static void main(String[] args) {
 		ThreadUncaughtExceptionHelper.setLoggingDefaultUncaughtException();
 		log.info("Starting RingingMasterDesktopApp");
@@ -60,7 +56,7 @@ public class RingingMasterDesktopApp extends Application {
 
 	private Parent createMainWindow() {
 		Node menuBar = createMenu();
-		Node statusBar = new StatusBar(proofManager);
+		Node statusBar = new StatusBar();
 		TouchPanel touchPanel =  new TouchPanel();
 		Node propertyWindow = new PropertyWindow();
 		Node analysis1 = buildAnalysis1();
@@ -84,8 +80,8 @@ public class RingingMasterDesktopApp extends Application {
 		VBox.setVgrow(topBottomSplit, Priority.ALWAYS);
 		VBox.setVgrow(statusBar, Priority.NEVER);
 
-		TouchDocument document = new TouchDocument(proofManager);
-		touchPanel.bind(document);
+
+		DocumentManager.getInstance().buildNewDocument();
 
 		return mainVerticalLayout;
 	}

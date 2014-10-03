@@ -23,6 +23,8 @@ import static com.google.common.base.Preconditions.checkState;
  */
 public class ProofManager {
 
+	private final static ProofManager INSTANCE = new ProofManager();
+
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 	private final Parser parser = new DefaultParser();
@@ -33,7 +35,11 @@ public class ProofManager {
 
 	private final Set<ProofManagerListener> listeners = Collections.newSetFromMap(new ConcurrentHashMap<>());
 
-	public ProofManager() {
+	public static ProofManager getInstance() {
+		return INSTANCE;
+	}
+
+	private ProofManager() {
 		proofExecutor =  new ThreadPoolExecutor(1, 1,
 						0L, TimeUnit.MILLISECONDS,
 						new LinkedBlockingQueue<>(),

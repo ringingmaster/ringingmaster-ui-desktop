@@ -4,7 +4,7 @@ import com.concurrentperformance.ringingmaster.fxui.desktop.documentmanager.Docu
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentpanel.TouchPanel;
 import com.concurrentperformance.ringingmaster.fxui.desktop.property.PropertyWindow;
 import com.concurrentperformance.ringingmaster.fxui.desktop.statusbar.StatusBar;
-import com.concurrentperformance.ringingmaster.util.ThreadUncaughtExceptionHelper;
+import com.concurrentperformance.util.thread.ThreadUncaughtExceptionHelper;
 import javafx.application.Application;
 import javafx.geometry.Orientation;
 import javafx.scene.Node;

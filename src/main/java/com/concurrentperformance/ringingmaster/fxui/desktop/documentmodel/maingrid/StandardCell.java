@@ -45,7 +45,7 @@ public class StandardCell extends SkeletalGridCellModel implements GridCellModel
 	@Override
 	public void removeCharacter(int index) {
 		cell.remove(index);
-		touchDocument.getTouch().collapseEmptyRowsAndColumns();
+		touchDocument.collapseEmptyRowsAndColumns();
 		fireCellStructureChanged();
 	}
 

@@ -23,7 +23,7 @@ public class ProofState extends ImageView implements ProofManagerListener {
 	private final Image proofCross = new Image(this.getClass().getResourceAsStream("/proof_cross.png"));
 
 	public ProofState() {
-		ProofManager.getInstance().registerListener(this);
+		ProofManager.getInstance().addListener(this);
 	}
 
 	@Override

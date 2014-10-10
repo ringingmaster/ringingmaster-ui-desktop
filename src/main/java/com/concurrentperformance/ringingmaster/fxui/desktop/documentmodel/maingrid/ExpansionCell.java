@@ -43,14 +43,14 @@ public class ExpansionCell extends SkeletalGridCellModel implements GridCellMode
 	@Override
 	public void insertCharacter(int index, char character) {
 		if (expandColumn) {
-			touchDocument.getTouch().incrementColumnCount();
+			touchDocument.incrementColumnCount();
 		}
 		if (expandRow) {
-			touchDocument.getTouch().incrementRowCount();
+			touchDocument.incrementRowCount();
 		}
 
 		// We do not use the cell version here as we do not have a cell until the increment above.
-		touchDocument.getTouch().insertCharacter(column, row, index, character);
+		touchDocument.insertCharacter(column, row, index, character);
 
 		fireCellStructureChanged();
 	}

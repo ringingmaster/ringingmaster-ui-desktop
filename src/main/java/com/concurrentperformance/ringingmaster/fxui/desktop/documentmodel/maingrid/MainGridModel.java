@@ -1,8 +1,13 @@
 package com.concurrentperformance.ringingmaster.fxui.desktop.documentmodel.maingrid;
 
+import com.concurrentperformance.ringingmaster.engine.touch.Touch;
 import com.concurrentperformance.ringingmaster.engine.touch.TouchCell;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentmodel.TouchDocument;
-import com.concurrentperformance.ringingmaster.fxui.desktop.documentpanel.grid.model.*;
+import com.concurrentperformance.ringingmaster.fxui.desktop.documentpanel.grid.model.GridCellModel;
+import com.concurrentperformance.ringingmaster.fxui.desktop.documentpanel.grid.model.GridCharacterGroup;
+import com.concurrentperformance.ringingmaster.fxui.desktop.documentpanel.grid.model.GridCharacterModel;
+import com.concurrentperformance.ringingmaster.fxui.desktop.documentpanel.grid.model.GridModel;
+import com.concurrentperformance.ringingmaster.fxui.desktop.documentpanel.grid.model.SkeletalGridModel;
 import com.concurrentperformance.ringingmaster.ui.common.TouchStyle;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -23,18 +28,18 @@ public class MainGridModel extends SkeletalGridModel implements GridModel {
 
 	private final TouchDocument touchDocument;
 
-	public MainGridModel(TouchDocument touchDocument) {
+	public MainGridModel(TouchDocument touchDocument, Touch touch) {
 		this.touchDocument = checkNotNull(touchDocument);
 	}
 
 	@Override
 	public int getColumnCount() {
-		return touchDocument.getTouch().getColumnCount() + EXTRA_ROW_OR_COLUMN_FOR_EXPANSION;
+		return touchDocument.getColumnCount() + EXTRA_ROW_OR_COLUMN_FOR_EXPANSION;
 	}
 
 	@Override
 	public int getRowCount() {
-		return touchDocument.getTouch().getRowCount() + EXTRA_ROW_OR_COLUMN_FOR_EXPANSION;
+		return touchDocument.getRowCount() + EXTRA_ROW_OR_COLUMN_FOR_EXPANSION;
 	}
 	@Override
 	public Color getGridColor() {
@@ -53,7 +58,7 @@ public class MainGridModel extends SkeletalGridModel implements GridModel {
 			return new ExpansionCell(getListeners(), touchDocument, outOfBoundCol, outOfBoundRow, column, row);
 		}
 		else {
-			TouchCell cell = touchDocument.getTouch().allCellsView().getCell(column, row);
+			TouchCell cell = touchDocument.allCellsView().getCell(column, row);
 			return new StandardCell(getListeners(), touchDocument, cell);
 		}
 	}
@@ -63,7 +68,7 @@ public class MainGridModel extends SkeletalGridModel implements GridModel {
 		return new GridCharacterGroup() {
 			@Override
 			public int getLength() {
-				return (row >= touchDocument.getTouch().getRowCount())?0:8;
+				return (row >= touchDocument.getRowCount())?0:8;
 			}
 
 			@Override

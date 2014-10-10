@@ -24,7 +24,10 @@
 			<param name="LevelMin" value="WARN" />
 		</filter>
 	</appender>
-  
+
+    <logger name="com.concurrentperformance.ringingmaster.engine">
+        <level value="WARN"/>
+    </logger>
   	<logger name="com.concurrentperformance.ringingmaster">
 		<level value="INFO"/>
 	</logger>

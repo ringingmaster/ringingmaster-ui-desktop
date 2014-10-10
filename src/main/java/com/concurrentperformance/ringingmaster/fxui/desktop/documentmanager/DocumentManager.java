@@ -1,23 +1,21 @@
 package com.concurrentperformance.ringingmaster.fxui.desktop.documentmanager;
 
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentmodel.TouchDocument;
-
-import java.util.Collections;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-
-import static com.google.common.base.Preconditions.checkState;
+import com.concurrentperformance.ringingmaster.fxui.desktop.documentmodel.TouchDocumentListener;
+import com.concurrentperformance.util.listener.ConcurrentListenable;
+import com.concurrentperformance.util.listener.Listenable;
 
 /**
  * TODO comments ???
  *
  * @author Lake
  */
-public class DocumentManager {
+public class DocumentManager extends ConcurrentListenable<DocumentManagerListener> implements Listenable<DocumentManagerListener> {
 
 	private static final DocumentManager INSTANCE = new DocumentManager();
 
-	private final Set<DocumentManagerListener> listeners = Collections.newSetFromMap(new ConcurrentHashMap<>());
+
+	private TouchDocument currentDocument = null;
 
 	public static DocumentManager getInstance() {
 		return INSTANCE;
@@ -26,17 +24,25 @@ public class DocumentManager {
 	private DocumentManager() {
 	}
 
-	public void addListener(DocumentManagerListener listener) {
-		final boolean added = listeners.add(listener);
-		checkState(added);
+	public void buildNewDocument() {
+		currentDocument = new TouchDocument();
+		currentDocument.addListener(new TouchDocumentListener() {
+			@Override
+			public void touchDocumentListener_documentContentChanged(TouchDocument touchDocument) {
+				fireUpdateDocument();
+			}
+		});
+		fireUpdateDocument();
 	}
 
-	public void buildNewDocument() {
-		TouchDocument document = new TouchDocument();
-
-		for (DocumentManagerListener listener : listeners) {
-			listener.documentManager_setDocument(document);
+	private void fireUpdateDocument() {
+		for (DocumentManagerListener listener : getListeners()) {
+			listener.documentManager_updateDocument(currentDocument);
 		}
+	}
+
+	public TouchDocument getCurrentDocument() {
+		return currentDocument;
 
 	}
 }

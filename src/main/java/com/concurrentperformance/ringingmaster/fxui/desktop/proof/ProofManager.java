@@ -5,23 +5,24 @@ import com.concurrentperformance.ringingmaster.engine.parser.Parser;
 import com.concurrentperformance.ringingmaster.engine.parser.impl.DefaultParser;
 import com.concurrentperformance.ringingmaster.engine.proof.Proof;
 import com.concurrentperformance.ringingmaster.engine.touch.Touch;
+import com.concurrentperformance.util.listener.ConcurrentListenable;
+import com.concurrentperformance.util.listener.Listenable;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Collections;
-import java.util.Set;
-import java.util.concurrent.*;
+import java.util.concurrent.Executor;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
-
-import static com.google.common.base.Preconditions.checkState;
 
 /**
  * TODO comments ???
  *
  * @author Lake
  */
-public class ProofManager {
+public class ProofManager extends ConcurrentListenable<ProofManagerListener> implements Listenable<ProofManagerListener> {
 
 	private final static ProofManager INSTANCE = new ProofManager();
 
@@ -33,7 +34,6 @@ public class ProofManager {
 	private final Executor updateExecutor;
 	private final AtomicLong nextProofId = new AtomicLong(0);
 
-	private final Set<ProofManagerListener> listeners = Collections.newSetFromMap(new ConcurrentHashMap<>());
 
 	public static ProofManager getInstance() {
 		return INSTANCE;
@@ -74,7 +74,7 @@ public class ProofManager {
 					updateProofState(proof);
 				}
 				else {
-					log.info("Ignoring finished proof [{}] as not current [{}]", proofId, currentProofId);
+					log.info("Ignoring finished proof [{}] as not current [{}]", proofId, currentProofId); //TODO ned a mech of cancelling a proff nid term.
 				}
 			}
 		});
@@ -84,18 +84,10 @@ public class ProofManager {
 		updateExecutor.execute(new Runnable() {
 			@Override
 			public void run() {
-				for (ProofManagerListener listener : listeners) {
+				for (ProofManagerListener listener : getListeners()) {
 					listener.proofManagerListener_proofFinished(proof);
 				}
 			}
 		});
-	}
-
-	public void registerListener(ProofManagerListener listener) {
-		listeners.add(listener);
-	}
-
-	public void deRegisterListener(ProofManagerListener listener) {
-		checkState(listeners.remove(listener) == false);
 	}
 }

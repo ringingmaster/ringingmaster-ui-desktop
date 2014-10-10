@@ -38,9 +38,13 @@
           <root url="jar://$IVY_CACHE_HOME$/cache/log4j/log4j/jars/log4j-1.2.16.jar!/" />
           <root url="jar://$IVY_CACHE_HOME$/cache/com.google.guava/guava/jars/guava-14.0.1.jar!/" />
           <root url="jar://$IVY_CACHE_HOME$/cache/net.jcip/jcip-annotations/jars/jcip-annotations-1.0.jar!/" />
+          <root url="jar://$IVY_CACHE_HOME$/cache/org.controlsfx/controlsfx/jars/controlsfx-8.20.7.jar!/" />
         </CLASSES>
         <JAVADOC />
-        <SOURCES />
+        <SOURCES>
+          <root url="jar://$USER_HOME$/.ideaLibSources/controlsfx-8.20.7-sources.jar!/" />
+          <root url="jar://$IVY_CACHE_HOME$/cache/org.controlsfx/controlsfx/jars/controlsfx-8.20.7-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library">

@@ -12,8 +12,6 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 
 import java.util.List;
 
@@ -24,15 +22,14 @@ import java.util.List;
  */
 public class TouchPanel extends ScrollPane implements DocumentManagerListener {
 
-	private final Text title = new Text();
+
+	private final TitlePane titlePane = new TitlePane();
 	private final GridPane gridPane = new GridPane("Main");
 	private final DefinitionPane definitionPane = new DefinitionPane();
 
 	public TouchPanel() {
-		title.setFont(new Font(20));
-		title.setFocusTraversable(false);
 
-		VBox verticalLayout = new VBox(title, gridPane, definitionPane);
+		VBox verticalLayout = new VBox(titlePane, gridPane, definitionPane);
 		verticalLayout.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
 		verticalLayout.setSpacing(20.0);
 
@@ -55,8 +52,8 @@ public class TouchPanel extends ScrollPane implements DocumentManagerListener {
 	}
 
 	@Override
-	public void documentManager_setDocument(TouchDocument document) {
-		title.textProperty().bind(document.getTitleProperty());
+	public void documentManager_updateDocument(TouchDocument document) {
+		titlePane.setText(document.getTitle(), document.getAuthor());
 
 		GridModel gridModel = document.getMainGridModel();
 		gridPane.setModel(gridModel);

@@ -9,5 +9,5 @@ import com.concurrentperformance.ringingmaster.fxui.desktop.documentmodel.TouchD
  */
 public interface DocumentManagerListener {
 
-	void documentManager_setDocument(TouchDocument touchDocument);
+	void documentManager_updateDocument(TouchDocument touchDocument);
 }

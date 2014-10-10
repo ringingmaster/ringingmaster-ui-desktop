@@ -197,7 +197,7 @@ public class TouchDocument extends ConcurrentListenable<TouchDocumentListener> i
 				final MethodRow existingTerminationRow = touch.getTerminationSpecificRow().get();
 				final MethodRow newTerminationRow = MethodBuilder.transformToNewNumberOfBells(existingTerminationRow, numberOfBells);
 
-				message.append(pointNumber++).append(") Row termination will chang from ")
+				message.append(pointNumber++).append(") Row termination will change from ")
 						.append(existingTerminationRow.getDisplayString())
 						.append(" to ")
 						.append(newTerminationRow.getDisplayString())

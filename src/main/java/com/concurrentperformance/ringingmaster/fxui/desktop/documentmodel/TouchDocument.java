@@ -90,7 +90,7 @@ public class TouchDocument extends ConcurrentListenable<TouchDocumentListener> i
 
 			int pointNumber = 1;
 			if (touch.getCallFromBell().getZeroBasedBell() > numberOfBells.getTenor().getZeroBasedBell()) {
-				message.append(pointNumber++).append(") Calling bell will change from ")
+				message.append(pointNumber++).append(") Call from bell will change from ")
 						.append(touch.getCallFromBell().getZeroBasedBell() + 1)
 						.append(" to ").append(numberOfBells.getTenor().getZeroBasedBell() + 1).append(".").append(System.lineSeparator());
 			}

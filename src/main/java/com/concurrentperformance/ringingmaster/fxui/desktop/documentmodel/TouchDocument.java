@@ -19,14 +19,14 @@ import com.concurrentperformance.ringingmaster.ui.common.TouchStyle;
 import com.concurrentperformance.util.listener.ConcurrentListenable;
 import com.concurrentperformance.util.listener.Listenable;
 import javafx.application.Platform;
-import org.controlsfx.control.action.Action;
-import org.controlsfx.dialog.Dialog;
-import org.controlsfx.dialog.Dialogs;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -204,16 +204,19 @@ public class TouchDocument extends ConcurrentListenable<TouchDocumentListener> i
 						.append(".").append(System.lineSeparator());
 			}
 
-			boolean doAction = true;
+			boolean doAction = false;
 
 			if (message.length() > originalLength) {
-				final Action action = Dialogs.create()
-					.title("Change number of bells")
-					.owner(null)
-					.message(message.toString())
-					.actions(Dialog.ACTION_OK, Dialog.ACTION_CANCEL)
-					.showConfirm();
-				doAction = action.equals(Dialog.ACTION_OK);
+				message.append(System.lineSeparator()).append("Do you wish to continue?");
+				Alert dialog = new Alert(Alert.AlertType.CONFIRMATION, message.toString(), ButtonType.OK, ButtonType.CANCEL);
+				dialog.setTitle("Change number of bells");
+				dialog.setHeaderText("Change number of bells");
+				dialog.getDialogPane().setMinHeight(280);
+				dialog.getDialogPane().setMinWidth(620);
+				final Optional result = dialog.showAndWait().filter(response -> response == ButtonType.OK);
+				if (result.isPresent()) {
+					doAction = true;
+				}
 			}
 
 			if (doAction) {
@@ -223,4 +226,5 @@ public class TouchDocument extends ConcurrentListenable<TouchDocumentListener> i
 		}
 		fireDocumentContentChanged();
 	}
+
 }

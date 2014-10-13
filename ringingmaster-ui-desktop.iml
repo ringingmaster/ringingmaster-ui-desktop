@@ -44,6 +44,7 @@
         <JAVADOC />
         <SOURCES>
           <root url="jar://$USER_HOME$/.ideaLibSources/openjfx-dialogs-1.0.2-sources.jar!/" />
+          <root url="jar://$IVY_CACHE_HOME$/cache/org.controlsfx/openjfx-dialogs/jars/openjfx-dialogs-1.0.2-sources.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>

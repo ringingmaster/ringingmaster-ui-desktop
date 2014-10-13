@@ -14,6 +14,7 @@
 
     <dependencies>
         <dependency org="org.controlsfx" name="controlsfx" rev="8.20.7"/>
+        <dependency org="org.controlsfx" name="openjfx-dialogs" rev="1.0.2"/>
         <dependency org="org.slf4j" name="slf4j-api" rev="1.7.5"/>
         <dependency org="org.slf4j" name="slf4j-log4j12" rev="1.7.5"/>
         <dependency org="log4j" name="log4j" rev="1.2.16" />

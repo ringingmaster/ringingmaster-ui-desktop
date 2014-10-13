@@ -1,6 +1,7 @@
 package com.concurrentperformance.ringingmaster.fxui.desktop.documentmodel;
 
 import com.concurrentperformance.ringingmaster.engine.NumberOfBells;
+import com.concurrentperformance.ringingmaster.engine.method.Bell;
 import com.concurrentperformance.ringingmaster.engine.method.MethodRow;
 import com.concurrentperformance.ringingmaster.engine.method.impl.MethodBuilder;
 import com.concurrentperformance.ringingmaster.engine.notation.NotationBody;
@@ -75,6 +76,67 @@ public class TouchDocument extends ConcurrentListenable<TouchDocumentListener> i
 		fireDocumentContentChanged();
 	}
 
+	public NumberOfBells getNumberOfBells() {
+		return touch.getNumberOfBells();
+	}
+
+	public void setNumberOfBells(NumberOfBells numberOfBells) {
+		if (touch.getNumberOfBells() != numberOfBells) {
+			StringBuilder message = new StringBuilder();
+			message.append("Changing number of bells from ").append(touch.getNumberOfBells().getDisplayString())
+					.append(" to ").append(numberOfBells.getDisplayString())
+					.append(" will modify other properties: ").append(System.lineSeparator());
+			int originalLength = message.length();
+
+			int pointNumber = 1;
+			if (touch.getCallFromBell().getZeroBasedBell() > numberOfBells.getTenor().getZeroBasedBell()) {
+				message.append(pointNumber++).append(") Calling bell will change from ")
+						.append(touch.getCallFromBell().getZeroBasedBell() + 1)
+						.append(" to ").append(numberOfBells.getTenor().getZeroBasedBell() + 1).append(".").append(System.lineSeparator());
+			}
+
+			if (touch.getTerminationSpecificRow().isPresent()) {
+				final MethodRow existingTerminationRow = touch.getTerminationSpecificRow().get();
+				final MethodRow newTerminationRow = MethodBuilder.transformToNewNumberOfBells(existingTerminationRow, numberOfBells);
+
+				message.append(pointNumber++).append(") Row termination will change from ")
+						.append(existingTerminationRow.getDisplayString())
+						.append(" to ")
+						.append(newTerminationRow.getDisplayString())
+						.append(".").append(System.lineSeparator());
+			}
+
+			boolean doAction = false;
+
+			if (message.length() > originalLength) {
+				message.append(System.lineSeparator()).append("Do you wish to continue?");
+				Alert dialog = new Alert(Alert.AlertType.CONFIRMATION, message.toString(), ButtonType.OK, ButtonType.CANCEL);
+				dialog.setTitle("Change number of bells");
+				dialog.setHeaderText("Change number of bells");
+				dialog.getDialogPane().setMinHeight(280);
+				dialog.getDialogPane().setMinWidth(620);
+				final Optional result = dialog.showAndWait().filter(response -> response == ButtonType.OK);
+				if (result.isPresent()) {
+					doAction = true;
+				}
+			}
+
+			if (doAction) {
+				touch.setNumberOfBells(numberOfBells);
+				parseAndProve();
+			}
+		}
+		fireDocumentContentChanged();
+	}
+
+	public Bell getCallFrom() {
+		return touch.getCallFromBell();
+	}
+
+	public void setCallFrom(Bell callFrom) {
+		touch.setCallFromBell(callFrom);
+	}
+
 	public GridModel getMainGridModel() {
 		return mainGridModel;
 	}
@@ -93,7 +155,7 @@ public class TouchDocument extends ConcurrentListenable<TouchDocumentListener> i
 	}
 
 	private void fireDocumentContentChanged() {
-		Platform.runLater( new Runnable() {
+		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
 				for (TouchDocumentListener touchDocumentListener : getListeners()) {
@@ -102,10 +164,10 @@ public class TouchDocument extends ConcurrentListenable<TouchDocumentListener> i
 			}
 		});
 	}
-
 	public TouchStyle getTouchStyle() {
 		return touchStyle;
 	}
+
 	public void parseAndProve() {
 		ProofManager.getInstance().parseAndProve(touch);
 	}
@@ -167,64 +229,11 @@ public class TouchDocument extends ConcurrentListenable<TouchDocumentListener> i
 	}
 
 	public void insertCharacter(int column, int row, int index, char character) {
-		touch.insertCharacter(column,row,index,character);
+		touch.insertCharacter(column, row, index, character);
 	}
 
 	public void collapseEmptyRowsAndColumns() {
 		touch.collapseEmptyRowsAndColumns();
-	}
-
-	public NumberOfBells getNumberOfBells() {
-		return touch.getNumberOfBells();
-	}
-
-	public void setNumberOfBells(NumberOfBells numberOfBells) {
-		if (touch.getNumberOfBells() != numberOfBells) {
-			StringBuilder message = new StringBuilder();
-			message.append("Changing number of bells from ").append(touch.getNumberOfBells().getDisplayString())
-					.append(" to ").append(numberOfBells.getDisplayString())
-					.append(" will modify other properties: ").append(System.lineSeparator());
-			int originalLength = message.length();
-
-			int pointNumber = 1;
-			if (touch.getCallFromBell().getZeroBasedBell() > numberOfBells.getTenor().getZeroBasedBell()) {
-				message.append(pointNumber++).append(") Calling bell will change from ")
-						.append(touch.getCallFromBell().getZeroBasedBell() + 1)
-						.append(" to ").append(numberOfBells.getTenor().getZeroBasedBell() + 1).append(".").append(System.lineSeparator());
-			}
-
-			if (touch.getTerminationSpecificRow().isPresent()) {
-				final MethodRow existingTerminationRow = touch.getTerminationSpecificRow().get();
-				final MethodRow newTerminationRow = MethodBuilder.transformToNewNumberOfBells(existingTerminationRow, numberOfBells);
-
-				message.append(pointNumber++).append(") Row termination will change from ")
-						.append(existingTerminationRow.getDisplayString())
-						.append(" to ")
-						.append(newTerminationRow.getDisplayString())
-						.append(".").append(System.lineSeparator());
-			}
-
-			boolean doAction = false;
-
-			if (message.length() > originalLength) {
-				message.append(System.lineSeparator()).append("Do you wish to continue?");
-				Alert dialog = new Alert(Alert.AlertType.CONFIRMATION, message.toString(), ButtonType.OK, ButtonType.CANCEL);
-				dialog.setTitle("Change number of bells");
-				dialog.setHeaderText("Change number of bells");
-				dialog.getDialogPane().setMinHeight(280);
-				dialog.getDialogPane().setMinWidth(620);
-				final Optional result = dialog.showAndWait().filter(response -> response == ButtonType.OK);
-				if (result.isPresent()) {
-					doAction = true;
-				}
-			}
-
-			if (doAction) {
-				touch.setNumberOfBells(numberOfBells);
-				parseAndProve();
-			}
-		}
-		fireDocumentContentChanged();
 	}
 
 }

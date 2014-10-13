@@ -4,6 +4,7 @@ import com.concurrentperformance.fxutils.propertyeditor.PropertyEditor;
 import com.concurrentperformance.fxutils.propertyeditor.SelectionPropertyValue;
 import com.concurrentperformance.fxutils.propertyeditor.TextPropertyValue;
 import com.concurrentperformance.ringingmaster.engine.NumberOfBells;
+import com.concurrentperformance.ringingmaster.engine.method.Bell;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentmanager.DocumentManager;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentmanager.DocumentManagerListener;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentmodel.TouchDocument;
@@ -32,6 +33,7 @@ public class PropertyWindow extends PropertyEditor implements DocumentManagerLis
 	public static final String TITLE_PROPERTY_NAME = "Title";
 	public static final String AUTHOR_PROPERTY_NAME = "Author";
 	public static final String NUMBER_OF_BELLS_PROPERTY_NAME = "Number Of Bells";
+	public static final String CALL_FROM_PROPERTY_NAME = "Call From";
 
 	public static final String ADVANCED_SETUP_GROUP_NAME = "Advanced Setup";
 
@@ -62,6 +64,7 @@ public class PropertyWindow extends PropertyEditor implements DocumentManagerLis
 				DocumentManager.getInstance().getCurrentDocument().setTitle(newValue);
 			}
 		}));
+
 		add(SETUP_GROUP_NAME, new TextPropertyValue(AUTHOR_PROPERTY_NAME, new ChangeListener<String>() {
 			@Override
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
@@ -82,11 +85,25 @@ public class PropertyWindow extends PropertyEditor implements DocumentManagerLis
 
 			}
 		}));
-		final List<String> numberOfBells = new ArrayList<>();
+		final List<String> numberOfBellItems = new ArrayList<>();
 		for (NumberOfBells bells : NumberOfBells.values()) {
-			numberOfBells.add(bells.getDisplayString());
+			numberOfBellItems.add(bells.getDisplayString());
 		}
-		((SelectionPropertyValue)findPropertyByName(NUMBER_OF_BELLS_PROPERTY_NAME)).setItems(numberOfBells);
+		((SelectionPropertyValue)findPropertyByName(NUMBER_OF_BELLS_PROPERTY_NAME)).setItems(numberOfBellItems);
+
+		add(SETUP_GROUP_NAME, new SelectionPropertyValue(CALL_FROM_PROPERTY_NAME, new ChangeListener<Number>() {
+			@Override
+			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+				final Bell callFrom = Bell.values()[newValue.intValue()];
+				Platform.runLater(new Runnable() {
+					@Override
+					public void run() {
+						DocumentManager.getInstance().getCurrentDocument().setCallFrom(callFrom);
+					}
+				});
+
+			}
+		}));
 	}
 
 	private void updateSetupSection(TouchDocument touchDocument) {
@@ -98,7 +115,19 @@ public class PropertyWindow extends PropertyEditor implements DocumentManagerLis
 
 		final NumberOfBells numberOfBells = touchDocument.getNumberOfBells();
 		((SelectionPropertyValue)findPropertyByName(NUMBER_OF_BELLS_PROPERTY_NAME)).setSelectedIndex(numberOfBells.ordinal());
+
+		final List<String> callFromItems = new ArrayList<>();
+		for (Bell bell : Bell.values()) {
+			if (bell.getZeroBasedBell() <= numberOfBells.getTenor().getZeroBasedBell()) {
+				callFromItems.add(bell.getDisplayString());
+			}
+		}
+		((SelectionPropertyValue)findPropertyByName(CALL_FROM_PROPERTY_NAME)).setItems(callFromItems);
+		final Bell callFrom = touchDocument.getCallFrom();
+		((SelectionPropertyValue)findPropertyByName(CALL_FROM_PROPERTY_NAME)).setSelectedIndex(callFrom.ordinal());
 	}
+
+
 
 	private void buildAdvancedSetupSection() {
 		add(ADVANCED_SETUP_GROUP_NAME, new TextPropertyValue("Wrap Calls", cl));

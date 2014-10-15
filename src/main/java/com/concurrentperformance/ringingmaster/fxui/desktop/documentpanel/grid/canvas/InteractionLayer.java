@@ -349,7 +349,7 @@ public class InteractionLayer extends Pane {
 	}
 
 	private void handleMousePressed(MouseEvent e) {
-		log.info("[{}] mouse pressed [{}]", parent.getName());
+		//log.info("[{}] mouse pressed", parent.getName());
 		Optional<GridPosition> gridPosition = mouseCoordinatesToGridPosition(e.getX(), e.getY());
 		if (gridPosition.isPresent()) {
 			parent.getModel().setCaretPosition(gridPosition.get());

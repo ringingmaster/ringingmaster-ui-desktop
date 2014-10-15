@@ -4,6 +4,7 @@ import com.concurrentperformance.ringingmaster.engine.NumberOfBells;
 import com.concurrentperformance.ringingmaster.engine.method.Bell;
 import com.concurrentperformance.ringingmaster.engine.method.MethodRow;
 import com.concurrentperformance.ringingmaster.engine.method.impl.MethodBuilder;
+import com.concurrentperformance.ringingmaster.engine.notation.Notation;
 import com.concurrentperformance.ringingmaster.engine.notation.NotationBody;
 import com.concurrentperformance.ringingmaster.engine.notation.impl.NotationBuilder;
 import com.concurrentperformance.ringingmaster.engine.touch.Grid;
@@ -19,6 +20,7 @@ import com.concurrentperformance.ringingmaster.fxui.desktop.proof.ProofManager;
 import com.concurrentperformance.ringingmaster.ui.common.TouchStyle;
 import com.concurrentperformance.util.listener.ConcurrentListenable;
 import com.concurrentperformance.util.listener.Listenable;
+import com.google.common.collect.Lists;
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -26,6 +28,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -137,6 +140,24 @@ public class TouchDocument extends ConcurrentListenable<TouchDocumentListener> i
 		touch.setCallFromBell(callFrom);
 	}
 
+	public List<NotationBody> getAllNotations() {
+		final ArrayList<NotationBody> sortedNotations = Lists.newArrayList(touch.getAllNotations());
+		Collections.sort(sortedNotations, Notation.BY_NUMBER_THEN_NAME);
+		return sortedNotations;
+	}
+
+	public NotationBody getActiveNotation() {
+		return touch.getActiveNotation();
+	}
+
+	public void setActiveNotation(int index) {
+		final List<NotationBody> allNotations = getAllNotations();
+		final NotationBody selectedNotation = allNotations.get(index);
+		touch.setActiveNotation(selectedNotation);
+		parseAndProve();
+	}
+
+
 	public GridModel getMainGridModel() {
 		return mainGridModel;
 	}
@@ -178,6 +199,8 @@ public class TouchDocument extends ConcurrentListenable<TouchDocumentListener> i
 		Touch touch = TouchBuilder.getInstance(NumberOfBells.BELLS_6, 2, 2);
 		touch.setTouchType(TouchType.LEAD_BASED);
 		touch.addNotation(buildPlainBobMinor());
+		touch.addNotation(buildLittleBobMinor());
+//		touch.addNotation(buildPlainBobMinimus());
 		touch.setTitle("My Touch");
 		touch.setAuthor("by Stephen");
 		touch.insertCharacter(0, 0, 0, '-');
@@ -203,6 +226,28 @@ public class TouchDocument extends ConcurrentListenable<TouchDocumentListener> i
 				.setNumberOfWorkingBells(NumberOfBells.BELLS_6)
 				.setName("Plain Bob")
 				.setFoldedPalindromeNotationShorthand("-16-16-16", "12")
+				.addCall("Bob", "-", "14", true)
+				.addCall("Single", "s", "1234", false)
+				.build();
+	}
+
+	// TODO remove this
+	private static NotationBody buildLittleBobMinor() {
+		return NotationBuilder.getInstance()
+				.setNumberOfWorkingBells(NumberOfBells.BELLS_6)
+				.setName("Little Bob")
+				.setFoldedPalindromeNotationShorthand("-16-14", "12")
+				.addCall("Bob", "-", "14", true)
+				.addCall("Single", "s", "1234", false)
+				.build();
+	}
+
+	// TODO remove this
+	private static NotationBody buildPlainBobMinimus() {
+		return NotationBuilder.getInstance()
+				.setNumberOfWorkingBells(NumberOfBells.BELLS_4)
+				.setName("Little Bob")
+				.setFoldedPalindromeNotationShorthand("-14-14", "12")
 				.addCall("Bob", "-", "14", true)
 				.addCall("Single", "s", "1234", false)
 				.build();

@@ -67,6 +67,7 @@ public class ProofManager extends ConcurrentListenable<ProofManagerListener> imp
 		proofExecutor.execute(new Runnable() {
 			@Override
 			public void run() {
+				log.info("Starting proof of [{}]", proofId);
 				final LeadBasedCompiler compiler = new LeadBasedCompiler(touch, "Proof-" + Long.toString(proofId));
 				Proof proof = compiler.compile(true);
 				final long currentProofId = nextProofId.get();

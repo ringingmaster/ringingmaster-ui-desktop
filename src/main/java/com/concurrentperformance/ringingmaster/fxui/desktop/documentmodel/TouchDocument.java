@@ -7,6 +7,7 @@ import com.concurrentperformance.ringingmaster.engine.method.impl.MethodBuilder;
 import com.concurrentperformance.ringingmaster.engine.notation.Notation;
 import com.concurrentperformance.ringingmaster.engine.notation.NotationBody;
 import com.concurrentperformance.ringingmaster.engine.notation.impl.NotationBuilder;
+import com.concurrentperformance.ringingmaster.engine.notation.impl.NotationBuilderHelper;
 import com.concurrentperformance.ringingmaster.engine.touch.Grid;
 import com.concurrentperformance.ringingmaster.engine.touch.Touch;
 import com.concurrentperformance.ringingmaster.engine.touch.TouchCell;
@@ -102,11 +103,29 @@ public class TouchDocument extends ConcurrentListenable<TouchDocumentListener> i
 				final MethodRow existingTerminationRow = touch.getTerminationSpecificRow().get();
 				final MethodRow newTerminationRow = MethodBuilder.transformToNewNumberOfBells(existingTerminationRow, numberOfBells);
 
-				message.append(pointNumber++).append(") Row termination will change from ")
+				message.append(pointNumber++).append(") Row termination will change from '")
 						.append(existingTerminationRow.getDisplayString())
-						.append(" to ")
+						.append("' to '")
 						.append(newTerminationRow.getDisplayString())
-						.append(".").append(System.lineSeparator());
+						.append("'.").append(System.lineSeparator());
+			}
+
+			if (!touch.isSpliced() &&
+					touch.getSingleMethodActiveNotation() != null &&
+					touch.getSingleMethodActiveNotation().getNumberOfWorkingBells().getBellCount() > numberOfBells.getBellCount()) {
+				final List<NotationBody> filteredNotations = NotationBuilderHelper.filterNotations(touch.getAllNotations(), numberOfBells);
+				message.append(pointNumber++).append(") Active method '")
+						.append(touch.getSingleMethodActiveNotation().getNameIncludingNumberOfBells())
+						.append("' ");
+				if (filteredNotations.size() == 0) {
+					message.append("will be unset. There is no suitable replacement.");
+				}
+				else {
+					message.append("will change to '")
+							.append(filteredNotations.get(0).getNameIncludingNumberOfBells())
+					.append("'");
+				}
+				message.append(System.lineSeparator());
 			}
 
 			boolean doAction = false;
@@ -147,14 +166,16 @@ public class TouchDocument extends ConcurrentListenable<TouchDocumentListener> i
 	}
 
 	public NotationBody getActiveNotation() {
-		return touch.getActiveNotation();
+		return touch.getSingleMethodActiveNotation();
 	}
 
 	public void setActiveNotation(int index) {
 		final List<NotationBody> allNotations = getAllNotations();
-		final NotationBody selectedNotation = allNotations.get(index);
-		touch.setActiveNotation(selectedNotation);
-		parseAndProve();
+		if (index != -1 ) {
+			final NotationBody selectedNotation = allNotations.get(index);
+			touch.setActiveNotation(selectedNotation);
+			parseAndProve();
+		}
 	}
 
 
@@ -200,7 +221,7 @@ public class TouchDocument extends ConcurrentListenable<TouchDocumentListener> i
 		touch.setTouchType(TouchType.LEAD_BASED);
 		touch.addNotation(buildPlainBobMinor());
 		touch.addNotation(buildLittleBobMinor());
-//		touch.addNotation(buildPlainBobMinimus());
+		touch.addNotation(buildPlainBobMinimus());
 		touch.setTitle("My Touch");
 		touch.setAuthor("by Stephen");
 		touch.insertCharacter(0, 0, 0, '-');

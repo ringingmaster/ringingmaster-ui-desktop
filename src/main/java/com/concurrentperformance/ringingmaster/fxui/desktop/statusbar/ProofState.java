@@ -1,6 +1,7 @@
 package com.concurrentperformance.ringingmaster.fxui.desktop.statusbar;
 
 import com.concurrentperformance.ringingmaster.engine.proof.Proof;
+import com.concurrentperformance.ringingmaster.engine.proof.ProofTerminationReason;
 import com.concurrentperformance.ringingmaster.fxui.desktop.proof.ProofManager;
 import com.concurrentperformance.ringingmaster.fxui.desktop.proof.ProofManagerListener;
 import javafx.application.Platform;
@@ -31,13 +32,19 @@ public class ProofState extends ImageView implements ProofManagerListener {
 		if (proof == null) {
 			updateImage(proofWait);
 		}
-		else {
+		else if (proof.getTerminationReason() == ProofTerminationReason.INVALID_TOUCH) {
+			updateImage(proofWait);//TODO could make this a question mark.
+		}
+		else if (proof.getAnalysis() != null) {
 			if (proof.getAnalysis().isTrueTouch()) {
 				updateImage(proofTick);
 			}
 			else {
 				updateImage(proofCross);
 			}
+		}
+		else {
+			updateImage(proofWait);
 		}
 	}
 

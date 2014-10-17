@@ -1,6 +1,6 @@
 package com.concurrentperformance.ringingmaster.fxui.desktop.proof;
 
-import com.concurrentperformance.ringingmaster.engine.compiler.impl.LeadBasedCompiler;
+import com.concurrentperformance.ringingmaster.engine.compiler.impl.CompilerFactory;
 import com.concurrentperformance.ringingmaster.engine.parser.Parser;
 import com.concurrentperformance.ringingmaster.engine.parser.impl.DefaultParser;
 import com.concurrentperformance.ringingmaster.engine.proof.Proof;
@@ -8,6 +8,7 @@ import com.concurrentperformance.ringingmaster.engine.touch.Touch;
 import com.concurrentperformance.util.listener.ConcurrentListenable;
 import com.concurrentperformance.util.listener.Listenable;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import com.concurrentperformance.ringingmaster.engine.compiler.Compiler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -68,14 +69,14 @@ public class ProofManager extends ConcurrentListenable<ProofManagerListener> imp
 			@Override
 			public void run() {
 				log.info("Starting proof of [{}]", proofId);
-				final LeadBasedCompiler compiler = new LeadBasedCompiler(touch, "Proof-" + Long.toString(proofId));
+				final Compiler compiler = CompilerFactory.getInstance(touch,"Proof-" + Long.toString(proofId));
 				Proof proof = compiler.compile(true);
 				final long currentProofId = nextProofId.get();
 				if (proofId == currentProofId) {
 					updateProofState(proof);
 				}
 				else {
-					log.info("Ignoring finished proof [{}] as not current [{}]", proofId, currentProofId); //TODO ned a mech of cancelling a proff nid term.
+					log.info("Ignoring finished proof [{}] as not current [{}]", proofId, currentProofId); //TODO ned a mech of cancelling a proof mid term.
 				}
 			}
 		});

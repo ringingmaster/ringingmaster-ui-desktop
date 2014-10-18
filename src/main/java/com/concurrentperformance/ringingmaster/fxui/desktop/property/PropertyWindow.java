@@ -133,7 +133,7 @@ public class PropertyWindow extends PropertyEditor implements DocumentManagerLis
 
 		final List<String> notationItems = new ArrayList<>();
 		int selectedNotationIndex = -1;
-		final List<NotationBody> allNotations = touchDocument.getAllNotations();
+		final List<NotationBody> allNotations = touchDocument.getNotations();
 		for (int index = 0;index < allNotations.size();index++) {
 			final NotationBody notation = allNotations.get(index);
 			notationItems.add(notation.getNameIncludingNumberOfBells());

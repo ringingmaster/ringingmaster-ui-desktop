@@ -159,18 +159,19 @@ public class TouchDocument extends ConcurrentListenable<TouchDocumentListener> i
 		touch.setCallFromBell(callFrom);
 	}
 
-	public List<NotationBody> getAllNotations() {
-		final ArrayList<NotationBody> sortedNotations = Lists.newArrayList(touch.getAllNotations());
+	public List<NotationBody> getNotations() {
+		final ArrayList<NotationBody> sortedNotations = Lists.newArrayList(touch.getValidNotations());
 		Collections.sort(sortedNotations, Notation.BY_NUMBER_THEN_NAME);
 		return sortedNotations;
 	}
+
 
 	public NotationBody getActiveNotation() {
 		return touch.getSingleMethodActiveNotation();
 	}
 
 	public void setActiveNotation(int index) {
-		final List<NotationBody> allNotations = getAllNotations();
+		final List<NotationBody> allNotations = getNotations();
 		if (index != -1 ) {
 			final NotationBody selectedNotation = allNotations.get(index);
 			touch.setActiveNotation(selectedNotation);
@@ -222,8 +223,11 @@ public class TouchDocument extends ConcurrentListenable<TouchDocumentListener> i
 		touch.addNotation(buildPlainBobMinor());
 		touch.addNotation(buildLittleBobMinor());
 		touch.addNotation(buildPlainBobMinimus());
+		touch.addNotation(buildPlainBobMajor());
+
 		touch.setTitle("My Touch");
 		touch.setAuthor("by Stephen");
+
 		touch.insertCharacter(0, 0, 0, '-');
 		touch.insertCharacter(0, 1, 0, 's');
 		touch.insertCharacter(0, 0, 1, 's');
@@ -269,6 +273,17 @@ public class TouchDocument extends ConcurrentListenable<TouchDocumentListener> i
 				.setNumberOfWorkingBells(NumberOfBells.BELLS_4)
 				.setName("Little Bob")
 				.setFoldedPalindromeNotationShorthand("-14-14", "12")
+				.addCall("Bob", "-", "14", true)
+				.addCall("Single", "s", "1234", false)
+				.build();
+	}
+
+	// TODO remove this
+	private static NotationBody buildPlainBobMajor() {
+		return NotationBuilder.getInstance()
+				.setNumberOfWorkingBells(NumberOfBells.BELLS_8)
+				.setName("Little Bob")
+				.setFoldedPalindromeNotationShorthand("-18-18-18-18", "12")
 				.addCall("Bob", "-", "14", true)
 				.addCall("Single", "s", "1234", false)
 				.build();

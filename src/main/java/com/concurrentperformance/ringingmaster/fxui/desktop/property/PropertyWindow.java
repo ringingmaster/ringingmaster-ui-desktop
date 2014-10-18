@@ -5,7 +5,6 @@ import com.concurrentperformance.fxutils.propertyeditor.SelectionPropertyValue;
 import com.concurrentperformance.fxutils.propertyeditor.TextPropertyValue;
 import com.concurrentperformance.ringingmaster.engine.NumberOfBells;
 import com.concurrentperformance.ringingmaster.engine.method.Bell;
-import com.concurrentperformance.ringingmaster.engine.notation.NotationBody;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentmanager.DocumentManager;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentmanager.DocumentManagerListener;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentmodel.TouchDocument;
@@ -131,17 +130,9 @@ public class PropertyWindow extends PropertyEditor implements DocumentManagerLis
 		final Bell callFrom = touchDocument.getCallFrom();
 		((SelectionPropertyValue)findPropertyByName(CALL_FROM_PROPERTY_NAME)).setSelectedIndex(callFrom.ordinal());
 
-		final List<String> notationItems = new ArrayList<>();
-		int selectedNotationIndex = -1;
-		final List<NotationBody> allNotations = touchDocument.getNotations();
-		for (int index = 0;index < allNotations.size();index++) {
-			final NotationBody notation = allNotations.get(index);
-			notationItems.add(notation.getNameIncludingNumberOfBells());
-			if (notation == touchDocument.getActiveNotation()) {
-				selectedNotationIndex = index;
-			}
+		final List<String> notationItems = touchDocument.getNotations();
+		int selectedNotationIndex = touchDocument.getActiveNotationIndex();
 
-		}
 		((SelectionPropertyValue)findPropertyByName(ACTIVE_METHOD_PROPERTY_NAME)).setItems(notationItems);
 		((SelectionPropertyValue)findPropertyByName(ACTIVE_METHOD_PROPERTY_NAME)).setSelectedIndex(selectedNotationIndex);
 

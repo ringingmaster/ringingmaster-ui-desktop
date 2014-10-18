@@ -159,24 +159,54 @@ public class TouchDocument extends ConcurrentListenable<TouchDocumentListener> i
 		touch.setCallFromBell(callFrom);
 	}
 
-	public List<NotationBody> getNotations() {
-		final ArrayList<NotationBody> sortedNotations = Lists.newArrayList(touch.getValidNotations());
+	public List<String> getNotations() {
+		final List<NotationBody> orderedNotations = getSortedNotationsBeingDisplayed();
+
+		List<String> result = Lists.newArrayList();
+
+		result.add("<Spliced>");
+
+		for (int index = 0;index < orderedNotations.size();index++) {
+			final NotationBody notation = orderedNotations.get(index);
+			result.add(notation.getNameIncludingNumberOfBells());
+		}
+
+		return result;
+	}
+
+	private List<NotationBody> getSortedNotationsBeingDisplayed() {
+		final List<NotationBody> sortedNotations = Lists.newArrayList(touch.getValidNotations());
 		Collections.sort(sortedNotations, Notation.BY_NUMBER_THEN_NAME);
 		return sortedNotations;
 	}
 
 
-	public NotationBody getActiveNotation() {
-		return touch.getSingleMethodActiveNotation();
+	public int getActiveNotationIndex() {
+		if (touch.isSpliced()) {
+			return 0;
+		}
+		final NotationBody activeNotation = touch.getSingleMethodActiveNotation();
+		final List<NotationBody> sortedNotationsBeingDisplayed = getSortedNotationsBeingDisplayed();
+		for (int index = 0;index<sortedNotationsBeingDisplayed.size();index++) {
+			final NotationBody notation = sortedNotationsBeingDisplayed.get(index);
+			if (notation == activeNotation) {
+				return index +1; // the 1 is the offset for the spliced row
+			}
+		}
+		return -1;
 	}
 
 	public void setActiveNotation(int index) {
-		final List<NotationBody> allNotations = getNotations();
-		if (index != -1 ) {
-			final NotationBody selectedNotation = allNotations.get(index);
-			touch.setActiveNotation(selectedNotation);
-			parseAndProve();
+		if (index==0) {
+			touch.setSpliced(true);
 		}
+		else {
+			final List<NotationBody> sortedNotationsBeingDisplayed = getSortedNotationsBeingDisplayed();
+
+			final NotationBody selectedNotation = sortedNotationsBeingDisplayed.get(index -1);// the -1 is the offset for the spliced row
+			touch.setActiveNotation(selectedNotation);
+		}
+		parseAndProve();
 	}
 
 
@@ -253,6 +283,7 @@ public class TouchDocument extends ConcurrentListenable<TouchDocumentListener> i
 				.setFoldedPalindromeNotationShorthand("-16-16-16", "12")
 				.addCall("Bob", "-", "14", true)
 				.addCall("Single", "s", "1234", false)
+				.setSpliceIdentifier("P")
 				.build();
 	}
 

@@ -68,7 +68,7 @@ public class ProofManager extends ConcurrentListenable<ProofManagerListener> imp
 		proofExecutor.execute(new Runnable() {
 			@Override
 			public void run() {
-				log.info("Starting proof of [{}]", proofId);
+				log.info(">>>> Proof of [{}]", proofId);
 				final Compiler compiler = CompilerFactory.getInstance(touch,"Proof-" + Long.toString(proofId));
 				Proof proof = compiler.compile(true);
 				final long currentProofId = nextProofId.get();
@@ -78,6 +78,7 @@ public class ProofManager extends ConcurrentListenable<ProofManagerListener> imp
 				else {
 					log.info("Ignoring finished proof [{}] as not current [{}]", proofId, currentProofId); //TODO ned a mech of cancelling a proof mid term.
 				}
+				log.info("<<<< Proof of [{}]", proofId);
 			}
 		});
 	}

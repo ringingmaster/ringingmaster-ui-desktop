@@ -223,6 +223,16 @@ public class TouchDocument extends ConcurrentListenable<TouchDocumentListener> i
 		fireDocumentContentChanged();
 	}
 
+	public String getPlainLeadToken() {
+		return touch.getPlainLeadToken();
+	}
+
+	public void setPlainLeadToken(String plainLeadToken) {
+		touch.setPlainLeadToken(plainLeadToken);
+		parseAndProve();
+		fireDocumentContentChanged();
+	}
+
 	public GridModel getMainGridModel() {
 		return mainGridModel;
 	}
@@ -235,10 +245,10 @@ public class TouchDocument extends ConcurrentListenable<TouchDocumentListener> i
 			definitionModels.add(new DefinitionGridModel(this, definition));
 		}
 	}
-
 	public List<GridModel> getDefinitionGridModels() {
 		return definitionModels;
 	}
+
 	private void fireDocumentContentChanged() {
 		Platform.runLater(new Runnable() {
 			@Override

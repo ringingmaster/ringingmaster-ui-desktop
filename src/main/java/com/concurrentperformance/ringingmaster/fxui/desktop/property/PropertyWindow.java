@@ -34,6 +34,7 @@ public class PropertyWindow extends PropertyEditor implements DocumentManagerLis
 	public static final String CALL_FROM_PROPERTY_NAME = "Call From";
 	public static final String ACTIVE_METHOD_PROPERTY_NAME = "Active Method";
 	public static final String CALL_TYPE_PROPERTY_NAME = "Call Type";
+	public static final String PLAIN_LEAD_TOKEN_PROPERTY_NAME = "Plain Lead Token";
 
 	public static final String ADVANCED_SETUP_GROUP_NAME = "Advanced Setup";
 
@@ -124,6 +125,19 @@ public class PropertyWindow extends PropertyEditor implements DocumentManagerLis
 
 			}
 		}));
+
+		add(SETUP_GROUP_NAME, new TextPropertyValue(PLAIN_LEAD_TOKEN_PROPERTY_NAME, new ChangeListener<String>() {
+			@Override
+			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+				Platform.runLater(new Runnable() {
+					@Override
+					public void run() {
+						DocumentManager.getInstance().getCurrentDocument().setPlainLeadToken(newValue);
+					}
+				});
+
+			}
+		}));
 	}
 
 	private void updateSetupSection(TouchDocument touchDocument) {
@@ -159,6 +173,9 @@ public class PropertyWindow extends PropertyEditor implements DocumentManagerLis
 		((SelectionPropertyValue)findPropertyByName(CALL_TYPE_PROPERTY_NAME)).setItems(touchTypes);
 		final TouchType touchType = touchDocument.getTouchType();
 		((SelectionPropertyValue)findPropertyByName(CALL_TYPE_PROPERTY_NAME)).setSelectedIndex(touchType.ordinal());
+
+		final String plainLeadToken = touchDocument.getPlainLeadToken();
+		((TextPropertyValue)findPropertyByName(PLAIN_LEAD_TOKEN_PROPERTY_NAME)).setValue(plainLeadToken);
 	}
 
 

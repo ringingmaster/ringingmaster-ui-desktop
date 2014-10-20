@@ -176,6 +176,7 @@ public class PropertyWindow extends PropertyEditor implements DocumentManagerLis
 
 		final String plainLeadToken = touchDocument.getPlainLeadToken();
 		((TextPropertyValue)findPropertyByName(PLAIN_LEAD_TOKEN_PROPERTY_NAME)).setValue(plainLeadToken);
+		((TextPropertyValue)findPropertyByName(PLAIN_LEAD_TOKEN_PROPERTY_NAME)).setDisable(touchType == TouchType.COURSE_BASED);
 	}
 
 

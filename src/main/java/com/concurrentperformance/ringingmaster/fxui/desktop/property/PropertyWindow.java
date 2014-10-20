@@ -5,6 +5,7 @@ import com.concurrentperformance.fxutils.propertyeditor.SelectionPropertyValue;
 import com.concurrentperformance.fxutils.propertyeditor.TextPropertyValue;
 import com.concurrentperformance.ringingmaster.engine.NumberOfBells;
 import com.concurrentperformance.ringingmaster.engine.method.Bell;
+import com.concurrentperformance.ringingmaster.engine.touch.TouchType;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentmanager.DocumentManager;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentmanager.DocumentManagerListener;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentmodel.TouchDocument;
@@ -32,6 +33,7 @@ public class PropertyWindow extends PropertyEditor implements DocumentManagerLis
 	public static final String NUMBER_OF_BELLS_PROPERTY_NAME = "Number Of Bells";
 	public static final String CALL_FROM_PROPERTY_NAME = "Call From";
 	public static final String ACTIVE_METHOD_PROPERTY_NAME = "Active Method";
+	public static final String CALL_TYPE_PROPERTY_NAME = "Call Type";
 
 	public static final String ADVANCED_SETUP_GROUP_NAME = "Advanced Setup";
 
@@ -108,6 +110,20 @@ public class PropertyWindow extends PropertyEditor implements DocumentManagerLis
 
 			}
 		}));
+
+		add(SETUP_GROUP_NAME, new SelectionPropertyValue(CALL_TYPE_PROPERTY_NAME, new ChangeListener<Number>() {
+			@Override
+			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+				final TouchType touchType = TouchType.values()[newValue.intValue()];
+				Platform.runLater(new Runnable() {
+					@Override
+					public void run() {
+						DocumentManager.getInstance().getCurrentDocument().setTouchType(touchType);
+					}
+				});
+
+			}
+		}));
 	}
 
 	private void updateSetupSection(TouchDocument touchDocument) {
@@ -136,6 +152,13 @@ public class PropertyWindow extends PropertyEditor implements DocumentManagerLis
 		((SelectionPropertyValue)findPropertyByName(ACTIVE_METHOD_PROPERTY_NAME)).setItems(notationItems);
 		((SelectionPropertyValue)findPropertyByName(ACTIVE_METHOD_PROPERTY_NAME)).setSelectedIndex(selectedNotationIndex);
 
+		final List<String> touchTypes = new ArrayList<>();
+		for (TouchType touchType : TouchType.values()) {
+			touchTypes.add(touchType.getName());
+		}
+		((SelectionPropertyValue)findPropertyByName(CALL_TYPE_PROPERTY_NAME)).setItems(touchTypes);
+		final TouchType touchType = touchDocument.getTouchType();
+		((SelectionPropertyValue)findPropertyByName(CALL_TYPE_PROPERTY_NAME)).setSelectedIndex(touchType.ordinal());
 	}
 
 

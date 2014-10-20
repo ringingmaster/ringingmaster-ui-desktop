@@ -213,6 +213,16 @@ public class TouchDocument extends ConcurrentListenable<TouchDocumentListener> i
 	}
 
 
+	public TouchType getTouchType() {
+		return touch.getTouchType();
+	}
+
+	public void setTouchType(TouchType touchType) {
+		touch.setTouchType(touchType);
+		parseAndProve();
+		fireDocumentContentChanged();
+	}
+
 	public GridModel getMainGridModel() {
 		return mainGridModel;
 	}
@@ -229,7 +239,6 @@ public class TouchDocument extends ConcurrentListenable<TouchDocumentListener> i
 	public List<GridModel> getDefinitionGridModels() {
 		return definitionModels;
 	}
-
 	private void fireDocumentContentChanged() {
 		Platform.runLater(new Runnable() {
 			@Override
@@ -240,6 +249,7 @@ public class TouchDocument extends ConcurrentListenable<TouchDocumentListener> i
 			}
 		});
 	}
+
 	public TouchStyle getTouchStyle() {
 		return touchStyle;
 	}
@@ -350,5 +360,4 @@ public class TouchDocument extends ConcurrentListenable<TouchDocumentListener> i
 	public void collapseEmptyRowsAndColumns() {
 		touch.collapseEmptyRowsAndColumns();
 	}
-
 }

@@ -157,6 +157,8 @@ public class TouchDocument extends ConcurrentListenable<TouchDocumentListener> i
 
 	public void setCallFrom(Bell callFrom) {
 		touch.setCallFromBell(callFrom);
+		parseAndProve();
+		fireDocumentContentChanged();
 	}
 
 	public List<String> getNotations() {
@@ -207,6 +209,7 @@ public class TouchDocument extends ConcurrentListenable<TouchDocumentListener> i
 			touch.setActiveNotation(selectedNotation);
 		}
 		parseAndProve();
+		fireDocumentContentChanged();
 	}
 
 

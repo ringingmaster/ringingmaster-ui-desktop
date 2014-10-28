@@ -31,7 +31,6 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -99,14 +98,23 @@ public class TouchDocument extends ConcurrentListenable<TouchDocumentListener> i
 						.append(" to ").append(numberOfBells.getTenor().getZeroBasedBell() + 1).append(".").append(System.lineSeparator());
 			}
 
+			final MethodRow existingInitialRow = touch.getInitialRow();
+			final MethodRow newInitialRow = MethodBuilder.transformToNewNumberOfBells(existingInitialRow, numberOfBells);
+
+			message.append(pointNumber++).append(") Start row will change from '")
+					.append(existingInitialRow.getDisplayString(true))
+					.append("' to '")
+					.append(newInitialRow.getDisplayString(true))
+					.append("'.").append(System.lineSeparator());
+
 			if (touch.getTerminationSpecificRow().isPresent()) {
 				final MethodRow existingTerminationRow = touch.getTerminationSpecificRow().get();
 				final MethodRow newTerminationRow = MethodBuilder.transformToNewNumberOfBells(existingTerminationRow, numberOfBells);
 
-				message.append(pointNumber++).append(") Row termination will change from '")
-						.append(existingTerminationRow.getDisplayString())
+				message.append(pointNumber++).append(") Termination row will change from '")
+						.append(existingTerminationRow.getDisplayString(true))
 						.append("' to '")
-						.append(newTerminationRow.getDisplayString())
+						.append(newTerminationRow.getDisplayString(true))
 						.append("'.").append(System.lineSeparator());
 			}
 
@@ -132,15 +140,6 @@ public class TouchDocument extends ConcurrentListenable<TouchDocumentListener> i
 
 			if (message.length() > originalLength) {
 				message.append(System.lineSeparator()).append("Do you wish to continue?");
-				Alert dialog = new Alert(Alert.AlertType.CONFIRMATION, message.toString(), ButtonType.OK, ButtonType.CANCEL);
-				dialog.setTitle("Change number of bells");
-				dialog.setHeaderText("Change number of bells");
-				dialog.getDialogPane().setMinHeight(280);
-				dialog.getDialogPane().setMinWidth(620);
-				final Optional result = dialog.showAndWait().filter(response -> response == ButtonType.OK);
-				if (result.isPresent()) {
-					doAction = true;
-				}
 			}
 
 			if (doAction) {
@@ -233,6 +232,56 @@ public class TouchDocument extends ConcurrentListenable<TouchDocumentListener> i
 		fireDocumentContentChanged();
 	}
 
+	public String getInitialRow() {
+		return touch.getInitialRow().getDisplayString(true);
+	}
+
+	public void setInitialRow(String initialRowText) {
+		if (initialRowText == null) {
+			return;
+		}
+
+		if (getInitialRow().equals(initialRowText)) {
+			return;
+		}
+
+		// first look for rounds token
+		if (initialRowText.compareToIgnoreCase(MethodRow.ROUNDS_TOKEN) == 0) {
+			final MethodRow rounds = MethodBuilder.buildRoundsRow(touch.getNumberOfBells());
+			touch.setInitialRow(rounds);
+			parseAndProve();
+		}
+		// Now check for valid row
+		else {
+			try {
+				final MethodRow parsedRow = MethodBuilder.parse(touch.getNumberOfBells(), initialRowText);
+				touch.setInitialRow(parsedRow);
+				parseAndProve();
+			}
+			catch (RuntimeException e) {
+				StringBuilder msg = new StringBuilder();
+				msg.append("Chang initial row to '")
+						.append(initialRowText)
+						.append("' has failed:")
+						.append(System.lineSeparator());
+				msg.append(e.getMessage())
+						.append(System.lineSeparator());
+				msg.append("The original initial row '")
+						.append(touch.getInitialRow().getDisplayString(true))
+						.append("' will be restored.");
+
+				Alert dialog = new Alert(Alert.AlertType.ERROR, msg.toString(), ButtonType.OK);
+				dialog.setTitle("Change initial row failed");
+				dialog.setHeaderText("Changing the initial row to '" + initialRowText + "' has failed.");
+				dialog.getDialogPane().setMinHeight(100);
+				dialog.getDialogPane().setMinWidth(400);
+				dialog.showAndWait().filter(response -> response == ButtonType.OK);
+			}
+		}
+
+		fireDocumentContentChanged();
+	}
+
 	public GridModel getMainGridModel() {
 		return mainGridModel;
 	}
@@ -245,6 +294,7 @@ public class TouchDocument extends ConcurrentListenable<TouchDocumentListener> i
 			definitionModels.add(new DefinitionGridModel(this, definition));
 		}
 	}
+
 	public List<GridModel> getDefinitionGridModels() {
 		return definitionModels;
 	}

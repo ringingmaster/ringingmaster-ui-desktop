@@ -38,35 +38,43 @@ public class PropertyWindow extends PropertyEditor implements DocumentManagerLis
 
 	public static final String ADVANCED_SETUP_GROUP_NAME = "Advanced Setup";
 
+	public static final String START_GROUP_NAME = "Start";
+	public static final String START_WITH_CHANGE_PROPERTY_NAME = "Start With Change";
+
 	public PropertyWindow() {
 		DocumentManager.getInstance().addListener(this);
 
 		buildSetupSection();
 		buildAdvancedSetupSection();
+		buildStartSection();
 	}
 
 	@Override
 	public void documentManager_updateDocument(TouchDocument touchDocument) {
 		updateSetupSection(touchDocument);
 		updateAdvancedSetupSection(touchDocument);
+		updateStartSection(touchDocument);
 	}
 
 	private void buildSetupSection() {
-		add(SETUP_GROUP_NAME, new TextPropertyValue(TITLE_PROPERTY_NAME, new ChangeListener<String>() {
+		add(SETUP_GROUP_NAME, new TextPropertyValue(TITLE_PROPERTY_NAME));
+		((TextPropertyValue)findPropertyByName(TITLE_PROPERTY_NAME)).setListener(new ChangeListener<String>() {
 			@Override
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
 				DocumentManager.getInstance().getCurrentDocument().setTitle(newValue);
 			}
-		}));
+		}, true);
 
-		add(SETUP_GROUP_NAME, new TextPropertyValue(AUTHOR_PROPERTY_NAME, new ChangeListener<String>() {
+		add(SETUP_GROUP_NAME, new TextPropertyValue(AUTHOR_PROPERTY_NAME));
+		((TextPropertyValue)findPropertyByName(AUTHOR_PROPERTY_NAME)).setListener( new ChangeListener<String>() {
 			@Override
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
 				DocumentManager.getInstance().getCurrentDocument().setAuthor(newValue);
 			}
-		}));
+		}, true);
 
-		add(SETUP_GROUP_NAME, new SelectionPropertyValue(NUMBER_OF_BELLS_PROPERTY_NAME, new ChangeListener<Number>() {
+		add(SETUP_GROUP_NAME, new SelectionPropertyValue(NUMBER_OF_BELLS_PROPERTY_NAME));
+		((SelectionPropertyValue)findPropertyByName(NUMBER_OF_BELLS_PROPERTY_NAME)).setListener(new ChangeListener<Number>() {
 			@Override
 			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
 				final NumberOfBells numberOfBells = NumberOfBells.values()[newValue.intValue()];
@@ -78,16 +86,17 @@ public class PropertyWindow extends PropertyEditor implements DocumentManagerLis
 				});
 
 			}
-		}));
+		});
 		final List<String> numberOfBellItems = new ArrayList<>();
 		for (NumberOfBells bells : NumberOfBells.values()) {
 			numberOfBellItems.add(bells.getDisplayString());
 		}
 		((SelectionPropertyValue)findPropertyByName(NUMBER_OF_BELLS_PROPERTY_NAME)).setItems(numberOfBellItems);
 
-		add(SETUP_GROUP_NAME, new SelectionPropertyValue(CALL_FROM_PROPERTY_NAME, new ChangeListener<Number>() {
+		add(SETUP_GROUP_NAME, new SelectionPropertyValue(CALL_FROM_PROPERTY_NAME));
+		((SelectionPropertyValue)findPropertyByName(CALL_FROM_PROPERTY_NAME)).setListener(new ChangeListener<Number>() {
 			@Override
-			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+			public void changed(ObservableValue <? extends Number> observable, Number oldValue, Number newValue) {
 				final Bell callFrom = Bell.values()[newValue.intValue()];
 				Platform.runLater(new Runnable() {
 					@Override
@@ -97,9 +106,10 @@ public class PropertyWindow extends PropertyEditor implements DocumentManagerLis
 				});
 
 			}
-		}));
+		});
 
-		add(SETUP_GROUP_NAME, new SelectionPropertyValue(ACTIVE_METHOD_PROPERTY_NAME, new ChangeListener<Number>() {
+		add(SETUP_GROUP_NAME, new SelectionPropertyValue(ACTIVE_METHOD_PROPERTY_NAME));
+		((SelectionPropertyValue)findPropertyByName(ACTIVE_METHOD_PROPERTY_NAME)).setListener( new ChangeListener<Number>() {
 			@Override
 			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
 				Platform.runLater(new Runnable() {
@@ -110,9 +120,10 @@ public class PropertyWindow extends PropertyEditor implements DocumentManagerLis
 				});
 
 			}
-		}));
+		});
 
-		add(SETUP_GROUP_NAME, new SelectionPropertyValue(CALL_TYPE_PROPERTY_NAME, new ChangeListener<Number>() {
+		add(SETUP_GROUP_NAME, new SelectionPropertyValue(CALL_TYPE_PROPERTY_NAME));
+		((SelectionPropertyValue)findPropertyByName(CALL_TYPE_PROPERTY_NAME)).setListener(new ChangeListener<Number>() {
 			@Override
 			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
 				final TouchType touchType = TouchType.values()[newValue.intValue()];
@@ -124,9 +135,10 @@ public class PropertyWindow extends PropertyEditor implements DocumentManagerLis
 				});
 
 			}
-		}));
+		});
 
-		add(SETUP_GROUP_NAME, new TextPropertyValue(PLAIN_LEAD_TOKEN_PROPERTY_NAME, new ChangeListener<String>() {
+		add(SETUP_GROUP_NAME, new TextPropertyValue(PLAIN_LEAD_TOKEN_PROPERTY_NAME));
+		((TextPropertyValue)findPropertyByName(PLAIN_LEAD_TOKEN_PROPERTY_NAME)).setListener( new ChangeListener<String>() {
 			@Override
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
 				Platform.runLater(new Runnable() {
@@ -137,7 +149,7 @@ public class PropertyWindow extends PropertyEditor implements DocumentManagerLis
 				});
 
 			}
-		}));
+		}, true);
 	}
 
 	private void updateSetupSection(TouchDocument touchDocument) {
@@ -176,32 +188,38 @@ public class PropertyWindow extends PropertyEditor implements DocumentManagerLis
 
 		final String plainLeadToken = touchDocument.getPlainLeadToken();
 		((TextPropertyValue)findPropertyByName(PLAIN_LEAD_TOKEN_PROPERTY_NAME)).setValue(plainLeadToken);
-		((TextPropertyValue)findPropertyByName(PLAIN_LEAD_TOKEN_PROPERTY_NAME)).setDisable(touchType == TouchType.COURSE_BASED);
+		findPropertyByName(PLAIN_LEAD_TOKEN_PROPERTY_NAME).setDisable(touchType == TouchType.COURSE_BASED);
 	}
-
-
 
 	private void buildAdvancedSetupSection() {
-//		add(ADVANCED_SETUP_GROUP_NAME, new TextPropertyValue("Wrap Calls", cl));
-//		final ObservableList<String> strings = FXCollections.observableArrayList(
-//				"Option 1",
-//				"Option 2",
-//				"Option 3"
-//		);
-//
-//		strings.addListener(new ListChangeListener<String>() {
-//			@Override
-//			public void onChanged(Change<? extends String> c) {
-//				log.info(c.toString());
-//			}
-//		});
-//	//	add(ADVANCED_SETUP_GROUP_NAME, new SelectionPropertyValue("Checking Type", strings));
+		// TODO
 	}
+
+
 
 	private void updateAdvancedSetupSection(TouchDocument touchDocument) {
-
+		//TODO
 
 	}
 
+	private void buildStartSection() {
+		add(START_GROUP_NAME, new TextPropertyValue(START_WITH_CHANGE_PROPERTY_NAME));
+		((TextPropertyValue)findPropertyByName(START_WITH_CHANGE_PROPERTY_NAME)).setListener(new ChangeListener<String>() {
+			@Override
+			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+				Platform.runLater(new Runnable() {
+					@Override
+					public void run() {
+						DocumentManager.getInstance().getCurrentDocument().setInitialRow(newValue);
+					}
+				});
+			}
+		}, false);
+	}
+
+	private void updateStartSection(TouchDocument touchDocument) {
+		final String initialRow = touchDocument.getInitialRow();
+		((TextPropertyValue)findPropertyByName(START_WITH_CHANGE_PROPERTY_NAME)).setValue(initialRow);
+	}
 
 }

@@ -98,11 +98,11 @@ public class TouchDocument extends ConcurrentListenable<TouchDocumentListener> i
 						.append(" to ").append(numberOfBells.getTenor().getZeroBasedBell() + 1).append(".").append(System.lineSeparator());
 			}
 
-			final MethodRow existingInitialRow = touch.getInitialRow();
-			final MethodRow newInitialRow = MethodBuilder.transformToNewNumberOfBells(existingInitialRow, numberOfBells);
+			final MethodRow existingStartChange = touch.getStartChange();
+			final MethodRow newInitialRow = MethodBuilder.transformToNewNumberOfBells(existingStartChange, numberOfBells);
 
-			message.append(pointNumber++).append(") Start row will change from '")
-					.append(existingInitialRow.getDisplayString(true))
+			message.append(pointNumber++).append(") Start change will change from '")
+					.append(existingStartChange.getDisplayString(true))
 					.append("' to '")
 					.append(newInitialRow.getDisplayString(true))
 					.append("'.").append(System.lineSeparator());
@@ -232,30 +232,30 @@ public class TouchDocument extends ConcurrentListenable<TouchDocumentListener> i
 		fireDocumentContentChanged();
 	}
 
-	public String getInitialRow() {
-		return touch.getInitialRow().getDisplayString(true);
+	public String getStartChange() {
+		return touch.getStartChange().getDisplayString(true);
 	}
 
-	public void setInitialRow(String initialRowText) {
+	public void setStartChange(String initialRowText) {
 		if (initialRowText == null) {
 			return;
 		}
 
-		if (getInitialRow().equals(initialRowText)) {
+		if (getStartChange().equals(initialRowText)) {
 			return;
 		}
 
 		// first look for rounds token
 		if (initialRowText.compareToIgnoreCase(MethodRow.ROUNDS_TOKEN) == 0) {
 			final MethodRow rounds = MethodBuilder.buildRoundsRow(touch.getNumberOfBells());
-			touch.setInitialRow(rounds);
+			touch.setStartChange(rounds);
 			parseAndProve();
 		}
 		// Now check for valid row
 		else {
 			try {
 				final MethodRow parsedRow = MethodBuilder.parse(touch.getNumberOfBells(), initialRowText);
-				touch.setInitialRow(parsedRow);
+				touch.setStartChange(parsedRow);
 				parseAndProve();
 			}
 			catch (RuntimeException e) {
@@ -266,8 +266,8 @@ public class TouchDocument extends ConcurrentListenable<TouchDocumentListener> i
 						.append(System.lineSeparator());
 				msg.append(e.getMessage())
 						.append(System.lineSeparator());
-				msg.append("The original initial row '")
-						.append(touch.getInitialRow().getDisplayString(true))
+				msg.append("The original start change '")
+						.append(touch.getStartChange().getDisplayString(true))
 						.append("' will be restored.");
 
 				Alert dialog = new Alert(Alert.AlertType.ERROR, msg.toString(), ButtonType.OK);
@@ -279,6 +279,18 @@ public class TouchDocument extends ConcurrentListenable<TouchDocumentListener> i
 			}
 		}
 
+		fireDocumentContentChanged();
+	}
+
+	public Integer getStartAtRow() {
+		return touch.getStartAtRow();
+	}
+
+	public void setStartAtRow(int startAtRow) {
+		if (startAtRow > 0)  {
+			touch.setStartAtRow(startAtRow);
+			parseAndProve();
+		}
 		fireDocumentContentChanged();
 	}
 

@@ -1,5 +1,7 @@
 package com.concurrentperformance.ringingmaster.fxui.desktop.property;
 
+import com.concurrentperformance.fxutils.propertyeditor.CallbackStyle;
+import com.concurrentperformance.fxutils.propertyeditor.IntegerPropertyValue;
 import com.concurrentperformance.fxutils.propertyeditor.PropertyEditor;
 import com.concurrentperformance.fxutils.propertyeditor.SelectionPropertyValue;
 import com.concurrentperformance.fxutils.propertyeditor.TextPropertyValue;
@@ -40,6 +42,7 @@ public class PropertyWindow extends PropertyEditor implements DocumentManagerLis
 
 	public static final String START_GROUP_NAME = "Start";
 	public static final String START_WITH_CHANGE_PROPERTY_NAME = "Start With Change";
+	public static final String START_AT_ROW_PROPERTY_NAME = "Start At Row";
 
 	public PropertyWindow() {
 		DocumentManager.getInstance().addListener(this);
@@ -63,7 +66,7 @@ public class PropertyWindow extends PropertyEditor implements DocumentManagerLis
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
 				DocumentManager.getInstance().getCurrentDocument().setTitle(newValue);
 			}
-		}, true);
+		}, CallbackStyle.EVERY_KEYSTROKE);
 
 		add(SETUP_GROUP_NAME, new TextPropertyValue(AUTHOR_PROPERTY_NAME));
 		((TextPropertyValue)findPropertyByName(AUTHOR_PROPERTY_NAME)).setListener( new ChangeListener<String>() {
@@ -71,7 +74,7 @@ public class PropertyWindow extends PropertyEditor implements DocumentManagerLis
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
 				DocumentManager.getInstance().getCurrentDocument().setAuthor(newValue);
 			}
-		}, true);
+		}, CallbackStyle.EVERY_KEYSTROKE);
 
 		add(SETUP_GROUP_NAME, new SelectionPropertyValue(NUMBER_OF_BELLS_PROPERTY_NAME));
 		((SelectionPropertyValue)findPropertyByName(NUMBER_OF_BELLS_PROPERTY_NAME)).setListener(new ChangeListener<Number>() {
@@ -149,7 +152,7 @@ public class PropertyWindow extends PropertyEditor implements DocumentManagerLis
 				});
 
 			}
-		}, true);
+		}, CallbackStyle.EVERY_KEYSTROKE);
 	}
 
 	private void updateSetupSection(TouchDocument touchDocument) {
@@ -210,16 +213,35 @@ public class PropertyWindow extends PropertyEditor implements DocumentManagerLis
 				Platform.runLater(new Runnable() {
 					@Override
 					public void run() {
-						DocumentManager.getInstance().getCurrentDocument().setInitialRow(newValue);
+						DocumentManager.getInstance().getCurrentDocument().setStartChange(newValue);
 					}
 				});
 			}
-		}, false);
+		}, CallbackStyle.WHEN_FINISHED);
+
+		add(START_GROUP_NAME, new IntegerPropertyValue(START_AT_ROW_PROPERTY_NAME));
+		((IntegerPropertyValue)findPropertyByName(START_AT_ROW_PROPERTY_NAME)).setListener(new ChangeListener<Number>() {
+
+
+			@Override
+			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+				Platform.runLater(new Runnable() {
+					@Override
+					public void run() {
+						DocumentManager.getInstance().getCurrentDocument().setStartAtRow(newValue.intValue());
+					}
+				});
+
+			}
+		}, CallbackStyle.WHEN_FINISHED);
 	}
 
 	private void updateStartSection(TouchDocument touchDocument) {
-		final String initialRow = touchDocument.getInitialRow();
+		final String initialRow = touchDocument.getStartChange();
 		((TextPropertyValue)findPropertyByName(START_WITH_CHANGE_PROPERTY_NAME)).setValue(initialRow);
+
+		int startAtRow = touchDocument.getStartAtRow();
+		((IntegerPropertyValue)findPropertyByName(START_AT_ROW_PROPERTY_NAME)).setValue(startAtRow);
 	}
 
 }

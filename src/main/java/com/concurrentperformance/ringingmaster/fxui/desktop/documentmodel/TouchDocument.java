@@ -3,6 +3,7 @@ package com.concurrentperformance.ringingmaster.fxui.desktop.documentmodel;
 import com.concurrentperformance.ringingmaster.engine.NumberOfBells;
 import com.concurrentperformance.ringingmaster.engine.method.Bell;
 import com.concurrentperformance.ringingmaster.engine.method.MethodRow;
+import com.concurrentperformance.ringingmaster.engine.method.Stroke;
 import com.concurrentperformance.ringingmaster.engine.method.impl.MethodBuilder;
 import com.concurrentperformance.ringingmaster.engine.notation.Notation;
 import com.concurrentperformance.ringingmaster.engine.notation.NotationBody;
@@ -292,6 +293,17 @@ public class TouchDocument extends ConcurrentListenable<TouchDocumentListener> i
 			parseAndProve();
 		}
 		fireDocumentContentChanged();
+	}
+
+
+	public void setStartStroke(Stroke startStroke) {
+		touch.setStartStroke(startStroke);
+		parseAndProve();
+		fireDocumentContentChanged();
+	}
+
+	public Stroke getStartStroke() {
+		return touch.getStartStroke();
 	}
 
 	public GridModel getMainGridModel() {

@@ -7,6 +7,7 @@ import com.concurrentperformance.fxutils.propertyeditor.SelectionPropertyValue;
 import com.concurrentperformance.fxutils.propertyeditor.TextPropertyValue;
 import com.concurrentperformance.ringingmaster.engine.NumberOfBells;
 import com.concurrentperformance.ringingmaster.engine.method.Bell;
+import com.concurrentperformance.ringingmaster.engine.method.Stroke;
 import com.concurrentperformance.ringingmaster.engine.touch.TouchType;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentmanager.DocumentManager;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentmanager.DocumentManagerListener;
@@ -43,6 +44,7 @@ public class PropertyWindow extends PropertyEditor implements DocumentManagerLis
 	public static final String START_GROUP_NAME = "Start";
 	public static final String START_WITH_CHANGE_PROPERTY_NAME = "Start With Change";
 	public static final String START_AT_ROW_PROPERTY_NAME = "Start At Row";
+	public static final String START_STROKE_PROPERTY_NAME = "Start Stroke";
 
 	public PropertyWindow() {
 		DocumentManager.getInstance().addListener(this);
@@ -177,7 +179,6 @@ public class PropertyWindow extends PropertyEditor implements DocumentManagerLis
 
 		final List<String> notationItems = touchDocument.getNotations();
 		int selectedNotationIndex = touchDocument.getActiveNotationIndex();
-
 		((SelectionPropertyValue)findPropertyByName(ACTIVE_METHOD_PROPERTY_NAME)).setItems(notationItems);
 		((SelectionPropertyValue)findPropertyByName(ACTIVE_METHOD_PROPERTY_NAME)).setSelectedIndex(selectedNotationIndex);
 
@@ -234,6 +235,21 @@ public class PropertyWindow extends PropertyEditor implements DocumentManagerLis
 
 			}
 		}, CallbackStyle.WHEN_FINISHED);
+
+		add(SETUP_GROUP_NAME, new SelectionPropertyValue(START_STROKE_PROPERTY_NAME));
+		((SelectionPropertyValue)findPropertyByName(START_STROKE_PROPERTY_NAME)).setListener( new ChangeListener<Number>() {
+			@Override
+			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+				Platform.runLater(new Runnable() {
+					@Override
+					public void run() {
+						final Stroke startStroke = Stroke.values()[newValue.intValue()];
+						DocumentManager.getInstance().getCurrentDocument().setStartStroke(startStroke);
+					}
+				});
+
+			}
+		});
 	}
 
 	private void updateStartSection(TouchDocument touchDocument) {
@@ -242,6 +258,14 @@ public class PropertyWindow extends PropertyEditor implements DocumentManagerLis
 
 		int startAtRow = touchDocument.getStartAtRow();
 		((IntegerPropertyValue)findPropertyByName(START_AT_ROW_PROPERTY_NAME)).setValue(startAtRow);
+
+		final List<String> startAtStrokeItems = new ArrayList<>();
+		for (Stroke stroke : Stroke.values()) {
+			startAtStrokeItems.add(stroke.getDisplayString());
+		}
+		((SelectionPropertyValue)findPropertyByName(START_STROKE_PROPERTY_NAME)).setItems(startAtStrokeItems);
+		final Stroke startStroke = touchDocument.getStartStroke();
+		((SelectionPropertyValue)findPropertyByName(START_STROKE_PROPERTY_NAME)).setSelectedIndex(startStroke.ordinal());
 	}
 
 }

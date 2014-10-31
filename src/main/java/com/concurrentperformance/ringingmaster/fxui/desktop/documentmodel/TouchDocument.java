@@ -105,9 +105,9 @@ public class TouchDocument extends ConcurrentListenable<TouchDocumentListener> i
 			final MethodRow newInitialRow = MethodBuilder.transformToNewNumberOfBells(existingStartChange, numberOfBells);
 
 			message.append(pointNumber++).append(") Start change will change from '")
-					.append(existingStartChange.getDisplayString(true))
+					.append(existingStartChange.getDisplayString(false))
 					.append("' to '")
-					.append(newInitialRow.getDisplayString(true))
+					.append(newInitialRow.getDisplayString(false))
 					.append("'.").append(System.lineSeparator());
 
 			if (touch.getTerminationSpecificRow().isPresent()) {
@@ -115,9 +115,9 @@ public class TouchDocument extends ConcurrentListenable<TouchDocumentListener> i
 				final MethodRow newTerminationRow = MethodBuilder.transformToNewNumberOfBells(existingTerminationRow, numberOfBells);
 
 				message.append(pointNumber++).append(") Termination row will change from '")
-						.append(existingTerminationRow.getDisplayString(true))
+						.append(existingTerminationRow.getDisplayString(false))
 						.append("' to '")
-						.append(newTerminationRow.getDisplayString(true))
+						.append(newTerminationRow.getDisplayString(false))
 						.append("'.").append(System.lineSeparator());
 			}
 

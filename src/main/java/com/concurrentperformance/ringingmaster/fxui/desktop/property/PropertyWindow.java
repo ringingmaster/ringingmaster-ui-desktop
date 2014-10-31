@@ -45,6 +45,7 @@ public class PropertyWindow extends PropertyEditor implements DocumentManagerLis
 	public static final String START_WITH_CHANGE_PROPERTY_NAME = "Start With Change";
 	public static final String START_AT_ROW_PROPERTY_NAME = "Start At Row";
 	public static final String START_STROKE_PROPERTY_NAME = "Start Stroke";
+	public static final String START_NOTATION_PROPERTY_NAME = "Start Notation";
 
 	public PropertyWindow() {
 		DocumentManager.getInstance().addListener(this);
@@ -250,6 +251,20 @@ public class PropertyWindow extends PropertyEditor implements DocumentManagerLis
 
 			}
 		});
+
+		add(SETUP_GROUP_NAME, new TextPropertyValue(START_NOTATION_PROPERTY_NAME));
+		((TextPropertyValue)findPropertyByName(START_NOTATION_PROPERTY_NAME)).setListener( new ChangeListener<String>() {
+			@Override
+			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+				Platform.runLater(new Runnable() {
+					@Override
+					public void run() {
+						DocumentManager.getInstance().getCurrentDocument().setStartNotation(newValue);
+					}
+				});
+
+			}
+		}, CallbackStyle.WHEN_FINISHED);
 	}
 
 	private void updateStartSection(TouchDocument touchDocument) {
@@ -266,6 +281,9 @@ public class PropertyWindow extends PropertyEditor implements DocumentManagerLis
 		((SelectionPropertyValue)findPropertyByName(START_STROKE_PROPERTY_NAME)).setItems(startAtStrokeItems);
 		final Stroke startStroke = touchDocument.getStartStroke();
 		((SelectionPropertyValue)findPropertyByName(START_STROKE_PROPERTY_NAME)).setSelectedIndex(startStroke.ordinal());
+
+		final String startNotation = touchDocument.getStartNotation();
+		((TextPropertyValue)findPropertyByName(START_NOTATION_PROPERTY_NAME)).setValue(startNotation);
 	}
 
 }

@@ -22,6 +22,8 @@ import com.concurrentperformance.ringingmaster.fxui.desktop.proof.ProofManager;
 import com.concurrentperformance.ringingmaster.ui.common.TouchStyle;
 import com.concurrentperformance.util.listener.ConcurrentListenable;
 import com.concurrentperformance.util.listener.Listenable;
+import com.google.common.base.Optional;
+import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
@@ -137,10 +139,37 @@ public class TouchDocument extends ConcurrentListenable<TouchDocumentListener> i
 				message.append(System.lineSeparator());
 			}
 
+			if (touch.getStartNotation().isPresent()) {
+				final String notation = touch.getStartNotation().get().getNotationDisplayString(false);
+				NotationBody builtNotation = NotationBuilder.getInstance()
+						.setNumberOfWorkingBells(numberOfBells)
+						.setUnfoldedNotationShorthand(notation)
+						.build();
+				String newNotation = builtNotation.getNotationDisplayString(false);
+				if (!newNotation.equals(notation)) {
+
+					message.append(pointNumber++).append(") Start notation '")
+							.append(notation)
+							.append("' ")
+					.append("will change to '")
+					.append(newNotation)
+					.append("'");
+				}
+			}
+
 			boolean doAction = false;
 
 			if (message.length() > originalLength) {
 				message.append(System.lineSeparator()).append("Do you wish to continue?");
+				Alert dialog = new Alert(Alert.AlertType.CONFIRMATION, message.toString(), ButtonType.OK, ButtonType.CANCEL);
+				dialog.setTitle("Change number of bells");
+				dialog.setHeaderText("Change number of bells");
+				dialog.getDialogPane().setMinHeight(280);
+				dialog.getDialogPane().setMinWidth(620);
+				final java.util.Optional result = dialog.showAndWait().filter(response -> response == ButtonType.OK);
+				if (result.isPresent()) {
+					doAction = true;
+				}
 			}
 
 			if (doAction) {
@@ -304,6 +333,38 @@ public class TouchDocument extends ConcurrentListenable<TouchDocumentListener> i
 
 	public Stroke getStartStroke() {
 		return touch.getStartStroke();
+	}
+
+	public void setStartNotation(String startNotation) {
+		if (Strings.isNullOrEmpty(startNotation)) {
+			touch.removeStartNotation();
+		}
+		else {
+			NotationBody builtNotation = NotationBuilder.getInstance()
+				.setNumberOfWorkingBells(touch.getNumberOfBells())
+				.setUnfoldedNotationShorthand(startNotation)
+				.build();
+
+			if (builtNotation != null && builtNotation.getRowCount() > 0) {
+				touch.setStartNotation(builtNotation);
+			}
+			else {
+				touch.removeStartNotation();
+			}
+		}
+
+		parseAndProve();
+		fireDocumentContentChanged();
+	}
+
+	public String getStartNotation() {
+		final Optional<NotationBody> startNotation = touch.getStartNotation();
+		if (startNotation.isPresent()) {
+			return startNotation.get().getNotationDisplayString(false);
+		}
+		else {
+			return "";
+		}
 	}
 
 	public GridModel getMainGridModel() {

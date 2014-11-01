@@ -42,10 +42,14 @@ public class PropertyWindow extends PropertyEditor implements DocumentManagerLis
 	public static final String ADVANCED_SETUP_GROUP_NAME = "Advanced Setup";
 
 	public static final String START_GROUP_NAME = "Start";
-	public static final String START_WITH_CHANGE_PROPERTY_NAME = "Start With Change";
+	public static final String START_WITH_CHANGE_PROPERTY_NAME = "Start Change";
 	public static final String START_AT_ROW_PROPERTY_NAME = "Start At Row";
 	public static final String START_STROKE_PROPERTY_NAME = "Start Stroke";
 	public static final String START_NOTATION_PROPERTY_NAME = "Start Notation";
+
+	public static final String TERMINATION_GROUP_NAME = "Termination";
+	public static final String TERMINATION_WITH_CHANGE_PROPERTY_NAME = "Termination Change";
+
 
 	public PropertyWindow() {
 		DocumentManager.getInstance().addListener(this);
@@ -53,6 +57,7 @@ public class PropertyWindow extends PropertyEditor implements DocumentManagerLis
 		buildSetupSection();
 		buildAdvancedSetupSection();
 		buildStartSection();
+		buildTerminationSection();
 	}
 
 	@Override
@@ -60,6 +65,7 @@ public class PropertyWindow extends PropertyEditor implements DocumentManagerLis
 		updateSetupSection(touchDocument);
 		updateAdvancedSetupSection(touchDocument);
 		updateStartSection(touchDocument);
+		updateTerminationSection(touchDocument);
 	}
 
 	private void buildSetupSection() {
@@ -200,12 +206,12 @@ public class PropertyWindow extends PropertyEditor implements DocumentManagerLis
 		// TODO
 	}
 
-
-
 	private void updateAdvancedSetupSection(TouchDocument touchDocument) {
 		//TODO
 
 	}
+
+
 
 	private void buildStartSection() {
 		add(START_GROUP_NAME, new TextPropertyValue(START_WITH_CHANGE_PROPERTY_NAME));
@@ -268,8 +274,8 @@ public class PropertyWindow extends PropertyEditor implements DocumentManagerLis
 	}
 
 	private void updateStartSection(TouchDocument touchDocument) {
-		final String initialRow = touchDocument.getStartChange();
-		((TextPropertyValue)findPropertyByName(START_WITH_CHANGE_PROPERTY_NAME)).setValue(initialRow);
+		final String startChange = touchDocument.getStartChange();
+		((TextPropertyValue)findPropertyByName(START_WITH_CHANGE_PROPERTY_NAME)).setValue(startChange);
 
 		int startAtRow = touchDocument.getStartAtRow();
 		((IntegerPropertyValue)findPropertyByName(START_AT_ROW_PROPERTY_NAME)).setValue(startAtRow);
@@ -284,6 +290,28 @@ public class PropertyWindow extends PropertyEditor implements DocumentManagerLis
 
 		final String startNotation = touchDocument.getStartNotation();
 		((TextPropertyValue)findPropertyByName(START_NOTATION_PROPERTY_NAME)).setValue(startNotation);
+	}
+
+	private void buildTerminationSection() {
+		add(TERMINATION_GROUP_NAME, new TextPropertyValue(TERMINATION_WITH_CHANGE_PROPERTY_NAME));
+		((TextPropertyValue)findPropertyByName(TERMINATION_WITH_CHANGE_PROPERTY_NAME)).setListener(new ChangeListener<String>() {
+			@Override
+			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+				Platform.runLater(new Runnable() {
+					@Override
+					public void run() {
+						DocumentManager.getInstance().getCurrentDocument().setTerminationChange(newValue);
+					}
+				});
+			}
+		}, CallbackStyle.WHEN_FINISHED);
+
+	}
+
+	private void updateTerminationSection(TouchDocument touchDocument) {
+		final String terminationChange = touchDocument.getTerminationChange();
+		((TextPropertyValue)findPropertyByName(TERMINATION_WITH_CHANGE_PROPERTY_NAME)).setValue(terminationChange);
+
 	}
 
 }

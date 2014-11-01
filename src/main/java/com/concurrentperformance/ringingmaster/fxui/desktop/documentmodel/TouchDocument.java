@@ -36,6 +36,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Provides the interface between the engine {@code Touch} and the various
  * UI components.
@@ -266,17 +268,15 @@ public class TouchDocument extends ConcurrentListenable<TouchDocumentListener> i
 		return touch.getStartChange().getDisplayString(true);
 	}
 
-	public void setStartChange(String initialRowText) {
-		if (initialRowText == null) {
-			return;
-		}
+	public void setStartChange(String startChangeText) {
+		checkNotNull(startChangeText);
 
-		if (getStartChange().equals(initialRowText)) {
+		if (getStartChange().equals(startChangeText)) {
 			return;
 		}
 
 		// first look for rounds token
-		if (initialRowText.compareToIgnoreCase(MethodRow.ROUNDS_TOKEN) == 0) {
+		if (startChangeText.compareToIgnoreCase(MethodRow.ROUNDS_TOKEN) == 0) {
 			final MethodRow rounds = MethodBuilder.buildRoundsRow(touch.getNumberOfBells());
 			touch.setStartChange(rounds);
 			parseAndProve();
@@ -284,14 +284,14 @@ public class TouchDocument extends ConcurrentListenable<TouchDocumentListener> i
 		// Now check for valid row
 		else {
 			try {
-				final MethodRow parsedRow = MethodBuilder.parse(touch.getNumberOfBells(), initialRowText);
+				final MethodRow parsedRow = MethodBuilder.parse(touch.getNumberOfBells(), startChangeText);
 				touch.setStartChange(parsedRow);
 				parseAndProve();
 			}
 			catch (RuntimeException e) {
 				StringBuilder msg = new StringBuilder();
-				msg.append("Chang initial row to '")
-						.append(initialRowText)
+				msg.append("Change start change to '")
+						.append(startChangeText)
 						.append("' has failed:")
 						.append(System.lineSeparator());
 				msg.append(e.getMessage())
@@ -301,8 +301,8 @@ public class TouchDocument extends ConcurrentListenable<TouchDocumentListener> i
 						.append("' will be restored.");
 
 				Alert dialog = new Alert(Alert.AlertType.ERROR, msg.toString(), ButtonType.OK);
-				dialog.setTitle("Change initial row failed");
-				dialog.setHeaderText("Changing the initial row to '" + initialRowText + "' has failed.");
+				dialog.setTitle("Change start change failed");
+				dialog.setHeaderText("Changing the start change to '" + startChangeText + "' has failed.");
 				dialog.getDialogPane().setMinHeight(100);
 				dialog.getDialogPane().setMinWidth(400);
 				dialog.showAndWait().filter(response -> response == ButtonType.OK);
@@ -365,6 +365,64 @@ public class TouchDocument extends ConcurrentListenable<TouchDocumentListener> i
 		else {
 			return "";
 		}
+	}
+
+	public String getTerminationChange() {
+		final Optional<MethodRow> terminationChange = touch.getTerminationSpecificRow();
+		if (terminationChange.isPresent()) {
+			return terminationChange.get().getDisplayString(true);
+		}
+		else {
+			return "";
+		}
+	}
+
+	public void setTerminationChange(String terminationChangeText) {
+		checkNotNull(terminationChangeText);
+
+		if (getTerminationChange().equals(terminationChangeText)) {
+			return;
+		}
+
+		if (terminationChangeText.isEmpty()) {
+			touch.removeTerminationSpecificRow();
+			parseAndProve();
+		}
+		// first look for rounds token
+		else if (terminationChangeText.compareToIgnoreCase(MethodRow.ROUNDS_TOKEN) == 0) {
+			final MethodRow rounds = MethodBuilder.buildRoundsRow(touch.getNumberOfBells());
+			touch.setTerminationSpecificRow(rounds);
+			parseAndProve();
+		}
+		// Now check for valid row
+		else {
+			try {
+				final MethodRow parsedRow = MethodBuilder.parse(touch.getNumberOfBells(), terminationChangeText);
+				touch.setTerminationSpecificRow(parsedRow);
+				parseAndProve();
+			}
+			catch (RuntimeException e) {
+				StringBuilder msg = new StringBuilder();
+				msg.append("Change termination change to '")
+						.append(terminationChangeText)
+						.append("' has failed:")
+						.append(System.lineSeparator());
+				msg.append(e.getMessage())
+						.append(System.lineSeparator());
+				msg.append("The original termination change '")
+						.append(touch.getTerminationSpecificRow().isPresent()? touch.getTerminationSpecificRow().get().getDisplayString(true):"")
+						.append("' will be restored.");
+
+				Alert dialog = new Alert(Alert.AlertType.ERROR, msg.toString(), ButtonType.OK);
+				dialog.setTitle("Change termination change failed");
+				dialog.setHeaderText("Changing the termination change to '" + terminationChangeText + "' has failed.");
+				dialog.getDialogPane().setMinHeight(100);
+				dialog.getDialogPane().setMinWidth(400);
+				dialog.showAndWait().filter(response -> response == ButtonType.OK);
+			}
+		}
+
+		fireDocumentContentChanged();
 	}
 
 	public GridModel getMainGridModel() {

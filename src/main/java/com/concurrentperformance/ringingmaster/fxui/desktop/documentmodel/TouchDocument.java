@@ -71,7 +71,9 @@ public class TouchDocument extends ConcurrentListenable<TouchDocumentListener> i
 	}
 
 	public void setTitle(String newTitle) {
-		touch.setTitle(newTitle);
+		if (!newTitle.equals(touch.getTitle())) {
+			touch.setTitle(newTitle);
+		}
 		fireDocumentContentChanged();
 	}
 
@@ -80,7 +82,9 @@ public class TouchDocument extends ConcurrentListenable<TouchDocumentListener> i
 	}
 
 	public void setAuthor(String author) {
-		touch.setAuthor(author);
+		if (!author.equals(touch.getAuthor())) {
+			touch.setAuthor(author);
+		}
 		fireDocumentContentChanged();
 	}
 
@@ -187,8 +191,10 @@ public class TouchDocument extends ConcurrentListenable<TouchDocumentListener> i
 	}
 
 	public void setCallFrom(Bell callFrom) {
-		touch.setCallFromBell(callFrom);
-		parseAndProve();
+		if (touch.getCallFromBell() != callFrom) {
+			touch.setCallFromBell(callFrom);
+			parseAndProve();
+		}
 		fireDocumentContentChanged();
 	}
 
@@ -231,15 +237,21 @@ public class TouchDocument extends ConcurrentListenable<TouchDocumentListener> i
 
 	public void setActiveNotation(int index) {
 		if (index==0) {
-			touch.setSpliced(true);
+			if (!touch.isSpliced()) {
+				touch.setSpliced(true);
+				parseAndProve();
+			}
 		}
 		else {
 			final List<NotationBody> sortedNotationsBeingDisplayed = getSortedNotationsBeingDisplayed();
 
 			final NotationBody selectedNotation = sortedNotationsBeingDisplayed.get(index -1);// the -1 is the offset for the spliced row
-			touch.setActiveNotation(selectedNotation);
+			if (!selectedNotation.equals(touch.getSingleMethodActiveNotation())) {
+				touch.setSingleMethodActiveNotation(selectedNotation);
+				parseAndProve();
+			}
 		}
-		parseAndProve();
+
 		fireDocumentContentChanged();
 	}
 
@@ -249,8 +261,11 @@ public class TouchDocument extends ConcurrentListenable<TouchDocumentListener> i
 	}
 
 	public void setTouchType(TouchType touchType) {
-		touch.setTouchType(touchType);
-		parseAndProve();
+		checkNotNull(touchType);
+		if (touchType != touch.getTouchType()) {
+			touch.setTouchType(touchType);
+			parseAndProve();
+		}
 		fireDocumentContentChanged();
 	}
 
@@ -259,8 +274,11 @@ public class TouchDocument extends ConcurrentListenable<TouchDocumentListener> i
 	}
 
 	public void setPlainLeadToken(String plainLeadToken) {
-		touch.setPlainLeadToken(plainLeadToken);
-		parseAndProve();
+		checkNotNull(plainLeadToken);
+		if (!plainLeadToken.equals(touch.getPlainLeadToken())) {
+			touch.setPlainLeadToken(plainLeadToken);
+			parseAndProve();
+		}
 		fireDocumentContentChanged();
 	}
 
@@ -325,14 +343,16 @@ public class TouchDocument extends ConcurrentListenable<TouchDocumentListener> i
 	}
 
 
-	public void setStartStroke(Stroke startStroke) {
-		touch.setStartStroke(startStroke);
-		parseAndProve();
-		fireDocumentContentChanged();
-	}
-
 	public Stroke getStartStroke() {
 		return touch.getStartStroke();
+	}
+
+	public void setStartStroke(Stroke startStroke) {
+		if (startStroke != touch.getStartStroke()) {
+			touch.setStartStroke(startStroke);
+			parseAndProve();
+		}
+		fireDocumentContentChanged();
 	}
 
 	public void setStartNotation(String startNotation) {
@@ -425,6 +445,26 @@ public class TouchDocument extends ConcurrentListenable<TouchDocumentListener> i
 		fireDocumentContentChanged();
 	}
 
+	public Integer getTerminationMaxRows() {
+		return touch.getTerminationMaxRows().orNull();
+	}
+
+	public void setTerminationMaxRows(Integer terminationMaxRows) {
+		if (terminationMaxRows != null) {
+			if (!terminationMaxRows.equals(getTerminationMaxRows())) {
+				touch.setTerminationMaxRows(terminationMaxRows);
+				parseAndProve();
+			}
+		}
+		else {
+			if (touch.getTerminationMaxRows() != null) {
+				touch.removeTerminationMaxRows();
+				parseAndProve();
+			}
+		}
+		fireDocumentContentChanged();
+	}
+
 	public GridModel getMainGridModel() {
 		return mainGridModel;
 	}
@@ -465,14 +505,16 @@ public class TouchDocument extends ConcurrentListenable<TouchDocumentListener> i
 	private static Touch createDummyTouch() {
 
 		Touch touch = TouchBuilder.getInstance(NumberOfBells.BELLS_6, 2, 2);
+
+		touch.setTitle("My Touch");
+		touch.setAuthor("by Stephen");
+
 		touch.setTouchType(TouchType.LEAD_BASED);
 		touch.addNotation(buildPlainBobMinor());
 		touch.addNotation(buildLittleBobMinor());
 		touch.addNotation(buildPlainBobMinimus());
 		touch.addNotation(buildPlainBobMajor());
 
-		touch.setTitle("My Touch");
-		touch.setAuthor("by Stephen");
 
 		touch.insertCharacter(0, 0, 0, '-');
 		touch.insertCharacter(0, 1, 0, 's');

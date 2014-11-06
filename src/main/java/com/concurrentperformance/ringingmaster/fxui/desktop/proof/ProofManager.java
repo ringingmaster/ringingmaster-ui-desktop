@@ -1,5 +1,6 @@
 package com.concurrentperformance.ringingmaster.fxui.desktop.proof;
 
+import com.concurrentperformance.ringingmaster.engine.compiler.Compiler;
 import com.concurrentperformance.ringingmaster.engine.compiler.impl.CompilerFactory;
 import com.concurrentperformance.ringingmaster.engine.parser.Parser;
 import com.concurrentperformance.ringingmaster.engine.parser.impl.DefaultParser;
@@ -8,7 +9,6 @@ import com.concurrentperformance.ringingmaster.engine.touch.Touch;
 import com.concurrentperformance.util.listener.ConcurrentListenable;
 import com.concurrentperformance.util.listener.Listenable;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
-import com.concurrentperformance.ringingmaster.engine.compiler.Compiler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -68,6 +68,7 @@ public class ProofManager extends ConcurrentListenable<ProofManagerListener> imp
 		proofExecutor.execute(new Runnable() {
 			@Override
 			public void run() {
+				long start = System.currentTimeMillis();
 				log.info(">>>> Proof of [{}]", proofId);
 				final Compiler compiler = CompilerFactory.getInstance(touch,"Proof-" + Long.toString(proofId));
 				Proof proof = compiler.compile(true);
@@ -76,9 +77,9 @@ public class ProofManager extends ConcurrentListenable<ProofManagerListener> imp
 					updateProofState(proof);
 				}
 				else {
-					log.info("Ignoring finished proof [{}] as not current [{}]", proofId, currentProofId); //TODO ned a mech of cancelling a proof mid term.
+					log.info("Ignoring finished proof [{}] as not current [{}]", proofId, currentProofId); //TODO need a mech of cancelling a proof mid term.
 				}
-				log.info("<<<< Proof of [{}]", proofId);
+				log.info("<<<< Proof of [{}], [{}ms]", proofId, System.currentTimeMillis()-start);
 			}
 		});
 	}

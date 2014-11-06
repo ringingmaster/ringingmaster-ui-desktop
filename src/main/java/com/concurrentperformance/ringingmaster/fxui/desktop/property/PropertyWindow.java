@@ -49,6 +49,7 @@ public class PropertyWindow extends PropertyEditor implements DocumentManagerLis
 
 	public static final String TERMINATION_GROUP_NAME = "Termination";
 	public static final String TERMINATION_WITH_CHANGE_PROPERTY_NAME = "Termination Change";
+	public static final String TERMINATION_ROW_LIMIT_PROPERTY_NAME = "Row Limit";
 
 
 	public PropertyWindow() {
@@ -306,12 +307,27 @@ public class PropertyWindow extends PropertyEditor implements DocumentManagerLis
 			}
 		}, CallbackStyle.WHEN_FINISHED);
 
+		add(TERMINATION_GROUP_NAME, new IntegerPropertyValue(TERMINATION_ROW_LIMIT_PROPERTY_NAME));
+		((IntegerPropertyValue)findPropertyByName(TERMINATION_ROW_LIMIT_PROPERTY_NAME)).setListener(new ChangeListener<Number>() {
+			@Override
+			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+				Platform.runLater(new Runnable() {
+					@Override
+					public void run() {
+						DocumentManager.getInstance().getCurrentDocument().setTerminationMaxRows(newValue == null?null:newValue.intValue());
+					}
+				});
+			}
+		}, CallbackStyle.WHEN_FINISHED);
+
 	}
 
 	private void updateTerminationSection(TouchDocument touchDocument) {
 		final String terminationChange = touchDocument.getTerminationChange();
 		((TextPropertyValue)findPropertyByName(TERMINATION_WITH_CHANGE_PROPERTY_NAME)).setValue(terminationChange);
 
+		int terminationRowLimit = touchDocument.getTerminationMaxRows();
+		((IntegerPropertyValue)findPropertyByName(TERMINATION_ROW_LIMIT_PROPERTY_NAME)).setValue(terminationRowLimit);
 	}
 
 }

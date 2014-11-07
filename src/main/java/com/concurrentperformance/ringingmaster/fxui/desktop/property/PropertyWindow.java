@@ -1,10 +1,6 @@
 package com.concurrentperformance.ringingmaster.fxui.desktop.property;
 
-import com.concurrentperformance.fxutils.propertyeditor.CallbackStyle;
-import com.concurrentperformance.fxutils.propertyeditor.IntegerPropertyValue;
-import com.concurrentperformance.fxutils.propertyeditor.PropertyEditor;
-import com.concurrentperformance.fxutils.propertyeditor.SelectionPropertyValue;
-import com.concurrentperformance.fxutils.propertyeditor.TextPropertyValue;
+import com.concurrentperformance.fxutils.propertyeditor.*;
 import com.concurrentperformance.ringingmaster.engine.NumberOfBells;
 import com.concurrentperformance.ringingmaster.engine.method.Bell;
 import com.concurrentperformance.ringingmaster.engine.method.Stroke;
@@ -13,8 +9,6 @@ import com.concurrentperformance.ringingmaster.fxui.desktop.documentmanager.Docu
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentmanager.DocumentManagerListener;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentmodel.TouchDocument;
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -71,34 +65,18 @@ public class PropertyWindow extends PropertyEditor implements DocumentManagerLis
 
 	private void buildSetupSection() {
 		add(SETUP_GROUP_NAME, new TextPropertyValue(TITLE_PROPERTY_NAME));
-		((TextPropertyValue)findPropertyByName(TITLE_PROPERTY_NAME)).setListener(new ChangeListener<String>() {
-			@Override
-			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-				DocumentManager.getInstance().getCurrentDocument().setTitle(newValue);
-			}
-		}, CallbackStyle.EVERY_KEYSTROKE);
+		((TextPropertyValue)findPropertyByName(TITLE_PROPERTY_NAME)).setListener((observable, oldValue, newValue) ->
+				DocumentManager.getInstance().getCurrentDocument().setTitle(newValue), CallbackStyle.EVERY_KEYSTROKE);
 
 		add(SETUP_GROUP_NAME, new TextPropertyValue(AUTHOR_PROPERTY_NAME));
-		((TextPropertyValue)findPropertyByName(AUTHOR_PROPERTY_NAME)).setListener( new ChangeListener<String>() {
-			@Override
-			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-				DocumentManager.getInstance().getCurrentDocument().setAuthor(newValue);
-			}
-		}, CallbackStyle.EVERY_KEYSTROKE);
+		((TextPropertyValue)findPropertyByName(AUTHOR_PROPERTY_NAME)).setListener((observable, oldValue, newValue) ->
+				DocumentManager.getInstance().getCurrentDocument().setAuthor(newValue), CallbackStyle.EVERY_KEYSTROKE);
 
 		add(SETUP_GROUP_NAME, new SelectionPropertyValue(NUMBER_OF_BELLS_PROPERTY_NAME));
-		((SelectionPropertyValue)findPropertyByName(NUMBER_OF_BELLS_PROPERTY_NAME)).setListener(new ChangeListener<Number>() {
-			@Override
-			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-				final NumberOfBells numberOfBells = NumberOfBells.values()[newValue.intValue()];
-				Platform.runLater(new Runnable() {
-					@Override
-					public void run() {
-						DocumentManager.getInstance().getCurrentDocument().setNumberOfBells(numberOfBells);
-					}
-				});
+		((SelectionPropertyValue)findPropertyByName(NUMBER_OF_BELLS_PROPERTY_NAME)).setListener((observable, oldValue, newValue) -> {
+			final NumberOfBells numberOfBells = NumberOfBells.values()[newValue.intValue()];
+			Platform.runLater(() -> DocumentManager.getInstance().getCurrentDocument().setNumberOfBells(numberOfBells));
 
-			}
 		});
 		final List<String> numberOfBellItems = new ArrayList<>();
 		for (NumberOfBells bells : NumberOfBells.values()) {
@@ -107,62 +85,27 @@ public class PropertyWindow extends PropertyEditor implements DocumentManagerLis
 		((SelectionPropertyValue)findPropertyByName(NUMBER_OF_BELLS_PROPERTY_NAME)).setItems(numberOfBellItems);
 
 		add(SETUP_GROUP_NAME, new SelectionPropertyValue(CALL_FROM_PROPERTY_NAME));
-		((SelectionPropertyValue)findPropertyByName(CALL_FROM_PROPERTY_NAME)).setListener(new ChangeListener<Number>() {
-			@Override
-			public void changed(ObservableValue <? extends Number> observable, Number oldValue, Number newValue) {
-				final Bell callFrom = Bell.values()[newValue.intValue()];
-				Platform.runLater(new Runnable() {
-					@Override
-					public void run() {
-						DocumentManager.getInstance().getCurrentDocument().setCallFrom(callFrom);
-					}
-				});
+		((SelectionPropertyValue)findPropertyByName(CALL_FROM_PROPERTY_NAME)).setListener((observable, oldValue, newValue) -> {
+			final Bell callFrom = Bell.values()[newValue.intValue()];
+			Platform.runLater(() -> DocumentManager.getInstance().getCurrentDocument().setCallFrom(callFrom));
 
-			}
 		});
 
 		add(SETUP_GROUP_NAME, new SelectionPropertyValue(ACTIVE_METHOD_PROPERTY_NAME));
-		((SelectionPropertyValue)findPropertyByName(ACTIVE_METHOD_PROPERTY_NAME)).setListener( new ChangeListener<Number>() {
-			@Override
-			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-				Platform.runLater(new Runnable() {
-					@Override
-					public void run() {
-						DocumentManager.getInstance().getCurrentDocument().setActiveNotation(newValue.intValue());
-					}
-				});
-
-			}
-		});
+		((SelectionPropertyValue)findPropertyByName(ACTIVE_METHOD_PROPERTY_NAME)).setListener((observable, oldValue, newValue) ->
+				Platform.runLater(() -> DocumentManager.getInstance().getCurrentDocument().setActiveNotation(newValue.intValue())));
 
 		add(SETUP_GROUP_NAME, new SelectionPropertyValue(CALL_TYPE_PROPERTY_NAME));
-		((SelectionPropertyValue)findPropertyByName(CALL_TYPE_PROPERTY_NAME)).setListener(new ChangeListener<Number>() {
-			@Override
-			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-				final TouchType touchType = TouchType.values()[newValue.intValue()];
-				Platform.runLater(new Runnable() {
-					@Override
-					public void run() {
-						DocumentManager.getInstance().getCurrentDocument().setTouchType(touchType);
-					}
-				});
+		((SelectionPropertyValue)findPropertyByName(CALL_TYPE_PROPERTY_NAME)).setListener((observable, oldValue, newValue) -> {
+			final TouchType touchType = TouchType.values()[newValue.intValue()];
+			Platform.runLater(() -> DocumentManager.getInstance().getCurrentDocument().setTouchType(touchType));
 
-			}
 		});
 
 		add(SETUP_GROUP_NAME, new TextPropertyValue(PLAIN_LEAD_TOKEN_PROPERTY_NAME));
-		((TextPropertyValue)findPropertyByName(PLAIN_LEAD_TOKEN_PROPERTY_NAME)).setListener( new ChangeListener<String>() {
-			@Override
-			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-				Platform.runLater(new Runnable() {
-					@Override
-					public void run() {
-						DocumentManager.getInstance().getCurrentDocument().setPlainLeadToken(newValue);
-					}
-				});
-
-			}
-		}, CallbackStyle.EVERY_KEYSTROKE);
+		((TextPropertyValue)findPropertyByName(PLAIN_LEAD_TOKEN_PROPERTY_NAME)).setListener((observable, oldValue, newValue) ->
+				Platform.runLater(() -> DocumentManager.getInstance().getCurrentDocument().setPlainLeadToken(newValue)),
+				CallbackStyle.EVERY_KEYSTROKE);
 	}
 
 	private void updateSetupSection(TouchDocument touchDocument) {
@@ -212,73 +155,34 @@ public class PropertyWindow extends PropertyEditor implements DocumentManagerLis
 
 	}
 
-
-
 	private void buildStartSection() {
 		add(START_GROUP_NAME, new TextPropertyValue(START_WITH_CHANGE_PROPERTY_NAME));
-		((TextPropertyValue)findPropertyByName(START_WITH_CHANGE_PROPERTY_NAME)).setListener(new ChangeListener<String>() {
-			@Override
-			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-				Platform.runLater(new Runnable() {
-					@Override
-					public void run() {
-						DocumentManager.getInstance().getCurrentDocument().setStartChange(newValue);
-					}
-				});
-			}
-		}, CallbackStyle.WHEN_FINISHED);
+		((TextPropertyValue)findPropertyByName(START_WITH_CHANGE_PROPERTY_NAME)).setListener((observable, oldValue, newValue) ->
+				Platform.runLater(() -> DocumentManager.getInstance().getCurrentDocument().setStartChange(newValue)),
+				CallbackStyle.WHEN_FINISHED);
 
 		add(START_GROUP_NAME, new IntegerPropertyValue(START_AT_ROW_PROPERTY_NAME));
-		((IntegerPropertyValue)findPropertyByName(START_AT_ROW_PROPERTY_NAME)).setListener(new ChangeListener<Number>() {
-
-
-			@Override
-			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-				Platform.runLater(new Runnable() {
-					@Override
-					public void run() {
-						DocumentManager.getInstance().getCurrentDocument().setStartAtRow(newValue.intValue());
-					}
-				});
-
-			}
-		}, CallbackStyle.WHEN_FINISHED);
+		((IntegerPropertyValue)findPropertyByName(START_AT_ROW_PROPERTY_NAME)).setListener((observable, oldValue, newValue) ->
+				Platform.runLater(() -> DocumentManager.getInstance().getCurrentDocument().setStartAtRow(newValue.intValue())), CallbackStyle.WHEN_FINISHED);
 
 		add(SETUP_GROUP_NAME, new SelectionPropertyValue(START_STROKE_PROPERTY_NAME));
-		((SelectionPropertyValue)findPropertyByName(START_STROKE_PROPERTY_NAME)).setListener( new ChangeListener<Number>() {
-			@Override
-			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-				Platform.runLater(new Runnable() {
-					@Override
-					public void run() {
-						final Stroke startStroke = Stroke.values()[newValue.intValue()];
-						DocumentManager.getInstance().getCurrentDocument().setStartStroke(startStroke);
-					}
-				});
-
-			}
-		});
+		((SelectionPropertyValue)findPropertyByName(START_STROKE_PROPERTY_NAME)).setListener((observable, oldValue, newValue) ->
+				Platform.runLater(() -> {
+			final Stroke startStroke = Stroke.values()[newValue.intValue()];
+			DocumentManager.getInstance().getCurrentDocument().setStartStroke(startStroke);
+		}));
 
 		add(SETUP_GROUP_NAME, new TextPropertyValue(START_NOTATION_PROPERTY_NAME));
-		((TextPropertyValue)findPropertyByName(START_NOTATION_PROPERTY_NAME)).setListener( new ChangeListener<String>() {
-			@Override
-			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-				Platform.runLater(new Runnable() {
-					@Override
-					public void run() {
-						DocumentManager.getInstance().getCurrentDocument().setStartNotation(newValue);
-					}
-				});
-
-			}
-		}, CallbackStyle.WHEN_FINISHED);
+		((TextPropertyValue)findPropertyByName(START_NOTATION_PROPERTY_NAME)).setListener((observable, oldValue, newValue) ->
+				Platform.runLater(() -> DocumentManager.getInstance().getCurrentDocument().setStartNotation(newValue)),
+				CallbackStyle.WHEN_FINISHED);
 	}
 
 	private void updateStartSection(TouchDocument touchDocument) {
 		final String startChange = touchDocument.getStartChange();
 		((TextPropertyValue)findPropertyByName(START_WITH_CHANGE_PROPERTY_NAME)).setValue(startChange);
 
-		int startAtRow = touchDocument.getStartAtRow();
+		Integer startAtRow = touchDocument.getStartAtRow();
 		((IntegerPropertyValue)findPropertyByName(START_AT_ROW_PROPERTY_NAME)).setValue(startAtRow);
 
 		final List<String> startAtStrokeItems = new ArrayList<>();
@@ -295,30 +199,14 @@ public class PropertyWindow extends PropertyEditor implements DocumentManagerLis
 
 	private void buildTerminationSection() {
 		add(TERMINATION_GROUP_NAME, new TextPropertyValue(TERMINATION_WITH_CHANGE_PROPERTY_NAME));
-		((TextPropertyValue)findPropertyByName(TERMINATION_WITH_CHANGE_PROPERTY_NAME)).setListener(new ChangeListener<String>() {
-			@Override
-			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-				Platform.runLater(new Runnable() {
-					@Override
-					public void run() {
-						DocumentManager.getInstance().getCurrentDocument().setTerminationChange(newValue);
-					}
-				});
-			}
-		}, CallbackStyle.WHEN_FINISHED);
+		((TextPropertyValue)findPropertyByName(TERMINATION_WITH_CHANGE_PROPERTY_NAME)).setListener((observable, oldValue, newValue) ->
+				Platform.runLater(() -> DocumentManager.getInstance().getCurrentDocument().setTerminationChange(newValue)),
+				CallbackStyle.WHEN_FINISHED);
 
 		add(TERMINATION_GROUP_NAME, new IntegerPropertyValue(TERMINATION_ROW_LIMIT_PROPERTY_NAME));
-		((IntegerPropertyValue)findPropertyByName(TERMINATION_ROW_LIMIT_PROPERTY_NAME)).setListener(new ChangeListener<Number>() {
-			@Override
-			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-				Platform.runLater(new Runnable() {
-					@Override
-					public void run() {
-						DocumentManager.getInstance().getCurrentDocument().setTerminationMaxRows(newValue == null?null:newValue.intValue());
-					}
-				});
-			}
-		}, CallbackStyle.WHEN_FINISHED);
+		((IntegerPropertyValue)findPropertyByName(TERMINATION_ROW_LIMIT_PROPERTY_NAME)).setListener((observable, oldValue, newValue) ->
+				Platform.runLater(() -> DocumentManager.getInstance().getCurrentDocument().setTerminationMaxRows(newValue == null?null:newValue.intValue())),
+				CallbackStyle.WHEN_FINISHED);
 
 	}
 
@@ -326,7 +214,7 @@ public class PropertyWindow extends PropertyEditor implements DocumentManagerLis
 		final String terminationChange = touchDocument.getTerminationChange();
 		((TextPropertyValue)findPropertyByName(TERMINATION_WITH_CHANGE_PROPERTY_NAME)).setValue(terminationChange);
 
-		int terminationRowLimit = touchDocument.getTerminationMaxRows();
+		Integer terminationRowLimit = touchDocument.getTerminationMaxRows();
 		((IntegerPropertyValue)findPropertyByName(TERMINATION_ROW_LIMIT_PROPERTY_NAME)).setValue(terminationRowLimit);
 	}
 

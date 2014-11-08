@@ -465,6 +465,26 @@ public class TouchDocument extends ConcurrentListenable<TouchDocumentListener> i
 		fireDocumentContentChanged();
 	}
 
+	public Integer getTerminationMaxLeads() {
+		return touch.getTerminationMaxLeads().orNull();
+	}
+
+	public void setTerminationMaxLeads(Integer terminationMaxLeads) {
+		if (terminationMaxLeads != null) {
+			if (!terminationMaxLeads.equals(getTerminationMaxLeads())) {
+				touch.setTerminationMaxLeads(terminationMaxLeads);
+				parseAndProve();
+			}
+		}
+		else {
+			if (touch.getTerminationMaxLeads() != null) {
+				touch.removeTerminationMaxLeads();
+				parseAndProve();
+			}
+		}
+		fireDocumentContentChanged();
+	}
+
 	public GridModel getMainGridModel() {
 		return mainGridModel;
 	}

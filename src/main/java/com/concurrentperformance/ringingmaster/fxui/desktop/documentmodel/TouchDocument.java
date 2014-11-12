@@ -330,14 +330,22 @@ public class TouchDocument extends ConcurrentListenable<TouchDocumentListener> i
 		fireDocumentContentChanged();
 	}
 
-	public Integer getStartAtRow() {
+	public int getStartAtRow() {
 		return touch.getStartAtRow();
 	}
 
-	public void setStartAtRow(int startAtRow) {
-		if (startAtRow > 0)  {
-			touch.setStartAtRow(startAtRow);
-			parseAndProve();
+	public void setStartAtRow(Integer startAtRow) {
+		if (startAtRow != null) {
+			if (!startAtRow.equals(getStartAtRow())) {
+				if (startAtRow > Touch.START_AT_ROW_MAX) {
+					startAtRow = Touch.START_AT_ROW_MAX;
+				}
+				if (startAtRow < 0) {
+					startAtRow = 0;
+				}
+				touch.setStartAtRow(startAtRow);
+				parseAndProve();
+			}
 		}
 		fireDocumentContentChanged();
 	}
@@ -445,23 +453,24 @@ public class TouchDocument extends ConcurrentListenable<TouchDocumentListener> i
 		fireDocumentContentChanged();
 	}
 
-	public Integer getTerminationMaxRows() {
-		return touch.getTerminationMaxRows().orNull();
+	public int getTerminationMaxRows() {
+		return touch.getTerminationMaxRows();
 	}
 
 	public void setTerminationMaxRows(Integer terminationMaxRows) {
 		if (terminationMaxRows != null) {
 			if (!terminationMaxRows.equals(getTerminationMaxRows())) {
+				if (terminationMaxRows > Touch.TERMINATION_MAX_ROWS_MAX) {
+					terminationMaxRows = Touch.TERMINATION_MAX_ROWS_MAX;
+				}
+				if (terminationMaxRows < 1) {
+					terminationMaxRows = 1;
+				}
 				touch.setTerminationMaxRows(terminationMaxRows);
 				parseAndProve();
 			}
 		}
-		else {
-			if (touch.getTerminationMaxRows() != null) {
-				touch.removeTerminationMaxRows();
-				parseAndProve();
-			}
-		}
+
 		fireDocumentContentChanged();
 	}
 
@@ -472,7 +481,12 @@ public class TouchDocument extends ConcurrentListenable<TouchDocumentListener> i
 	public void setTerminationMaxLeads(Integer terminationMaxLeads) {
 		if (terminationMaxLeads != null) {
 			if (!terminationMaxLeads.equals(getTerminationMaxLeads())) {
-				touch.setTerminationMaxLeads(terminationMaxLeads);
+				if (terminationMaxLeads > Touch.TERMINATION_MAX_LEADS_MAX) {
+					terminationMaxLeads = Touch.TERMINATION_MAX_LEADS_MAX;
+				}
+				if (terminationMaxLeads < 1) {
+					terminationMaxLeads = 1;
+				}				touch.setTerminationMaxLeads(terminationMaxLeads);
 				parseAndProve();
 			}
 		}

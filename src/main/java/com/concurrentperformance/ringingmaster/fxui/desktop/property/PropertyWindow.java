@@ -220,7 +220,7 @@ public class PropertyWindow extends PropertyEditor implements DocumentManagerLis
 		final String terminationChange = touchDocument.getTerminationChange();
 		((TextPropertyValue)findPropertyByName(TERMINATION_WITH_CHANGE_PROPERTY_NAME)).setValue(terminationChange);
 
-		Integer terminationRowLimit = touchDocument.getTerminationMaxRows();
+		int terminationRowLimit = touchDocument.getTerminationMaxRows();
 		((IntegerPropertyValue)findPropertyByName(TERMINATION_ROW_LIMIT_PROPERTY_NAME)).setValue(terminationRowLimit);
 
 		Integer terminationLeadLimit = touchDocument.getTerminationMaxLeads();

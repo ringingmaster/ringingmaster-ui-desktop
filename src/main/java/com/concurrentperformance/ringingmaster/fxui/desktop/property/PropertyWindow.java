@@ -167,17 +167,20 @@ public class PropertyWindow extends PropertyEditor implements DocumentManagerLis
 		((IntegerPropertyValue)findPropertyByName(START_AT_ROW_PROPERTY_NAME)).setListener((observable, oldValue, newValue) ->
 				Platform.runLater(() -> DocumentManager.getInstance().getCurrentDocument().setStartAtRow(newValue.intValue())), CallbackStyle.WHEN_FINISHED);
 
-		add(SETUP_GROUP_NAME, new SelectionPropertyValue(START_STROKE_PROPERTY_NAME));
+		add(START_GROUP_NAME, new SelectionPropertyValue(START_STROKE_PROPERTY_NAME));
 		((SelectionPropertyValue)findPropertyByName(START_STROKE_PROPERTY_NAME)).setListener((observable, oldValue, newValue) ->
 				Platform.runLater(() -> {
 			final Stroke startStroke = Stroke.values()[newValue.intValue()];
 			DocumentManager.getInstance().getCurrentDocument().setStartStroke(startStroke);
 		}));
 
-		add(SETUP_GROUP_NAME, new TextPropertyValue(START_NOTATION_PROPERTY_NAME));
+		add(START_GROUP_NAME, new TextPropertyValue(START_NOTATION_PROPERTY_NAME));
 		((TextPropertyValue)findPropertyByName(START_NOTATION_PROPERTY_NAME)).setListener((observable, oldValue, newValue) ->
 				Platform.runLater(() -> DocumentManager.getInstance().getCurrentDocument().setStartNotation(newValue)),
 				CallbackStyle.WHEN_FINISHED);
+
+		showGroupByName(SETUP_GROUP_NAME, false); // TODO save state in document
+
 	}
 
 	private void updateStartSection(TouchDocument touchDocument) {
@@ -220,6 +223,7 @@ public class PropertyWindow extends PropertyEditor implements DocumentManagerLis
 						Platform.runLater(() -> DocumentManager.getInstance().getCurrentDocument().setTerminationMaxParts(newValue == null ? null : newValue.intValue())),
 				CallbackStyle.WHEN_FINISHED);
 
+		showGroupByName(TERMINATION_GROUP_NAME, false); // TODO save state in document
 	}
 
 	private void updateTerminationSection(TouchDocument touchDocument) {

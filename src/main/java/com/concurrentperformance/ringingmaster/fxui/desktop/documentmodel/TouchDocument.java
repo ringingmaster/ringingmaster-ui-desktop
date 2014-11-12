@@ -486,13 +486,42 @@ public class TouchDocument extends ConcurrentListenable<TouchDocumentListener> i
 				}
 				if (terminationMaxLeads < 1) {
 					terminationMaxLeads = 1;
-				}				touch.setTerminationMaxLeads(terminationMaxLeads);
+				}
+
+				touch.setTerminationMaxLeads(terminationMaxLeads);
 				parseAndProve();
 			}
 		}
 		else {
 			if (touch.getTerminationMaxLeads() != null) {
 				touch.removeTerminationMaxLeads();
+				parseAndProve();
+			}
+		}
+		fireDocumentContentChanged();
+	}
+
+	public Integer getTerminationMaxParts() {
+		return touch.getTerminationMaxParts().orNull();
+	}
+
+	public void setTerminationMaxParts(Integer terminationMaxParts) {
+		if (terminationMaxParts != null) {
+			if (!terminationMaxParts.equals(getTerminationMaxParts())) {
+				if (terminationMaxParts > Touch.TERMINATION_MAX_PARTS_MAX) {
+					terminationMaxParts = Touch.TERMINATION_MAX_PARTS_MAX;
+				}
+				if (terminationMaxParts < 1) {
+					terminationMaxParts = 1;
+				}
+
+				touch.setTerminationMaxParts(terminationMaxParts);
+				parseAndProve();
+			}
+		}
+		else {
+			if (touch.getTerminationMaxParts() != null) {
+				touch.removeTerminationMaxParts();
 				parseAndProve();
 			}
 		}

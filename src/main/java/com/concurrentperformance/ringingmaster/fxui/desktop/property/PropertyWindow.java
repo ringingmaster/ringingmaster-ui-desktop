@@ -44,7 +44,8 @@ public class PropertyWindow extends PropertyEditor implements DocumentManagerLis
 	public static final String TERMINATION_GROUP_NAME = "Termination";
 	public static final String TERMINATION_WITH_CHANGE_PROPERTY_NAME = "Termination Change";
 	public static final String TERMINATION_ROW_LIMIT_PROPERTY_NAME = "Row Limit";
-	public static final String TERMINATION_LEAD_LIMIT_PROPERTY_NAME = "Part Limit";
+	public static final String TERMINATION_LEAD_LIMIT_PROPERTY_NAME = "Lead Limit";
+	public static final String TERMINATION_PART_LIMIT_PROPERTY_NAME = "Part Limit";
 
 
 	public PropertyWindow() {
@@ -214,6 +215,11 @@ public class PropertyWindow extends PropertyEditor implements DocumentManagerLis
 						Platform.runLater(() -> DocumentManager.getInstance().getCurrentDocument().setTerminationMaxLeads(newValue == null ? null : newValue.intValue())),
 				CallbackStyle.WHEN_FINISHED);
 
+		add(TERMINATION_GROUP_NAME, new IntegerPropertyValue(TERMINATION_PART_LIMIT_PROPERTY_NAME));
+		((IntegerPropertyValue)findPropertyByName(TERMINATION_PART_LIMIT_PROPERTY_NAME)).setListener((observable, oldValue, newValue) ->
+						Platform.runLater(() -> DocumentManager.getInstance().getCurrentDocument().setTerminationMaxParts(newValue == null ? null : newValue.intValue())),
+				CallbackStyle.WHEN_FINISHED);
+
 	}
 
 	private void updateTerminationSection(TouchDocument touchDocument) {
@@ -225,6 +231,10 @@ public class PropertyWindow extends PropertyEditor implements DocumentManagerLis
 
 		Integer terminationLeadLimit = touchDocument.getTerminationMaxLeads();
 		((IntegerPropertyValue)findPropertyByName(TERMINATION_LEAD_LIMIT_PROPERTY_NAME)).setValue(terminationLeadLimit);
+
+		Integer terminationPartLimit = touchDocument.getTerminationMaxParts();
+		((IntegerPropertyValue)findPropertyByName(TERMINATION_PART_LIMIT_PROPERTY_NAME)).setValue(terminationPartLimit);
+
 	}
 
 }

@@ -46,6 +46,7 @@ public class PropertyWindow extends PropertyEditor implements DocumentManagerLis
 	public static final String TERMINATION_ROW_LIMIT_PROPERTY_NAME = "Row Limit";
 	public static final String TERMINATION_LEAD_LIMIT_PROPERTY_NAME = "Lead Limit";
 	public static final String TERMINATION_PART_LIMIT_PROPERTY_NAME = "Part Limit";
+	public static final String TERMINATION_CIRCULAR_TOUCH_LIMIT_PROPERTY_NAME = "Circular Touch Limit";
 
 
 	public PropertyWindow() {
@@ -223,6 +224,11 @@ public class PropertyWindow extends PropertyEditor implements DocumentManagerLis
 						Platform.runLater(() -> DocumentManager.getInstance().getCurrentDocument().setTerminationMaxParts(newValue == null ? null : newValue.intValue())),
 				CallbackStyle.WHEN_FINISHED);
 
+		add(TERMINATION_GROUP_NAME, new IntegerPropertyValue(TERMINATION_CIRCULAR_TOUCH_LIMIT_PROPERTY_NAME));
+		((IntegerPropertyValue)findPropertyByName(TERMINATION_CIRCULAR_TOUCH_LIMIT_PROPERTY_NAME)).setListener((observable, oldValue, newValue) ->
+						Platform.runLater(() -> DocumentManager.getInstance().getCurrentDocument().setTerminationCircularTouch(newValue == null ? null : newValue.intValue())),
+				CallbackStyle.WHEN_FINISHED);
+
 		showGroupByName(TERMINATION_GROUP_NAME, false); // TODO save state in app
 	}
 
@@ -238,6 +244,9 @@ public class PropertyWindow extends PropertyEditor implements DocumentManagerLis
 
 		Integer terminationPartLimit = touchDocument.getTerminationMaxParts();
 		((IntegerPropertyValue)findPropertyByName(TERMINATION_PART_LIMIT_PROPERTY_NAME)).setValue(terminationPartLimit);
+
+		Integer terminationCircularTouchLimit = touchDocument.getTerminationCircularTouch();
+		((IntegerPropertyValue)findPropertyByName(TERMINATION_CIRCULAR_TOUCH_LIMIT_PROPERTY_NAME)).setValue(terminationCircularTouchLimit);
 
 	}
 

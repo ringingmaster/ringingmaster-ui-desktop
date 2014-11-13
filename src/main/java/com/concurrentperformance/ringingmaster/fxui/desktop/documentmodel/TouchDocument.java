@@ -336,13 +336,13 @@ public class TouchDocument extends ConcurrentListenable<TouchDocumentListener> i
 
 	public void setStartAtRow(Integer startAtRow) {
 		if (startAtRow != null) {
+			if (startAtRow > Touch.START_AT_ROW_MAX) {
+				startAtRow = Touch.START_AT_ROW_MAX;
+			}
+			if (startAtRow < 0) {
+				startAtRow = 0;
+			}
 			if (!startAtRow.equals(getStartAtRow())) {
-				if (startAtRow > Touch.START_AT_ROW_MAX) {
-					startAtRow = Touch.START_AT_ROW_MAX;
-				}
-				if (startAtRow < 0) {
-					startAtRow = 0;
-				}
 				touch.setStartAtRow(startAtRow);
 				parseAndProve();
 			}
@@ -459,13 +459,13 @@ public class TouchDocument extends ConcurrentListenable<TouchDocumentListener> i
 
 	public void setTerminationMaxRows(Integer terminationMaxRows) {
 		if (terminationMaxRows != null) {
+			if (terminationMaxRows > Touch.TERMINATION_MAX_ROWS_MAX) {
+				terminationMaxRows = Touch.TERMINATION_MAX_ROWS_MAX;
+			}
+			if (terminationMaxRows < 1) {
+				terminationMaxRows = 1;
+			}
 			if (!terminationMaxRows.equals(getTerminationMaxRows())) {
-				if (terminationMaxRows > Touch.TERMINATION_MAX_ROWS_MAX) {
-					terminationMaxRows = Touch.TERMINATION_MAX_ROWS_MAX;
-				}
-				if (terminationMaxRows < 1) {
-					terminationMaxRows = 1;
-				}
 				touch.setTerminationMaxRows(terminationMaxRows);
 				parseAndProve();
 			}
@@ -480,14 +480,13 @@ public class TouchDocument extends ConcurrentListenable<TouchDocumentListener> i
 
 	public void setTerminationMaxLeads(Integer terminationMaxLeads) {
 		if (terminationMaxLeads != null) {
+			if (terminationMaxLeads > Touch.TERMINATION_MAX_LEADS_MAX) {
+				terminationMaxLeads = Touch.TERMINATION_MAX_LEADS_MAX;
+			}
+			if (terminationMaxLeads < 1) {
+				terminationMaxLeads = 1;
+			}
 			if (!terminationMaxLeads.equals(getTerminationMaxLeads())) {
-				if (terminationMaxLeads > Touch.TERMINATION_MAX_LEADS_MAX) {
-					terminationMaxLeads = Touch.TERMINATION_MAX_LEADS_MAX;
-				}
-				if (terminationMaxLeads < 1) {
-					terminationMaxLeads = 1;
-				}
-
 				touch.setTerminationMaxLeads(terminationMaxLeads);
 				parseAndProve();
 			}
@@ -507,14 +506,13 @@ public class TouchDocument extends ConcurrentListenable<TouchDocumentListener> i
 
 	public void setTerminationMaxParts(Integer terminationMaxParts) {
 		if (terminationMaxParts != null) {
+			if (terminationMaxParts > Touch.TERMINATION_MAX_PARTS_MAX) {
+				terminationMaxParts = Touch.TERMINATION_MAX_PARTS_MAX;
+			}
+			if (terminationMaxParts < 1) {
+				terminationMaxParts = 1;
+			}
 			if (!terminationMaxParts.equals(getTerminationMaxParts())) {
-				if (terminationMaxParts > Touch.TERMINATION_MAX_PARTS_MAX) {
-					terminationMaxParts = Touch.TERMINATION_MAX_PARTS_MAX;
-				}
-				if (terminationMaxParts < 1) {
-					terminationMaxParts = 1;
-				}
-
 				touch.setTerminationMaxParts(terminationMaxParts);
 				parseAndProve();
 			}
@@ -522,6 +520,33 @@ public class TouchDocument extends ConcurrentListenable<TouchDocumentListener> i
 		else {
 			if (touch.getTerminationMaxParts() != null) {
 				touch.removeTerminationMaxParts();
+				parseAndProve();
+			}
+		}
+		fireDocumentContentChanged();
+	}
+
+	public Integer getTerminationCircularTouch() {
+		return touch.getTerminationCircularTouch().orNull();
+	}
+
+	public void setTerminationCircularTouch(Integer terminationCircularTouch) {
+		if (terminationCircularTouch != null) {
+			if (terminationCircularTouch > Touch.TERMINATION_CIRCULAR_TOUCH_MAX) {
+				terminationCircularTouch = Touch.TERMINATION_CIRCULAR_TOUCH_MAX;
+			}
+			if (terminationCircularTouch < 1) {
+				terminationCircularTouch = 1;
+			}
+			if (!terminationCircularTouch.equals(getTerminationCircularTouch())) {
+
+				touch.setTerminationCircularTouch(terminationCircularTouch);
+				parseAndProve();
+			}
+		}
+		else {
+			if (touch.getTerminationCircularTouch() != null) {
+				touch.removeTerminationCircularTouch();
 				parseAndProve();
 			}
 		}

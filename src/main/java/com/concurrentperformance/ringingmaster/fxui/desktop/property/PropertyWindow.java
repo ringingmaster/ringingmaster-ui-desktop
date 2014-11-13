@@ -179,7 +179,7 @@ public class PropertyWindow extends PropertyEditor implements DocumentManagerLis
 				Platform.runLater(() -> DocumentManager.getInstance().getCurrentDocument().setStartNotation(newValue)),
 				CallbackStyle.WHEN_FINISHED);
 
-		showGroupByName(SETUP_GROUP_NAME, false); // TODO save state in document
+		showGroupByName(START_GROUP_NAME, false); // TODO save state in app
 
 	}
 
@@ -223,7 +223,7 @@ public class PropertyWindow extends PropertyEditor implements DocumentManagerLis
 						Platform.runLater(() -> DocumentManager.getInstance().getCurrentDocument().setTerminationMaxParts(newValue == null ? null : newValue.intValue())),
 				CallbackStyle.WHEN_FINISHED);
 
-		showGroupByName(TERMINATION_GROUP_NAME, false); // TODO save state in document
+		showGroupByName(TERMINATION_GROUP_NAME, false); // TODO save state in app
 	}
 
 	private void updateTerminationSection(TouchDocument touchDocument) {

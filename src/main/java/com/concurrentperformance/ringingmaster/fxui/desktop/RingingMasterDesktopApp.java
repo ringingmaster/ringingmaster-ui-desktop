@@ -1,5 +1,6 @@
 package com.concurrentperformance.ringingmaster.fxui.desktop;
 
+import com.concurrentperformance.ringingmaster.fxui.desktop.analysis.AnalysisWindow;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentmanager.DocumentManager;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentpanel.TouchPanel;
 import com.concurrentperformance.ringingmaster.fxui.desktop.property.PropertyWindow;
@@ -15,7 +16,6 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SplitPane;
 import javafx.scene.image.Image;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -59,7 +59,7 @@ public class RingingMasterDesktopApp extends Application {
 		Node statusBar = new StatusBar();
 		TouchPanel touchPanel =  new TouchPanel();
 		Node propertyWindow = new PropertyWindow();
-		Node analysis1 = buildAnalysis1();
+		Node analysis = new AnalysisWindow();
 
 		SplitPane leftRightSplit = new SplitPane();
 		leftRightSplit.setOrientation(Orientation.HORIZONTAL);
@@ -71,15 +71,14 @@ public class RingingMasterDesktopApp extends Application {
 		SplitPane topBottomSplit = new SplitPane();
 		topBottomSplit.setOrientation(Orientation.VERTICAL);
 		topBottomSplit.getItems().add(0, leftRightSplit);
-		topBottomSplit.getItems().add(1, analysis1);
+		topBottomSplit.getItems().add(1, analysis);
 		topBottomSplit.setDividerPositions(0.8);
-		SplitPane.setResizableWithParent(analysis1, false);
+		SplitPane.setResizableWithParent(analysis, false);
 
 		VBox mainVerticalLayout = new VBox(menuBar, topBottomSplit, statusBar);
 		VBox.setVgrow(menuBar, Priority.NEVER);
 		VBox.setVgrow(topBottomSplit, Priority.ALWAYS);
 		VBox.setVgrow(statusBar, Priority.NEVER);
-
 
 		DocumentManager.getInstance().buildNewDocument();
 
@@ -100,9 +99,4 @@ public class RingingMasterDesktopApp extends Application {
 		return menuBar;
 	}
 
-	private Node buildAnalysis1() {
-		AnchorPane analysis1 = new AnchorPane();
-		analysis1.setMinHeight(100.0);
-		return analysis1;
-	}
 }

@@ -49,11 +49,6 @@ public class ProofState extends ImageView implements ProofManagerListener {
 	}
 
 	private void updateImage(Image image) {
-		Platform.runLater(new Runnable() {
-			@Override
-			public void run() {
-				setImage(image);
-			}
-		});
+		Platform.runLater(() -> setImage(image));
 	}
 }

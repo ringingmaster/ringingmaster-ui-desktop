@@ -571,12 +571,9 @@ public class TouchDocument extends ConcurrentListenable<TouchDocumentListener> i
 	}
 
 	private void fireDocumentContentChanged() {
-		Platform.runLater(new Runnable() {
-			@Override
-			public void run() {
-				for (TouchDocumentListener touchDocumentListener : getListeners()) {
-					touchDocumentListener.touchDocumentListener_documentContentChanged(TouchDocument.this);
-				}
+		Platform.runLater(() -> {
+			for (TouchDocumentListener touchDocumentListener : getListeners()) {
+				touchDocumentListener.touchDocumentListener_documentContentChanged(TouchDocument.this);
 			}
 		});
 	}

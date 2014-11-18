@@ -46,7 +46,7 @@ public class RingingMasterDesktopApp extends Application {
 
 		Parent parent = createMainWindow();
 
-		Scene scene = new Scene(parent, 800,500);
+		Scene scene = new Scene(parent, 900,650);
 		stage.setScene(scene);
 		stage.initStyle(StageStyle.DECORATED);
 		stage.getIcons().add(new Image(	RingingMasterDesktopApp.class.getResourceAsStream("/RingingMaster.png")));
@@ -72,7 +72,7 @@ public class RingingMasterDesktopApp extends Application {
 		topBottomSplit.setOrientation(Orientation.VERTICAL);
 		topBottomSplit.getItems().add(0, leftRightSplit);
 		topBottomSplit.getItems().add(1, analysis);
-		topBottomSplit.setDividerPositions(0.8);
+		topBottomSplit.setDividerPositions(0.6);
 		SplitPane.setResizableWithParent(analysis, false);
 
 		VBox mainVerticalLayout = new VBox(menuBar, topBottomSplit, statusBar);

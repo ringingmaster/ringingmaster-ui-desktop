@@ -24,7 +24,6 @@ public class PropertyWindow extends PropertyEditor implements DocumentManagerLis
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-	public static final String SETUP_GROUP_NAME = "Setup";
 	public static final String TITLE_PROPERTY_NAME = "Title";
 	public static final String AUTHOR_PROPERTY_NAME = "Author";
 	public static final String NUMBER_OF_BELLS_PROPERTY_NAME = "Number Of Bells";
@@ -67,15 +66,15 @@ public class PropertyWindow extends PropertyEditor implements DocumentManagerLis
 	}
 
 	private void buildSetupSection() {
-		add(SETUP_GROUP_NAME, new TextPropertyValue(TITLE_PROPERTY_NAME));
+		add( new TextPropertyValue(TITLE_PROPERTY_NAME));
 		((TextPropertyValue)findPropertyByName(TITLE_PROPERTY_NAME)).setListener((observable, oldValue, newValue) ->
 				DocumentManager.getInstance().getCurrentDocument().setTitle(newValue), CallbackStyle.EVERY_KEYSTROKE);
 
-		add(SETUP_GROUP_NAME, new TextPropertyValue(AUTHOR_PROPERTY_NAME));
+		add( new TextPropertyValue(AUTHOR_PROPERTY_NAME));
 		((TextPropertyValue)findPropertyByName(AUTHOR_PROPERTY_NAME)).setListener((observable, oldValue, newValue) ->
 				DocumentManager.getInstance().getCurrentDocument().setAuthor(newValue), CallbackStyle.EVERY_KEYSTROKE);
 
-		add(SETUP_GROUP_NAME, new SelectionPropertyValue(NUMBER_OF_BELLS_PROPERTY_NAME));
+		add( new SelectionPropertyValue(NUMBER_OF_BELLS_PROPERTY_NAME));
 		((SelectionPropertyValue)findPropertyByName(NUMBER_OF_BELLS_PROPERTY_NAME)).setListener((observable, oldValue, newValue) -> {
 			final NumberOfBells numberOfBells = NumberOfBells.values()[newValue.intValue()];
 			Platform.runLater(() -> DocumentManager.getInstance().getCurrentDocument().setNumberOfBells(numberOfBells));
@@ -87,25 +86,25 @@ public class PropertyWindow extends PropertyEditor implements DocumentManagerLis
 		}
 		((SelectionPropertyValue)findPropertyByName(NUMBER_OF_BELLS_PROPERTY_NAME)).setItems(numberOfBellItems);
 
-		add(SETUP_GROUP_NAME, new SelectionPropertyValue(CALL_FROM_PROPERTY_NAME));
+		add( new SelectionPropertyValue(CALL_FROM_PROPERTY_NAME));
 		((SelectionPropertyValue)findPropertyByName(CALL_FROM_PROPERTY_NAME)).setListener((observable, oldValue, newValue) -> {
 			final Bell callFrom = Bell.values()[newValue.intValue()];
 			Platform.runLater(() -> DocumentManager.getInstance().getCurrentDocument().setCallFrom(callFrom));
 
 		});
 
-		add(SETUP_GROUP_NAME, new SelectionPropertyValue(ACTIVE_METHOD_PROPERTY_NAME));
+		add( new SelectionPropertyValue(ACTIVE_METHOD_PROPERTY_NAME));
 		((SelectionPropertyValue)findPropertyByName(ACTIVE_METHOD_PROPERTY_NAME)).setListener((observable, oldValue, newValue) ->
 				Platform.runLater(() -> DocumentManager.getInstance().getCurrentDocument().setActiveNotation(newValue.intValue())));
 
-		add(SETUP_GROUP_NAME, new SelectionPropertyValue(CALL_TYPE_PROPERTY_NAME));
+		add( new SelectionPropertyValue(CALL_TYPE_PROPERTY_NAME));
 		((SelectionPropertyValue)findPropertyByName(CALL_TYPE_PROPERTY_NAME)).setListener((observable, oldValue, newValue) -> {
 			final TouchType touchType = TouchType.values()[newValue.intValue()];
 			Platform.runLater(() -> DocumentManager.getInstance().getCurrentDocument().setTouchType(touchType));
 
 		});
 
-		add(SETUP_GROUP_NAME, new TextPropertyValue(PLAIN_LEAD_TOKEN_PROPERTY_NAME));
+		add( new TextPropertyValue(PLAIN_LEAD_TOKEN_PROPERTY_NAME));
 		((TextPropertyValue)findPropertyByName(PLAIN_LEAD_TOKEN_PROPERTY_NAME)).setListener((observable, oldValue, newValue) ->
 				Platform.runLater(() -> DocumentManager.getInstance().getCurrentDocument().setPlainLeadToken(newValue)),
 				CallbackStyle.EVERY_KEYSTROKE);

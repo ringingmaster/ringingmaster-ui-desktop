@@ -31,16 +31,16 @@ public class AnalysisWindow extends PropertyEditor implements ProofManagerListen
 	public AnalysisWindow() {
 		ProofManager.getInstance().addListener(this);
 
-		add("2", new DisplayPropertyValue(TOUCH_TRUE_PROPERTY_NAME));
-		add("2", new DisplayPropertyValue(TERMINATION_PROPERTY_NAME));
-		add("2", new DisplayPropertyValue(PART_COUNT_PROPERTY_NAME));
-		add("2", new DisplayPropertyValue(LEAD_COUNT_PROPERTY_NAME));
-		add("2", new DisplayPropertyValue(ROW_COUNT_PROPERTY_NAME));
-		add("2", new DisplayPropertyValue(CALL_COUNT_PROPERTY_NAME));
-		add("2", new DisplayPropertyValue(START_ROW_PROPERTY_NAME));
-		add("2", new DisplayPropertyValue(END_ROW_PROPERTY_NAME));
-		add("2", new DisplayPropertyValue(END_STROKE_PROPERTY_NAME));
-		add("2", new DisplayPropertyValue(PROOF_TIME_PROPERTY_NAME));
+		add(new DisplayPropertyValue(TOUCH_TRUE_PROPERTY_NAME));
+		add(new DisplayPropertyValue(TERMINATION_PROPERTY_NAME));
+		add(new DisplayPropertyValue(PART_COUNT_PROPERTY_NAME));
+		add(new DisplayPropertyValue(LEAD_COUNT_PROPERTY_NAME));
+		add(new DisplayPropertyValue(ROW_COUNT_PROPERTY_NAME));
+		add(new DisplayPropertyValue(CALL_COUNT_PROPERTY_NAME));
+		add(new DisplayPropertyValue(START_ROW_PROPERTY_NAME));
+		add(new DisplayPropertyValue(END_ROW_PROPERTY_NAME));
+		add(new DisplayPropertyValue(END_STROKE_PROPERTY_NAME));
+		add(new DisplayPropertyValue(PROOF_TIME_PROPERTY_NAME));
 	}
 
 	@Override

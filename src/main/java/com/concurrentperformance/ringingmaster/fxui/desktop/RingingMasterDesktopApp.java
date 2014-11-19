@@ -59,7 +59,8 @@ public class RingingMasterDesktopApp extends Application {
 		Node statusBar = new StatusBar();
 		TouchPanel touchPanel =  new TouchPanel();
 		Node propertyWindow = new PropertyWindow();
-		Node analysis = new AnalysisWindow();
+		Node analysisLeft = new AnalysisWindow(AnalysisWindow.Type.LEFT);
+		Node analysisRight = new AnalysisWindow(AnalysisWindow.Type.RIGHT);
 
 		SplitPane leftRightSplit = new SplitPane();
 		leftRightSplit.setOrientation(Orientation.HORIZONTAL);
@@ -68,12 +69,18 @@ public class RingingMasterDesktopApp extends Application {
 		leftRightSplit.setDividerPositions(0.3);
 		SplitPane.setResizableWithParent(propertyWindow, false);
 
+		SplitPane analysisSplit = new SplitPane();
+		analysisSplit.setOrientation(Orientation.HORIZONTAL);
+		analysisSplit.getItems().add(0, analysisLeft);
+		analysisSplit.getItems().add(1, analysisRight);
+		analysisSplit.setDividerPositions(0.5);
+
 		SplitPane topBottomSplit = new SplitPane();
 		topBottomSplit.setOrientation(Orientation.VERTICAL);
 		topBottomSplit.getItems().add(0, leftRightSplit);
-		topBottomSplit.getItems().add(1, analysis);
+		topBottomSplit.getItems().add(1, analysisSplit);
 		topBottomSplit.setDividerPositions(0.6);
-		SplitPane.setResizableWithParent(analysis, false);
+		SplitPane.setResizableWithParent(analysisSplit, false);
 
 		VBox mainVerticalLayout = new VBox(menuBar, topBottomSplit, statusBar);
 		VBox.setVgrow(menuBar, Priority.NEVER);

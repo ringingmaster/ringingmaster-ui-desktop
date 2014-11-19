@@ -10,6 +10,8 @@ import com.concurrentperformance.ringingmaster.fxui.desktop.documentpanel.grid.m
 import com.concurrentperformance.ringingmaster.ui.common.TouchStyle;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
@@ -21,6 +23,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * @author Lake
  */
 public class DefinitionCell extends SkeletalGridCellModel implements GridCellModel {
+
+	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 	private final TouchDocument touchDocument;
 	private final TouchDefinition definition;
@@ -34,6 +38,24 @@ public class DefinitionCell extends SkeletalGridCellModel implements GridCellMod
 	@Override
 	public int getLength() {
 		return definition.getLength();
+	}
+
+	@Override
+	public void insertCharacter(int index, char character) {
+		definition.insert(character, index);
+		fireCellStructureChanged();
+	}
+
+	@Override
+	public void removeCharacter(int index) {
+		definition.remove(index);
+		touchDocument.collapseEmptyRowsAndColumns();
+		fireCellStructureChanged();
+	}
+
+	protected void fireCellStructureChanged() {
+		touchDocument.parseAndProve();
+		super.fireCellStructureChanged();
 	}
 
 	@Override

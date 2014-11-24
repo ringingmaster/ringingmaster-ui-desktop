@@ -7,5 +7,5 @@ import javafx.scene.shape.Rectangle;
  *
  * @author Lake
  */
-public class AnalysisCallsMade extends Rectangle {
+public class AnalysisCallsMadeWindow extends Rectangle {
 }

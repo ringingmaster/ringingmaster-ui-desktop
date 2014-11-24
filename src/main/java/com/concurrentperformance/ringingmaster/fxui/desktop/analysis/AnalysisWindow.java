@@ -28,10 +28,10 @@ public class AnalysisWindow extends TabPane {
 
 		switch (type) {
 			case LEFT:
-				createTab("Status", new AnalysisStatus());
+				createTab("Status", new AnalysisStatusWindow());
 				break;
 			case RIGHT:
-				createTab("Calls Made", new AnalysisCallsMade());
+				createTab("Calls Made", new AnalysisCallsMadeWindow());
 				break;
 		}
 	}
@@ -41,7 +41,6 @@ public class AnalysisWindow extends TabPane {
 		tab.setText(name);
 		tab.setContent(node);
 		getTabs().add(tab);
-
 	}
 }
 

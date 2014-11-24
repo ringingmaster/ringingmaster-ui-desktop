@@ -13,7 +13,7 @@ import javafx.scene.paint.Color;
  *
  * @author Lake
  */
-public class AnalysisStatus extends PropertyEditor implements ProofManagerListener {
+public class AnalysisStatusWindow extends PropertyEditor implements ProofManagerListener {
 
 	public static final String TOUCH_TRUE_PROPERTY_NAME = "The touch is";
 	public static final String TERMINATION_PROPERTY_NAME = "Termination";
@@ -28,7 +28,7 @@ public class AnalysisStatus extends PropertyEditor implements ProofManagerListen
 
 
 
-	public AnalysisStatus() {
+	public AnalysisStatusWindow() {
 		ProofManager.getInstance().addListener(this);
 
 		add(new DisplayPropertyValue(TOUCH_TRUE_PROPERTY_NAME));

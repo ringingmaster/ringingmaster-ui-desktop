@@ -15,8 +15,8 @@ public class PropertyWindow extends TabPane {
 	private final PropertyMethodsWindow propertyMethodsWindow = new PropertyMethodsWindow();
 
 	public PropertyWindow() {
-		createTab("Setup", propertySetupWindow);
 		createTab("Methods", propertyMethodsWindow);
+		createTab("Setup", propertySetupWindow);
 	}
 
 

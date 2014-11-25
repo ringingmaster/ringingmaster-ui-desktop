@@ -48,6 +48,8 @@ public class TouchDocument extends ConcurrentListenable<TouchDocumentListener> i
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
+	public static final String SPLICED_TOKEN = "<Spliced>";
+
 	private final Touch touch;
 	private final TouchStyle touchStyle = new TouchStyle();
 
@@ -198,12 +200,23 @@ public class TouchDocument extends ConcurrentListenable<TouchDocumentListener> i
 		fireDocumentContentChanged();
 	}
 
-	public List<String> getNotations() {
-		final List<NotationBody> orderedNotations = getSortedNotationsBeingDisplayed();
+	public List<NotationBody> getSortedAllNotations() {
+		final List<NotationBody> sortedNotations = Lists.newArrayList(touch.getAllNotations());
+		Collections.sort(sortedNotations, Notation.BY_NUMBER_THEN_NAME);
+		return sortedNotations;
+	}
+
+	public NotationBody getSingleMethodActiveNotation() {
+		return touch.getSingleMethodActiveNotation();
+	}
+
+
+	public List<String> getValidNotations() {
+		final List<NotationBody> orderedNotations = getSortedValidNotations();
 
 		List<String> result = Lists.newArrayList();
 
-		result.add("<Spliced>");
+		result.add(SPLICED_TOKEN);
 
 		for (int index = 0;index < orderedNotations.size();index++) {
 			final NotationBody notation = orderedNotations.get(index);
@@ -213,19 +226,18 @@ public class TouchDocument extends ConcurrentListenable<TouchDocumentListener> i
 		return result;
 	}
 
-	private List<NotationBody> getSortedNotationsBeingDisplayed() {
+	private List<NotationBody> getSortedValidNotations() {
 		final List<NotationBody> sortedNotations = Lists.newArrayList(touch.getValidNotations());
 		Collections.sort(sortedNotations, Notation.BY_NUMBER_THEN_NAME);
 		return sortedNotations;
 	}
 
-
-	public int getActiveNotationIndex() {
+	public int getActiveValidNotationIndex() {
 		if (touch.isSpliced()) {
 			return 0;
 		}
 		final NotationBody activeNotation = touch.getSingleMethodActiveNotation();
-		final List<NotationBody> sortedNotationsBeingDisplayed = getSortedNotationsBeingDisplayed();
+		final List<NotationBody> sortedNotationsBeingDisplayed = getSortedValidNotations();
 		for (int index = 0;index<sortedNotationsBeingDisplayed.size();index++) {
 			final NotationBody notation = sortedNotationsBeingDisplayed.get(index);
 			if (notation == activeNotation) {
@@ -235,7 +247,7 @@ public class TouchDocument extends ConcurrentListenable<TouchDocumentListener> i
 		return -1;
 	}
 
-	public void setActiveNotation(int index) {
+	public void setActiveValidNotation(int index) {
 		if (index==0) {
 			if (!touch.isSpliced()) {
 				touch.setSpliced(true);
@@ -243,7 +255,7 @@ public class TouchDocument extends ConcurrentListenable<TouchDocumentListener> i
 			}
 		}
 		else {
-			final List<NotationBody> sortedNotationsBeingDisplayed = getSortedNotationsBeingDisplayed();
+			final List<NotationBody> sortedNotationsBeingDisplayed = getSortedValidNotations();
 
 			final NotationBody selectedNotation = sortedNotationsBeingDisplayed.get(index -1);// the -1 is the offset for the spliced row
 			if (!selectedNotation.equals(touch.getSingleMethodActiveNotation())) {
@@ -255,6 +267,9 @@ public class TouchDocument extends ConcurrentListenable<TouchDocumentListener> i
 		fireDocumentContentChanged();
 	}
 
+	public boolean isSpliced() {
+		return touch.isSpliced();
+	}
 
 	public TouchType getTouchType() {
 		return touch.getTouchType();
@@ -660,6 +675,7 @@ public class TouchDocument extends ConcurrentListenable<TouchDocumentListener> i
 				.setFoldedPalindromeNotationShorthand("-18-18-18-18", "12")
 				.addCall("Bob", "-", "14", true)
 				.addCall("Single", "s", "1234", false)
+				.setSpliceIdentifier("X")
 				.build();
 	}
 
@@ -690,4 +706,5 @@ public class TouchDocument extends ConcurrentListenable<TouchDocumentListener> i
 	public void collapseEmptyRowsAndColumns() {
 		touch.collapseEmptyRowsAndColumns();
 	}
+
 }

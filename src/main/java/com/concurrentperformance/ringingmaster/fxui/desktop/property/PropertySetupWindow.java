@@ -95,7 +95,7 @@ public class PropertySetupWindow extends PropertyEditor implements DocumentManag
 
 		add( new SelectionPropertyValue(ACTIVE_METHOD_PROPERTY_NAME));
 		((SelectionPropertyValue)findPropertyByName(ACTIVE_METHOD_PROPERTY_NAME)).setListener((observable, oldValue, newValue) ->
-				Platform.runLater(() -> DocumentManager.getInstance().getCurrentDocument().setActiveNotation(newValue.intValue())));
+				Platform.runLater(() -> DocumentManager.getInstance().getCurrentDocument().setActiveValidNotation(newValue.intValue())));
 
 		add( new SelectionPropertyValue(CALL_TYPE_PROPERTY_NAME));
 		((SelectionPropertyValue)findPropertyByName(CALL_TYPE_PROPERTY_NAME)).setListener((observable, oldValue, newValue) -> {
@@ -130,9 +130,9 @@ public class PropertySetupWindow extends PropertyEditor implements DocumentManag
 		final Bell callFrom = touchDocument.getCallFrom();
 		((SelectionPropertyValue)findPropertyByName(CALL_FROM_PROPERTY_NAME)).setSelectedIndex(callFrom.ordinal());
 
-		final List<String> notationItems = touchDocument.getNotations();
-		int selectedNotationIndex = touchDocument.getActiveNotationIndex();
-		((SelectionPropertyValue)findPropertyByName(ACTIVE_METHOD_PROPERTY_NAME)).setItems(notationItems);
+		final List<String> validNotationItems = touchDocument.getValidNotations();
+		int selectedNotationIndex = touchDocument.getActiveValidNotationIndex();
+		((SelectionPropertyValue)findPropertyByName(ACTIVE_METHOD_PROPERTY_NAME)).setItems(validNotationItems);
 		((SelectionPropertyValue)findPropertyByName(ACTIVE_METHOD_PROPERTY_NAME)).setSelectedIndex(selectedNotationIndex);
 
 		final List<String> touchTypes = new ArrayList<>();

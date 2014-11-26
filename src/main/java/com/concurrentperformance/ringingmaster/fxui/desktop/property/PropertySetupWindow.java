@@ -4,10 +4,12 @@ import com.concurrentperformance.fxutils.propertyeditor.*;
 import com.concurrentperformance.ringingmaster.engine.NumberOfBells;
 import com.concurrentperformance.ringingmaster.engine.method.Bell;
 import com.concurrentperformance.ringingmaster.engine.method.Stroke;
+import com.concurrentperformance.ringingmaster.engine.notation.NotationBody;
 import com.concurrentperformance.ringingmaster.engine.touch.TouchType;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentmanager.DocumentManager;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentmanager.DocumentManagerListener;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentmodel.TouchDocument;
+import com.google.common.collect.Lists;
 import javafx.application.Platform;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -95,7 +97,7 @@ public class PropertySetupWindow extends PropertyEditor implements DocumentManag
 
 		add( new SelectionPropertyValue(ACTIVE_METHOD_PROPERTY_NAME));
 		((SelectionPropertyValue)findPropertyByName(ACTIVE_METHOD_PROPERTY_NAME)).setListener((observable, oldValue, newValue) ->
-				Platform.runLater(() -> DocumentManager.getInstance().getCurrentDocument().setActiveValidNotation(newValue.intValue())));
+				Platform.runLater(() -> setActiveValidNotation(newValue.intValue())));
 
 		add( new SelectionPropertyValue(CALL_TYPE_PROPERTY_NAME));
 		((SelectionPropertyValue)findPropertyByName(CALL_TYPE_PROPERTY_NAME)).setListener((observable, oldValue, newValue) -> {
@@ -130,8 +132,10 @@ public class PropertySetupWindow extends PropertyEditor implements DocumentManag
 		final Bell callFrom = touchDocument.getCallFrom();
 		((SelectionPropertyValue)findPropertyByName(CALL_FROM_PROPERTY_NAME)).setSelectedIndex(callFrom.ordinal());
 
-		final List<String> validNotationItems = touchDocument.getValidNotations();
-		int selectedNotationIndex = touchDocument.getActiveValidNotationIndex();
+
+
+		final List<String> validNotationItems = getValidNotations(touchDocument);
+		int selectedNotationIndex = getActiveValidNotationIndex(touchDocument);
 		((SelectionPropertyValue)findPropertyByName(ACTIVE_METHOD_PROPERTY_NAME)).setItems(validNotationItems);
 		((SelectionPropertyValue)findPropertyByName(ACTIVE_METHOD_PROPERTY_NAME)).setSelectedIndex(selectedNotationIndex);
 
@@ -146,6 +150,52 @@ public class PropertySetupWindow extends PropertyEditor implements DocumentManag
 		final String plainLeadToken = touchDocument.getPlainLeadToken();
 		((TextPropertyValue)findPropertyByName(PLAIN_LEAD_TOKEN_PROPERTY_NAME)).setValue(plainLeadToken);
 		findPropertyByName(PLAIN_LEAD_TOKEN_PROPERTY_NAME).setDisable(touchType == TouchType.COURSE_BASED);
+	}
+
+	public List<String> getValidNotations(TouchDocument touchDocument) {
+		final List<NotationBody> orderedNotations = touchDocument.getSortedValidNotations();
+
+		List<String> result = Lists.newArrayList();
+
+		result.add(TouchDocument.SPLICED_TOKEN);
+
+		for (int index = 0;index < orderedNotations.size();index++) {
+			final NotationBody notation = orderedNotations.get(index);
+			result.add(notation.getNameIncludingNumberOfBells());
+		}
+
+		return result;
+	}
+
+	private int getActiveValidNotationIndex(TouchDocument touchDocument) {
+
+		if (touchDocument.isSpliced()) {
+			return 0;
+		}
+		final NotationBody activeNotation = touchDocument.getSingleMethodActiveNotation();
+		final List<NotationBody> sortedNotationsBeingDisplayed = touchDocument.getSortedValidNotations();
+		for (int index = 0;index<sortedNotationsBeingDisplayed.size();index++) {
+			final NotationBody notation = sortedNotationsBeingDisplayed.get(index);
+			if (notation == activeNotation) {
+				return index +1; // the 1 is the offset for the spliced row
+			}
+		}
+		return -1;
+	}
+
+	private void setActiveValidNotation(int index) {
+		TouchDocument touchDocument = DocumentManager.getInstance().getCurrentDocument();
+
+		if (index==0) {
+			touchDocument.setSpliced(true);
+		}
+		else {
+			final List<NotationBody> sortedNotationsBeingDisplayed = touchDocument.getSortedValidNotations();
+
+			final NotationBody selectedNotation = sortedNotationsBeingDisplayed.get(index -1);// the -1 is the offset for the spliced row
+			touchDocument.setSingleMethodActiveNotation(selectedNotation);
+		}
+
 	}
 
 	private void buildAdvancedSetupSection() {

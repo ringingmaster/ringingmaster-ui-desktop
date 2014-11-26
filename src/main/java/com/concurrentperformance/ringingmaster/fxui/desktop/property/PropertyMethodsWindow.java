@@ -21,8 +21,8 @@ public class PropertyMethodsWindow extends VBox {
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-	private final Image newMethodImage = new Image(this.getClass().getResourceAsStream("/new_method.png"));
-	private final Image deleteImage = new Image(this.getClass().getResourceAsStream("/delete.png"));
+	private final Image newMethodImage = new Image(this.getClass().getResourceAsStream("/images/new_method.png"));
+	private final Image deleteImage = new Image(this.getClass().getResourceAsStream("/images/delete.png"));
 
 	public PropertyMethodsWindow() {
 		getChildren().add(createToolbar());

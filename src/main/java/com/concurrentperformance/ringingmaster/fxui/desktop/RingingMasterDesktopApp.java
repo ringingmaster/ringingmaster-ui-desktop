@@ -49,7 +49,7 @@ public class RingingMasterDesktopApp extends Application {
 		Scene scene = new Scene(parent, 900,650);
 		stage.setScene(scene);
 		stage.initStyle(StageStyle.DECORATED);
-		stage.getIcons().add(new Image(	RingingMasterDesktopApp.class.getResourceAsStream("/RingingMaster.png")));
+		stage.getIcons().add(new Image(	RingingMasterDesktopApp.class.getResourceAsStream("/images/RingingMaster.png")));
 
 		stage.show();
 	}

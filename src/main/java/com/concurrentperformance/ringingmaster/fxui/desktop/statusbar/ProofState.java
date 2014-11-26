@@ -19,9 +19,9 @@ public class ProofState extends ImageView implements ProofManagerListener {
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-	private final Image proofTick = new Image(this.getClass().getResourceAsStream("/proof_tick.png"));
-	private final Image proofWait = new Image(this.getClass().getResourceAsStream("/proof_wait.png"));
-	private final Image proofCross = new Image(this.getClass().getResourceAsStream("/proof_cross.png"));
+	private final Image proofTick = new Image(this.getClass().getResourceAsStream("/images/proof_tick.png"));
+	private final Image proofWait = new Image(this.getClass().getResourceAsStream("/images/proof_wait.png"));
+	private final Image proofCross = new Image(this.getClass().getResourceAsStream("/images/proof_cross.png"));
 
 	public ProofState() {
 		ProofManager.getInstance().addListener(this);

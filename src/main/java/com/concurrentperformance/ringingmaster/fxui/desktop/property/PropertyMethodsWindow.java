@@ -38,7 +38,12 @@ public class PropertyMethodsWindow extends VBox {
 			@Override
 			public void handle(ActionEvent event) {
 				log.info(event.toString());
+				NotationEditor notationEditor = new NotationEditor();
+				notationEditor.setText("Hello World!");
+				getChildren().add(notationEditor);
 			}
+
+
 		});
 
 		toolBar.getItems().addAll(addMethod, removeMethod);

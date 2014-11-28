@@ -1,5 +1,7 @@
 package com.concurrentperformance.ringingmaster.fxui.desktop.property;
 
+import com.concurrentperformance.ringingmaster.fxui.desktop.property.methods.PropertyMethodsWindow;
+import com.concurrentperformance.ringingmaster.fxui.desktop.property.setup.PropertySetupWindow;
 import javafx.scene.Node;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;

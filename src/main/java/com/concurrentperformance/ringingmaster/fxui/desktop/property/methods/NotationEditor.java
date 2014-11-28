@@ -1,4 +1,4 @@
-package com.concurrentperformance.ringingmaster.fxui.desktop.property;
+package com.concurrentperformance.ringingmaster.fxui.desktop.property.methods;
 
 
 import javafx.beans.property.StringProperty;

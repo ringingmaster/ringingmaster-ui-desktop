@@ -3,6 +3,7 @@ package com.concurrentperformance.ringingmaster.fxui.desktop;
 import com.concurrentperformance.ringingmaster.fxui.desktop.analysis.AnalysisWindow;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentmanager.DocumentManager;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentpanel.TouchPanel;
+import com.concurrentperformance.ringingmaster.fxui.desktop.property.methods.AddMethodButton;
 import com.concurrentperformance.ringingmaster.fxui.desktop.property.PropertyWindow;
 import com.concurrentperformance.ringingmaster.fxui.desktop.statusbar.StatusBar;
 import com.concurrentperformance.util.thread.ThreadUncaughtExceptionHelper;
@@ -11,13 +12,17 @@ import javafx.geometry.Orientation;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.SplitPane;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import org.controlsfx.control.ButtonBar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -95,9 +100,9 @@ public class RingingMasterDesktopApp extends Application {
 	private Node createButtonBar() {
 		ButtonBar buttonBar = new ButtonBar();
 
-		Button addMethod = new Button("Add");
+		Button addMethod = new AddMethodButton();
 		buttonBar.getButtons().add(addMethod);
-
+		ButtonBar.setButtonData(addMethod, ButtonBar.ButtonData.LEFT);
 
 		return buttonBar;
 	}

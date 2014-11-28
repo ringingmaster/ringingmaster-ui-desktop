@@ -11,15 +11,13 @@ import javafx.geometry.Orientation;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.SplitPane;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import org.controlsfx.control.ButtonBar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,6 +54,7 @@ public class RingingMasterDesktopApp extends Application {
 
 	private Parent createMainWindow() {
 		Node menuBar = createMenu();
+		Node buttonBar = createButtonBar();
 		Node statusBar = new StatusBar();
 		TouchPanel touchPanel =  new TouchPanel();
 		Node propertyWindow = new PropertyWindow();
@@ -82,14 +81,25 @@ public class RingingMasterDesktopApp extends Application {
 		topBottomSplit.setDividerPositions(0.6);
 		SplitPane.setResizableWithParent(analysisSplit, false);
 
-		VBox mainVerticalLayout = new VBox(menuBar, topBottomSplit, statusBar);
+		VBox mainVerticalLayout = new VBox(menuBar, buttonBar, topBottomSplit, statusBar);
 		VBox.setVgrow(menuBar, Priority.NEVER);
+		VBox.setVgrow(buttonBar, Priority.NEVER);
 		VBox.setVgrow(topBottomSplit, Priority.ALWAYS);
 		VBox.setVgrow(statusBar, Priority.NEVER);
 
 		DocumentManager.getInstance().buildNewDocument();
 
 		return mainVerticalLayout;
+	}
+
+	private Node createButtonBar() {
+		ButtonBar buttonBar = new ButtonBar();
+
+		Button addMethod = new Button("Add");
+		buttonBar.getButtons().add(addMethod);
+
+
+		return buttonBar;
 	}
 
 	private Node createMenu() {

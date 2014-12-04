@@ -1,6 +1,7 @@
 package com.concurrentperformance.ringingmaster.fxui.desktop.notationeditor;
 
 import com.concurrentperformance.ringingmaster.fxui.desktop.property.methods.AddMethodButton;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -46,11 +47,18 @@ public class NotationEditorDialog extends Stage {
 	private TabPane getTabPane() {
 		TabPane tabPane = new TabPane();
 
-		Tab plainCourse = new Tab();
-		plainCourse.setText("Plain Course");
-		PlainCourse notationEditor = new PlainCourse();
-		plainCourse.setContent(notationEditor);
-		tabPane.getTabs().add(plainCourse);
+		Tab plainCourseTab = new Tab();
+		plainCourseTab.setText("Plain Course");
+		PlainCourse plainCourse = new PlainCourse();
+		plainCourseTab.setContent(plainCourse);
+		tabPane.getTabs().add(plainCourseTab);
+
+		Tab callsTab = new Tab();
+		callsTab.setText("Calls");
+		Calls calls = new Calls();
+		callsTab.setContent(calls);
+		tabPane.getTabs().add(callsTab);
+
 		return tabPane;
 	}
 
@@ -66,7 +74,7 @@ public class NotationEditorDialog extends Stage {
 		HBox.setHgrow(spacer,Priority.ALWAYS);
 
 		buttonBar.setSpacing(20);
-
+		buttonBar.setPadding(new Insets(0,10,10,10));
 		return buttonBar;
 	}
 }

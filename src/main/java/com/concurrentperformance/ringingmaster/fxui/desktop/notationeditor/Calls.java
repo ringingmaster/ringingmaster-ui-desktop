@@ -18,7 +18,7 @@ public class Calls extends GridPane {
 	//@FXML private TextField textField; //TODO remove example
 
 	public Calls() {
-		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/concurrentperformance/ringingmaster/fxui/desktop/notationeditor/PlainCourse.fxml"));
+		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/concurrentperformance/ringingmaster/fxui/desktop/notationeditor/Calls.fxml"));
 		fxmlLoader.setRoot(this);
 		fxmlLoader.setController(this);
 

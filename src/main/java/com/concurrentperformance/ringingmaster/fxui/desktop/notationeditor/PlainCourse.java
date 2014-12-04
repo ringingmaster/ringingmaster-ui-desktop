@@ -3,7 +3,7 @@ package com.concurrentperformance.ringingmaster.fxui.desktop.notationeditor;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.GridPane;
 
 import java.io.IOException;
 
@@ -14,7 +14,7 @@ import java.io.IOException;
  */
 
 
-public class PlainCourse extends VBox {
+public class PlainCourse extends GridPane {
 	//@FXML private TextField textField; //TODO remove example
 
 	public PlainCourse() {

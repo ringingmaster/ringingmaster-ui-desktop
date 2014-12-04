@@ -3,7 +3,7 @@ package com.concurrentperformance.ringingmaster.fxui.desktop.notationeditor;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.GridPane;
 
 import java.io.IOException;
 
@@ -14,11 +14,11 @@ import java.io.IOException;
  */
 
 
-public class NotationEditor extends VBox {
+public class Calls extends GridPane {
 	//@FXML private TextField textField; //TODO remove example
 
-	public NotationEditor() {
-		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/concurrentperformance/ringingmaster/fxui/desktop/notationeditor/NotationEditor.fxml"));
+	public Calls() {
+		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/concurrentperformance/ringingmaster/fxui/desktop/notationeditor/PlainCourse.fxml"));
 		fxmlLoader.setRoot(this);
 		fxmlLoader.setController(this);
 

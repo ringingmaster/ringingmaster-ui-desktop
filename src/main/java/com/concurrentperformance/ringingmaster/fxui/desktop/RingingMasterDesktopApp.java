@@ -37,8 +37,6 @@ public class RingingMasterDesktopApp extends Application {
 
 	private final static Logger log = LoggerFactory.getLogger(RingingMasterDesktopApp.class);
 
-	private static Stage stage;
-
 	public static void main(String[] args) {
 		ThreadUncaughtExceptionHelper.setLoggingDefaultUncaughtException();
 		log.info("Starting RingingMasterDesktopApp");
@@ -47,7 +45,6 @@ public class RingingMasterDesktopApp extends Application {
 
 	@Override
 	public void start(Stage stage) throws IOException {
-		this.stage = stage;
 		stage.setTitle("Ringingmaster Desktop");
 
 		Parent parent = createMainWindow();
@@ -58,10 +55,6 @@ public class RingingMasterDesktopApp extends Application {
 		stage.getIcons().add(new Image(	RingingMasterDesktopApp.class.getResourceAsStream("/images/RingingMaster.png")));
 
 		stage.show();
-	}
-
-	public static Stage getMainStage() {
-		return stage;
 	}
 
 	private Parent createMainWindow() {

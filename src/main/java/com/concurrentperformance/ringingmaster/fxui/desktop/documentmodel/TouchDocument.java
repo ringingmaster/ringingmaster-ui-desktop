@@ -633,10 +633,10 @@ public class TouchDocument extends ConcurrentListenable<TouchDocumentListener> i
 	}
 
 	// TODO remove this
-	private static NotationBody buildPlainBobMajor() {
+	public static NotationBody buildPlainBobMajor() {
 		return NotationBuilder.getInstance()
 				.setNumberOfWorkingBells(NumberOfBells.BELLS_8)
-				.setName("Little Bob")
+				.setName("Plain Bob")
 				.setFoldedPalindromeNotationShorthand("-18-18-18-18", "12")
 				.addCall("Bob", "-", "14", true)
 				.addCall("Single", "s", "1234", false)

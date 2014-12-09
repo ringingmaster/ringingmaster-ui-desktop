@@ -1,80 +1,88 @@
 package com.concurrentperformance.ringingmaster.fxui.desktop.notationeditor;
 
-import com.concurrentperformance.ringingmaster.fxui.desktop.property.methods.AddMethodButton;
-import javafx.geometry.Insets;
-import javafx.scene.Node;
+import com.concurrentperformance.ringingmaster.engine.notation.NotationBody;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
 
 /**
  * TODO Comments
  *
  * @author Lake
  */
-public class NotationEditorDialog extends Stage {
+public class NotationEditorDialog {
 
-	private static Image INFO_IMAGE = new Image(AddMethodButton.class.getResourceAsStream("/images/info.png"));
+	private static final Logger log = LoggerFactory.getLogger(NotationEditorDialog.class);
 
-	public NotationEditorDialog() {
-		super(StageStyle.DECORATED);
+	private PlainCourse plainCourseController;
+	private Calls callsController;
 
-		TabPane tabPane = getTabPane();
-		Node buttonBar = getButtonBar();
+	@FXML
+	private TabPane tabs;
 
-		VBox vBox = new VBox();
-		vBox.getChildren().addAll(tabPane, buttonBar);
-		VBox.setVgrow(tabPane, Priority.ALWAYS);
-		VBox.setVgrow(buttonBar, Priority.NEVER);
+	public static NotationEditorDialog createInstance(NotationBody notationBody) {
+		FXMLLoader fxmlLoader = new FXMLLoader(NotationEditorDialog.class.getResource("/com/concurrentperformance/ringingmaster/fxui/desktop/notationeditor/NotationEditorDialog.fxml"));
 
-		setScene(new Scene(vBox));
-		setTitle("Notation Editor - TODO ");
-		initModality(Modality.APPLICATION_MODAL);
+		try {
+			Stage stage = new Stage(StageStyle.DECORATED);
 
-		show();
+			stage.setScene(new Scene(fxmlLoader.load()));
+			stage.setTitle("Notation Editor - TODO ");
+			stage.initModality(Modality.APPLICATION_MODAL);
+
+			NotationEditorDialog controller = fxmlLoader.getController();
+			controller.init();
+			controller.setNotationBody(notationBody);
+
+			stage.show();
+
+			return controller;
+
+		} catch (IOException e) {
+			log.error("Error initialising NotationEditorDialog", e);
+			return null;
+		}
 	}
 
-	private TabPane getTabPane() {
-		TabPane tabPane = new TabPane();
+	private void setNotationBody(NotationBody notationBody) {
+		plainCourseController.setNotation(notationBody);
+	}
 
+	private void init() throws IOException {
+		addPlainCourseTab(tabs);
+		addCallsTab(tabs);
+	}
+
+	private void addPlainCourseTab(TabPane tabPane) throws IOException {
 		Tab plainCourseTab = new Tab();
 		plainCourseTab.setText("Plain Course");
-		PlainCourse plainCourse = new PlainCourse();
+		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/concurrentperformance/ringingmaster/fxui/desktop/notationeditor/PlainCourse.fxml"));
+		GridPane plainCourse = fxmlLoader.load();
+		plainCourseController = fxmlLoader.getController();
+
 		plainCourseTab.setContent(plainCourse);
 		tabPane.getTabs().add(plainCourseTab);
-
-		Tab callsTab = new Tab();
-		callsTab.setText("Calls");
-		Calls calls = new Calls();
-		callsTab.setContent(calls);
-		tabPane.getTabs().add(callsTab);
-
-		return tabPane;
 	}
 
-	public Node getButtonBar() {
-		HBox buttonBar = new HBox();
+	private void addCallsTab(TabPane tabPane) throws IOException {
+		Tab callsCourseTab = new Tab();
+		callsCourseTab.setText("Plain Course");
+		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/concurrentperformance/ringingmaster/fxui/desktop/notationeditor/Calls.fxml"));
+		GridPane calls = fxmlLoader.load();
+		callsController = fxmlLoader.getController();
 
-		Button okButton = new Button("OK");
-		Button cancelButton = new Button("Cancel");
-		Pane spacer = new Pane();
-		Button infoButton = new Button("", new ImageView(INFO_IMAGE));
-
-		buttonBar.getChildren().addAll(infoButton, spacer, cancelButton, okButton);
-		HBox.setHgrow(spacer,Priority.ALWAYS);
-
-		buttonBar.setSpacing(20);
-		buttonBar.setPadding(new Insets(0,10,10,10));
-		return buttonBar;
+		callsCourseTab.setContent(calls);
+		tabPane.getTabs().add(callsCourseTab);
 	}
+
 }

@@ -1,11 +1,11 @@
 package com.concurrentperformance.ringingmaster.fxui.desktop.notationeditor;
 
 
+import com.concurrentperformance.ringingmaster.engine.notation.NotationBody;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.layout.GridPane;
-
-import java.io.IOException;
+import javafx.scene.control.TextField;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * TODO Comments
@@ -14,35 +14,23 @@ import java.io.IOException;
  */
 
 
-public class PlainCourse extends GridPane {
-	//@FXML private TextField textField; //TODO remove example
+public class PlainCourse {
 
-	public PlainCourse() {
-		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/concurrentperformance/ringingmaster/fxui/desktop/notationeditor/PlainCourse.fxml"));
-		fxmlLoader.setRoot(this);
-		fxmlLoader.setController(this);
+	@FXML
+	private TextField name;
+	@FXML
+	private TextField shorthand;
 
-		try {
-			fxmlLoader.load();
-		} catch (IOException exception) {
-			throw new RuntimeException(exception);
-		}
-	}
-
-//	public String getText() {
-//		return textProperty().get();
-//	}
-//
-//	public void setText(String value) {
-//		textProperty().set(value);
-//	}
-
-	//public StringProperty textProperty() {
-//		return textField.textProperty();
-//	}
+	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 	@FXML
 	protected void doSomething() {
-		System.out.println("The button was clicked!");
+		log.info("The button was clicked!");
 	}
+
+	public void setNotation(NotationBody notation) {
+		name.setText(notation.getName());
+		shorthand.setText(notation.getSpliceIdentifier());
+	}
+
 }

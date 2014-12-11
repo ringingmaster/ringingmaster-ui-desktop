@@ -1,13 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.image.*?>
-<?import javafx.geometry.*?>
 <?import java.lang.*?>
-<?import javafx.scene.*?>
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.control.cell.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.cell.PropertyValueFactory?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
 
-<GridPane hgap="10" prefHeight="160.0" prefWidth="668.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.concurrentperformance.ringingmaster.fxui.desktop.notationeditor.Calls">
+<GridPane hgap="10" prefHeight="160.0" prefWidth="668.0" vgap="10.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.concurrentperformance.ringingmaster.fxui.desktop.notationeditor.Calls">
    <columnConstraints>
       <ColumnConstraints />
       <ColumnConstraints />
@@ -25,12 +35,29 @@
       <CheckBox mnemonicParsing="false" text="Use Default Calls" />
       <Label text="lh:" GridPane.columnIndex="3" />
       <TextField GridPane.columnIndex="4" />
-      <Separator orientation="VERTICAL" prefHeight="200.0" GridPane.columnIndex="2" />
-      <TableView prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="2147483647" GridPane.rowIndex="1">
-        <columns>
-          <TableColumn prefWidth="75.0" text="C1" />
-          <TableColumn prefWidth="75.0" text="C2" />
-        </columns>
+      <Separator orientation="VERTICAL" GridPane.columnIndex="2" />
+      <TableView fx:id="callsList" prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="2147483647" GridPane.rowIndex="1">
+         <columns>
+            <TableColumn fx:id="callNameColumn" prefWidth="130.0" text="Call Name">
+               <cellValueFactory><PropertyValueFactory property="callName" />
+               </cellValueFactory>
+            </TableColumn>
+            <TableColumn prefWidth="130.0" text="Call Shorthand">
+               <cellValueFactory><PropertyValueFactory property="callShorthand" />
+               </cellValueFactory>
+            </TableColumn>
+            <TableColumn minWidth="1.0" prefWidth="130.0" text="Notation">
+               <cellValueFactory><PropertyValueFactory property="notation" />
+               </cellValueFactory>
+            </TableColumn>
+            <TableColumn prefWidth="130.0" text="Default">
+               <cellValueFactory><PropertyValueFactory property="selected" />
+               </cellValueFactory>
+            </TableColumn>
+         </columns>
+         <sortOrder>
+            <fx:reference source="callNameColumn" />
+         </sortOrder>
       </TableView>
    </children>
    <padding>

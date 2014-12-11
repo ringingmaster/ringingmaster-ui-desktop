@@ -9,9 +9,9 @@
 
 <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="348.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.concurrentperformance.ringingmaster.fxui.desktop.notationeditor.NotationEditorDialog">
    <children>
-      <TabPane fx:id="tabs" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" />
+      <TabPane fx:id="tabs" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS" />
       <Separator prefWidth="200.0" />
-      <Label prefHeight="98.0" prefWidth="627.0" text="Errors" />
+      <Label fx:id="status" prefHeight="98.0" prefWidth="627.0" text="Errors" VBox.vgrow="NEVER" />
       <Separator prefWidth="200.0" />
       <HBox prefHeight="55.0" prefWidth="600.0" spacing="10.0" VBox.vgrow="NEVER">
          <children>

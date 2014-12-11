@@ -26,17 +26,17 @@
     </rowConstraints>
      <children>
         <Label text="Name:" />
-        <TextField fx:id="name" onAction="#doSomething" onKeyTyped="#doSomething" GridPane.columnSpan="2" GridPane.rowIndex="1" />
+        <TextField fx:id="name" onAction="#update" onKeyTyped="#update" GridPane.columnSpan="2" GridPane.rowIndex="1" />
         <Label text="Shorthand:" GridPane.columnIndex="3" />
         <TextField fx:id="shorthand" GridPane.columnIndex="3" GridPane.rowIndex="1" />
         <CheckBox mnemonicParsing="false" text="Asymmetric" GridPane.rowIndex="2" />
         <Separator prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="2" />
         <Label text="Notation:" GridPane.rowIndex="3" />
-        <TextField GridPane.columnSpan="4" GridPane.rowIndex="4" />
+        <TextField fx:id="notation" GridPane.columnSpan="4" GridPane.rowIndex="4" />
         <Label text="Number:" GridPane.columnIndex="4" />
         <ComboBox prefWidth="150.0" GridPane.columnIndex="4" GridPane.rowIndex="1" />
         <Label text="Lead End:" GridPane.columnIndex="4" GridPane.rowIndex="3" />
-        <TextField GridPane.columnIndex="4" GridPane.rowIndex="4" />
+        <TextField fx:id="leadend" GridPane.columnIndex="4" GridPane.rowIndex="4" />
          <Button mnemonicParsing="false" text="" GridPane.columnIndex="2" GridPane.rowIndex="1">
              <graphic>
                  <ImageView>

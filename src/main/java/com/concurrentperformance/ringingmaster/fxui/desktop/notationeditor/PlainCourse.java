@@ -62,7 +62,8 @@ public class PlainCourse {
 		for (NumberOfBells numberOfBells : NumberOfBells.values()) {
 			this.numberOfBells.getItems().add(numberOfBells);
 		}
-		this.numberOfBells.getSelectionModel().select(notation.getNumberOfWorkingBells());
+		numberOfBells.getSelectionModel().select(notation.getNumberOfWorkingBells());
+		numberOfBells.focusedProperty().addListener(this::focusLostUpdater);
 	}
 
 	public void focusLostUpdater(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {

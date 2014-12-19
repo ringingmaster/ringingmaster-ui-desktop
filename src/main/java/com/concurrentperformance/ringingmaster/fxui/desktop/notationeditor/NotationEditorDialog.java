@@ -58,7 +58,7 @@ public class NotationEditorDialog {
 
 	private Stage stage;
 	private PlainCourse plainCourseController;
-	private Calls callsController;
+	private Call callController;
 	private CallPointRow callPointRowController;
 	private CallPointMethod callPointMethodController;
 	private CallPointAggregate callPointAggregateController;
@@ -101,7 +101,7 @@ public class NotationEditorDialog {
 		this.stage = stage;
 
 		plainCourseController = addTab(tabs, "Plain Course", "/com/concurrentperformance/ringingmaster/fxui/desktop/notationeditor/PlainCourse.fxml");
-		callsController = addTab(tabs, "Calls", "/com/concurrentperformance/ringingmaster/fxui/desktop/notationeditor/Calls.fxml");
+		callController = addTab(tabs, "Calls", "/com/concurrentperformance/ringingmaster/fxui/desktop/notationeditor/Call.fxml");
 		callPointRowController = addTab(tabs, "Row Call Points", "/com/concurrentperformance/ringingmaster/fxui/desktop/notationeditor/CallPointRow.fxml");
 		callPointMethodController = addTab(tabs, "Method Call Points", "/com/concurrentperformance/ringingmaster/fxui/desktop/notationeditor/CallPointMethod.fxml");
 		callPointAggregateController = addTab(tabs, "Aggregate Call Points", "/com/concurrentperformance/ringingmaster/fxui/desktop/notationeditor/CallPointAggregate.fxml");
@@ -111,7 +111,7 @@ public class NotationEditorDialog {
 
 		notationName = notationBody.getNameIncludingNumberOfBells();
 		plainCourseController.init(notationBody, this, editMode);
-		callsController.setNotation(notationBody);
+		callController.setNotation(notationBody);
 
 
 		// Hide the status headers

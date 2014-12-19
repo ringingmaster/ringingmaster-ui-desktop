@@ -7,10 +7,12 @@ import com.concurrentperformance.ringingmaster.engine.notation.impl.NotationBuil
 import com.google.common.base.Objects;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import org.slf4j.Logger;
@@ -32,6 +34,8 @@ public class PlainCourse {
 
 	@FXML
 	private TextField name;
+	@FXML
+	private Button notationSearchButton;
 	@FXML
 	private TextField shorthand;
 	@FXML
@@ -60,6 +64,8 @@ public class PlainCourse {
 
 		this.notation.setText(notation.getRawNotationDisplayString(true));
 		this.notation.setOnKeyReleased(this::keyPressUpdater);
+
+		notationSearchButton.setTooltip(new Tooltip("Search for method to populate editor."));
 
 		leadend.setText(notation.getRawLeadEndDisplayString(true));
 		leadend.setOnKeyReleased(this::keyPressUpdater);

@@ -16,9 +16,10 @@ import java.util.Set;
  */
 
 
-public class Calls {
+public class Call {
 
-	@FXML private TableView<CallModel> callsList;
+	@FXML
+	private TableView<CallModel> callsList;
 
 	public void setNotation(NotationBody notation) {
 

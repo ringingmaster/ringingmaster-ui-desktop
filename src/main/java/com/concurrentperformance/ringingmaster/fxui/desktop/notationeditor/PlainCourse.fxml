@@ -37,9 +37,9 @@
         <ComboBox fx:id="numberOfBells" prefWidth="150.0" GridPane.columnIndex="4" GridPane.rowIndex="1" />
         <Label fx:id="leadendLabel" text="Lead End:" GridPane.columnIndex="4" GridPane.rowIndex="3" />
         <TextField fx:id="leadend" GridPane.columnIndex="4" GridPane.rowIndex="4" />
-         <Button mnemonicParsing="false" text="" GridPane.columnIndex="2" GridPane.rowIndex="1">
+         <Button fx:id="notationSearchButton" mnemonicParsing="false" text="" GridPane.columnIndex="2" GridPane.rowIndex="1">
              <graphic>
-                 <ImageView>
+                 <ImageView >
                     <image>
                         <Image url="/images/find.png" />
                     </image>

@@ -17,15 +17,12 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane hgap="10" prefHeight="160.0" prefWidth="668.0" vgap="10.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.concurrentperformance.ringingmaster.fxui.desktop.notationeditor.Calls">
+<GridPane hgap="10" prefHeight="160.0" prefWidth="668.0" vgap="10.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.concurrentperformance.ringingmaster.fxui.desktop.notationeditor.Call">
    <columnConstraints>
       <ColumnConstraints />
       <ColumnConstraints />
       <ColumnConstraints />
-      <ColumnConstraints />
       <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" />
-      <ColumnConstraints />
-      <ColumnConstraints />
    </columnConstraints>
    <rowConstraints>
       <RowConstraints maxHeight="69.0" minHeight="37.0" prefHeight="37.0" />
@@ -33,9 +30,9 @@
    </rowConstraints>
    <children>
       <CheckBox mnemonicParsing="false" text="Use Default Calls" />
-      <Label text="lh:" GridPane.columnIndex="3" />
-      <TextField GridPane.columnIndex="4" />
-      <Separator orientation="VERTICAL" GridPane.columnIndex="2" />
+      <Separator orientation="VERTICAL" GridPane.columnIndex="1" />
+      <Label text="lh:" GridPane.columnIndex="2" />
+      <TextField GridPane.columnIndex="3" />
       <TableView fx:id="callsList" prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="2147483647" GridPane.rowIndex="1">
          <columns>
             <TableColumn fx:id="callNameColumn" prefWidth="130.0" text="Call Name">

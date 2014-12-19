@@ -10,7 +10,7 @@ public class CallModel {
 	private String callName = "";
 	private String callShorthand = "";
 	private String notation = "";
-	private String selected = ""; //TODO boolean?
+	private String selected = "";
 
 	public CallModel() {
 	}

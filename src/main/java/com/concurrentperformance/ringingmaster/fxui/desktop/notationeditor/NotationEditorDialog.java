@@ -100,14 +100,14 @@ public class NotationEditorDialog {
 		this.editMode = editMode;
 		this.stage = stage;
 
-		plainCourseController = addTab(tabs, "Plain Course", "/com/concurrentperformance/ringingmaster/fxui/desktop/notationeditor/PlainCourse.fxml");
-		callController = addTab(tabs, "Calls", "/com/concurrentperformance/ringingmaster/fxui/desktop/notationeditor/Call.fxml");
-		callPointRowController = addTab(tabs, "Row Call Points", "/com/concurrentperformance/ringingmaster/fxui/desktop/notationeditor/CallPointRow.fxml");
-		callPointMethodController = addTab(tabs, "Method Call Points", "/com/concurrentperformance/ringingmaster/fxui/desktop/notationeditor/CallPointMethod.fxml");
-		callPointAggregateController = addTab(tabs, "Aggregate Call Points", "/com/concurrentperformance/ringingmaster/fxui/desktop/notationeditor/CallPointAggregate.fxml");
-		splicePointController = addTab(tabs, "Aggregate Call Points", "/com/concurrentperformance/ringingmaster/fxui/desktop/notationeditor/SplicePoint.fxml");
-		leadLinePointController = addTab(tabs, "Lead Line Points", "/com/concurrentperformance/ringingmaster/fxui/desktop/notationeditor/LeadLinePoint.fxml");
-		courseHeadPointController = addTab(tabs, "Course Head Point", "/com/concurrentperformance/ringingmaster/fxui/desktop/notationeditor/CourseHeadPoint.fxml");
+		plainCourseController = addTab(tabs, "Plain Course", "PlainCourse.fxml");
+		callController = addTab(tabs, "Calls", "Call.fxml");
+		callPointRowController = addTab(tabs, "Row Call Points", "CallPointRow.fxml");
+		callPointMethodController = addTab(tabs, "Method Call Points", "CallPointMethod.fxml");
+		callPointAggregateController = addTab(tabs, "Aggregate Call Points", "CallPointAggregate.fxml");
+		splicePointController = addTab(tabs, "Splice Points", "SplicePoint.fxml");
+		leadLinePointController = addTab(tabs, "Lead Line Points", "LeadLinePoint.fxml");
+		courseHeadPointController = addTab(tabs, "Course Head Point", "CourseHeadPoint.fxml");
 
 		notationName = notationBody.getNameIncludingNumberOfBells();
 		plainCourseController.init(notationBody, this, editMode);
@@ -134,13 +134,17 @@ public class NotationEditorDialog {
 	}
 
 	private <T> T addTab(TabPane tabPane, String name, String fxmlFile) throws IOException {
-		Tab tab = new Tab();
-		tab.setText(name);
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(fxmlFile));
 		Node content = fxmlLoader.load();
+		T controller = fxmlLoader.getController();
+
+		Tab tab = new Tab();
+		tab.setText(name);
 		tab.setContent(content);
+
 		tabPane.getTabs().add(tab);
-		return fxmlLoader.getController();
+
+		return controller;
 	}
 
 	public void update() {
@@ -150,6 +154,7 @@ public class NotationEditorDialog {
 			NotationBuilder notationBuilder = NotationBuilder.getInstance();
 
 			plainCourseController.build(notationBuilder);
+			callController.build(notationBuilder);
 			NotationBody notation = notationBuilder.build();
 
 			// Test build a plain course to see if it is possible.

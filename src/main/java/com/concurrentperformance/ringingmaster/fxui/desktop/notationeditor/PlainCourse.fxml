@@ -35,7 +35,7 @@
         <TextField fx:id="notation" GridPane.columnSpan="4" GridPane.rowIndex="4" />
         <Label text="Number:" GridPane.columnIndex="4" />
         <ComboBox fx:id="numberOfBells" prefWidth="150.0" GridPane.columnIndex="4" GridPane.rowIndex="1" />
-        <Label text="Lead End:" GridPane.columnIndex="4" GridPane.rowIndex="3" />
+        <Label fx:id="leadendLabel" text="Lead End:" GridPane.columnIndex="4" GridPane.rowIndex="3" />
         <TextField fx:id="leadend" GridPane.columnIndex="4" GridPane.rowIndex="4" />
          <Button mnemonicParsing="false" text="" GridPane.columnIndex="2" GridPane.rowIndex="1">
              <graphic>

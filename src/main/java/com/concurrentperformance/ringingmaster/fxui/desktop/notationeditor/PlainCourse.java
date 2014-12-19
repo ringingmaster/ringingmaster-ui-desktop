@@ -9,7 +9,10 @@ import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.GridPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,38 +35,43 @@ public class PlainCourse {
 	@FXML
 	private TextField shorthand;
 	@FXML
-	private ComboBox numberOfBells;
+	private ComboBox<NumberOfBells> numberOfBells;
 	@FXML
 	private CheckBox asymmetric;
 	@FXML
 	private TextField notation;
 	@FXML
 	private TextField leadend;
+	@FXML
+	private Label leadendLabel;
 
 	private NotationEditorDialog parent;
 
-	public void init(NotationBody notation, NotationEditorDialog parent) {
+	public void init(NotationBody notation, NotationEditorDialog parent, NotationEditorDialog.EditMode editMode) {
 		checkNotNull(notation);
 		checkState(this.parent == null, "Don't init more than once");
 		this.parent = checkNotNull(parent);
 
 		name.setText(notation.getName());
-		name.focusedProperty().addListener(this::focusLostUpdater);
+		name.setOnKeyReleased(this::keyPressUpdater);
 
 		shorthand.setText(notation.getSpliceIdentifier());
 		shorthand.focusedProperty().addListener(this::focusLostUpdater);
 
 		this.notation.setText(notation.getRawNotationDisplayString(true));
-		this.notation.focusedProperty().addListener(this::focusLostUpdater);
+		this.notation.setOnKeyReleased(this::keyPressUpdater);
 
 		leadend.setText(notation.getRawLeadEndDisplayString(true));
-		leadend.focusedProperty().addListener(this::focusLostUpdater);
+		leadend.setOnKeyReleased(this::keyPressUpdater);
 
 		for (NumberOfBells numberOfBells : NumberOfBells.values()) {
 			this.numberOfBells.getItems().add(numberOfBells);
 		}
 		numberOfBells.getSelectionModel().select(notation.getNumberOfWorkingBells());
+		numberOfBells.getSelectionModel().selectedItemProperty().addListener(this::numberOfBellsUpdater);
 		numberOfBells.focusedProperty().addListener(this::focusLostUpdater);
+
+		asymmetric.selectedProperty().addListener(this::asymmetricUpdater);
 	}
 
 	public void focusLostUpdater(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
@@ -72,14 +80,29 @@ public class PlainCourse {
 		}
 	}
 
+	public void numberOfBellsUpdater(ObservableValue<? extends NumberOfBells> observable, NumberOfBells oldValue, NumberOfBells newValue) {
+		parent.update();
+	}
+
+	public void keyPressUpdater(KeyEvent event) {
+		parent.update();
+	}
+
+	public void asymmetricUpdater(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+		leadend.setVisible(!newValue);
+		leadendLabel.setVisible(!newValue);
+		GridPane.setColumnSpan(this.notation, (newValue)?5:4);
+		parent.update();
+	}
+
 	public void build(NotationBuilder notationBuilder) {
 		notationBuilder.setName(name.getText());
+		notationBuilder.setNumberOfWorkingBells(numberOfBells.getSelectionModel().getSelectedItem());
 		boolean selected = asymmetric.isSelected();
 		if (selected) {
-			notationBuilder.setFoldedPalindromeNotationShorthand(notation.getText(), leadend.getText());
-		}
-		else {
 			notationBuilder.setUnfoldedNotationShorthand(notation.getText());
+		} else {
+			notationBuilder.setFoldedPalindromeNotationShorthand(notation.getText(), leadend.getText());
 		}
 	}
 }

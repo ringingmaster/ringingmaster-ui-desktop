@@ -71,21 +71,23 @@ public class AnalysisStatusWindow extends PropertyEditor implements ProofManager
 
 	private void updateTermination(Proof proof) {
 		if (proof != null) {
+			String terminateReasonDisplayString = proof.getTerminateReasonDisplayString();
+
 			switch(proof.getTerminationReason()) {
 
 				case INVALID_TOUCH:
 					break;
 				case ROW_COUNT:
-					updateDisplayProperty(TERMINATION_PROPERTY_NAME, "Row limit (" + proof.getCreatedMethod().getRowCount() + ")", ColorManager.getWarnHighlight());
+					updateDisplayProperty(TERMINATION_PROPERTY_NAME, terminateReasonDisplayString, ColorManager.getWarnHighlight());
 					break;
 				case LEAD_COUNT:
-					updateDisplayProperty(TERMINATION_PROPERTY_NAME, "Lead limit (" + proof.getCreatedMethod().getLeadCount() + ")", ColorManager.getWarnHighlight());
+					updateDisplayProperty(TERMINATION_PROPERTY_NAME, terminateReasonDisplayString, ColorManager.getWarnHighlight());
 					break;
 				case SPECIFIED_ROW:
-					updateDisplayProperty(TERMINATION_PROPERTY_NAME, "Change (" + proof.getCreatedMethod().getLastRow().getDisplayString(true) + ")", ColorManager.getClearHighlight());
+					updateDisplayProperty(TERMINATION_PROPERTY_NAME, terminateReasonDisplayString, ColorManager.getClearHighlight());
 					break;
 				case EMPTY_PARTS:
-					updateDisplayProperty(TERMINATION_PROPERTY_NAME, "Aborted - Empty parts found", ColorManager.getErrorHighlight());
+					updateDisplayProperty(TERMINATION_PROPERTY_NAME, terminateReasonDisplayString, ColorManager.getErrorHighlight());
 					break;
 				// TODO this is from C++
 //			case TR_PARTS:

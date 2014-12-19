@@ -31,7 +31,7 @@ public class Calls {
 					call.getName(),
 					call.getNameShorthand(),
 					call.getNotationDisplayString(false),
-					(call == defaultCall)?"default":""));
+					(call == defaultCall)?"<default>":""));
 		}
 	}
 }

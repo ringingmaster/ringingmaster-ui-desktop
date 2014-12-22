@@ -29,6 +29,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * TODO Comments
@@ -54,18 +56,10 @@ public class NotationEditorDialog {
 			return editText;
 		}
 	};
+
 	private EditMode editMode;
-
 	private Stage stage;
-	private PlainCourse plainCourseController;
-	private Call callController;
-	private CallPointRow callPointRowController;
-	private CallPointMethod callPointMethodController;
-	private CallPointAggregate callPointAggregateController;
-	private SplicePoint splicePointController;
-	private LeadLinePoint leadLinePointController;
-	private CourseHeadPoint courseHeadPointController;
-
+	private List<NotationEditorTabController> tabControllers = new ArrayList<>();
 	private String notationName;
 
 	@FXML
@@ -100,19 +94,20 @@ public class NotationEditorDialog {
 		this.editMode = editMode;
 		this.stage = stage;
 
-		plainCourseController = addTab(tabs, "Plain Course", "PlainCourse.fxml");
-		callController = addTab(tabs, "Calls", "Call.fxml");
-		callPointRowController = addTab(tabs, "Row Call Points", "CallPointRow.fxml");
-		callPointMethodController = addTab(tabs, "Method Call Points", "CallPointMethod.fxml");
-		callPointAggregateController = addTab(tabs, "Aggregate Call Points", "CallPointAggregate.fxml");
-		splicePointController = addTab(tabs, "Splice Points", "SplicePoint.fxml");
-		leadLinePointController = addTab(tabs, "Lead Line Points", "LeadLinePoint.fxml");
-		courseHeadPointController = addTab(tabs, "Course Head Point", "CourseHeadPoint.fxml");
+		addTab("PlainCourse.fxml");
+		addTab("Call.fxml");
+		addTab("CallPointRow.fxml");
+		addTab("CallPointMethod.fxml");
+		addTab("CallPointAggregate.fxml");
+		addTab("SplicePoint.fxml");
+		addTab("LeadLinePoint.fxml");
+		addTab("CourseHeadPoint.fxml");
 
 		notationName = notationBody.getNameIncludingNumberOfBells();
-		plainCourseController.init(notationBody, this, editMode);
-		callController.setNotation(notationBody);
 
+		for (NotationEditorTabController tabController : tabControllers) {
+			tabController.init(notationBody, this, editMode);
+		}
 
 		// Hide the status headers
 		status.widthProperty().addListener(new ChangeListener<Number>() {
@@ -133,28 +128,28 @@ public class NotationEditorDialog {
 		update();
 	}
 
-	private <T> T addTab(TabPane tabPane, String name, String fxmlFile) throws IOException {
+	private void addTab(String fxmlFile) throws IOException {
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(fxmlFile));
 		Node content = fxmlLoader.load();
-		T controller = fxmlLoader.getController();
+		NotationEditorTabController controller = fxmlLoader.getController();
+		tabControllers.add(controller);
 
 		Tab tab = new Tab();
-		tab.setText(name);
+		tab.setText(controller.getTabName());
 		tab.setContent(content);
 
-		tabPane.getTabs().add(tab);
-
-		return controller;
+		tabs.getTabs().add(tab);
 	}
 
 	public void update() {
 		ObservableList<StatusModel> items = status.getItems();
 
 		try {
+			// build notations
 			NotationBuilder notationBuilder = NotationBuilder.getInstance();
-
-			plainCourseController.build(notationBuilder);
-			callController.build(notationBuilder);
+			for (NotationEditorTabController tabController : tabControllers) {
+				tabController.build(notationBuilder);
+			}
 			NotationBody notation = notationBuilder.build();
 
 			// Test build a plain course to see if it is possible.

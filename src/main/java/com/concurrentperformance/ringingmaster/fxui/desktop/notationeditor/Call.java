@@ -17,13 +17,19 @@ import java.util.Set;
  */
 
 
-public class Call {
+public class Call implements NotationEditorTabController {
 
 	public static final String DEFAULT_CALL_TOKEN = "<default>";
 	@FXML
 	private TableView<CallModel> callsList;
 
-	public void setNotation(NotationBody notation) {
+	@Override
+	public String getTabName() {
+		return "Calls";
+	}
+
+	@Override
+	public void init(NotationBody notation, NotationEditorDialog notationEditorDialog, NotationEditorDialog.EditMode editMode) {
 
 		ObservableList<CallModel> items = callsList.getItems();
 		items.clear();
@@ -38,6 +44,7 @@ public class Call {
 		}
 	}
 
+	@Override
 	public void build(NotationBuilder notationBuilder) {
 		for (CallModel call : callsList.getItems()) {
 			notationBuilder.addCall(call.getCallName(),

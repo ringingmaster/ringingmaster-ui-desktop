@@ -28,7 +28,7 @@ import static com.google.common.base.Preconditions.checkState;
  */
 
 
-public class PlainCourse {
+public class PlainCourse implements NotationEditorTabController {
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
@@ -51,6 +51,12 @@ public class PlainCourse {
 
 	private NotationEditorDialog parent;
 
+	@Override
+	public String getTabName() {
+		return "Plain Course"   ;
+	}
+
+	@Override
 	public void init(NotationBody notation, NotationEditorDialog parent, NotationEditorDialog.EditMode editMode) {
 		checkNotNull(notation);
 		checkState(this.parent == null, "Don't init more than once");
@@ -101,6 +107,7 @@ public class PlainCourse {
 		parent.update();
 	}
 
+	@Override
 	public void build(NotationBuilder notationBuilder) {
 		notationBuilder.setName(name.getText());
 		notationBuilder.setNumberOfWorkingBells(numberOfBells.getSelectionModel().getSelectedItem());

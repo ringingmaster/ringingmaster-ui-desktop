@@ -159,7 +159,7 @@ public class NotationEditorDialog {
 			items.clear();
 			items.add(new StatusModel("name", notation.getNameIncludingNumberOfBells()));
 			items.add(new StatusModel("notation", notation.getNotationDisplayString(true)));
-			items.add(new StatusModel("notation type", notation.isFoldedPalindrome()?"asymmetric":"asymmetric"));
+			items.add(new StatusModel("notation type", notation.isFoldedPalindrome()?"symmetric":"asymmetric"));
 			items.add(new StatusModel("plain course", plainCourseProof.getAnalysis().isTrueTouch()?"true":"false"));
 			items.add(new StatusModel("changes in plain lead", Integer.toString(plainCourse.getLead(0).getRowCount())));
 			items.add(new StatusModel("changes in plain course", Integer.toString(plainCourse.getRowCount())));

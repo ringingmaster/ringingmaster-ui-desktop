@@ -18,9 +18,6 @@ import javafx.scene.layout.GridPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.base.Preconditions.checkState;
-
 /**
  * TODO Comments
  *
@@ -28,7 +25,7 @@ import static com.google.common.base.Preconditions.checkState;
  */
 
 
-public class PlainCourse implements NotationEditorTabController {
+public class PlainCourse extends SkeletalNotationEditorTabController implements NotationEditorTabController {
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
@@ -58,9 +55,7 @@ public class PlainCourse implements NotationEditorTabController {
 
 	@Override
 	public void init(NotationBody notation, NotationEditorDialog parent, NotationEditorDialog.EditMode editMode) {
-		checkNotNull(notation);
-		checkState(this.parent == null, "Don't init more than once");
-		this.parent = checkNotNull(parent);
+		super.init(notation, parent, editMode);
 
 		name.setText(notation.getName());
 		name.setOnKeyReleased(this::keyPressUpdater);

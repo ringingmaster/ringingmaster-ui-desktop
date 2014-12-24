@@ -11,7 +11,7 @@ import com.concurrentperformance.ringingmaster.engine.notation.impl.NotationBuil
  */
 
 
-public class CallPointAggregate implements NotationEditorTabController {
+public class CallPointAggregate extends SkeletalNotationEditorTabController implements NotationEditorTabController {
 
 	@Override
 	public String getTabName() {
@@ -19,7 +19,8 @@ public class CallPointAggregate implements NotationEditorTabController {
 	}
 
 	@Override
-	public void init(NotationBody notationBody, NotationEditorDialog notationEditorDialog, NotationEditorDialog.EditMode editMode) {
+	public void init(NotationBody notation, NotationEditorDialog parent, NotationEditorDialog.EditMode editMode) {
+		super.init(notation, parent, editMode);
 
 	}
 

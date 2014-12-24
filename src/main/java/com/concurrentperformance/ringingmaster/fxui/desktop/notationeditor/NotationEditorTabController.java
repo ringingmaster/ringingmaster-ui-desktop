@@ -12,7 +12,7 @@ public interface NotationEditorTabController {
 
 	String getTabName();
 
-	void init(NotationBody notationBody, NotationEditorDialog notationEditorDialog, NotationEditorDialog.EditMode editMode);
+	void init(NotationBody notationBody, NotationEditorDialog parent, NotationEditorDialog.EditMode editMode);
 
 	void build(NotationBuilder notationBuilder);
 }

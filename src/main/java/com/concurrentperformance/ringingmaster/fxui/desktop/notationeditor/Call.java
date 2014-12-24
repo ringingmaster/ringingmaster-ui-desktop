@@ -4,8 +4,10 @@ package com.concurrentperformance.ringingmaster.fxui.desktop.notationeditor;
 import com.concurrentperformance.ringingmaster.engine.notation.NotationBody;
 import com.concurrentperformance.ringingmaster.engine.notation.NotationCall;
 import com.concurrentperformance.ringingmaster.engine.notation.impl.NotationBuilder;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.TableView;
 
 import java.util.Set;
@@ -17,11 +19,13 @@ import java.util.Set;
  */
 
 
-public class Call implements NotationEditorTabController {
+public class Call extends SkeletalNotationEditorTabController implements NotationEditorTabController {
 
 	public static final String DEFAULT_CALL_TOKEN = "<default>";
 	@FXML
 	private TableView<CallModel> callsList;
+	@FXML
+	private CheckBox useDefault;
 
 	@Override
 	public String getTabName() {
@@ -29,7 +33,8 @@ public class Call implements NotationEditorTabController {
 	}
 
 	@Override
-	public void init(NotationBody notation, NotationEditorDialog notationEditorDialog, NotationEditorDialog.EditMode editMode) {
+	public void init(NotationBody notation, NotationEditorDialog parent, NotationEditorDialog.EditMode editMode) {
+		super.init(notation, parent, editMode);
 
 		ObservableList<CallModel> items = callsList.getItems();
 		items.clear();
@@ -42,6 +47,13 @@ public class Call implements NotationEditorTabController {
 					call.getNotationDisplayString(false),
 					(call == defaultCall)? DEFAULT_CALL_TOKEN :""));
 		}
+
+		useDefault.selectedProperty().addListener(this::useDefaultUpdater);
+	}
+
+	public void useDefaultUpdater(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+		callsList.setDisable(!newValue);
+		parent.update();
 	}
 
 	@Override

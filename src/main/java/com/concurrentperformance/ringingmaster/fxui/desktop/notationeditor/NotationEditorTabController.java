@@ -11,8 +11,7 @@ import com.concurrentperformance.ringingmaster.engine.notation.impl.NotationBuil
 public interface NotationEditorTabController {
 
 	String getTabName();
-
-	void init(NotationBody notationBody, NotationEditorDialog parent, NotationEditorDialog.EditMode editMode);
-
-	void build(NotationBuilder notationBuilder);
+	void init(NotationEditorDialog parent, NotationEditorEditMode editMode);
+	void buildDialogDataFromNotation(NotationBody notation);
+	void buildNotationFromDialogData(NotationBuilder notationBuilder);
 }

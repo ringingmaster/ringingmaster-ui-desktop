@@ -1,7 +1,7 @@
 package com.concurrentperformance.ringingmaster.fxui.desktop.property.methods;
 
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentmodel.TouchDocument;
-import com.concurrentperformance.ringingmaster.fxui.desktop.notationeditor.NotationEditorDialog;
+import com.concurrentperformance.ringingmaster.fxui.desktop.notationeditor.NotationEditorDialogBuilder;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
@@ -24,7 +24,7 @@ public class AddMethodButton extends Button {
 			@Override
 			public void handle(ActionEvent event) {
 
-				NotationEditorDialog.createInstance(TouchDocument.buildPlainBobMajor());
+				NotationEditorDialogBuilder.createInstance(TouchDocument.buildPlainBobMajor());
 			}
 
 		});

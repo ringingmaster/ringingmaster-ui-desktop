@@ -33,9 +33,19 @@ public class Call extends SkeletalNotationEditorTabController implements Notatio
 	}
 
 	@Override
-	public void init(NotationBody notation, NotationEditorDialog parent, NotationEditorDialog.EditMode editMode) {
-		super.init(notation, parent, editMode);
+	public void init(NotationEditorDialog parent, NotationEditorEditMode editMode) {
+		super.init(parent, editMode);
 
+		useDefault.selectedProperty().addListener(this::useDefaultUpdater);
+	}
+
+	public void useDefaultUpdater(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+		callsList.setDisable(newValue);
+		parent.buildNotationFromDialogData();
+	}
+
+	@Override
+	public void buildDialogDataFromNotation(NotationBody notation) {
 		ObservableList<CallModel> items = callsList.getItems();
 		items.clear();
 		Set<NotationCall> calls = notation.getCalls();
@@ -47,17 +57,10 @@ public class Call extends SkeletalNotationEditorTabController implements Notatio
 					call.getNotationDisplayString(false),
 					(call == defaultCall)? DEFAULT_CALL_TOKEN :""));
 		}
-
-		useDefault.selectedProperty().addListener(this::useDefaultUpdater);
-	}
-
-	public void useDefaultUpdater(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-		callsList.setDisable(!newValue);
-		parent.update();
 	}
 
 	@Override
-	public void build(NotationBuilder notationBuilder) {
+	public void buildNotationFromDialogData(NotationBuilder notationBuilder) {
 		for (CallModel call : callsList.getItems()) {
 			notationBuilder.addCall(call.getCallName(),
 									call.getCallShorthand(),

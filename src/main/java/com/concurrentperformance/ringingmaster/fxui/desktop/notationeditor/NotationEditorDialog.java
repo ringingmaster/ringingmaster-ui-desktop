@@ -13,7 +13,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -22,11 +21,7 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Pane;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -39,25 +34,7 @@ import java.util.List;
  */
 public class NotationEditorDialog {
 
-	private static final Logger log = LoggerFactory.getLogger(NotationEditorDialog.class);
-
-	enum EditMode {
-		ADD_NOTATION("Add"),
-		EDIT_NOTATION("Editing")
-		;
-
-		private final String editText;
-
-		EditMode(String editText) {
-			this.editText = editText;
-		}
-
-		public String getEditText() {
-			return editText;
-		}
-	};
-
-	private EditMode editMode;
+	private NotationEditorEditMode editMode;
 	private Stage stage;
 	private List<NotationEditorTabController> tabControllers = new ArrayList<>();
 	private String notationName;
@@ -69,31 +46,26 @@ public class NotationEditorDialog {
 	@FXML
 	private Button okButton;
 
-	public static NotationEditorDialog createInstance(NotationBody notationBody) {
-		FXMLLoader fxmlLoader = new FXMLLoader(NotationEditorDialog.class.getResource("/com/concurrentperformance/ringingmaster/fxui/desktop/notationeditor/NotationEditorDialog.fxml"));
-
-		try {
-			Stage stage = new Stage(StageStyle.DECORATED);
-			stage.setScene(new Scene(fxmlLoader.load()));
-			stage.initModality(Modality.APPLICATION_MODAL);
-
-			NotationEditorDialog controller = fxmlLoader.getController();
-			controller.init(EditMode.EDIT_NOTATION, stage, notationBody);
-
-			stage.show();
-
-			return controller;
-
-		} catch (IOException e) {
-			log.error("Error initialising NotationEditorDialog", e);
-			return null;
-		}
-	}
-
-	private void init(EditMode editMode, Stage stage, NotationBody notationBody) throws IOException {
+	void init(NotationEditorEditMode editMode, Stage stage, NotationBody notation) throws IOException {
 		this.editMode = editMode;
 		this.stage = stage;
 
+		addAllTabs();
+
+		notationName = notation.getNameIncludingNumberOfBells();
+
+		for (NotationEditorTabController tabController : tabControllers) {
+			tabController.init(this, editMode);
+		}
+
+		hideStatusHeaders();
+
+		buildDialogDataFromNotation(notation);
+
+		buildNotationFromDialogData();
+	}
+
+	private void addAllTabs() throws IOException {
 		addTab("PlainCourse.fxml");
 		addTab("Call.fxml");
 		addTab("CallPointRow.fxml");
@@ -102,30 +74,6 @@ public class NotationEditorDialog {
 		addTab("SplicePoint.fxml");
 		addTab("LeadLinePoint.fxml");
 		addTab("CourseHeadPoint.fxml");
-
-		notationName = notationBody.getNameIncludingNumberOfBells();
-
-		for (NotationEditorTabController tabController : tabControllers) {
-			tabController.init(notationBody, this, editMode);
-		}
-
-		// Hide the status headers
-		status.widthProperty().addListener(new ChangeListener<Number>() {
-			@Override
-			public void changed(ObservableValue<? extends Number> ov, Number t, Number t1) {
-				// Get the table header
-				Pane header = (Pane) status.lookup("TableHeaderRow");
-				if (header != null && header.isVisible()) {
-					header.setMaxHeight(0);
-					header.setMinHeight(0);
-					header.setPrefHeight(0);
-					header.setVisible(false);
-					header.setManaged(false);
-				}
-			}
-		});
-
-		update();
 	}
 
 	private void addTab(String fxmlFile) throws IOException {
@@ -141,14 +89,38 @@ public class NotationEditorDialog {
 		tabs.getTabs().add(tab);
 	}
 
-	public void update() {
+	private void hideStatusHeaders() {
+		// Hide the status headers
+		status.widthProperty().addListener(new ChangeListener<Number>() {
+			@Override
+			public void changed(ObservableValue<? extends Number> ov, Number t, Number t1) {
+				// Get the table header
+				Pane header = (Pane) status.lookup("TableHeaderRow");
+				if (header != null && header.isVisible()) {
+					header.setMaxHeight(0);
+					header.setMinHeight(0);
+					header.setPrefHeight(0);
+					header.setVisible(false);
+					header.setManaged(false);
+				}
+			}
+		});
+	}
+
+	private void buildDialogDataFromNotation(NotationBody notation) {
+		for (NotationEditorTabController tabController : tabControllers) {
+			tabController.buildDialogDataFromNotation(notation);
+		}
+	}
+
+	public void buildNotationFromDialogData() {
 		ObservableList<StatusModel> items = status.getItems();
 
 		try {
 			// build notations
 			NotationBuilder notationBuilder = NotationBuilder.getInstance();
 			for (NotationEditorTabController tabController : tabControllers) {
-				tabController.build(notationBuilder);
+				tabController.buildNotationFromDialogData(notationBuilder);
 			}
 			NotationBody notation = notationBuilder.build();
 

@@ -19,13 +19,18 @@ public class SplicePoint extends SkeletalNotationEditorTabController implements 
 	}
 
 	@Override
-	public void init(NotationBody notation, NotationEditorDialog parent, NotationEditorDialog.EditMode editMode) {
-		super.init(notation, parent, editMode);
+	public void init(NotationEditorDialog parent, NotationEditorEditMode editMode) {
+		super.init(parent, editMode);
 
 	}
 
 	@Override
-	public void build(NotationBuilder notationBuilder) {
+	public void buildDialogDataFromNotation(NotationBody notation) {
+
+	}
+
+	@Override
+	public void buildNotationFromDialogData(NotationBuilder notationBuilder) {
 
 	}
 }

@@ -54,56 +54,60 @@ public class PlainCourse extends SkeletalNotationEditorTabController implements 
 	}
 
 	@Override
-	public void init(NotationBody notation, NotationEditorDialog parent, NotationEditorDialog.EditMode editMode) {
-		super.init(notation, parent, editMode);
+	public void init(NotationEditorDialog parent, NotationEditorEditMode editMode) {
+		super.init(parent, editMode);
 
-		name.setText(notation.getName());
 		name.setOnKeyReleased(this::keyPressUpdater);
 
-		shorthand.setText(notation.getSpliceIdentifier());
 		shorthand.focusedProperty().addListener(this::focusLostUpdater);
 
-		this.notation.setText(notation.getRawNotationDisplayString(true));
 		this.notation.setOnKeyReleased(this::keyPressUpdater);
 
 		notationSearchButton.setTooltip(new Tooltip("Search for method to populate editor."));
 
-		leadend.setText(notation.getRawLeadEndDisplayString(true));
 		leadend.setOnKeyReleased(this::keyPressUpdater);
 
 		for (NumberOfBells numberOfBells : NumberOfBells.values()) {
 			this.numberOfBells.getItems().add(numberOfBells);
 		}
-		numberOfBells.getSelectionModel().select(notation.getNumberOfWorkingBells());
 		numberOfBells.getSelectionModel().selectedItemProperty().addListener(this::numberOfBellsUpdater);
 		numberOfBells.focusedProperty().addListener(this::focusLostUpdater);
 
 		asymmetric.selectedProperty().addListener(this::asymmetricUpdater);
 	}
 
+	@Override
+	public void buildDialogDataFromNotation(NotationBody notation) {
+		name.setText(notation.getName());
+		shorthand.setText(notation.getSpliceIdentifier());
+		this.notation.setText(notation.getRawNotationDisplayString(true));
+		leadend.setText(notation.getRawLeadEndDisplayString(true));
+		numberOfBells.getSelectionModel().select(notation.getNumberOfWorkingBells());
+	}
+
 	public void focusLostUpdater(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
 		if (Objects.equal(Boolean.FALSE, newValue)) {
-			parent.update();
+			parent.buildNotationFromDialogData();
 		}
 	}
 
 	public void numberOfBellsUpdater(ObservableValue<? extends NumberOfBells> observable, NumberOfBells oldValue, NumberOfBells newValue) {
-		parent.update();
+		parent.buildNotationFromDialogData();
 	}
 
 	public void keyPressUpdater(KeyEvent event) {
-		parent.update();
+		parent.buildNotationFromDialogData();
 	}
 
 	public void asymmetricUpdater(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
 		leadend.setVisible(!newValue);
 		leadendLabel.setVisible(!newValue);
 		GridPane.setColumnSpan(this.notation, (newValue)?5:4);
-		parent.update();
+		parent.buildNotationFromDialogData();
 	}
 
 	@Override
-	public void build(NotationBuilder notationBuilder) {
+	public void buildNotationFromDialogData(NotationBuilder notationBuilder) {
 		notationBuilder.setName(name.getText());
 		notationBuilder.setNumberOfWorkingBells(numberOfBells.getSelectionModel().getSelectedItem());
 		boolean selected = asymmetric.isSelected();

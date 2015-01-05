@@ -46,7 +46,6 @@ public class PlainCourse extends SkeletalNotationEditorTabController implements 
 	@FXML
 	private Label leadendLabel;
 
-	private NotationEditorDialog parent;
 
 	@Override
 	public String getTabName() {
@@ -62,10 +61,12 @@ public class PlainCourse extends SkeletalNotationEditorTabController implements 
 		shorthand.focusedProperty().addListener(this::focusLostUpdater);
 
 		this.notation.setOnKeyReleased(this::keyPressUpdater);
+		this.notation.focusedProperty().addListener(this::focusLostUpdater);
 
 		notationSearchButton.setTooltip(new Tooltip("Search for method to populate editor."));
 
 		leadend.setOnKeyReleased(this::keyPressUpdater);
+		leadend.focusedProperty().addListener(this::focusLostUpdater);
 
 		for (NumberOfBells numberOfBells : NumberOfBells.values()) {
 			this.numberOfBells.getItems().add(numberOfBells);
@@ -74,6 +75,7 @@ public class PlainCourse extends SkeletalNotationEditorTabController implements 
 		numberOfBells.focusedProperty().addListener(this::focusLostUpdater);
 
 		asymmetric.selectedProperty().addListener(this::asymmetricUpdater);
+		asymmetric.focusedProperty().addListener(this::focusLostUpdater);
 	}
 
 	@Override
@@ -87,23 +89,23 @@ public class PlainCourse extends SkeletalNotationEditorTabController implements 
 
 	public void focusLostUpdater(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
 		if (Objects.equal(Boolean.FALSE, newValue)) {
-			parent.buildNotationFromDialogData();
+			parent.rebuildNotationFromDialogData();
 		}
 	}
 
 	public void numberOfBellsUpdater(ObservableValue<? extends NumberOfBells> observable, NumberOfBells oldValue, NumberOfBells newValue) {
-		parent.buildNotationFromDialogData();
+		parent.checkNotationFromDialogData();
 	}
 
 	public void keyPressUpdater(KeyEvent event) {
-		parent.buildNotationFromDialogData();
+		parent.checkNotationFromDialogData();
 	}
 
 	public void asymmetricUpdater(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
 		leadend.setVisible(!newValue);
 		leadendLabel.setVisible(!newValue);
 		GridPane.setColumnSpan(this.notation, (newValue)?5:4);
-		parent.buildNotationFromDialogData();
+		parent.checkNotationFromDialogData();
 	}
 
 	@Override

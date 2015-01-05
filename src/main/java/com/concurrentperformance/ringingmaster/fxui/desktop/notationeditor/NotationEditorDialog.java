@@ -62,7 +62,7 @@ public class NotationEditorDialog {
 
 		buildDialogDataFromNotation(notation);
 
-		buildNotationFromDialogData();
+		checkNotationFromDialogData();
 	}
 
 	private void addAllTabs() throws IOException {
@@ -107,48 +107,72 @@ public class NotationEditorDialog {
 		});
 	}
 
-	private void buildDialogDataFromNotation(NotationBody notation) {
-		for (NotationEditorTabController tabController : tabControllers) {
-			tabController.buildDialogDataFromNotation(notation);
+	public void checkNotationFromDialogData() {
+		try {
+			// build notation
+			NotationBody notation = buildNotationFromDialogData();
+			updateNotationStats(notation);
+		}
+		catch (Exception e) {
+			updateNotationStats(e);
 		}
 	}
 
-	public void buildNotationFromDialogData() {
-		ObservableList<StatusModel> items = status.getItems();
-
+	public void rebuildNotationFromDialogData() {
 		try {
-			// build notations
-			NotationBuilder notationBuilder = NotationBuilder.getInstance();
-			for (NotationEditorTabController tabController : tabControllers) {
-				tabController.buildNotationFromDialogData(notationBuilder);
-			}
-			NotationBody notation = notationBuilder.build();
-
-			// Test build a plain course to see if it is possible.
-			Proof plainCourseProof = PlainCourseHelper.buildPlainCourse(notation, "Checking new notation", true);
-			Method plainCourse = plainCourseProof.getCreatedMethod();
-
-			items.clear();
-			items.add(new StatusModel("name", notation.getNameIncludingNumberOfBells()));
-			items.add(new StatusModel("notation", notation.getNotationDisplayString(true)));
-			items.add(new StatusModel("notation type", notation.isFoldedPalindrome()?"symmetric":"asymmetric"));
-			items.add(new StatusModel("plain course", plainCourseProof.getAnalysis().isTrueTouch()?"true":"false"));
-			items.add(new StatusModel("changes in plain lead", Integer.toString(plainCourse.getLead(0).getRowCount())));
-			items.add(new StatusModel("changes in plain course", Integer.toString(plainCourse.getRowCount())));
-			items.add(new StatusModel("leads in plain course", Integer.toString(plainCourse.getLeadCount())));
-			items.add(new StatusModel("number of bells in the hunt", "TODO"));
-			items.add(new StatusModel("number of calls defined", Integer.toString(notation.getCalls().size())));
-
-			status.setBackground(new Background(new BackgroundFill(ColorManager.getClearHighlight(), CornerRadii.EMPTY, Insets.EMPTY)));
-			stage.setTitle(editMode.getEditText() + " " + notation.getNameIncludingNumberOfBells());
-			okButton.setDisable(false);
+			// build notation
+			NotationBody notation = buildNotationFromDialogData();
+			updateNotationStats(notation);
+			buildDialogDataFromNotation(notation);
 		}
 		catch (Exception e) {
-			items.clear();
-			items.add(new StatusModel("error",e.getMessage()));
-			status.setBackground(new Background(new BackgroundFill(ColorManager.getErrorHighlight(), CornerRadii.EMPTY, Insets.EMPTY)));
-			stage.setTitle(editMode.getEditText() + " " + notationName);
-			okButton.setDisable(true);
+			updateNotationStats(e);
+		}
+	}
+
+	private NotationBody buildNotationFromDialogData() {
+		NotationBuilder notationBuilder = NotationBuilder.getInstance();
+		for (NotationEditorTabController tabController : tabControllers) {
+			tabController.buildNotationFromDialogData(notationBuilder);
+		}
+		return notationBuilder.build();
+	}
+
+	private void updateNotationStats(NotationBody notation) {
+		ObservableList<StatusModel> items = status.getItems();
+
+		// Test build a plain course to see if it is possible.
+		Proof plainCourseProof = PlainCourseHelper.buildPlainCourse(notation, "Checking new notation", true);
+		Method plainCourse = plainCourseProof.getCreatedMethod();
+
+		items.clear();
+		items.add(new StatusModel("name", notation.getNameIncludingNumberOfBells()));
+		items.add(new StatusModel("notation", notation.getNotationDisplayString(true)));
+		items.add(new StatusModel("notation type", notation.isFoldedPalindrome()?"symmetric":"asymmetric"));
+		items.add(new StatusModel("plain course", plainCourseProof.getAnalysis().isTrueTouch()?"true":"false"));
+		items.add(new StatusModel("changes in plain lead", Integer.toString(plainCourse.getLead(0).getRowCount())));
+		items.add(new StatusModel("changes in plain course", Integer.toString(plainCourse.getRowCount())));
+		items.add(new StatusModel("leads in plain course", Integer.toString(plainCourse.getLeadCount())));
+		items.add(new StatusModel("number of bells in the hunt", "TODO"));
+		items.add(new StatusModel("number of calls defined", Integer.toString(notation.getCalls().size())));
+
+		status.setBackground(new Background(new BackgroundFill(ColorManager.getClearHighlight(), CornerRadii.EMPTY, Insets.EMPTY)));
+		stage.setTitle(editMode.getEditText() + " " + notation.getNameIncludingNumberOfBells());
+		okButton.setDisable(false);
+	}
+
+	private void updateNotationStats(Exception e) {
+		ObservableList<StatusModel> items = status.getItems();
+		items.clear();
+		items.add(new StatusModel("error",e.getMessage()));
+		status.setBackground(new Background(new BackgroundFill(ColorManager.getErrorHighlight(), CornerRadii.EMPTY, Insets.EMPTY)));
+		stage.setTitle(editMode.getEditText() + " " + notationName);
+		okButton.setDisable(true);
+	}
+
+	private void buildDialogDataFromNotation(NotationBody notation) {
+		for (NotationEditorTabController tabController : tabControllers) {
+			tabController.buildDialogDataFromNotation(notation);
 		}
 	}
 }

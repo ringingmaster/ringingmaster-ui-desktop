@@ -9,6 +9,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 
 import java.util.Set;
 
@@ -26,6 +27,8 @@ public class Call extends SkeletalNotationEditorTabController implements Notatio
 	private TableView<CallModel> callsList;
 	@FXML
 	private CheckBox useDefault;
+	@FXML
+	private TextField leadHeadCode;
 
 	@Override
 	public String getTabName() {
@@ -41,7 +44,7 @@ public class Call extends SkeletalNotationEditorTabController implements Notatio
 
 	public void useDefaultUpdater(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
 		callsList.setDisable(newValue);
-		parent.buildNotationFromDialogData();
+		parent.checkNotationFromDialogData();
 	}
 
 	@Override
@@ -57,6 +60,8 @@ public class Call extends SkeletalNotationEditorTabController implements Notatio
 					call.getNotationDisplayString(false),
 					(call == defaultCall)? DEFAULT_CALL_TOKEN :""));
 		}
+
+		leadHeadCode.setText(notation.getLeadHeadCode());
 	}
 
 	@Override

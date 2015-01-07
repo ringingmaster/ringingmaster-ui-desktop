@@ -49,7 +49,7 @@ public class PlainCourse extends SkeletalNotationEditorTabController implements 
 
 	@Override
 	public String getTabName() {
-		return "Plain Course"   ;
+		return "Plain Course";
 	}
 
 	@Override

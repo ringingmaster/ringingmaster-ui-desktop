@@ -42,9 +42,7 @@
           <root url="jar://$IVY_CACHE_HOME$/cache/log4j/log4j/jars/log4j-1.2.16.jar!/" />
         </CLASSES>
         <JAVADOC />
-        <SOURCES>
-          <root url="jar://$USER_HOME$/.ideaLibSources/openjfx-dialogs-1.0.2-sources.jar!/" />
-        </SOURCES>
+        <SOURCES />
       </library>
     </orderEntry>
     <orderEntry type="module-library">

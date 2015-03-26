@@ -5,6 +5,7 @@ import com.concurrentperformance.ringingmaster.engine.NumberOfBells;
 import com.concurrentperformance.ringingmaster.engine.notation.NotationBody;
 import com.concurrentperformance.ringingmaster.engine.notation.impl.NotationBuilder;
 import com.google.common.base.Objects;
+import com.google.common.collect.Lists;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -17,6 +18,8 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import static com.google.common.base.Preconditions.checkState;
 
 /**
  * TODO Comments
@@ -82,8 +85,9 @@ public class PlainCourse extends SkeletalNotationEditorTabController implements 
 	public void buildDialogDataFromNotation(NotationBody notation) {
 		name.setText(notation.getName());
 		shorthand.setText(notation.getSpliceIdentifier());
-		this.notation.setText(notation.getRawNotationDisplayString(true));
-		leadend.setText(notation.getRawLeadEndDisplayString(true));
+		checkState(false, "TODO This all needs reqorking and renaming in terms of rotation sets. - lead end does not cut it as a name. read the pdf that comes with the method library");
+		//TODO this.notation.setText(notation.getRawNotationDisplayString(true));
+		//TODO leadend.setText(notation.getRawNotation2DisplayString(true));
 		numberOfBells.getSelectionModel().select(notation.getNumberOfWorkingBells());
 	}
 
@@ -116,7 +120,7 @@ public class PlainCourse extends SkeletalNotationEditorTabController implements 
 		if (selected) {
 			notationBuilder.setUnfoldedNotationShorthand(notation.getText());
 		} else {
-			notationBuilder.setFoldedPalindromeNotationShorthand(notation.getText(), leadend.getText());
+			notationBuilder.setFoldedPalindromeNotationShorthand(Lists.newArrayList(notation.getText(), leadend.getText()));
 		}
 	}
 }

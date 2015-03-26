@@ -15,7 +15,7 @@
     <dependencies>
         <dependency org="org.controlsfx" name="controlsfx" rev="8.20.7"/>
         <dependency org="org.controlsfx" name="openjfx-dialogs" rev="1.0.2"/>
-        <dependency org="com.google.guava" name="guava" rev="14.0.1" />
+        <dependency org="com.google.guava" name="guava" rev="18.0"/>
 		<dependency org="net.jcip" name="jcip-annotations" rev="1.0"/>
 
         <dependency org="org.slf4j" name="slf4j-api" rev="1.7.5"/>

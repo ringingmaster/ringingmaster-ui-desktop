@@ -5,7 +5,7 @@ import com.concurrentperformance.ringingmaster.engine.NumberOfBells;
 import com.concurrentperformance.ringingmaster.engine.method.Bell;
 import com.concurrentperformance.ringingmaster.engine.method.Stroke;
 import com.concurrentperformance.ringingmaster.engine.notation.NotationBody;
-import com.concurrentperformance.ringingmaster.engine.touch.TouchType;
+import com.concurrentperformance.ringingmaster.engine.touch.container.TouchType;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentmanager.DocumentManager;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentmanager.DocumentManagerListener;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentmodel.TouchDocument;

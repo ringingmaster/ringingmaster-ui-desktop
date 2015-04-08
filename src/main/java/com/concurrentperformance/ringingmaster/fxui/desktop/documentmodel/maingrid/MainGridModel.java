@@ -1,7 +1,7 @@
 package com.concurrentperformance.ringingmaster.fxui.desktop.documentmodel.maingrid;
 
-import com.concurrentperformance.ringingmaster.engine.touch.Touch;
-import com.concurrentperformance.ringingmaster.engine.touch.TouchCell;
+import com.concurrentperformance.ringingmaster.engine.touch.container.Touch;
+import com.concurrentperformance.ringingmaster.engine.touch.container.TouchCell;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentmodel.TouchDocument;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentpanel.grid.model.GridCellModel;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentpanel.grid.model.GridCharacterGroup;

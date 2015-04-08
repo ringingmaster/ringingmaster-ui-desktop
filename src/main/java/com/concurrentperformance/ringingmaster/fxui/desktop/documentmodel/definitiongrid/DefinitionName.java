@@ -1,6 +1,6 @@
 package com.concurrentperformance.ringingmaster.fxui.desktop.documentmodel.definitiongrid;
 
-import com.concurrentperformance.ringingmaster.engine.touch.TouchDefinition;
+import com.concurrentperformance.ringingmaster.engine.touch.container.TouchDefinition;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentmodel.TouchDocument;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentpanel.grid.model.GridCharacterGroup;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentpanel.grid.model.GridCharacterModel;

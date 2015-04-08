@@ -1,7 +1,7 @@
 package com.concurrentperformance.ringingmaster.fxui.desktop.statusbar;
 
-import com.concurrentperformance.ringingmaster.engine.proof.Proof;
-import com.concurrentperformance.ringingmaster.engine.proof.ProofTerminationReason;
+import com.concurrentperformance.ringingmaster.engine.touch.proof.Proof;
+import com.concurrentperformance.ringingmaster.engine.touch.proof.ProofTerminationReason;
 import com.concurrentperformance.ringingmaster.fxui.desktop.proof.ProofManager;
 import com.concurrentperformance.ringingmaster.fxui.desktop.proof.ProofManagerListener;
 import javafx.application.Platform;

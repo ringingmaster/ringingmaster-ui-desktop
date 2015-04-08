@@ -2,7 +2,7 @@ package com.concurrentperformance.ringingmaster.fxui.desktop.analysis;
 
 import com.concurrentperformance.fxutils.propertyeditor.DisplayPropertyValue;
 import com.concurrentperformance.fxutils.propertyeditor.PropertyEditor;
-import com.concurrentperformance.ringingmaster.engine.proof.Proof;
+import com.concurrentperformance.ringingmaster.engine.touch.proof.Proof;
 import com.concurrentperformance.ringingmaster.fxui.desktop.proof.ProofManager;
 import com.concurrentperformance.ringingmaster.fxui.desktop.proof.ProofManagerListener;
 import com.concurrentperformance.ringingmaster.fxui.desktop.util.ColorManager;

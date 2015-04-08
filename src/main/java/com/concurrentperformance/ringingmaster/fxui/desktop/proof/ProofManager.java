@@ -1,11 +1,11 @@
 package com.concurrentperformance.ringingmaster.fxui.desktop.proof;
 
-import com.concurrentperformance.ringingmaster.engine.compiler.Compiler;
-import com.concurrentperformance.ringingmaster.engine.compiler.impl.CompilerFactory;
-import com.concurrentperformance.ringingmaster.engine.parser.Parser;
-import com.concurrentperformance.ringingmaster.engine.parser.impl.DefaultParser;
-import com.concurrentperformance.ringingmaster.engine.proof.Proof;
-import com.concurrentperformance.ringingmaster.engine.touch.Touch;
+import com.concurrentperformance.ringingmaster.engine.touch.compiler.Compiler;
+import com.concurrentperformance.ringingmaster.engine.touch.compiler.impl.CompilerFactory;
+import com.concurrentperformance.ringingmaster.engine.touch.parser.Parser;
+import com.concurrentperformance.ringingmaster.engine.touch.parser.impl.DefaultParser;
+import com.concurrentperformance.ringingmaster.engine.touch.proof.Proof;
+import com.concurrentperformance.ringingmaster.engine.touch.container.Touch;
 import com.concurrentperformance.util.listener.ConcurrentListenable;
 import com.concurrentperformance.util.listener.Listenable;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;

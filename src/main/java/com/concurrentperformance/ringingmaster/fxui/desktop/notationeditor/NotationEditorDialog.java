@@ -4,7 +4,7 @@ import com.concurrentperformance.ringingmaster.engine.helper.PlainCourseHelper;
 import com.concurrentperformance.ringingmaster.engine.method.Method;
 import com.concurrentperformance.ringingmaster.engine.notation.NotationBody;
 import com.concurrentperformance.ringingmaster.engine.notation.impl.NotationBuilder;
-import com.concurrentperformance.ringingmaster.engine.proof.Proof;
+import com.concurrentperformance.ringingmaster.engine.touch.proof.Proof;
 import com.concurrentperformance.ringingmaster.fxui.desktop.util.ColorManager;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;

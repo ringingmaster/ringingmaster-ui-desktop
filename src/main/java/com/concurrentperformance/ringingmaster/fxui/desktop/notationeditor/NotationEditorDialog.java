@@ -153,7 +153,7 @@ public class NotationEditorDialog {
 		items.add(new StatusModel("changes in plain lead", Integer.toString(plainCourse.getLead(0).getRowCount())));
 		items.add(new StatusModel("changes in plain course", Integer.toString(plainCourse.getRowCount())));
 		items.add(new StatusModel("leads in plain course", Integer.toString(plainCourse.getLeadCount())));
-		items.add(new StatusModel("number of bells in the hunt", "TODO"));
+		items.add(new StatusModel("number of bells in the hunt", Integer.toString(plainCourse.getNumberOfBellsInHunt())));
 		items.add(new StatusModel("number of calls defined", Integer.toString(notation.getCalls().size())));
 
 		status.setBackground(new Background(new BackgroundFill(ColorManager.getClearHighlight(), CornerRadii.EMPTY, Insets.EMPTY)));

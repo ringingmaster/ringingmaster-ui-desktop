@@ -5,7 +5,6 @@ import com.concurrentperformance.ringingmaster.engine.NumberOfBells;
 import com.concurrentperformance.ringingmaster.engine.notation.NotationBody;
 import com.concurrentperformance.ringingmaster.engine.notation.impl.NotationBuilder;
 import com.google.common.base.Objects;
-import com.google.common.collect.Lists;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -18,8 +17,6 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import static com.google.common.base.Preconditions.checkState;
 
 /**
  * TODO Comments
@@ -43,11 +40,13 @@ public class PlainCourse extends SkeletalNotationEditorTabController implements 
 	@FXML
 	private CheckBox asymmetric;
 	@FXML
-	private TextField notation;
+	private TextField notation1;
 	@FXML
-	private TextField leadend;
+	private TextField notation2;
 	@FXML
-	private Label leadendLabel;
+	private Label notation1Label;
+	@FXML
+	private Label notation2Label;
 
 
 	@Override
@@ -63,13 +62,13 @@ public class PlainCourse extends SkeletalNotationEditorTabController implements 
 
 		shorthand.focusedProperty().addListener(this::focusLostUpdater);
 
-		this.notation.setOnKeyReleased(this::keyPressUpdater);
-		this.notation.focusedProperty().addListener(this::focusLostUpdater);
+		this.notation1.setOnKeyReleased(this::keyPressUpdater);
+		this.notation1.focusedProperty().addListener(this::focusLostUpdater);
 
 		notationSearchButton.setTooltip(new Tooltip("Search for method to populate editor."));
 
-		leadend.setOnKeyReleased(this::keyPressUpdater);
-		leadend.focusedProperty().addListener(this::focusLostUpdater);
+		notation2.setOnKeyReleased(this::keyPressUpdater);
+		notation2.focusedProperty().addListener(this::focusLostUpdater);
 
 		for (NumberOfBells numberOfBells : NumberOfBells.values()) {
 			this.numberOfBells.getItems().add(numberOfBells);
@@ -85,9 +84,9 @@ public class PlainCourse extends SkeletalNotationEditorTabController implements 
 	public void buildDialogDataFromNotation(NotationBody notation) {
 		name.setText(notation.getName());
 		shorthand.setText(notation.getSpliceIdentifier());
-		checkState(false, "TODO This all needs reqorking and renaming in terms of rotation sets. - lead end does not cut it as a name. read the pdf that comes with the method library");
-		//TODO this.notation.setText(notation.getRawNotationDisplayString(true));
-		//TODO leadend.setText(notation.getRawNotation2DisplayString(true));
+		//checkState(false, "TODO This all needs reqorking and renaming in terms of rotation sets. - lead end does not cut it as a name. read the pdf that comes with the method library");
+		this.notation1.setText(notation.getRawNotationDisplayString(0, true));
+		notation2.setText(notation.getRawNotationDisplayString(1, true));
 		numberOfBells.getSelectionModel().select(notation.getNumberOfWorkingBells());
 	}
 
@@ -106,9 +105,10 @@ public class PlainCourse extends SkeletalNotationEditorTabController implements 
 	}
 
 	public void asymmetricUpdater(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-		leadend.setVisible(!newValue);
-		leadendLabel.setVisible(!newValue);
-		GridPane.setColumnSpan(this.notation, (newValue)?5:4);
+		notation1Label.setText((newValue)?"Notation:":"Notation: Rotation 1:");
+		notation2.setVisible(!newValue);
+		notation2Label.setVisible(!newValue);
+		GridPane.setColumnSpan(this.notation1, (newValue)?5:3);
 		parent.checkNotationFromDialogData();
 	}
 
@@ -118,9 +118,9 @@ public class PlainCourse extends SkeletalNotationEditorTabController implements 
 		notationBuilder.setNumberOfWorkingBells(numberOfBells.getSelectionModel().getSelectedItem());
 		boolean selected = asymmetric.isSelected();
 		if (selected) {
-			notationBuilder.setUnfoldedNotationShorthand(notation.getText());
+			notationBuilder.setUnfoldedNotationShorthand(notation1.getText());
 		} else {
-			notationBuilder.setFoldedPalindromeNotationShorthand(Lists.newArrayList(notation.getText(), leadend.getText()));
+			notationBuilder.setFoldedPalindromeNotationShorthand(notation1.getText(), notation2.getText());
 		}
 	}
 }

@@ -18,20 +18,9 @@
 
 <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="485.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.concurrentperformance.ringingmaster.fxui.desktop.notationeditor.NotationEditorDialog">
    <children>
-      <TabPane fx:id="tabs" minHeight="54.0" prefHeight="93.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="SOMETIMES" />
+      <TabPane fx:id="editorTabs" minHeight="54.0" prefHeight="93.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="SOMETIMES" />
       <Separator prefWidth="200.0" />
-      <TableView fx:id="status" maxHeight="400.0" minHeight="113.0" opacity="0.55" prefHeight="229.0" prefWidth="600.0" VBox.vgrow="NEVER">
-        <columns>
-           <TableColumn prefWidth="200.0" text="Property Name">
-              <cellValueFactory><PropertyValueFactory property="name" />
-              </cellValueFactory>
-           </TableColumn>
-           <TableColumn maxWidth="1.7976931348623157E308" prefWidth="387.0" text="Value">
-              <cellValueFactory><PropertyValueFactory property="value" />
-              </cellValueFactory>
-           </TableColumn>
-        </columns>
-      </TableView>
+      <TabPane fx:id="statusTabs" minHeight="54.0" prefHeight="93.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="SOMETIMES" />
       <Separator prefWidth="200.0" />
       <HBox prefHeight="26.0" prefWidth="600.0" spacing="10.0" VBox.vgrow="NEVER">
          <children>

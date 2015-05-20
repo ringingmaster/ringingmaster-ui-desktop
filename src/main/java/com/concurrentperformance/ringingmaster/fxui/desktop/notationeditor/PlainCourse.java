@@ -84,10 +84,10 @@ public class PlainCourse extends SkeletalNotationEditorTabController implements 
 	public void buildDialogDataFromNotation(NotationBody notation) {
 		name.setText(notation.getName());
 		shorthand.setText(notation.getSpliceIdentifier());
-		//checkState(false, "TODO This all needs reqorking and renaming in terms of rotation sets. - lead end does not cut it as a name. read the pdf that comes with the method library");
-		this.notation1.setText(notation.getRawNotationDisplayString(0, true));
+		notation1.setText(notation.getRawNotationDisplayString(0, true));
 		notation2.setText(notation.getRawNotationDisplayString(1, true));
 		numberOfBells.getSelectionModel().select(notation.getNumberOfWorkingBells());
+		asymmetric.setSelected(!notation.isFoldedPalindrome());
 	}
 
 	public void focusLostUpdater(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {

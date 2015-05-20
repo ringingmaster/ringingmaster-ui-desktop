@@ -9,6 +9,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.stage.Stage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -20,6 +22,8 @@ import java.util.List;
  * @author Lake
  */
 public class NotationEditorDialog {
+
+	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 	protected NotationEditorEditMode editMode;
 	protected Stage stage;
@@ -106,6 +110,7 @@ public class NotationEditorDialog {
 			statusController.updateNotationStats(notation);
 		}
 		catch (Exception e) {
+			log.error("",e);
 			statusController.updateNotationStats(e);
 		}
 	}
@@ -118,6 +123,7 @@ public class NotationEditorDialog {
 			buildDialogDataFromNotation(notation);
 		}
 		catch (Exception e) {
+			log.error("",e);
 			statusController.updateNotationStats(e);
 		}
 	}

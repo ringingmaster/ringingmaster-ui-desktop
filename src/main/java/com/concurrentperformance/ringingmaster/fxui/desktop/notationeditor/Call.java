@@ -8,6 +8,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 
@@ -23,10 +24,11 @@ import java.util.Set;
 public class Call extends SkeletalNotationEditorTabController implements NotationEditorTabController {
 
 	public static final String DEFAULT_CALL_TOKEN = "<default>";
+
 	@FXML
 	private TableView<CallModel> callsList;
 	@FXML
-	private CheckBox useDefault;
+	private CheckBox useCannedCalls;
 	@FXML
 	private TextField leadHeadCode;
 
@@ -39,10 +41,15 @@ public class Call extends SkeletalNotationEditorTabController implements Notatio
 	public void init(NotationEditorDialog parent, NotationEditorEditMode editMode) {
 		super.init(parent, editMode);
 
-		useDefault.selectedProperty().addListener(this::useDefaultUpdater);
+		useCannedCalls.selectedProperty().addListener(this::useCannedCallsUpdater);
+		useCannedCalls.selectedProperty().addListener(parent::rebuildNotationUpdater);
+
+		callsList.setPlaceholder(new Label("No Calls Defined"));
+		leadHeadCode.setDisable(true);
+
 	}
 
-	public void useDefaultUpdater(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+	public void useCannedCallsUpdater(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
 		callsList.setDisable(newValue);
 		parent.checkNotationFromDialogData();
 	}
@@ -66,11 +73,17 @@ public class Call extends SkeletalNotationEditorTabController implements Notatio
 
 	@Override
 	public void buildNotationFromDialogData(NotationBuilder notationBuilder) {
-		for (CallModel call : callsList.getItems()) {
-			notationBuilder.addCall(call.getCallName(),
-									call.getCallShorthand(),
-									call.getNotation(),
-									(DEFAULT_CALL_TOKEN.equals(call.getSelected())));
+
+		if (useCannedCalls.isSelected()) {
+			notationBuilder.setUseCannedCalls();
+		}
+		else {
+			for (CallModel call : callsList.getItems()) {
+				notationBuilder.addCall(call.getCallName(),
+						call.getCallShorthand(),
+						call.getNotation(),
+						(DEFAULT_CALL_TOKEN.equals(call.getSelected())));
+			}
 		}
 	}
 }

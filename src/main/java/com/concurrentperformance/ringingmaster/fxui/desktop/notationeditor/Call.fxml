@@ -29,10 +29,10 @@
       <RowConstraints maxHeight="1.7976931348623157E308" minHeight="81.0" prefHeight="113.0" vgrow="ALWAYS" />
    </rowConstraints>
    <children>
-      <CheckBox fx:id="useDefault" mnemonicParsing="false" text="Use Default Calls" />
+      <CheckBox fx:id="useCannedCalls" mnemonicParsing="false" text="Use Canned Calls" />
       <Separator orientation="VERTICAL" GridPane.columnIndex="1" />
       <Label text="lh:" GridPane.columnIndex="2" />
-      <TextField fx:id="leadHeadCode" GridPane.columnIndex="3" />
+      <TextField fx:id="leadHeadCode" editable="false" GridPane.columnIndex="3" />
       <TableView fx:id="callsList" prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="2147483647" GridPane.rowIndex="1">
          <columns>
             <TableColumn fx:id="callNameColumn" prefWidth="130.0" text="Call Name">

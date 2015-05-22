@@ -2,6 +2,8 @@ package com.concurrentperformance.ringingmaster.fxui.desktop.notationeditor;
 
 import com.concurrentperformance.ringingmaster.engine.notation.NotationBody;
 import com.concurrentperformance.ringingmaster.engine.notation.impl.NotationBuilder;
+import com.google.common.base.Objects;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -115,7 +117,17 @@ public class NotationEditorDialog {
 		}
 	}
 
-	public void rebuildNotationFromDialogData() {
+	public void rebuildNotationOnFocusLossUpdater(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+		if (Objects.equal(Boolean.FALSE, newValue)) {
+			rebuildNotationFromDialogData();
+		}
+	}
+
+	public void rebuildNotationUpdater(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+		rebuildNotationFromDialogData();
+	}
+
+	private void rebuildNotationFromDialogData() {
 		try {
 			// build notation
 			NotationBody notation = buildNotationFromDialogData();

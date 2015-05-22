@@ -4,7 +4,6 @@ package com.concurrentperformance.ringingmaster.fxui.desktop.notationeditor;
 import com.concurrentperformance.ringingmaster.engine.NumberOfBells;
 import com.concurrentperformance.ringingmaster.engine.notation.NotationBody;
 import com.concurrentperformance.ringingmaster.engine.notation.impl.NotationBuilder;
-import com.google.common.base.Objects;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -60,24 +59,24 @@ public class PlainCourse extends SkeletalNotationEditorTabController implements 
 
 		name.setOnKeyReleased(this::keyPressUpdater);
 
-		shorthand.focusedProperty().addListener(this::focusLostUpdater);
+		shorthand.focusedProperty().addListener(parent::rebuildNotationOnFocusLossUpdater);
 
 		this.notation1.setOnKeyReleased(this::keyPressUpdater);
-		this.notation1.focusedProperty().addListener(this::focusLostUpdater);
+		this.notation1.focusedProperty().addListener(parent::rebuildNotationOnFocusLossUpdater);
 
 		notationSearchButton.setTooltip(new Tooltip("Search for method to populate editor."));
 
 		notation2.setOnKeyReleased(this::keyPressUpdater);
-		notation2.focusedProperty().addListener(this::focusLostUpdater);
+		notation2.focusedProperty().addListener(parent::rebuildNotationOnFocusLossUpdater);
 
 		for (NumberOfBells numberOfBells : NumberOfBells.values()) {
 			this.numberOfBells.getItems().add(numberOfBells);
 		}
 		numberOfBells.getSelectionModel().selectedItemProperty().addListener(this::numberOfBellsUpdater);
-		numberOfBells.focusedProperty().addListener(this::focusLostUpdater);
+		numberOfBells.focusedProperty().addListener(parent::rebuildNotationOnFocusLossUpdater);
 
 		asymmetric.selectedProperty().addListener(this::asymmetricUpdater);
-		asymmetric.focusedProperty().addListener(this::focusLostUpdater);
+		asymmetric.focusedProperty().addListener(parent::rebuildNotationOnFocusLossUpdater);
 	}
 
 	@Override
@@ -90,12 +89,6 @@ public class PlainCourse extends SkeletalNotationEditorTabController implements 
 		asymmetric.setSelected(!notation.isFoldedPalindrome());
 	}
 
-	public void focusLostUpdater(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-		if (Objects.equal(Boolean.FALSE, newValue)) {
-			parent.rebuildNotationFromDialogData();
-		}
-	}
-
 	public void numberOfBellsUpdater(ObservableValue<? extends NumberOfBells> observable, NumberOfBells oldValue, NumberOfBells newValue) {
 		parent.checkNotationFromDialogData();
 	}
@@ -105,7 +98,7 @@ public class PlainCourse extends SkeletalNotationEditorTabController implements 
 	}
 
 	public void asymmetricUpdater(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-		notation1Label.setText((newValue)?"Notation:":"Notation: Rotation 1:");
+		notation1Label.setText((newValue) ? "Notation:" : "Notation: Rotation 1:");
 		notation2.setVisible(!newValue);
 		notation2Label.setVisible(!newValue);
 		GridPane.setColumnSpan(this.notation1, (newValue)?5:3);

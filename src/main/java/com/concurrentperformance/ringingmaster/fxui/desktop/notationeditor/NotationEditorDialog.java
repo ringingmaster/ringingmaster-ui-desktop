@@ -34,6 +34,8 @@ public class NotationEditorDialog {
 	private List<NotationEditorTabController> tabControllers = new ArrayList<>();
 	private Status statusController;
 
+	private NotationBody result;
+
 	@FXML
 	private TabPane editorTabs;
 	@FXML
@@ -152,5 +154,21 @@ public class NotationEditorDialog {
 		for (NotationEditorTabController tabController : tabControllers) {
 			tabController.buildDialogDataFromNotation(notation);
 		}
+	}
+
+	public NotationBody getResult() {
+		return result;
+	}
+
+	@FXML
+	private void OnOk() {
+		result = buildNotationFromDialogData();
+		stage.close();
+	}
+
+	@FXML
+	private void OnCancel() {
+		result = null;
+		stage.close();
 	}
 }

@@ -212,6 +212,11 @@ public class TouchDocument extends ConcurrentListenable<TouchDocumentListener> i
 		return sortedNotations;
 	}
 
+	public  void addNotation(NotationBody notationBody) {
+		touch.addNotation(notationBody);
+		fireDocumentContentChanged();
+	}
+
 	public NotationBody getSingleMethodActiveNotation() {
 		return touch.getSingleMethodActiveNotation();
 	}

@@ -66,23 +66,29 @@ public class PropertyMethodPanel extends PropertyEditor implements DocumentManag
 			if (notation.getNumberOfWorkingBells().getBellCount() > touchDocument.getNumberOfBells().getBellCount()) {
 				property.setValue("Too many bells");
 				property.setColor(ColorManager.getWarnHighlight());
+				property.setDisable(true);
 			}
 			else if (spliced) {
 				if (Strings.isNullOrEmpty(notation.getSpliceIdentifier())) {
 					property.setValue("No splice letter");
 					property.setColor(ColorManager.getWarnHighlight());
+					property.setDisable(true);
+
 				} else {
 					property.setValue(TouchDocument.SPLICED_TOKEN + " " + notation.getSpliceIdentifier());
 					property.setColor(ColorManager.getClearHighlight());
+					property.setDisable(false);
 				}
 			}
 			else if (notation == touchDocument.getSingleMethodActiveNotation()) {
 				property.setValue("<Active>");
 				property.setColor(ColorManager.getClearHighlight());
+				property.setDisable(false);
 			}
 			else {
 				property.setValue("");
 				property.setColor(ColorManager.getClearHighlight());
+				property.setDisable(false);
 			}
 		}
 	}

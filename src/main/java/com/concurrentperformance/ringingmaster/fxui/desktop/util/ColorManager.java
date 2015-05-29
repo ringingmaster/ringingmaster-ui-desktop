@@ -10,15 +10,15 @@ import javafx.scene.paint.Color;
 public class ColorManager {
 
 	public static Color getErrorHighlight() {
-		return Color.rgb(255, 120, 120);
+		return Color.SALMON;
 	}
 
 	public static Color getWarnHighlight() {
-		return Color.rgb(255, 120, 255);
+		return Color.PEACHPUFF ;
 	}
 
 	public static Color getPassHighlight() {
-		return Color.rgb(120, 255, 120);
+		return Color.LIGHTGREEN;
 	}
 
 	public static Color getClearHighlight() {

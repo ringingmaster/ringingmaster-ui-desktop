@@ -22,6 +22,7 @@ import com.concurrentperformance.ringingmaster.fxui.desktop.proof.ProofManager;
 import com.concurrentperformance.ringingmaster.ui.common.TouchStyle;
 import com.concurrentperformance.util.listener.ConcurrentListenable;
 import com.concurrentperformance.util.listener.Listenable;
+import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
@@ -35,6 +36,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -212,9 +214,48 @@ public class TouchDocument extends ConcurrentListenable<TouchDocumentListener> i
 		return sortedNotations;
 	}
 
-	public  void addNotation(NotationBody notationBody) {
-		touch.addNotation(notationBody);
-		fireDocumentContentChanged();
+	public boolean addNotation(NotationBody notationToAdd) {
+
+		List<String> messages = new ArrayList<>();
+
+		messages.addAll(touch.getAllNotations().stream()
+				.filter(existingNotation -> (existingNotation.getNumberOfWorkingBells() == notationToAdd.getNumberOfWorkingBells()) &&
+						(Objects.equal(existingNotation.getName(), notationToAdd.getName())))
+				.map(existngNotation -> "An existing method with notation '" + existngNotation.getNotationDisplayString(true) + "' has the same 'Name' and 'Number Of Bells'.")
+				.collect(Collectors.toList()));
+
+		messages.addAll(touch.getAllNotations().stream()
+				.filter(existingNotation -> (!Strings.isNullOrEmpty(notationToAdd.getSpliceIdentifier()) &&
+						Objects.equal(existingNotation.getSpliceIdentifier(), notationToAdd.getSpliceIdentifier())))
+				.map(existngNotation -> "An existing method '" + existngNotation.getNameIncludingNumberOfBells()  + "' has the same 'Splice Identifier'.")
+				.collect(Collectors.toList()));
+
+			//TODO	Could also check that the notations dont match.
+
+			//TODO	Can Split the stream?
+
+		//TODO problem with property panel in that the 'too many bells' note appears at the location of the devider between the name and property. Try moving the devider when adding a new notation
+
+		//TODO also show splice letter in the editor dialog.
+
+		if (messages.size() == 0) {
+			touch.addNotation(notationToAdd);
+			parseAndProve();
+			fireDocumentContentChanged();
+			return true;
+		}
+		else {
+			String message = messages.stream().collect(Collectors.joining(System.lineSeparator()));
+			Alert dialog = new Alert(Alert.AlertType.CONFIRMATION, message.toString(), ButtonType.OK);
+			dialog.setTitle("Can't add notation");
+			dialog.setHeaderText("Can't add '" + notationToAdd.getNameIncludingNumberOfBells() + "'");
+			dialog.getDialogPane().setMinHeight(280);
+			dialog.getDialogPane().setMinWidth(500);
+			dialog.showAndWait();
+
+			fireDocumentContentChanged();
+			return false;
+		}
 	}
 
 	public NotationBody getSingleMethodActiveNotation() {

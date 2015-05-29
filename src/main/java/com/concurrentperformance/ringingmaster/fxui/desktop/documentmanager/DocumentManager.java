@@ -1,7 +1,6 @@
 package com.concurrentperformance.ringingmaster.fxui.desktop.documentmanager;
 
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentmodel.TouchDocument;
-import com.concurrentperformance.ringingmaster.fxui.desktop.documentmodel.TouchDocumentListener;
 import com.concurrentperformance.util.listener.ConcurrentListenable;
 import com.concurrentperformance.util.listener.Listenable;
 
@@ -26,12 +25,7 @@ public class DocumentManager extends ConcurrentListenable<DocumentManagerListene
 
 	public void buildNewDocument() {
 		currentDocument = new TouchDocument();
-		currentDocument.addListener(new TouchDocumentListener() {
-			@Override
-			public void touchDocumentListener_documentContentChanged(TouchDocument touchDocument) {
-				fireUpdateDocument();
-			}
-		});
+		currentDocument.addListener(touchDocument -> fireUpdateDocument());
 		fireUpdateDocument();
 	}
 

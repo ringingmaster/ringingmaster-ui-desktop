@@ -65,22 +65,19 @@ public class ProofManager extends ConcurrentListenable<ProofManagerListener> imp
 
 		updateProofState(null);
 
-		proofExecutor.execute(new Runnable() {
-			@Override
-			public void run() {
-				long start = System.currentTimeMillis();
-				log.info(">>>> Proof of [{}]", proofId);
-				final Compiler compiler = CompilerFactory.getInstance(touch,"Proof-" + Long.toString(proofId));
-				Proof proof = compiler.compile(true);
-				final long currentProofId = nextProofId.get();
-				if (proofId == currentProofId) {
-					updateProofState(proof);
-				}
-				else {
-					log.info("Ignoring finished proof [{}] as not current [{}]", proofId, currentProofId); //TODO need a mech of cancelling a proof mid term.
-				}
-				log.info("<<<< Proof of [{}], [{}ms]", proofId, System.currentTimeMillis()-start);
+		proofExecutor.execute(() -> {
+			long start = System.currentTimeMillis();
+			log.info(">>>> Proof of [{}]", proofId);
+			final Compiler compiler = CompilerFactory.getInstance(touch,"Proof-" + Long.toString(proofId));
+			Proof proof = compiler.compile(true);
+			final long currentProofId = nextProofId.get();
+			if (proofId == currentProofId) {
+				updateProofState(proof);
 			}
+			else {
+				log.info("Ignoring finished proof [{}] as not current [{}]", proofId, currentProofId); //TODO need a mech of cancelling a proof mid term.
+			}
+			log.info("<<<< Proof of [{}], [{}ms]", proofId, System.currentTimeMillis()-start);
 		});
 	}
 

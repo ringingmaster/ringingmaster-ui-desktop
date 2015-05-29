@@ -33,7 +33,7 @@ public class PlainCourse extends SkeletalNotationEditorTabController implements 
 	@FXML
 	private Button notationSearchButton;
 	@FXML
-	private TextField shorthand;
+	private TextField spliceIndntifier;
 	@FXML
 	private ComboBox<NumberOfBells> numberOfBells;
 	@FXML
@@ -59,7 +59,8 @@ public class PlainCourse extends SkeletalNotationEditorTabController implements 
 
 		name.setOnKeyReleased(this::keyPressUpdater);
 
-		shorthand.focusedProperty().addListener(parent::rebuildNotationOnFocusLossUpdater);
+		spliceIndntifier.setOnKeyReleased(this::keyPressUpdater);
+		spliceIndntifier.focusedProperty().addListener(parent::rebuildNotationOnFocusLossUpdater);
 
 		this.notation1.setOnKeyReleased(this::keyPressUpdater);
 		this.notation1.focusedProperty().addListener(parent::rebuildNotationOnFocusLossUpdater);
@@ -82,7 +83,7 @@ public class PlainCourse extends SkeletalNotationEditorTabController implements 
 	@Override
 	public void buildDialogDataFromNotation(NotationBody notation) {
 		name.setText(notation.getName());
-		shorthand.setText(notation.getSpliceIdentifier());
+		spliceIndntifier.setText(notation.getSpliceIdentifier());
 		notation1.setText(notation.getRawNotationDisplayString(0, true));
 		notation2.setText(notation.getRawNotationDisplayString(1, true));
 		numberOfBells.getSelectionModel().select(notation.getNumberOfWorkingBells());
@@ -115,5 +116,6 @@ public class PlainCourse extends SkeletalNotationEditorTabController implements 
 		} else {
 			notationBuilder.setFoldedPalindromeNotationShorthand(notation1.getText(), notation2.getText());
 		}
+		notationBuilder.setSpliceIdentifier(spliceIndntifier.getText());
 	}
 }

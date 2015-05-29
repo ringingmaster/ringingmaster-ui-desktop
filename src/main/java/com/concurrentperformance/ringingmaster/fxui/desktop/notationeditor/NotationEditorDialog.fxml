@@ -25,7 +25,7 @@
       <HBox prefHeight="26.0" prefWidth="600.0" spacing="10.0" VBox.vgrow="NEVER">
          <children>
             <Pane prefHeight="24.0" prefWidth="463.0" HBox.hgrow="ALWAYS" />
-            <Button minWidth="70.0" mnemonicParsing="false" text="Cancel" HBox.hgrow="NEVER" />
+            <Button minWidth="70.0" mnemonicParsing="false" onAction="#OnCancel" text="Cancel" HBox.hgrow="NEVER" />
             <Button fx:id="okButton" minWidth="40.0" mnemonicParsing="false" onAction="#OnOk" text="OK" HBox.hgrow="NEVER" />
          </children>
          <padding>

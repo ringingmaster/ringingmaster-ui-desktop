@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.function.Function;
 
 /**
  * TODO Comments
@@ -22,14 +23,14 @@ public class NotationEditorDialogBuilder {
 
 	private static final Logger log = LoggerFactory.getLogger(NotationEditorDialogBuilder.class);
 
-	public static NotationBody showDialog(NumberOfBells numberOfWorkingBells) {
+	public static void showDialog(NumberOfBells numberOfWorkingBells, Function<NotationBody, Boolean> onSuccessHandler) {
 		NotationBuilder builder = NotationBuilder.getInstance();
 		builder.setNumberOfWorkingBells(numberOfWorkingBells);
-		builder.setFoldedPalindromeNotationShorthand(""); 
-		return showDialog(builder.build());
+		builder.setFoldedPalindromeNotationShorthand("");
+		showDialog(builder.build(), onSuccessHandler);
 	}
 
-	public static NotationBody showDialog(NotationBody notation) {
+	public static void showDialog(NotationBody notation, Function<NotationBody, Boolean> onSuccessHandler) {
 		FXMLLoader fxmlLoader = new FXMLLoader(NotationEditorDialog.class.getResource("NotationEditorDialog.fxml"));
 
 		try {
@@ -38,15 +39,11 @@ public class NotationEditorDialogBuilder {
 			stage.initModality(Modality.APPLICATION_MODAL);
 
 			NotationEditorDialog controller = fxmlLoader.getController();
-			controller.init(NotationEditorEditMode.EDIT_NOTATION, stage, notation);
+			controller.init(NotationEditorEditMode.EDIT_NOTATION, stage, notation, onSuccessHandler);
 
 			stage.showAndWait();
-
-			return controller.getResult();
-
 		} catch (IOException e) {
 			log.error("Error initialising NotationEditorDialog", e);
-			return null;
 		}
 	}
 }

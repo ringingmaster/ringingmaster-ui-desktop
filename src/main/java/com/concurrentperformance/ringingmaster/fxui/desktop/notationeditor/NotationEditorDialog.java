@@ -17,6 +17,9 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * TODO Comments
@@ -31,10 +34,10 @@ public class NotationEditorDialog {
 	protected Stage stage;
 	protected String notationName;
 
+	private Function<NotationBody, Boolean> onSuccessHandler;
+
 	private List<NotationEditorTabController> tabControllers = new ArrayList<>();
 	private Status statusController;
-
-	private NotationBody result;
 
 	@FXML
 	private TabPane editorTabs;
@@ -43,9 +46,10 @@ public class NotationEditorDialog {
 	@FXML
 	protected Button okButton;
 
-	void init(NotationEditorEditMode editMode, Stage stage, NotationBody notation) throws IOException {
-		this.editMode = editMode;
-		this.stage = stage;
+	void init(NotationEditorEditMode editMode, Stage stage, NotationBody notation, Function<NotationBody, Boolean> onSuccessHandler) throws IOException {
+		this.editMode = checkNotNull(editMode);
+		this.stage = checkNotNull(stage);
+		this.onSuccessHandler = checkNotNull(onSuccessHandler);
 
 		addEditorTabs();
 		addStatusTabs();
@@ -156,19 +160,22 @@ public class NotationEditorDialog {
 		}
 	}
 
-	public NotationBody getResult() {
-		return result;
-	}
-
 	@FXML
 	private void OnOk() {
-		result = buildNotationFromDialogData();
-		stage.close();
+		NotationBody result = buildNotationFromDialogData();
+
+		try {
+			Boolean success = onSuccessHandler.apply(result);
+			if (success) {
+				stage.close();
+			}
+		} catch (RuntimeException e) {
+
+		}
 	}
 
 	@FXML
 	private void OnCancel() {
-		result = null;
 		stage.close();
 	}
 }

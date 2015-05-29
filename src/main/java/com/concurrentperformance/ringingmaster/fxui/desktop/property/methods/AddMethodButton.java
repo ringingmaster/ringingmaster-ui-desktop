@@ -1,10 +1,8 @@
 package com.concurrentperformance.ringingmaster.fxui.desktop.property.methods;
 
 import com.concurrentperformance.ringingmaster.engine.NumberOfBells;
-import com.concurrentperformance.ringingmaster.engine.notation.NotationBody;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentmanager.DocumentManager;
 import com.concurrentperformance.ringingmaster.fxui.desktop.notationeditor.NotationEditorDialogBuilder;
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
@@ -32,12 +30,12 @@ public class AddMethodButton extends Button {
 			public void handle(ActionEvent event) {
 
 				NumberOfBells numberOfBells = DocumentManager.getInstance().getCurrentDocument().getNumberOfBells();
-				NotationBody result = NotationEditorDialogBuilder.showDialog(numberOfBells);
-//				NotationEditorDialogBuilder.showDialog(TouchDocument.buildPlainBobMajor());
 
-				Platform.runLater(() -> DocumentManager.getInstance().getCurrentDocument().addNotation(result));
+				NotationEditorDialogBuilder.showDialog(numberOfBells, result -> {
+					log.info("AddMethodButton - adding", result.toString());
+					return DocumentManager.getInstance().getCurrentDocument().addNotation(result);
+				});
 
-				log.info(result.toString());
 			}
 
 		});

@@ -22,7 +22,6 @@ import com.concurrentperformance.ringingmaster.fxui.desktop.proof.ProofManager;
 import com.concurrentperformance.ringingmaster.ui.common.TouchStyle;
 import com.concurrentperformance.util.listener.ConcurrentListenable;
 import com.concurrentperformance.util.listener.Listenable;
-import com.google.common.base.Objects;
 import com.google.common.base.Optional;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
@@ -174,7 +173,7 @@ public class TouchDocument extends ConcurrentListenable<TouchDocumentListener> i
 				Alert dialog = new Alert(Alert.AlertType.CONFIRMATION, message.toString(), ButtonType.OK, ButtonType.CANCEL);
 				dialog.setTitle("Change number of bells");
 				dialog.setHeaderText("Change number of bells");
-				dialog.getDialogPane().setMinHeight(280);
+				dialog.getDialogPane().setMinHeight(180);
 				dialog.getDialogPane().setMinWidth(620);
 				final java.util.Optional result = dialog.showAndWait().filter(response -> response == ButtonType.OK);
 				if (result.isPresent()) {
@@ -216,27 +215,7 @@ public class TouchDocument extends ConcurrentListenable<TouchDocumentListener> i
 
 	public boolean addNotation(NotationBody notationToAdd) {
 
-		List<String> messages = new ArrayList<>();
-
-		messages.addAll(touch.getAllNotations().stream()
-				.filter(existingNotation -> (existingNotation.getNumberOfWorkingBells() == notationToAdd.getNumberOfWorkingBells()) &&
-						(Objects.equal(existingNotation.getName(), notationToAdd.getName())))
-				.map(existngNotation -> "An existing method with notation '" + existngNotation.getNotationDisplayString(true) + "' has the same 'Name' and 'Number Of Bells'.")
-				.collect(Collectors.toList()));
-
-		messages.addAll(touch.getAllNotations().stream()
-				.filter(existingNotation -> (!Strings.isNullOrEmpty(notationToAdd.getSpliceIdentifier()) &&
-						Objects.equal(existingNotation.getSpliceIdentifier(), notationToAdd.getSpliceIdentifier())))
-				.map(existngNotation -> "An existing method '" + existngNotation.getNameIncludingNumberOfBells()  + "' has the same 'Splice Identifier'.")
-				.collect(Collectors.toList()));
-
-			//TODO	Could also check that the notations dont match.
-
-			//TODO	Can Split the stream?
-
-		//TODO problem with property panel in that the 'too many bells' note appears at the location of the devider between the name and property. Try moving the devider when adding a new notation
-
-		//TODO also show splice letter in the editor dialog.
+		List<String> messages = touch.checkAddNotation(notationToAdd);
 
 		if (messages.size() == 0) {
 			touch.addNotation(notationToAdd);
@@ -250,7 +229,7 @@ public class TouchDocument extends ConcurrentListenable<TouchDocumentListener> i
 			dialog.setTitle("Can't add notation");
 			dialog.setHeaderText("Can't add '" + notationToAdd.getNameIncludingNumberOfBells() + "'");
 			dialog.getDialogPane().setMinHeight(280);
-			dialog.getDialogPane().setMinWidth(500);
+			dialog.getDialogPane().setMinWidth(560);
 			dialog.showAndWait();
 
 			fireDocumentContentChanged();

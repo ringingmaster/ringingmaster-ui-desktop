@@ -1,6 +1,6 @@
 package com.concurrentperformance.ringingmaster.fxui.desktop.property.methods;
 
-import com.concurrentperformance.fxutils.propertyeditor.DisplayPropertyValue;
+import com.concurrentperformance.fxutils.propertyeditor.LabelPropertyValue;
 import com.concurrentperformance.fxutils.propertyeditor.PropertyEditor;
 import com.concurrentperformance.ringingmaster.engine.notation.NotationBody;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentmanager.DocumentManager;
@@ -39,7 +39,7 @@ public class PropertyMethodPanel extends PropertyEditor implements DocumentManag
 	private void rebuildMethodList(TouchDocument touchDocument) {
 		clear();
 		for (NotationBody notation : touchDocument.getSortedAllNotations()) {
-			add(new DisplayPropertyValue(getDisplayName(notation)));
+			add(new LabelPropertyValue(getDisplayName(notation)));
 		}
 	}
 
@@ -61,7 +61,7 @@ public class PropertyMethodPanel extends PropertyEditor implements DocumentManag
 
 		for (NotationBody notation : allNotations) {
 			String name = getDisplayName(notation);
-			DisplayPropertyValue property = (DisplayPropertyValue)findPropertyByName(name);
+			LabelPropertyValue property = (LabelPropertyValue)findPropertyByName(name);
 
 			if (notation.getNumberOfWorkingBells().getBellCount() > touchDocument.getNumberOfBells().getBellCount()) {
 				property.setValue("Too many bells");

@@ -1,6 +1,6 @@
 package com.concurrentperformance.ringingmaster.fxui.desktop.analysis;
 
-import com.concurrentperformance.fxutils.propertyeditor.DisplayPropertyValue;
+import com.concurrentperformance.fxutils.propertyeditor.LabelPropertyValue;
 import com.concurrentperformance.fxutils.propertyeditor.PropertyEditor;
 import com.concurrentperformance.ringingmaster.engine.touch.proof.Proof;
 import com.concurrentperformance.ringingmaster.fxui.desktop.proof.ProofManager;
@@ -32,16 +32,16 @@ public class AnalysisStatusWindow extends PropertyEditor implements ProofManager
 	public AnalysisStatusWindow() {
 		ProofManager.getInstance().addListener(this);
 
-		add(new DisplayPropertyValue(TOUCH_TRUE_PROPERTY_NAME));
-		add(new DisplayPropertyValue(TERMINATION_PROPERTY_NAME));
-		add(new DisplayPropertyValue(PART_COUNT_PROPERTY_NAME));
-		add(new DisplayPropertyValue(LEAD_COUNT_PROPERTY_NAME));
-		add(new DisplayPropertyValue(ROW_COUNT_PROPERTY_NAME));
-		add(new DisplayPropertyValue(CALL_COUNT_PROPERTY_NAME));
-		add(new DisplayPropertyValue(START_ROW_PROPERTY_NAME));
-		add(new DisplayPropertyValue(END_ROW_PROPERTY_NAME));
-		add(new DisplayPropertyValue(END_STROKE_PROPERTY_NAME));
-		add(new DisplayPropertyValue(PROOF_TIME_PROPERTY_NAME));
+		add(new LabelPropertyValue(TOUCH_TRUE_PROPERTY_NAME));
+		add(new LabelPropertyValue(TERMINATION_PROPERTY_NAME));
+		add(new LabelPropertyValue(PART_COUNT_PROPERTY_NAME));
+		add(new LabelPropertyValue(LEAD_COUNT_PROPERTY_NAME));
+		add(new LabelPropertyValue(ROW_COUNT_PROPERTY_NAME));
+		add(new LabelPropertyValue(CALL_COUNT_PROPERTY_NAME));
+		add(new LabelPropertyValue(START_ROW_PROPERTY_NAME));
+		add(new LabelPropertyValue(END_ROW_PROPERTY_NAME));
+		add(new LabelPropertyValue(END_STROKE_PROPERTY_NAME));
+		add(new LabelPropertyValue(PROOF_TIME_PROPERTY_NAME));
 	}
 
 	@Override
@@ -162,7 +162,7 @@ public class AnalysisStatusWindow extends PropertyEditor implements ProofManager
 
 	public void updateDisplayProperty(String propertyName, String touchTrue, Color color) {
 		Platform.runLater(() -> {
-			DisplayPropertyValue propertyByName = (DisplayPropertyValue) findPropertyByName(propertyName);
+			LabelPropertyValue propertyByName = (LabelPropertyValue) findPropertyByName(propertyName);
 			propertyByName.setValue(touchTrue);
 			propertyByName.setColor(color);
 		});

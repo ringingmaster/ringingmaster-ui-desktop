@@ -160,10 +160,10 @@ public class AnalysisStatusWindow extends PropertyEditor implements ProofManager
 		}
 	}
 
-	public void updateDisplayProperty(String propertyName, String touchTrue, Color color) {
+	public void updateDisplayProperty(String propertyName, String value, Color color) {
 		Platform.runLater(() -> {
 			LabelPropertyValue propertyByName = (LabelPropertyValue) findPropertyByName(propertyName);
-			propertyByName.setValue(touchTrue);
+			propertyByName.setValue(value);
 			propertyByName.setColor(color);
 		});
 	}

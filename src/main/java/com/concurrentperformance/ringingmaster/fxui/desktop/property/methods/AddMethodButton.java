@@ -3,8 +3,6 @@ package com.concurrentperformance.ringingmaster.fxui.desktop.property.methods;
 import com.concurrentperformance.ringingmaster.engine.NumberOfBells;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentmanager.DocumentManager;
 import com.concurrentperformance.ringingmaster.fxui.desktop.notationeditor.NotationEditorDialogBuilder;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -25,19 +23,13 @@ public class AddMethodButton extends Button {
 	public AddMethodButton() {
 		super("", new ImageView(IMAGE));
 
-		setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent event) {
+		setOnAction(event -> {
+			NumberOfBells numberOfBells = DocumentManager.getInstance().getCurrentDocument().getNumberOfBells();
 
-				NumberOfBells numberOfBells = DocumentManager.getInstance().getCurrentDocument().getNumberOfBells();
-
-				NotationEditorDialogBuilder.showDialog(numberOfBells, result -> {
-					log.info("AddMethodButton - adding", result.toString());
-					return DocumentManager.getInstance().getCurrentDocument().addNotation(result);
-				});
-
-			}
-
+			NotationEditorDialogBuilder.showDialog(numberOfBells, result -> {
+				log.info("AddMethodButton - adding", result.toString());
+				return DocumentManager.getInstance().getCurrentDocument().addNotation(result);
+			});
 		});
 	}
 

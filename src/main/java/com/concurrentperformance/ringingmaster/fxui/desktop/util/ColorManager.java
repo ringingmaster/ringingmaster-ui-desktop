@@ -22,7 +22,7 @@ public class ColorManager {
 	}
 
 	public static Color getClearHighlight() {
-		return Color.WHITE;
+		return Color.TRANSPARENT;
 	}
 }
 

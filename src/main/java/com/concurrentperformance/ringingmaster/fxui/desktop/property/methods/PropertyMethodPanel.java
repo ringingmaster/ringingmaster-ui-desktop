@@ -2,6 +2,7 @@ package com.concurrentperformance.ringingmaster.fxui.desktop.property.methods;
 
 import com.concurrentperformance.fxutils.propertyeditor.LabelPropertyValue;
 import com.concurrentperformance.fxutils.propertyeditor.PropertyEditor;
+import com.concurrentperformance.fxutils.propertyeditor.PropertyValue;
 import com.concurrentperformance.ringingmaster.engine.notation.NotationBody;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentmanager.DocumentManager;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentmanager.DocumentManagerListener;
@@ -22,9 +23,16 @@ public class PropertyMethodPanel extends PropertyEditor implements DocumentManag
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-	public PropertyMethodPanel() {
+	static PropertyMethodPanel INSTANCE = new PropertyMethodPanel();
+
+	static PropertyMethodPanel getInstance() {
+		return INSTANCE;
+	}
+
+	private PropertyMethodPanel() {
 		DocumentManager.getInstance().addListener(this);
 		setVertSeparatorPosition(140.0);
+		allowSelection(true);
 	}
 
 	@Override
@@ -41,6 +49,22 @@ public class PropertyMethodPanel extends PropertyEditor implements DocumentManag
 		for (NotationBody notation : touchDocument.getSortedAllNotations()) {
 			add(new LabelPropertyValue(getDisplayName(notation)));
 		}
+	}
+
+	public NotationBody getSelectedNotation() {
+
+		PropertyValue selected = getSelected();
+		if (selected != null) {
+			String name = selected.getName();
+			for (NotationBody possibleNotation : DocumentManager.getInstance().getCurrentDocument().getSortedAllNotations()) {
+				String possibleName = getDisplayName(possibleNotation);
+				if (name.equals(possibleName)) {
+					return possibleNotation;
+				}
+			}
+		}
+
+		return null;
 	}
 
 	private boolean hasMethodListChanged(TouchDocument touchDocument) {

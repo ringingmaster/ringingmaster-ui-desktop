@@ -23,7 +23,7 @@ public class PropertyMethodsWindow extends VBox {
 		getChildren().add(toolbar);
 		VBox.setVgrow(toolbar, Priority.NEVER);
 
-		PropertyMethodPanel methodPanel = new PropertyMethodPanel();
+		PropertyMethodPanel methodPanel = PropertyMethodPanel.getInstance();
 		getChildren().add(methodPanel);
 		VBox.setVgrow(methodPanel, Priority.ALWAYS);
 	}

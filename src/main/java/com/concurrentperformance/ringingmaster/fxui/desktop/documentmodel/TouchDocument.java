@@ -237,6 +237,15 @@ public class TouchDocument extends ConcurrentListenable<TouchDocumentListener> i
 		}
 	}
 
+	public void removeNotation(NotationBody notationToRemove) {
+		touch.removeNotation(notationToRemove);
+		parseAndProve();
+		fireDocumentContentChanged();
+
+//				Also do checks thate the notation can be removed
+//				Also what happens to active method.
+	}
+
 	public NotationBody getSingleMethodActiveNotation() {
 		return touch.getSingleMethodActiveNotation();
 	}

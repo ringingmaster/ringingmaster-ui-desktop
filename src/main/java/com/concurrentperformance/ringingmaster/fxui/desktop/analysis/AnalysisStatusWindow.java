@@ -59,37 +59,36 @@ public class AnalysisStatusWindow extends PropertyEditor implements ProofManager
 	}
 
 	private void updateTouchTrue(Proof proof) {
-		if (proof != null && proof.getAnalysis() != null) {
-			if (proof.getAnalysis().isTrueTouch()) {
+		if (proof.getAnalysis().isPresent()) {
+			if (proof.getAnalysis().get().isTrueTouch()) {
 				updateDisplayProperty(TOUCH_TRUE_PROPERTY_NAME, "TRUE", ColorManager.getPassHighlight());
 			}
 			else {
 				updateDisplayProperty(TOUCH_TRUE_PROPERTY_NAME, "FALSE", ColorManager.getErrorHighlight());
 			}
 		}
+		else {
+			updateDisplayProperty(TOUCH_TRUE_PROPERTY_NAME, "INVALID", ColorManager.getErrorHighlight());
+		}
 	}
 
 	private void updateTermination(Proof proof) {
-		if (proof != null) {
-			String terminateReasonDisplayString = proof.getTerminateReasonDisplayString();
+		String terminateReasonDisplayString = proof.getTerminateReasonDisplayString();
 
-			switch(proof.getTerminationReason()) {
-
-				case INVALID_TOUCH:
-					break;
-				case ROW_COUNT:
-					updateDisplayProperty(TERMINATION_PROPERTY_NAME, terminateReasonDisplayString, ColorManager.getWarnHighlight());
-					break;
-				case LEAD_COUNT:
-					updateDisplayProperty(TERMINATION_PROPERTY_NAME, terminateReasonDisplayString, ColorManager.getWarnHighlight());
-					break;
-				case SPECIFIED_ROW:
-					updateDisplayProperty(TERMINATION_PROPERTY_NAME, terminateReasonDisplayString, ColorManager.getClearHighlight());
-					break;
-				case EMPTY_PARTS:
-					updateDisplayProperty(TERMINATION_PROPERTY_NAME, terminateReasonDisplayString, ColorManager.getErrorHighlight());
-					break;
-				// TODO this is from C++
+		switch(proof.getTerminationReason()) {
+			case SPECIFIED_ROW:
+				updateDisplayProperty(TERMINATION_PROPERTY_NAME, terminateReasonDisplayString, ColorManager.getClearHighlight());
+				break;
+			case ROW_COUNT:
+			case LEAD_COUNT:
+				updateDisplayProperty(TERMINATION_PROPERTY_NAME, terminateReasonDisplayString, ColorManager.getWarnHighlight());
+				updateDisplayProperty(TERMINATION_PROPERTY_NAME, terminateReasonDisplayString, ColorManager.getWarnHighlight());
+				break;
+			case INVALID_TOUCH:
+			case EMPTY_PARTS:
+				updateDisplayProperty(TERMINATION_PROPERTY_NAME, terminateReasonDisplayString, ColorManager.getErrorHighlight());
+				break;
+			// TODO this is from C++
 //			case TR_PARTS:
 //				str.Format("Part limit (%d)", method->getPartCount());
 //				addLine("Termination:", str, RGB(255, 120, 255));
@@ -99,33 +98,40 @@ public class AnalysisStatusWindow extends PropertyEditor implements ProofManager
 //				addLine("Termination:", "Aborted - Circular touch", RGB(255, 120, 120));
 //				break;
 
-				default:
-					throw new RuntimeException("Please code for termination reason [" + proof.getTerminationReason() + "]");
-			}
-
+			default:
+				throw new RuntimeException("Please code for termination reason [" + proof.getTerminationReason() + "]");
 		}
 	}
 
 	private void updatePartCount(Proof proof) {
-		if (proof != null && proof.getCreatedMethod() != null) {
+		if (proof.getCreatedMethod().isPresent()) {
 			updateDisplayProperty(PART_COUNT_PROPERTY_NAME, "TODO", ColorManager.getClearHighlight());
+		}
+		else {
+			updateDisplayProperty(PART_COUNT_PROPERTY_NAME, "", ColorManager.getClearHighlight());
 		}
 	}
 
 	private void updateLeadCount(Proof proof) {
-		if (proof != null && proof.getCreatedMethod() != null) {
-			updateDisplayProperty(LEAD_COUNT_PROPERTY_NAME, Integer.toString(proof.getCreatedMethod().getLeadCount()), ColorManager.getClearHighlight());
+		if (proof.getCreatedMethod().isPresent()) {
+			updateDisplayProperty(LEAD_COUNT_PROPERTY_NAME, Integer.toString(proof.getCreatedMethod().get().getLeadCount()), ColorManager.getClearHighlight());
+		}
+		else {
+			updateDisplayProperty(LEAD_COUNT_PROPERTY_NAME, "", ColorManager.getClearHighlight());
 		}
 	}
 
 	private void updateRowCount(Proof proof) {
-		if (proof != null && proof.getCreatedMethod() != null) {
-			updateDisplayProperty(ROW_COUNT_PROPERTY_NAME, Integer.toString(proof.getCreatedMethod().getRowCount()), ColorManager.getClearHighlight());
+		if (proof.getCreatedMethod().isPresent()) {
+			updateDisplayProperty(ROW_COUNT_PROPERTY_NAME, Integer.toString(proof.getCreatedMethod().get().getRowCount()), ColorManager.getClearHighlight());
+		}
+		else {
+			updateDisplayProperty(ROW_COUNT_PROPERTY_NAME, "", ColorManager.getClearHighlight());
 		}
 	}
 
 	private void updateCallCount(Proof proof) {
-		if (proof != null && proof.getAnalysis() != null) {
+		if (proof.getCreatedMethod().isPresent()) {
 			updateDisplayProperty(CALL_COUNT_PROPERTY_NAME, "TODO", ColorManager.getClearHighlight());
 
 //TODO - From C++ - note Pain Course message
@@ -134,30 +140,40 @@ public class AnalysisStatusWindow extends PropertyEditor implements ProofManager
 //	((method->getCallCount() == 0)&&(!method->isSpliced()))? "- Plain Course":"");
 //	addLine("Number of calls:" , str);
 		}
+		else {
+			updateDisplayProperty(CALL_COUNT_PROPERTY_NAME, "", ColorManager.getClearHighlight());
+		}
 	}
 
 	private void updateStartRow(Proof proof) {
-		if (proof != null && proof.getCreatedMethod() != null) {
-			updateDisplayProperty(START_ROW_PROPERTY_NAME, proof.getCreatedMethod().getFirstRow().getDisplayString(true), ColorManager.getClearHighlight());
+		if (proof.getCreatedMethod().isPresent()) {
+			updateDisplayProperty(START_ROW_PROPERTY_NAME, proof.getCreatedMethod().get().getFirstRow().getDisplayString(true), ColorManager.getClearHighlight());
+		}
+		else {
+			updateDisplayProperty(START_ROW_PROPERTY_NAME, "", ColorManager.getClearHighlight());
 		}
 	}
 
 	private void updateEndRow(Proof proof) {
-		if (proof != null && proof.getCreatedMethod() != null) {
-			updateDisplayProperty(END_ROW_PROPERTY_NAME, proof.getCreatedMethod().getLastRow().getDisplayString(true), ColorManager.getClearHighlight());
+		if (proof.getCreatedMethod().isPresent()) {
+			updateDisplayProperty(END_ROW_PROPERTY_NAME, proof.getCreatedMethod().get().getLastRow().getDisplayString(true), ColorManager.getClearHighlight());
+		}
+		else {
+			updateDisplayProperty(END_ROW_PROPERTY_NAME, "", ColorManager.getClearHighlight());
 		}
 	}
 
 	private void updateEndStroke(Proof proof) {
-		if (proof != null && proof.getCreatedMethod() != null) {
-			updateDisplayProperty(END_STROKE_PROPERTY_NAME, proof.getCreatedMethod().getLastRow().getStroke().getDisplayString(), ColorManager.getClearHighlight());
+		if (proof.getCreatedMethod().isPresent()) {
+			updateDisplayProperty(END_STROKE_PROPERTY_NAME, proof.getCreatedMethod().get().getLastRow().getStroke().getDisplayString(), ColorManager.getClearHighlight());
+		}
+		else {
+			updateDisplayProperty(END_STROKE_PROPERTY_NAME, "", ColorManager.getClearHighlight());
 		}
 	}
 
 	private void updateProofTime(Proof proof) {
-		if (proof != null) {
-			updateDisplayProperty(PROOF_TIME_PROPERTY_NAME, Long.toString(proof.getProofTime()) + "ms", ColorManager.getClearHighlight());
-		}
+		updateDisplayProperty(PROOF_TIME_PROPERTY_NAME, Long.toString(proof.getProofTime()) + "ms", ColorManager.getClearHighlight());
 	}
 
 	public void updateDisplayProperty(String propertyName, String value, Color color) {

@@ -18,6 +18,8 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * TODO comments ???
  *
@@ -63,8 +65,6 @@ public class ProofManager extends ConcurrentListenable<ProofManagerListener> imp
 		// Get the proofId before clearing the proof, so another thread does not preempt us.
 		final long proofId = this.nextProofId.incrementAndGet();
 
-		updateProofState(null);
-
 		proofExecutor.execute(() -> {
 			long start = System.currentTimeMillis();
 			log.info(">>>> Proof of [{}]", proofId);
@@ -77,17 +77,16 @@ public class ProofManager extends ConcurrentListenable<ProofManagerListener> imp
 			else {
 				log.info("Ignoring finished proof [{}] as not current [{}]", proofId, currentProofId); //TODO need a mech of cancelling a proof mid term.
 			}
-			log.info("<<<< Proof of [{}], [{}ms]", proofId, System.currentTimeMillis()-start);
+			log.info("<<<< Proof of [{}], [{}ms], Calculation Time [{}ms]", proofId, System.currentTimeMillis()-start, proof.getProofTime());
 		});
 	}
 
 	private void updateProofState(final Proof proof) {
-		updateExecutor.execute(new Runnable() {
-			@Override
-			public void run() {
-				for (ProofManagerListener listener : getListeners()) {
-					listener.proofManagerListener_proofFinished(proof);
-				}
+
+		checkNotNull(proof);
+		updateExecutor.execute(() -> {
+			for (ProofManagerListener listener : getListeners()) {
+				listener.proofManagerListener_proofFinished(proof);
 			}
 		});
 	}

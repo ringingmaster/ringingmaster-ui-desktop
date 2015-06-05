@@ -29,14 +29,11 @@ public class ProofState extends ImageView implements ProofManagerListener {
 
 	@Override
 	public void proofManagerListener_proofFinished(Proof proof) {
-		if (proof == null) {
-			updateImage(proofWait);
-		}
-		else if (proof.getTerminationReason() == ProofTerminationReason.INVALID_TOUCH) {
+		if (proof.getTerminationReason() == ProofTerminationReason.INVALID_TOUCH) {
 			updateImage(proofWait);//TODO could make this a question mark.
 		}
-		else if (proof.getAnalysis() != null) {
-			if (proof.getAnalysis().isTrueTouch()) {
+		else if (proof.getAnalysis().isPresent()) {
+			if (proof.getAnalysis().get().isTrueTouch()) {
 				updateImage(proofTick);
 			}
 			else {

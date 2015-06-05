@@ -8,25 +8,32 @@ import javafx.scene.image.ImageView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Optional;
+
 /**
  * TODO Comments
  *
  * @author Lake
  */
-public class DeleteMethodButton extends Button {
+public class DeleteNotationButton extends Button implements PropertyNotationPanelListener {
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-	private static Image IMAGE = new Image(DeleteMethodButton.class.getResourceAsStream("/images/delete.png"));
+	private static Image IMAGE = new Image(DeleteNotationButton.class.getResourceAsStream("/images/delete.png"));
 
-	public DeleteMethodButton() {
+	public DeleteNotationButton() {
 		super("", new ImageView(IMAGE));
+		PropertyNotationPanel.getInstance().addListener(this);
 
 		setOnAction(event -> {
-			NotationBody notation = PropertyMethodPanel.getInstance().getSelectedNotation();
+			NotationBody notation = PropertyNotationPanel.getInstance().getSelectedNotation();
 			DocumentManager.getInstance().getCurrentDocument().removeNotation(notation);
 		});
-
 	}
 
+
+	@Override
+	public void propertyMethod_setSelectedNotation(Optional<NotationBody> selectedNotation) {
+		setDisable(!selectedNotation.isPresent());
+	}
 }

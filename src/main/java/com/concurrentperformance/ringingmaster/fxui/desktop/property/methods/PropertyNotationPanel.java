@@ -8,28 +8,33 @@ import com.concurrentperformance.ringingmaster.fxui.desktop.documentmanager.Docu
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentmanager.DocumentManagerListener;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentmodel.TouchDocument;
 import com.concurrentperformance.ringingmaster.fxui.desktop.util.ColorManager;
+import com.concurrentperformance.util.listener.ConcurrentListenable;
+import com.concurrentperformance.util.listener.Listenable;
 import com.google.common.base.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * TODO Comments
  *
  * @author Lake
  */
-public class PropertyMethodPanel extends PropertyEditor implements DocumentManagerListener {
+public class PropertyNotationPanel extends PropertyEditor implements DocumentManagerListener, Listenable<PropertyNotationPanelListener> {
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-	static PropertyMethodPanel INSTANCE = new PropertyMethodPanel();
+	private ConcurrentListenable<PropertyNotationPanelListener> listenableDelegate = new ConcurrentListenable<>();
 
-	static PropertyMethodPanel getInstance() {
+	static PropertyNotationPanel INSTANCE = new PropertyNotationPanel();
+
+	static PropertyNotationPanel getInstance() {
 		return INSTANCE;
 	}
 
-	private PropertyMethodPanel() {
+	private PropertyNotationPanel() {
 		DocumentManager.getInstance().addListener(this);
 		setVertSeparatorPosition(140.0);
 		allowSelection(true);
@@ -58,8 +63,14 @@ public class PropertyMethodPanel extends PropertyEditor implements DocumentManag
 		}
 		if (selectedIndex >= 0) {
 			setSelectedIndex(selectedIndex);
+			fireSelctionChange(Optional.empty());
 		}
+	}
 
+	private void fireSelctionChange(Optional<NotationBody> selectedNotation) {
+		for (PropertyNotationPanelListener propertyNotationPanelListener : listenableDelegate.getListeners()) {
+			propertyNotationPanelListener.propertyMethod_setSelectedNotation(selectedNotation);
+		}
 	}
 
 	public NotationBody getSelectedNotation() {
@@ -130,5 +141,10 @@ public class PropertyMethodPanel extends PropertyEditor implements DocumentManag
 
 	private String getDisplayName(NotationBody notation) {
 		return notation.getNameIncludingNumberOfBells();
+	}
+
+	@Override
+	public void addListener(PropertyNotationPanelListener listener) {
+		listenableDelegate.addListener(listener);
 	}
 }

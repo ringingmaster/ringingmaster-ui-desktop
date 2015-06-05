@@ -1,6 +1,6 @@
 package com.concurrentperformance.ringingmaster.fxui.desktop.property;
 
-import com.concurrentperformance.ringingmaster.fxui.desktop.property.methods.PropertyMethodsWindow;
+import com.concurrentperformance.ringingmaster.fxui.desktop.property.methods.PropertyNotationWindow;
 import com.concurrentperformance.ringingmaster.fxui.desktop.property.setup.PropertySetupWindow;
 import javafx.scene.Node;
 import javafx.scene.control.Tab;
@@ -14,10 +14,10 @@ import javafx.scene.control.TabPane;
 public class PropertyWindow extends TabPane {
 
 	private final PropertySetupWindow propertySetupWindow = new PropertySetupWindow();
-	private final PropertyMethodsWindow propertyMethodsWindow = new PropertyMethodsWindow();
+	private final PropertyNotationWindow propertyNotationWindow = new PropertyNotationWindow();
 
 	public PropertyWindow() {
-		createTab("Methods", propertyMethodsWindow);
+		createTab("Methods", propertyNotationWindow);
 		createTab("Setup", propertySetupWindow);
 	}
 

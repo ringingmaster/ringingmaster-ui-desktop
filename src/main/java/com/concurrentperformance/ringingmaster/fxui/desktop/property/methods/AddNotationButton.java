@@ -14,13 +14,13 @@ import org.slf4j.LoggerFactory;
  *
  * @author Lake
  */
-public class AddMethodButton extends Button {
+public class AddNotationButton extends Button {
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-	private static Image IMAGE = new Image(AddMethodButton.class.getResourceAsStream("/images/add_method.png"));
+	private static Image IMAGE = new Image(AddNotationButton.class.getResourceAsStream("/images/add_method.png"));
 
-	public AddMethodButton() {
+	public AddNotationButton() {
 		super("", new ImageView(IMAGE));
 
 		setOnAction(event -> {

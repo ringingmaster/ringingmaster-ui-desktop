@@ -3,7 +3,7 @@ package com.concurrentperformance.ringingmaster.fxui.desktop;
 import com.concurrentperformance.ringingmaster.fxui.desktop.analysis.AnalysisWindow;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentmanager.DocumentManager;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentpanel.TouchPanel;
-import com.concurrentperformance.ringingmaster.fxui.desktop.property.methods.AddMethodButton;
+import com.concurrentperformance.ringingmaster.fxui.desktop.property.methods.AddNotationButton;
 import com.concurrentperformance.ringingmaster.fxui.desktop.property.PropertyWindow;
 import com.concurrentperformance.ringingmaster.fxui.desktop.statusbar.StatusBar;
 import com.concurrentperformance.util.thread.ThreadUncaughtExceptionHelper;
@@ -100,7 +100,7 @@ public class RingingMasterDesktopApp extends Application {
 	private Node createButtonBar() {
 		ButtonBar buttonBar = new ButtonBar();
 
-		Button addMethod = new AddMethodButton();
+		Button addMethod = new AddNotationButton();
 		buttonBar.getButtons().add(addMethod);
 		ButtonBar.setButtonData(addMethod, ButtonBar.ButtonData.LEFT);
 

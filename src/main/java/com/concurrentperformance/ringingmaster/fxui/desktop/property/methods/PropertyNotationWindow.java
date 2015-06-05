@@ -14,16 +14,16 @@ import org.slf4j.LoggerFactory;
  *
  * @author Lake
  */
-public class PropertyMethodsWindow extends VBox {
+public class PropertyNotationWindow extends VBox {
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-	public PropertyMethodsWindow() {
+	public PropertyNotationWindow() {
 		Node toolbar = createToolbar();
 		getChildren().add(toolbar);
 		VBox.setVgrow(toolbar, Priority.NEVER);
 
-		PropertyMethodPanel methodPanel = PropertyMethodPanel.getInstance();
+		PropertyNotationPanel methodPanel = PropertyNotationPanel.getInstance();
 		getChildren().add(methodPanel);
 		VBox.setVgrow(methodPanel, Priority.ALWAYS);
 	}
@@ -31,8 +31,8 @@ public class PropertyMethodsWindow extends VBox {
 
 	private Node createToolbar() {
 		ToolBar toolBar = new ToolBar();
-		Button addMethod = new AddMethodButton();
-		Button deleteMethod = new DeleteMethodButton();
+		Button addMethod = new AddNotationButton();
+		Button deleteMethod = new DeleteNotationButton();
 
 		toolBar.getItems().addAll(addMethod, deleteMethod);
 

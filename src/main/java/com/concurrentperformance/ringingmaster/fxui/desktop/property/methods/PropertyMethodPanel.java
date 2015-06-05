@@ -45,10 +45,21 @@ public class PropertyMethodPanel extends PropertyEditor implements DocumentManag
 	}
 
 	private void rebuildMethodList(TouchDocument touchDocument) {
+		int selectedIndex = getSelectedIndex();
 		clear();
 		for (NotationBody notation : touchDocument.getSortedAllNotations()) {
 			add(new LabelPropertyValue(getDisplayName(notation)));
 		}
+
+		if (selectedIndex >= 0) {
+			if (selectedIndex >= sizeAll()) {
+				selectedIndex = sizeAll()-1;
+			}
+		}
+		if (selectedIndex >= 0) {
+			setSelectedIndex(selectedIndex);
+		}
+
 	}
 
 	public NotationBody getSelectedNotation() {

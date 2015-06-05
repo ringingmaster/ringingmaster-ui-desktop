@@ -98,10 +98,6 @@ public class TouchDocument extends ConcurrentListenable<TouchDocumentListener> i
 	public void setNumberOfBells(NumberOfBells numberOfBells) {
 		if (touch.getNumberOfBells() != numberOfBells) {
 			StringBuilder message = new StringBuilder();
-			message.append("Changing number of bells from ").append(touch.getNumberOfBells().getDisplayString())
-					.append(" to ").append(numberOfBells.getDisplayString())
-					.append(" will modify other properties: ").append(System.lineSeparator());
-			int originalLength = message.length();
 
 			int pointNumber = 1;
 			if (touch.getCallFromBell().getZeroBasedBell() > numberOfBells.getTenor().getZeroBasedBell()) {
@@ -168,12 +164,18 @@ public class TouchDocument extends ConcurrentListenable<TouchDocumentListener> i
 
 			boolean doAction = false;
 
-			if (message.length() > originalLength) {
+			if (message.length() > 0) {
 				message.append(System.lineSeparator()).append("Do you wish to continue?");
-				Alert dialog = new Alert(Alert.AlertType.CONFIRMATION, message.toString(), ButtonType.OK, ButtonType.CANCEL);
+
+				StringBuilder preamble = new StringBuilder();
+				preamble.append("Changing number of bells from ").append(touch.getNumberOfBells().getDisplayString())
+						.append(" to ").append(numberOfBells.getDisplayString())
+						.append(" will modify other properties: ").append(System.lineSeparator());
+
+				Alert dialog = new Alert(Alert.AlertType.CONFIRMATION, preamble.toString() + message.toString(), ButtonType.OK, ButtonType.CANCEL);
 				dialog.setTitle("Change number of bells");
 				dialog.setHeaderText("Change number of bells");
-				dialog.getDialogPane().setMinHeight(180);
+				dialog.getDialogPane().setMinHeight(280);
 				dialog.getDialogPane().setMinWidth(620);
 				final java.util.Optional result = dialog.showAndWait().filter(response -> response == ButtonType.OK);
 				if (result.isPresent()) {

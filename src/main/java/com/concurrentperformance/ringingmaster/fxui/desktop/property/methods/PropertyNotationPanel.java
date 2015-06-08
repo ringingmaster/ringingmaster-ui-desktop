@@ -2,10 +2,8 @@ package com.concurrentperformance.ringingmaster.fxui.desktop.property.methods;
 
 import com.concurrentperformance.fxutils.propertyeditor.LabelPropertyValue;
 import com.concurrentperformance.fxutils.propertyeditor.PropertyEditor;
-import com.concurrentperformance.fxutils.propertyeditor.PropertyValue;
 import com.concurrentperformance.ringingmaster.engine.notation.NotationBody;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentmanager.DocumentManager;
-import com.concurrentperformance.ringingmaster.fxui.desktop.documentmanager.DocumentManagerListener;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentmodel.TouchDocument;
 import com.concurrentperformance.ringingmaster.fxui.desktop.util.ColorManager;
 import com.concurrentperformance.util.listener.ConcurrentListenable;
@@ -22,7 +20,7 @@ import java.util.Optional;
  *
  * @author Lake
  */
-public class PropertyNotationPanel extends PropertyEditor implements DocumentManagerListener, Listenable<PropertyNotationPanelListener> {
+public class PropertyNotationPanel extends PropertyEditor implements Listenable<PropertyNotationPanelListener> {
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
@@ -35,18 +33,31 @@ public class PropertyNotationPanel extends PropertyEditor implements DocumentMan
 	}
 
 	private PropertyNotationPanel() {
-		DocumentManager.getInstance().addListener(this);
+		DocumentManager.getInstance().addListener(touchDocument -> {
+			if (hasMethodListChanged(touchDocument)) {
+				rebuildMethodList(touchDocument);
+			}
+			updateMethodList(touchDocument);
+			fireSelctionChange();
+
+		});
+
 		setVertSeparatorPosition(140.0);
 		allowSelection(true);
+		selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
+			log.info("Index set to " + newValue);
+			fireSelctionChange();
+		});
 	}
 
-	@Override
-	public void documentManager_updateDocument(TouchDocument touchDocument) {
-		if (hasMethodListChanged(touchDocument)) {
-			rebuildMethodList(touchDocument);
-		}
+	private void fireSelctionChange() {
+		int selectedIndex = getSelectedIndex();
+		Optional<NotationBody> selectedNotation = Optional.ofNullable(getNotation(selectedIndex));
 
-		updateMethodList(touchDocument);
+		for (PropertyNotationPanelListener propertyNotationPanelListener : listenableDelegate.getListeners()) {
+			propertyNotationPanelListener.propertyMethod_setSelectedNotation(selectedNotation);
+
+		}
 	}
 
 	private void rebuildMethodList(TouchDocument touchDocument) {
@@ -63,30 +74,7 @@ public class PropertyNotationPanel extends PropertyEditor implements DocumentMan
 		}
 		if (selectedIndex >= 0) {
 			setSelectedIndex(selectedIndex);
-			fireSelctionChange(Optional.empty());
 		}
-	}
-
-	private void fireSelctionChange(Optional<NotationBody> selectedNotation) {
-		for (PropertyNotationPanelListener propertyNotationPanelListener : listenableDelegate.getListeners()) {
-			propertyNotationPanelListener.propertyMethod_setSelectedNotation(selectedNotation);
-		}
-	}
-
-	public NotationBody getSelectedNotation() {
-
-		PropertyValue selected = getSelected();
-		if (selected != null) {
-			String name = selected.getName();
-			for (NotationBody possibleNotation : DocumentManager.getInstance().getCurrentDocument().getSortedAllNotations()) {
-				String possibleName = getDisplayName(possibleNotation);
-				if (name.equals(possibleName)) {
-					return possibleNotation;
-				}
-			}
-		}
-
-		return null;
 	}
 
 	private boolean hasMethodListChanged(TouchDocument touchDocument) {
@@ -146,5 +134,14 @@ public class PropertyNotationPanel extends PropertyEditor implements DocumentMan
 	@Override
 	public void addListener(PropertyNotationPanelListener listener) {
 		listenableDelegate.addListener(listener);
+	}
+
+	public NotationBody getNotation(int index) {
+		List<NotationBody> sortedAllNotations = DocumentManager.getInstance().getCurrentDocument().getSortedAllNotations();
+		if (index >= 0 && index < sortedAllNotations.size()) {
+			return sortedAllNotations.get(index);
+		}
+
+		return null;
 	}
 }

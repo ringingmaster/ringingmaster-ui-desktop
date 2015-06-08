@@ -26,7 +26,8 @@ public class DeleteNotationButton extends Button implements PropertyNotationPane
 		PropertyNotationPanel.getInstance().addListener(this);
 
 		setOnAction(event -> {
-			NotationBody notation = PropertyNotationPanel.getInstance().getSelectedNotation();
+			int index = PropertyNotationPanel.getInstance().getSelectedIndex();
+			NotationBody notation =  PropertyNotationPanel.getInstance().getNotation(index);
 			DocumentManager.getInstance().getCurrentDocument().removeNotation(notation);
 		});
 	}

@@ -50,6 +50,9 @@ public class RingingMasterDesktopApp extends Application {
 		Parent parent = createMainWindow();
 
 		Scene scene = new Scene(parent, 900,650);
+		scene.getStylesheets().add("path/stylesheet.css");
+
+
 		stage.setScene(scene);
 		stage.initStyle(StageStyle.DECORATED);
 		stage.getIcons().add(new Image(	RingingMasterDesktopApp.class.getResourceAsStream("/images/RingingMaster.png")));

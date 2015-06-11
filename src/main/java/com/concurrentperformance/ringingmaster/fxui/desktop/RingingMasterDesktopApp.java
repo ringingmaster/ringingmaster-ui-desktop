@@ -50,7 +50,7 @@ public class RingingMasterDesktopApp extends Application {
 		Parent parent = createMainWindow();
 
 		Scene scene = new Scene(parent, 900,650);
-		scene.getStylesheets().add("path/stylesheet.css");
+		scene.getStylesheets().add("com/concurrentperformance/ringingmaster/fxui/desktop/stylesheet.css");
 
 
 		stage.setScene(scene);
@@ -95,7 +95,7 @@ public class RingingMasterDesktopApp extends Application {
 		VBox.setVgrow(topBottomSplit, Priority.ALWAYS);
 		VBox.setVgrow(statusBar, Priority.NEVER);
 
-		DocumentManager.getInstance().buildNewDocument();
+		DocumentManager.buildNewDocument();
 
 		return mainVerticalLayout;
 	}

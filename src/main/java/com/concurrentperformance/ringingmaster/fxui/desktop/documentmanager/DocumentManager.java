@@ -23,7 +23,11 @@ public class DocumentManager extends ConcurrentListenable<DocumentManagerListene
 	private DocumentManager() {
 	}
 
-	public void buildNewDocument() {
+	public static void buildNewDocument() {
+		INSTANCE.doBuildNewDocument();
+	}
+
+	private void doBuildNewDocument() {
 		currentDocument = new TouchDocument();
 		currentDocument.addListener(touchDocument -> fireUpdateDocument());
 		fireUpdateDocument();
@@ -35,8 +39,8 @@ public class DocumentManager extends ConcurrentListenable<DocumentManagerListene
 		}
 	}
 
-	public TouchDocument getCurrentDocument() {
-		return currentDocument;
+	public static TouchDocument getCurrentDocument() {
+		return INSTANCE.currentDocument;
 
 	}
 }

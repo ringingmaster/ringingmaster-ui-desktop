@@ -2,6 +2,7 @@ package com.concurrentperformance.ringingmaster.fxui.desktop.property.methods;
 
 import com.concurrentperformance.ringingmaster.engine.notation.NotationBody;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentmanager.DocumentManager;
+import com.concurrentperformance.ringingmaster.fxui.desktop.notationeditor.NotationEditorDialogBuilder;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -15,20 +16,27 @@ import java.util.Optional;
  *
  * @author Lake
  */
-public class DeleteNotationButton extends Button implements PropertyNotationPanelListener {
+public class EditNotationButton extends Button implements PropertyNotationPanelListener {
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-	private static Image IMAGE = new Image(DeleteNotationButton.class.getResourceAsStream("/images/remove.png"));
+	private static Image IMAGE = new Image(EditNotationButton.class.getResourceAsStream("/images/method_edit.png"));
 
-	public DeleteNotationButton() {
+	public EditNotationButton() {
 		super("", new ImageView(IMAGE));
 		PropertyNotationPanel.getInstance().addListener(this);
 
 		setOnAction(event -> {
 			int index = PropertyNotationPanel.getInstance().getSelectedIndex();
 			NotationBody notation =  PropertyNotationPanel.getInstance().getNotation(index);
-			DocumentManager.getCurrentDocument().removeNotation(notation);
+			if (notation != null) {
+				NotationEditorDialogBuilder.showDialog(notation, result -> {
+					log.info("EditNotationButton - adding", result.toString());
+					DocumentManager.getCurrentDocument().exchangeNotationAfterEdit(notation, result);
+					// TODO what checks do we need here?
+					return true; //TODO common this code from double click -
+				});
+			}
 		});
 	}
 

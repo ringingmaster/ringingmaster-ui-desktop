@@ -18,17 +18,17 @@ public class AddNotationButton extends Button {
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-	private static Image IMAGE = new Image(AddNotationButton.class.getResourceAsStream("/images/add_method.png"));
+	private static Image IMAGE = new Image(AddNotationButton.class.getResourceAsStream("/images/add.png"));
 
 	public AddNotationButton() {
 		super("", new ImageView(IMAGE));
 
 		setOnAction(event -> {
-			NumberOfBells numberOfBells = DocumentManager.getInstance().getCurrentDocument().getNumberOfBells();
+			NumberOfBells numberOfBells = DocumentManager.getCurrentDocument().getNumberOfBells();
 
 			NotationEditorDialogBuilder.showDialog(numberOfBells, result -> {
 				log.info("AddMethodButton - adding", result.toString());
-				return DocumentManager.getInstance().getCurrentDocument().addNotation(result);
+				return DocumentManager.getCurrentDocument().addNotation(result);
 			});
 		});
 	}

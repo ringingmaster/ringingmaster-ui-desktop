@@ -2,9 +2,11 @@ package com.concurrentperformance.ringingmaster.fxui.desktop.property.methods;
 
 import com.concurrentperformance.fxutils.propertyeditor.LabelPropertyValue;
 import com.concurrentperformance.fxutils.propertyeditor.PropertyEditor;
+import com.concurrentperformance.fxutils.propertyeditor.DoubleClickListener;
 import com.concurrentperformance.ringingmaster.engine.notation.NotationBody;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentmanager.DocumentManager;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentmodel.TouchDocument;
+import com.concurrentperformance.ringingmaster.fxui.desktop.notationeditor.NotationEditorDialogBuilder;
 import com.concurrentperformance.ringingmaster.fxui.desktop.util.ColorManager;
 import com.concurrentperformance.util.listener.ConcurrentListenable;
 import com.concurrentperformance.util.listener.Listenable;
@@ -40,6 +42,20 @@ public class PropertyNotationPanel extends PropertyEditor implements Listenable<
 			updateMethodList(touchDocument);
 			fireSelctionChange();
 
+		});
+
+		setOnDoubleClickListener(new DoubleClickListener() {
+			@Override
+			public void onDoubleClick(int index) {
+				NotationBody activeNotation = DocumentManager.getCurrentDocument().getSingleMethodActiveNotation();
+				if (activeNotation != null) {
+					NotationEditorDialogBuilder.showDialog(activeNotation, result -> {
+						log.info("AddMethodButton - adding", result.toString());
+						return true;
+						//return DocumentManager.getCurrentDocument().addNotation(result);
+					});
+				}
+			}
 		});
 
 		setVertSeparatorPosition(140.0);
@@ -137,7 +153,7 @@ public class PropertyNotationPanel extends PropertyEditor implements Listenable<
 	}
 
 	public NotationBody getNotation(int index) {
-		List<NotationBody> sortedAllNotations = DocumentManager.getInstance().getCurrentDocument().getSortedAllNotations();
+		List<NotationBody> sortedAllNotations = DocumentManager.getCurrentDocument().getSortedAllNotations();
 		if (index >= 0 && index < sortedAllNotations.size()) {
 			return sortedAllNotations.get(index);
 		}

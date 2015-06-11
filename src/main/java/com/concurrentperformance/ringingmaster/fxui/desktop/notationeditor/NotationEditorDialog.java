@@ -170,7 +170,7 @@ public class NotationEditorDialog {
 				stage.close();
 			}
 		} catch (RuntimeException e) {
-
+			log.error("",e);
 		}
 	}
 

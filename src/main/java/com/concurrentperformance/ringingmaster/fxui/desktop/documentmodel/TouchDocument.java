@@ -244,8 +244,16 @@ public class TouchDocument extends ConcurrentListenable<TouchDocumentListener> i
 		parseAndProve();
 		fireDocumentContentChanged();
 
-//				Also do checks thate the notation can be removed
-//				Also what happens to active method.
+//	TODO			Also do checks thate the notation can be removed
+//	TODO			Also what happens to active method.
+	}
+
+	public void exchangeNotationAfterEdit(NotationBody originalNotation, NotationBody replacementNotation) {
+		touch.exchangeNotation(originalNotation, replacementNotation);
+		parseAndProve();
+		fireDocumentContentChanged();
+
+		// TODO do we need checks here???
 	}
 
 	public NotationBody getSingleMethodActiveNotation() {

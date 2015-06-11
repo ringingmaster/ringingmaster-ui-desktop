@@ -1,7 +1,6 @@
 package com.concurrentperformance.ringingmaster.fxui.desktop.property.methods;
 
 import javafx.scene.Node;
-import javafx.scene.control.Button;
 import javafx.scene.control.ToolBar;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
@@ -31,10 +30,10 @@ public class PropertyNotationWindow extends VBox {
 
 	private Node createToolbar() {
 		ToolBar toolBar = new ToolBar();
-		Button addMethod = new AddNotationButton();
-		Button deleteMethod = new DeleteNotationButton();
 
-		toolBar.getItems().addAll(addMethod, deleteMethod);
+		toolBar.getItems().addAll(new AddNotationButton(),
+				new DeleteNotationButton(),
+				new EditNotationButton());
 
 		return toolBar;
 

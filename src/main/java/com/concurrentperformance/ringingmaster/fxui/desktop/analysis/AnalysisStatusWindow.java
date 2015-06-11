@@ -4,7 +4,6 @@ import com.concurrentperformance.fxutils.propertyeditor.LabelPropertyValue;
 import com.concurrentperformance.fxutils.propertyeditor.PropertyEditor;
 import com.concurrentperformance.ringingmaster.engine.touch.proof.Proof;
 import com.concurrentperformance.ringingmaster.fxui.desktop.proof.ProofManager;
-import com.concurrentperformance.ringingmaster.fxui.desktop.proof.ProofManagerListener;
 import com.concurrentperformance.ringingmaster.fxui.desktop.util.ColorManager;
 import javafx.application.Platform;
 import javafx.scene.paint.Color;
@@ -14,7 +13,7 @@ import javafx.scene.paint.Color;
  *
  * @author Lake
  */
-public class AnalysisStatusWindow extends PropertyEditor implements ProofManagerListener {
+public class AnalysisStatusWindow extends PropertyEditor {
 
 	public static final String TOUCH_TRUE_PROPERTY_NAME = "The touch is";
 	public static final String TERMINATION_PROPERTY_NAME = "Termination";
@@ -30,7 +29,18 @@ public class AnalysisStatusWindow extends PropertyEditor implements ProofManager
 
 
 	public AnalysisStatusWindow() {
-		ProofManager.getInstance().addListener(this);
+		ProofManager.getInstance().addListener(proof -> {
+			updateTouchTrue(proof);
+			updateTermination(proof);
+			updatePartCount(proof);
+			updateLeadCount(proof);
+			updateRowCount(proof);
+			updateCallCount(proof);
+			updateStartRow(proof);
+			updateEndRow(proof);
+			updateEndStroke(proof);
+			updateProofTime(proof);
+		});
 
 		add(new LabelPropertyValue(TOUCH_TRUE_PROPERTY_NAME));
 		add(new LabelPropertyValue(TERMINATION_PROPERTY_NAME));
@@ -44,19 +54,7 @@ public class AnalysisStatusWindow extends PropertyEditor implements ProofManager
 		add(new LabelPropertyValue(PROOF_TIME_PROPERTY_NAME));
 	}
 
-	@Override
-	public void proofManagerListener_proofFinished(Proof proof) {
-		updateTouchTrue(proof);
-		updateTermination(proof);
-		updatePartCount(proof);
-		updateLeadCount(proof);
-		updateRowCount(proof);
-		updateCallCount(proof);
-		updateStartRow(proof);
-		updateEndRow(proof);
-		updateEndStroke(proof);
-		updateProofTime(proof);
-	}
+
 
 	private void updateTouchTrue(Proof proof) {
 		if (proof.getAnalysis().isPresent()) {

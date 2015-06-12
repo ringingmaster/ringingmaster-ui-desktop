@@ -1,13 +1,12 @@
 package com.concurrentperformance.ringingmaster.fxui.desktop.property.methods;
 
+import com.concurrentperformance.fxutils.propertyeditor.DoubleClickListener;
 import com.concurrentperformance.fxutils.propertyeditor.LabelPropertyValue;
 import com.concurrentperformance.fxutils.propertyeditor.PropertyEditor;
-import com.concurrentperformance.fxutils.propertyeditor.DoubleClickListener;
 import com.concurrentperformance.ringingmaster.engine.notation.NotationBody;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentmanager.DocumentManager;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentmodel.TouchDocument;
 import com.concurrentperformance.ringingmaster.fxui.desktop.notationeditor.NotationEditorDialogBuilder;
-import com.concurrentperformance.ringingmaster.fxui.desktop.util.ColorManager;
 import com.concurrentperformance.util.listener.ConcurrentListenable;
 import com.concurrentperformance.util.listener.Listenable;
 import com.google.common.base.Strings;
@@ -115,29 +114,24 @@ public class PropertyNotationPanel extends PropertyEditor implements Listenable<
 
 			if (notation.getNumberOfWorkingBells().getBellCount() > touchDocument.getNumberOfBells().getBellCount()) {
 				property.setValue("Too many bells");
-				property.setColor(ColorManager.getWarnHighlight());
 				property.setDisable(true);
 			}
 			else if (spliced) {
 				if (Strings.isNullOrEmpty(notation.getSpliceIdentifier())) {
 					property.setValue("No splice letter");
-					property.setColor(ColorManager.getWarnHighlight());
 					property.setDisable(true);
 
 				} else {
 					property.setValue(TouchDocument.SPLICED_TOKEN + " " + notation.getSpliceIdentifier());
-					property.setColor(ColorManager.getClearHighlight());
 					property.setDisable(false);
 				}
 			}
 			else if (notation == touchDocument.getSingleMethodActiveNotation()) {
 				property.setValue("<Active>");
-				property.setColor(ColorManager.getClearHighlight());
 				property.setDisable(false);
 			}
 			else {
 				property.setValue("");
-				property.setColor(ColorManager.getClearHighlight());
 				property.setDisable(false);
 			}
 		}

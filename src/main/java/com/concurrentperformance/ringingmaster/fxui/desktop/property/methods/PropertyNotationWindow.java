@@ -33,7 +33,8 @@ public class PropertyNotationWindow extends VBox {
 
 		toolBar.getItems().addAll(new AddNotationButton(),
 				new DeleteNotationButton(),
-				new EditNotationButton());
+				new EditNotationButton(),
+				new SetActiveNotationButton());
 
 		return toolBar;
 

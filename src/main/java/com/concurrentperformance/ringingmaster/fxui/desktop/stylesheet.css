@@ -15,7 +15,7 @@
     -fx-background-color: rgba(255,255,255,0.0);
     -fx-text-fill: rgb(49, 89, 23);
     -fx-border-radius: 1;
-    -fx-padding: 0 0 0 0;
+    -fx-padding: 4 4 4 4;
 }
 
 .button:pressed{
@@ -27,8 +27,7 @@
 .button:hover{
     -fx-background-color: -fx-focus-color, -fx-outer-border, -fx-inner-border, linear-gradient(
             derive(-fx-color,+12%) 0%,
-            derive(-fx-color,-12%) 100%,
-    );
+            derive(-fx-color,-12%) 100%);
     -fx-background-insets: 0 0 0 0, 0, 1, 1;
 }
 

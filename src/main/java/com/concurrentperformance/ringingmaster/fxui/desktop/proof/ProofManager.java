@@ -77,7 +77,7 @@ public class ProofManager extends ConcurrentListenable<ProofManagerListener> imp
 			else {
 				log.info("Ignoring finished proof [{}] as not current [{}]", proofId, currentProofId); //TODO need a mech of cancelling a proof mid term.
 			}
-			log.info("<<<< Proof of [{}], [{}ms], Calculation Time [{}ms]", proofId, System.currentTimeMillis()-start, proof.getProofTime());
+			log.info("<<<< Proof of [{}], [{}ms], Calculation Time [{}ms]", proofId, System.currentTimeMillis()-start, proof.getProofTimeMs());
 		});
 	}
 

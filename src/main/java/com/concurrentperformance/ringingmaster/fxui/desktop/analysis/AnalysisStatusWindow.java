@@ -171,7 +171,7 @@ public class AnalysisStatusWindow extends PropertyEditor {
 	}
 
 	private void updateProofTime(Proof proof) {
-		updateDisplayProperty(PROOF_TIME_PROPERTY_NAME, Long.toString(proof.getProofTime()) + "ms", ColorManager.getClearHighlight());
+		updateDisplayProperty(PROOF_TIME_PROPERTY_NAME, String.format("%.3f", (proof.getProofTimeMs()) / 1000.0) + " seconds", ColorManager.getClearHighlight());
 	}
 
 	public void updateDisplayProperty(String propertyName, String value, Color color) {

@@ -18,7 +18,7 @@ import java.util.Optional;
  */
 public class EditNotationButton extends Button implements PropertyNotationPanelListener {
 
-	private final Logger log = LoggerFactory.getLogger(this.getClass());
+	private final static Logger log = LoggerFactory.getLogger(EditNotationButton.class);
 
 	private static Image IMAGE = new Image(EditNotationButton.class.getResourceAsStream("/images/method_edit.png"));
 
@@ -26,18 +26,20 @@ public class EditNotationButton extends Button implements PropertyNotationPanelL
 		super("", new ImageView(IMAGE));
 		PropertyNotationPanel.getInstance().addListener(this);
 
-		setOnAction(event -> {
-			int index = PropertyNotationPanel.getInstance().getSelectedIndex();
-			NotationBody notation =  PropertyNotationPanel.getInstance().getNotation(index);
-			if (notation != null) {
-				NotationEditorDialogBuilder.showDialog(notation, result -> {
-					log.info("EditNotationButton - adding", result.toString());
-					DocumentManager.getCurrentDocument().exchangeNotationAfterEdit(notation, result);
-					// TODO what checks do we need here?
-					return true; //TODO common this code from double click -
-				});
-			}
-		});
+		setOnAction(event -> doEditCurrentSelectedNotation());
+	}
+
+	public static void doEditCurrentSelectedNotation() {
+		int index = PropertyNotationPanel.getInstance().getSelectedIndex();
+		NotationBody notation =  PropertyNotationPanel.getInstance().getNotation(index);
+		if (notation != null) {
+			NotationEditorDialogBuilder.editNotationShowDialog(notation, result -> {
+				log.info("EditNotationButton - adding", result.toString());
+				DocumentManager.getCurrentDocument().exchangeNotationAfterEdit(notation, result);
+				// TODO what checks do we need here?
+				return true; //TODO common this code from double click -
+			});
+		}
 	}
 
 

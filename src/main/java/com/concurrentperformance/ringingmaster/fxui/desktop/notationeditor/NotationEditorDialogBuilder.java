@@ -23,14 +23,14 @@ public class NotationEditorDialogBuilder {
 
 	private static final Logger log = LoggerFactory.getLogger(NotationEditorDialogBuilder.class);
 
-	public static void showDialog(NumberOfBells numberOfWorkingBells, Function<NotationBody, Boolean> onSuccessHandler) {
+	public static void newNotationShowDialog(NumberOfBells numberOfWorkingBells, Function<NotationBody, Boolean> onSuccessHandler) {
 		NotationBuilder builder = NotationBuilder.getInstance();
 		builder.setNumberOfWorkingBells(numberOfWorkingBells);
 		builder.setFoldedPalindromeNotationShorthand("");
-		showDialog(builder.build(), onSuccessHandler);
+		editNotationShowDialog(builder.build(), onSuccessHandler);
 	}
 
-	public static void showDialog(NotationBody notation, Function<NotationBody, Boolean> onSuccessHandler) {
+	public static void editNotationShowDialog(NotationBody notation, Function<NotationBody, Boolean> onSuccessHandler) {
 		FXMLLoader fxmlLoader = new FXMLLoader(NotationEditorDialog.class.getResource("NotationEditorDialog.fxml"));
 
 		try {

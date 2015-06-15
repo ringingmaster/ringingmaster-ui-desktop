@@ -26,7 +26,7 @@ public class AddNotationButton extends Button {
 		setOnAction(event -> {
 			NumberOfBells numberOfBells = DocumentManager.getCurrentDocument().getNumberOfBells();
 
-			NotationEditorDialogBuilder.showDialog(numberOfBells, result -> {
+			NotationEditorDialogBuilder.newNotationShowDialog(numberOfBells, result -> {
 				log.info("AddMethodButton - adding", result.toString());
 				return DocumentManager.getCurrentDocument().addNotation(result);
 			});

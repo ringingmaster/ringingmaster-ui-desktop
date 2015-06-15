@@ -1,12 +1,10 @@
 package com.concurrentperformance.ringingmaster.fxui.desktop.property.methods;
 
-import com.concurrentperformance.fxutils.propertyeditor.DoubleClickListener;
 import com.concurrentperformance.fxutils.propertyeditor.LabelPropertyValue;
 import com.concurrentperformance.fxutils.propertyeditor.PropertyEditor;
 import com.concurrentperformance.ringingmaster.engine.notation.NotationBody;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentmanager.DocumentManager;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentmodel.TouchDocument;
-import com.concurrentperformance.ringingmaster.fxui.desktop.notationeditor.NotationEditorDialogBuilder;
 import com.concurrentperformance.util.listener.ConcurrentListenable;
 import com.concurrentperformance.util.listener.Listenable;
 import com.google.common.base.Strings;
@@ -43,19 +41,7 @@ public class PropertyNotationPanel extends PropertyEditor implements Listenable<
 
 		});
 
-		setOnDoubleClickListener(new DoubleClickListener() {
-			@Override
-			public void onDoubleClick(int index) {
-				NotationBody activeNotation = DocumentManager.getCurrentDocument().getSingleMethodActiveNotation();
-				if (activeNotation != null) {
-					NotationEditorDialogBuilder.showDialog(activeNotation, result -> {
-						log.info("AddMethodButton - adding", result.toString());
-						return true;
-						//return DocumentManager.getCurrentDocument().addNotation(result);
-					});
-				}
-			}
-		});
+		setOnDoubleClickListener(index -> EditNotationButton.doEditCurrentSelectedNotation());
 
 		setVertSeparatorPosition(140.0);
 		allowSelection(true);

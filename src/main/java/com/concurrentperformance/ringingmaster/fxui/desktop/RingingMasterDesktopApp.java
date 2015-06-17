@@ -2,7 +2,6 @@ package com.concurrentperformance.ringingmaster.fxui.desktop;
 
 import com.concurrentperformance.ringingmaster.fxui.desktop.analysis.AnalysisWindow;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentmanager.DocumentManager;
-import com.concurrentperformance.ringingmaster.fxui.desktop.documentpanel.TouchPanel;
 import com.concurrentperformance.ringingmaster.fxui.desktop.property.PropertyWindow;
 import com.concurrentperformance.ringingmaster.fxui.desktop.property.methods.AddNotationButton;
 import com.concurrentperformance.ringingmaster.fxui.desktop.statusbar.StatusBar;
@@ -64,7 +63,7 @@ public class RingingMasterDesktopApp extends Application {
 		Node menuBar = createMenu();
 		Node buttonBar = createButtonBar();
 		Node statusBar = new StatusBar();
-		TouchPanel touchPanel =  new TouchPanel();
+		Node touchDocumentTabs =  DocumentManager.getInstance().getDocPane();
 		Node propertyWindow = new PropertyWindow();
 		Node analysisLeft = new AnalysisWindow(AnalysisWindow.Type.LEFT);
 		Node analysisRight = new AnalysisWindow(AnalysisWindow.Type.RIGHT);
@@ -72,7 +71,7 @@ public class RingingMasterDesktopApp extends Application {
 		SplitPane leftRightSplit = new SplitPane();
 		leftRightSplit.setOrientation(Orientation.HORIZONTAL);
 		leftRightSplit.getItems().add(0, propertyWindow);
-		leftRightSplit.getItems().add(1, touchPanel);
+		leftRightSplit.getItems().add(1, touchDocumentTabs);
 		leftRightSplit.setDividerPositions(0.3);
 		SplitPane.setResizableWithParent(propertyWindow, false);
 
@@ -95,6 +94,7 @@ public class RingingMasterDesktopApp extends Application {
 		VBox.setVgrow(topBottomSplit, Priority.ALWAYS);
 		VBox.setVgrow(statusBar, Priority.NEVER);
 
+		DocumentManager.buildNewDocument();
 		DocumentManager.buildNewDocument();
 
 		return mainVerticalLayout;

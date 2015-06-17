@@ -1,8 +1,6 @@
 package com.concurrentperformance.ringingmaster.fxui.desktop.documentpanel;
 
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentmanager.DocumentManager;
-import com.concurrentperformance.ringingmaster.fxui.desktop.documentmanager.DocumentManagerListener;
-import com.concurrentperformance.ringingmaster.fxui.desktop.documentmodel.TouchDocument;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentpanel.grid.canvas.GridPane;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentpanel.grid.model.GridModel;
 import javafx.geometry.Insets;
@@ -20,7 +18,7 @@ import java.util.List;
  *
  * @author Lake
  */
-public class TouchPanel extends ScrollPane implements DocumentManagerListener {
+public class TouchPanel extends ScrollPane {
 
 
 	private final TitlePane titlePane = new TitlePane();
@@ -41,8 +39,15 @@ public class TouchPanel extends ScrollPane implements DocumentManagerListener {
 		setFitToWidth(false);
 		setFocusTraversable(false);
 
-		DocumentManager.getInstance().addListener(this);
+		DocumentManager.getInstance().addListener(document -> {
+			titlePane.setText(document.getTitle(), document.getAuthor());
 
+			GridModel gridModel = document.getMainGridModel();
+			gridPane.setModel(gridModel);
+
+			List<GridModel> gridModels = document.getDefinitionGridModels();
+			definitionPane.setModels(gridModels);
+		});
 	}
 
 	@Override
@@ -51,14 +56,4 @@ public class TouchPanel extends ScrollPane implements DocumentManagerListener {
 		//super.requestFocus();
 	}
 
-	@Override
-	public void documentManager_updateDocument(TouchDocument document) {
-		titlePane.setText(document.getTitle(), document.getAuthor());
-
-		GridModel gridModel = document.getMainGridModel();
-		gridPane.setModel(gridModel);
-
-		List<GridModel> gridModels = document.getDefinitionGridModels();
-		definitionPane.setModels(gridModels);
-	}
 }

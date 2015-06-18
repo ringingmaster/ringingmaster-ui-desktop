@@ -6,6 +6,7 @@ import com.concurrentperformance.ringingmaster.fxui.desktop.documentpanel.grid.m
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontSmoothingType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,6 +28,7 @@ class MainDrawingLayer extends Canvas {
 
 	public void draw() {
 		GraphicsContext gc = getGraphicsContext2D();
+		gc.setFontSmoothingType(FontSmoothingType.LCD);
 		clearBackground(gc);
 		drawGrid(gc, parent.getModel(), parent.getDimensions());
 		drawCellText(gc, parent.getModel(), parent.getDimensions());

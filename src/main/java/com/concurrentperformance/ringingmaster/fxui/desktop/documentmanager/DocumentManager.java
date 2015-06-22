@@ -4,9 +4,13 @@ import com.concurrentperformance.ringingmaster.fxui.desktop.documentmodel.TouchD
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentpanel.TouchPanel;
 import com.concurrentperformance.util.listener.ConcurrentListenable;
 import com.concurrentperformance.util.listener.Listenable;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.Node;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * TODO comments ???
@@ -15,10 +19,13 @@ import javafx.scene.control.TabPane;
  */
 public class DocumentManager extends ConcurrentListenable<DocumentManagerListener> implements Listenable<DocumentManagerListener> {
 
+	private final Logger log = LoggerFactory.getLogger(this.getClass());
+
 	private static final DocumentManager INSTANCE = new DocumentManager();
 
 	private TouchDocument currentDocument = null;
 	private TabPane docTabPane = new TabPane();
+	private int docNumber = 0;
 
 
 	public static DocumentManager getInstance() {
@@ -26,6 +33,13 @@ public class DocumentManager extends ConcurrentListenable<DocumentManagerListene
 	}
 
 	private DocumentManager() {
+		docTabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.ALL_TABS);
+		docTabPane.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Tab>() {
+			@Override
+			public void changed(ObservableValue<? extends Tab> observable, Tab oldValue, Tab newValue) {
+				log.info("Got Tab " + newValue.toString());
+			}
+		});
 	}
 
 	public static void buildNewDocument() {
@@ -33,7 +47,7 @@ public class DocumentManager extends ConcurrentListenable<DocumentManagerListene
 	}
 
 	private void doBuildNewDocument() {
-		createTab("My Touch", new TouchPanel());
+		createTab("New Touch #" + ++docNumber, new TouchPanel());
 
 		currentDocument = new TouchDocument();
 		currentDocument.addListener(touchDocument -> fireUpdateDocument());

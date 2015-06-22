@@ -2,34 +2,26 @@ package com.concurrentperformance.ringingmaster.fxui.desktop;
 
 import com.concurrentperformance.ringingmaster.fxui.desktop.analysis.AnalysisWindow;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentmanager.DocumentManager;
+import com.concurrentperformance.ringingmaster.fxui.desktop.menu.ConfiguredMenuBar;
 import com.concurrentperformance.ringingmaster.fxui.desktop.property.PropertyWindow;
-import com.concurrentperformance.ringingmaster.fxui.desktop.property.methods.AddNotationButton;
-import com.concurrentperformance.ringingmaster.fxui.desktop.statusbar.StatusBar;
+import com.concurrentperformance.ringingmaster.fxui.desktop.statusbar.ConfiguredStatusBar;
+import com.concurrentperformance.ringingmaster.fxui.desktop.toolbar.ConfiguredToolBar;
 import com.concurrentperformance.util.thread.ThreadUncaughtExceptionHelper;
 import javafx.application.Application;
 import javafx.geometry.Orientation;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.Separator;
 import javafx.scene.control.SplitPane;
-import javafx.scene.control.ToolBar;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.FontSmoothingType;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-
-import static javafx.scene.text.FontSmoothingType.*;
 
 /**
  * TODO comments ???
@@ -64,9 +56,9 @@ public class RingingMasterDesktopApp extends Application {
 	}
 
 	private Parent createMainWindow() {
-		Node menuBar = createMenu();
-		Node buttonBar = createButtonBar();
-		Node statusBar = new StatusBar();
+		Node menuBar = new ConfiguredMenuBar();
+		Node buttonBar = new ConfiguredToolBar();
+		Node statusBar = new ConfiguredStatusBar();
 		Node touchDocumentTabs =  DocumentManager.getInstance().getDocPane();
 		Node propertyWindow = new PropertyWindow();
 		Node analysisLeft = new AnalysisWindow(AnalysisWindow.Type.LEFT);
@@ -102,30 +94,6 @@ public class RingingMasterDesktopApp extends Application {
 		DocumentManager.buildNewDocument();
 
 		return mainVerticalLayout;
-	}
-
-	private Node createButtonBar() {
-		ToolBar toolBar = new ToolBar();
-
-		toolBar.getItems().addAll(new AddNotationButton(),
-				new Separator(Orientation.VERTICAL));
-
-		return toolBar;
-
-	}
-
-	private Node createMenu() {
-
-		MenuBar menuBar = new MenuBar();
-
-		// --- Menu File
-		Menu menuFile = new Menu("File");
-		menuFile.getItems().add(0,new MenuItem("Stephen"));
-
-		menuBar.getMenus().addAll(menuFile);
-
-		menuBar.setUseSystemMenuBar(true);
-		return menuBar;
 	}
 
 }

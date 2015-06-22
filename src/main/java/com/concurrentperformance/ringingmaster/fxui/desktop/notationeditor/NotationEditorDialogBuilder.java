@@ -3,6 +3,7 @@ package com.concurrentperformance.ringingmaster.fxui.desktop.notationeditor;
 import com.concurrentperformance.ringingmaster.engine.NumberOfBells;
 import com.concurrentperformance.ringingmaster.engine.notation.NotationBody;
 import com.concurrentperformance.ringingmaster.engine.notation.impl.NotationBuilder;
+import com.concurrentperformance.ringingmaster.fxui.desktop.RingingMasterDesktopApp;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Modality;
@@ -34,8 +35,11 @@ public class NotationEditorDialogBuilder {
 		FXMLLoader fxmlLoader = new FXMLLoader(NotationEditorDialog.class.getResource("NotationEditorDialog.fxml"));
 
 		try {
+			Scene scene = new Scene(fxmlLoader.load());
+			scene.getStylesheets().add(RingingMasterDesktopApp.STYLESHEET);
+
 			Stage stage = new Stage(StageStyle.DECORATED);
-			stage.setScene(new Scene(fxmlLoader.load()));
+			stage.setScene(scene);
 			stage.initModality(Modality.APPLICATION_MODAL);
 
 			NotationEditorDialog controller = fxmlLoader.getController();

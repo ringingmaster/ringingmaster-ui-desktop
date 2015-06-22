@@ -31,6 +31,7 @@ import java.io.IOException;
 public class RingingMasterDesktopApp extends Application {
 
 	private final static Logger log = LoggerFactory.getLogger(RingingMasterDesktopApp.class);
+	public static final String STYLESHEET = "com/concurrentperformance/ringingmaster/fxui/desktop/stylesheet.css";
 
 	public static void main(String[] args) {
 		ThreadUncaughtExceptionHelper.setLoggingDefaultUncaughtException();
@@ -45,7 +46,7 @@ public class RingingMasterDesktopApp extends Application {
 		Parent parent = createMainWindow();
 
 		Scene scene = new Scene(parent, 900,650);
-		scene.getStylesheets().add("com/concurrentperformance/ringingmaster/fxui/desktop/stylesheet.css");
+		scene.getStylesheets().add(STYLESHEET);
 
 
 		stage.setScene(scene);

@@ -12,11 +12,11 @@ import javafx.scene.layout.Priority;
  *
  * @author Lake
  */
-public class StatusBar extends HBox {
+public class ConfiguredStatusBar extends HBox {
 
 
 
-	public StatusBar() {
+	public ConfiguredStatusBar() {
 
 		ProofState proofState = new ProofState();
 

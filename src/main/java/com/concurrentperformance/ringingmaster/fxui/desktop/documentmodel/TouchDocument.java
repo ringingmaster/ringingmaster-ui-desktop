@@ -648,8 +648,7 @@ public class TouchDocument extends ConcurrentListenable<TouchDocumentListener> i
 				.setNumberOfWorkingBells(NumberOfBells.BELLS_6)
 				.setName("Plain Bob")
 				.setFoldedPalindromeNotationShorthand("-16-16-16", "12")
-				.addCall("Bob", "-", "14", true)
-				.addCall("Single", "s", "1234", false)
+				.setCannedCalls()
 				.setSpliceIdentifier("P")
 				.build();
 	}
@@ -660,8 +659,7 @@ public class TouchDocument extends ConcurrentListenable<TouchDocumentListener> i
 				.setNumberOfWorkingBells(NumberOfBells.BELLS_6)
 				.setName("Little Bob")
 				.setFoldedPalindromeNotationShorthand("-16-14", "12")
-				.addCall("Bob", "-", "14", true)
-				.addCall("Single", "s", "1234", false)
+				.setCannedCalls()
 				.build();
 	}
 
@@ -671,8 +669,7 @@ public class TouchDocument extends ConcurrentListenable<TouchDocumentListener> i
 				.setNumberOfWorkingBells(NumberOfBells.BELLS_4)
 				.setName("Little Bob")
 				.setFoldedPalindromeNotationShorthand("-14-14", "12")
-				.addCall("Bob", "-", "14", true)
-				.addCall("Single", "s", "1234", false)
+				.setCannedCalls()
 				.build();
 	}
 
@@ -682,8 +679,7 @@ public class TouchDocument extends ConcurrentListenable<TouchDocumentListener> i
 				.setNumberOfWorkingBells(NumberOfBells.BELLS_8)
 				.setName("Plain Bob")
 				.setFoldedPalindromeNotationShorthand("-18-18-18-18", "12")
-				.addCall("Bob", "-", "14", true)
-				.addCall("Single", "s", "1234", false)
+				.setCannedCalls()
 				.setSpliceIdentifier("X")
 				.build();
 	}

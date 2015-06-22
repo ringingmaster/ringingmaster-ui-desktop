@@ -28,7 +28,7 @@ public class Call extends SkeletalNotationEditorTabController implements Notatio
 	@FXML
 	private TableView<CallModel> callsList;
 	@FXML
-	private CheckBox useCannedCalls;
+	private CheckBox cannedCalls;
 	@FXML
 	private TextField leadHeadCode;
 
@@ -41,8 +41,8 @@ public class Call extends SkeletalNotationEditorTabController implements Notatio
 	public void init(NotationEditorDialog parent, NotationEditorEditMode editMode) {
 		super.init(parent, editMode);
 
-		useCannedCalls.selectedProperty().addListener(this::useCannedCallsUpdater);
-		useCannedCalls.selectedProperty().addListener(parent::rebuildNotationUpdater);
+		cannedCalls.selectedProperty().addListener(this::useCannedCallsUpdater);
+		cannedCalls.selectedProperty().addListener(parent::rebuildNotationUpdater);
 
 		callsList.setPlaceholder(new Label("No Calls Defined"));
 		leadHeadCode.setDisable(true);
@@ -56,6 +56,8 @@ public class Call extends SkeletalNotationEditorTabController implements Notatio
 
 	@Override
 	public void buildDialogDataFromNotation(NotationBody notation) {
+		cannedCalls.setSelected(notation.isCannedCalls());
+
 		ObservableList<CallModel> items = callsList.getItems();
 		items.clear();
 		Set<NotationCall> calls = notation.getCalls();
@@ -74,8 +76,8 @@ public class Call extends SkeletalNotationEditorTabController implements Notatio
 	@Override
 	public void buildNotationFromDialogData(NotationBuilder notationBuilder) {
 
-		if (useCannedCalls.isSelected()) {
-			notationBuilder.setUseCannedCalls();
+		if (cannedCalls.isSelected()) {
+			notationBuilder.setCannedCalls();
 		}
 		else {
 			for (CallModel call : callsList.getItems()) {

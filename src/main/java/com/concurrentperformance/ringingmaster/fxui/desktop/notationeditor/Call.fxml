@@ -29,7 +29,7 @@
       <RowConstraints maxHeight="1.7976931348623157E308" minHeight="81.0" prefHeight="113.0" vgrow="ALWAYS" />
    </rowConstraints>
    <children>
-      <CheckBox fx:id="useCannedCalls" mnemonicParsing="false" text="Use Canned Calls" />
+      <CheckBox fx:id="cannedCalls" mnemonicParsing="false" text="Use Canned Calls" />
       <Separator orientation="VERTICAL" GridPane.columnIndex="1" />
       <Label text="lh:" GridPane.columnIndex="2" />
       <TextField fx:id="leadHeadCode" editable="false" GridPane.columnIndex="3" />

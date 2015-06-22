@@ -28,6 +28,10 @@ public class NotationEditorDialogBuilder {
 		NotationBuilder builder = NotationBuilder.getInstance();
 		builder.setNumberOfWorkingBells(numberOfWorkingBells);
 		builder.setFoldedPalindromeNotationShorthand("");
+
+		// We set everything to use the canned version.
+		builder.setCannedCalls();
+
 		editNotationShowDialog(builder.build(), onSuccessHandler);
 	}
 

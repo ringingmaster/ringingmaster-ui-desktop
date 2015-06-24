@@ -7,6 +7,7 @@ import com.concurrentperformance.ringingmaster.engine.notation.impl.NotationBuil
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
@@ -30,6 +31,13 @@ public class Call extends SkeletalNotationEditorTabController implements Notatio
 	@FXML
 	private CheckBox cannedCalls;
 	@FXML
+	private Button addCallButton;
+	@FXML
+	private Button removeCallButton;
+	@FXML
+	private Button defaultCallButton;
+
+	@FXML
 	private TextField leadHeadCode;
 
 	@Override
@@ -51,7 +59,9 @@ public class Call extends SkeletalNotationEditorTabController implements Notatio
 
 	public void useCannedCallsUpdater(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
 		callsList.setDisable(newValue);
-		parent.checkNotationFromDialogData();
+		addCallButton.setDisable(newValue);
+		removeCallButton.setDisable(newValue);
+		defaultCallButton.setDisable(newValue);
 	}
 
 	@Override
@@ -87,5 +97,20 @@ public class Call extends SkeletalNotationEditorTabController implements Notatio
 						(DEFAULT_CALL_TOKEN.equals(call.getSelected())));
 			}
 		}
+	}
+
+	@FXML
+	private void onAddCall() {
+
+	}
+
+	@FXML
+	private void onRemoveCall() {
+
+	}
+
+	@FXML
+	private void onDefaultCall() {
+
 	}
 }

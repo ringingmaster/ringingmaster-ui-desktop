@@ -8,7 +8,7 @@ package com.concurrentperformance.ringingmaster.fxui.desktop.notationeditor;
 public enum NotationEditorEditMode {
 
 	ADD_NOTATION("Add"),
-	EDIT_NOTATION("Editing")
+	EDIT_NOTATION("Edit")
 	;
 
 	private final String editText;

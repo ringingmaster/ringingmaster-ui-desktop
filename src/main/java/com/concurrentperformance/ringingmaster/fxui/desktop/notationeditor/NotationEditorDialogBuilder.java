@@ -32,10 +32,14 @@ public class NotationEditorDialogBuilder {
 		// We set everything to use the canned version.
 		builder.setCannedCalls();
 
-		editNotationShowDialog(builder.build(), onSuccessHandler);
+		showDialog(builder.build(), NotationEditorEditMode.ADD_NOTATION, onSuccessHandler);
 	}
 
 	public static void editNotationShowDialog(NotationBody notation, Function<NotationBody, Boolean> onSuccessHandler) {
+		showDialog(notation, NotationEditorEditMode.EDIT_NOTATION, onSuccessHandler);
+	}
+
+	private static void showDialog(NotationBody notation, NotationEditorEditMode editMode, Function<NotationBody, Boolean> onSuccessHandler) {
 		FXMLLoader fxmlLoader = new FXMLLoader(NotationEditorDialog.class.getResource("NotationEditorDialog.fxml"));
 
 		try {
@@ -47,7 +51,7 @@ public class NotationEditorDialogBuilder {
 			stage.initModality(Modality.APPLICATION_MODAL);
 
 			NotationEditorDialog controller = fxmlLoader.getController();
-			controller.init(NotationEditorEditMode.EDIT_NOTATION, stage, notation, onSuccessHandler);
+			controller.init(editMode, stage, notation, onSuccessHandler);
 
 			stage.showAndWait();
 		} catch (IOException e) {

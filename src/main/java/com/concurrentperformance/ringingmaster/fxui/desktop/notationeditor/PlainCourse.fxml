@@ -29,12 +29,12 @@
         <TextField fx:id="name" GridPane.columnSpan="2" GridPane.rowIndex="1" />
         <Label text="Shorthand:" GridPane.columnIndex="3" GridPane.columnSpan="2" />
         <TextField fx:id="spliceIndntifier" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+         <Label text="Number:" GridPane.columnIndex="4" />
+         <ComboBox fx:id="numberOfBells" GridPane.columnIndex="4" GridPane.rowIndex="1" />
         <CheckBox fx:id="asymmetric" mnemonicParsing="false" text="Asymmetric" GridPane.rowIndex="2" />
         <Separator prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="2" />
         <Label fx:id="notation1Label" text="Notation: Rotation 1:" GridPane.columnSpan="2" GridPane.rowIndex="3" />
         <TextField fx:id="notation1" GridPane.columnSpan="3" GridPane.rowIndex="4" />
-        <Label text="Number:" GridPane.columnIndex="4" />
-        <ComboBox fx:id="numberOfBells" GridPane.columnIndex="4" GridPane.rowIndex="1" />
         <Label fx:id="notation2Label" text="Rotation 2:" GridPane.columnIndex="3" GridPane.columnSpan="2" GridPane.rowIndex="3" />
         <TextField fx:id="notation2" GridPane.columnIndex="3" GridPane.columnSpan="2" GridPane.rowIndex="4" />
          <Button fx:id="notationSearchButton" mnemonicParsing="false" text="" GridPane.columnIndex="2" GridPane.rowIndex="1">

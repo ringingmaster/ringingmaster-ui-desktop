@@ -111,18 +111,6 @@ public class NotationEditorDialog {
 	}
 
 
-	public void checkNotationFromDialogData() {
-		try {
-			// build notation
-			NotationBody notation = buildNotationFromDialogData();
-			statusController.updateNotationStats(notation);
-		}
-		catch (Exception e) {
-			log.error("",e);
-			statusController.updateNotationStats(e);
-		}
-	}
-
 	public void rebuildNotationOnFocusLossUpdater(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
 		if (Objects.equal(Boolean.FALSE, newValue)) {
 			rebuildNotationFromDialogData();
@@ -141,7 +129,21 @@ public class NotationEditorDialog {
 			buildDialogDataFromNotation(notation);
 		}
 		catch (Exception e) {
-			log.error("",e);
+			log.warn("Problem with re-building notation [{}]", e.getMessage());
+			log.debug("", e);
+			statusController.updateNotationStats(e);
+		}
+	}
+
+	public void checkNotationFromDialogData() {
+		try {
+			// build notation
+			NotationBody notation = buildNotationFromDialogData();
+			statusController.updateNotationStats(notation);
+		}
+		catch (Exception e) {
+			log.warn("Problem with checking notation [{}]", e.getMessage());
+			log.debug("",e);
 			statusController.updateNotationStats(e);
 		}
 	}

@@ -1,16 +1,14 @@
 package com.concurrentperformance.ringingmaster.fxui.desktop.notationeditor;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+
 /**
  * TODO Comments
  *
  * @author Lake
  */
 public class CallModel {
-
-	private String callName = "";
-	private String callShorthand = "";
-	private String notation = "";
-	private String selected = "";
 
 	public CallModel() {
 	}
@@ -22,35 +20,26 @@ public class CallModel {
 		setSelected(selected);
 	}
 
-	public String getCallName() {
-		return callName;
-	}
+	private StringProperty callName = new SimpleStringProperty(this, "callName");
+	public void setCallName(String value) { callName.set(value); }
+	public String getCallName() { return callName.get(); }
+	public StringProperty callNameProperty() {return callName;}
 
-	public void setCallName(String callName) {
-		this.callName = callName;
-	}
+	private StringProperty callShorthand = new SimpleStringProperty(this, "callShorthand");
+	public void setCallShorthand(String value) { callShorthand.set(value); }
+	public String getCallShorthand() { return callShorthand.get(); }
+	public StringProperty callShorthandProperty() {return callShorthand;}
 
-	public String getCallShorthand() {
-		return callShorthand;
-	}
+	private StringProperty notation = new SimpleStringProperty(this, "notation");
+	public void setNotation(String value) { notation.set(value); }
+	public String getNotation() { return notation.get(); }
+	public StringProperty notationProperty() {return notation;}
 
-	public void setCallShorthand(String callShorthand) {
-		this.callShorthand = callShorthand;
-	}
-
-	public String getNotation() {
-		return notation;
-	}
-
-	public void setNotation(String notation) {
-		this.notation = notation;
-	}
-
-	public String getSelected() {
+	private StringProperty selected = new SimpleStringProperty(this, "selected");
+	public void setSelected(String value) { selected.set(value); }
+	public String getSelected() { return selected.get(); }
+	public StringProperty selectedProperty() {
 		return selected;
 	}
 
-	public void setSelected(String selected) {
-		this.selected = selected;
-	}
 }

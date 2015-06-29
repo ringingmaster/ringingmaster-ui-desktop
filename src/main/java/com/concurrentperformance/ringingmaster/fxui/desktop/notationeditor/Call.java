@@ -1,6 +1,7 @@
 package com.concurrentperformance.ringingmaster.fxui.desktop.notationeditor;
 
 
+import com.concurrentperformance.fxutils.components.PressableButton;
 import com.concurrentperformance.ringingmaster.engine.notation.NotationBody;
 import com.concurrentperformance.ringingmaster.engine.notation.NotationCall;
 import com.concurrentperformance.ringingmaster.engine.notation.impl.NotationBuilder;
@@ -35,7 +36,7 @@ public class Call extends SkeletalNotationEditorTabController implements Notatio
 	@FXML
 	private Button removeCallButton;
 	@FXML
-	private Button defaultCallButton;
+	private PressableButton defaultCallButton;
 
 	@FXML
 	private TextField leadHeadCode;
@@ -53,6 +54,9 @@ public class Call extends SkeletalNotationEditorTabController implements Notatio
 		cannedCalls.selectedProperty().addListener(parent::rebuildNotationUpdater);
 
 		callsList.setPlaceholder(new Label("No Calls Defined"));
+		callsList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+			updateDefaultCallButtonDisableState();
+		});
 		leadHeadCode.setDisable(true);
 
 	}
@@ -61,17 +65,27 @@ public class Call extends SkeletalNotationEditorTabController implements Notatio
 		callsList.setDisable(newValue);
 		addCallButton.setDisable(newValue);
 		removeCallButton.setDisable(newValue);
-		defaultCallButton.setDisable(newValue);
+		updateDefaultCallButtonDisableState();
+	}
+
+	private void updateDefaultCallButtonDisableState() {
+		defaultCallButton.setDisable(cannedCalls.isSelected() ||
+									 callsList.getSelectionModel().selectedItemProperty().get() == null);
+		defaultCallButton.setPressedState(!cannedCalls.isSelected() &&
+				callsList.getSelectionModel().selectedItemProperty().get() != null &&
+				DEFAULT_CALL_TOKEN.equals(callsList.getSelectionModel().selectedItemProperty().get().getSelected()));
 	}
 
 	@Override
 	public void buildDialogDataFromNotation(NotationBody notation) {
 		cannedCalls.setSelected(notation.isCannedCalls());
 
+		int selectedIndex = callsList.getSelectionModel().selectedIndexProperty().get();
 		ObservableList<CallModel> items = callsList.getItems();
 		items.clear();
 		Set<NotationCall> calls = notation.getCalls();
 		NotationCall defaultCall = notation.getDefaultCall();
+
 		for (NotationCall call : calls) {
 			items.add(new CallModel(
 					call.getName(),
@@ -79,6 +93,7 @@ public class Call extends SkeletalNotationEditorTabController implements Notatio
 					call.getNotationDisplayString(false),
 					(call == defaultCall)? DEFAULT_CALL_TOKEN :""));
 		}
+		//TODO Would be really nice to keep the selected item. callsList.getSelectionModel().selectedIndexProperty(selectedIndex);
 
 		leadHeadCode.setText(notation.getLeadHeadCode());
 	}
@@ -111,6 +126,14 @@ public class Call extends SkeletalNotationEditorTabController implements Notatio
 
 	@FXML
 	private void onDefaultCall() {
+		int selectedIndex = callsList.getSelectionModel().selectedIndexProperty().get();
+		if (selectedIndex == -1) {
+			return;
+		}
 
+		for (int index = 0;index<callsList.getItems().size();index++) {
+			callsList.getItems().get(index).setSelected((index == selectedIndex)?DEFAULT_CALL_TOKEN:"");
+		}
+		parent.rebuildNotationFromDialogData();
 	}
 }

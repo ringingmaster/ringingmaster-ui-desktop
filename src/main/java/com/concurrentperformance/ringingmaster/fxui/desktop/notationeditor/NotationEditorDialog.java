@@ -121,7 +121,7 @@ public class NotationEditorDialog {
 		rebuildNotationFromDialogData();
 	}
 
-	private void rebuildNotationFromDialogData() {
+	protected void rebuildNotationFromDialogData() {
 		try {
 			// build notation
 			NotationBody notation = buildNotationFromDialogData();

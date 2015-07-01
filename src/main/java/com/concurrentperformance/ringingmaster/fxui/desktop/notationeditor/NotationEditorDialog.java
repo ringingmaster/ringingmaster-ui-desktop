@@ -2,15 +2,20 @@ package com.concurrentperformance.ringingmaster.fxui.desktop.notationeditor;
 
 import com.concurrentperformance.ringingmaster.engine.notation.NotationBody;
 import com.concurrentperformance.ringingmaster.engine.notation.impl.NotationBuilder;
+import com.concurrentperformance.ringingmaster.fxui.desktop.RingingMasterDesktopApp;
 import com.google.common.base.Objects;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.input.KeyCode;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,10 +51,12 @@ public class NotationEditorDialog {
 	@FXML
 	protected Button okButton;
 
-	void init(NotationEditorEditMode editMode, Stage stage, NotationBody notation, Function<NotationBody, Boolean> onSuccessHandler) throws IOException {
+	void init(NotationEditorEditMode editMode, Scene scene, NotationBody notation, Function<NotationBody, Boolean> onSuccessHandler) throws IOException {
 		this.editMode = checkNotNull(editMode);
-		this.stage = checkNotNull(stage);
 		this.onSuccessHandler = checkNotNull(onSuccessHandler);
+
+		configureScene(scene);
+		buildStage(scene);
 
 		addEditorTabs();
 		addStatusTabs();
@@ -63,6 +70,24 @@ public class NotationEditorDialog {
 		buildDialogDataFromNotation(notation);
 
 		checkNotationFromDialogData();
+
+		stage.showAndWait();
+	}
+
+	private void configureScene(Scene scene) {
+		checkNotNull(scene);
+		scene.getStylesheets().add(RingingMasterDesktopApp.STYLESHEET);
+		scene.setOnKeyReleased(event -> {
+			if (event.getCode().equals(KeyCode.ESCAPE)) {
+				OnCancel();
+			}
+		});
+	}
+
+	private void buildStage(Scene scene) {
+		this.stage = new Stage(StageStyle.DECORATED);
+		stage.setScene(scene);
+		stage.initModality(Modality.APPLICATION_MODAL);
 	}
 
 	private void addEditorTabs() throws IOException {
@@ -143,7 +168,7 @@ public class NotationEditorDialog {
 		}
 		catch (Exception e) {
 			log.warn("Problem with checking notation [{}]", e.getMessage());
-			log.debug("",e);
+			log.debug("", e);
 			statusController.updateNotationStats(e);
 		}
 	}

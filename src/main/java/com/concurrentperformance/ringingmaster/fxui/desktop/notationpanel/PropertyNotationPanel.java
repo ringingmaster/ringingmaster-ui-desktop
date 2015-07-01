@@ -37,7 +37,7 @@ public class PropertyNotationPanel extends PropertyEditor implements Listenable<
 				rebuildMethodList(touchDocument);
 			}
 			updateMethodList(touchDocument);
-			fireSelctionChange();
+			fireSelectionChange();
 
 		});
 
@@ -46,12 +46,12 @@ public class PropertyNotationPanel extends PropertyEditor implements Listenable<
 		setVertSeparatorPosition(140.0);
 		allowSelection(true);
 		selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
-			log.info("Index set to " + newValue);
-			fireSelctionChange();
+//			log.info("Index set to " + newValue);
+			fireSelectionChange();
 		});
 	}
 
-	private void fireSelctionChange() {
+	private void fireSelectionChange() {
 		int selectedIndex = getSelectedIndex();
 		Optional<NotationBody> selectedNotation = Optional.ofNullable(getNotation(selectedIndex));
 

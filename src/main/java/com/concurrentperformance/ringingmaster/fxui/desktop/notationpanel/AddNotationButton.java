@@ -1,4 +1,4 @@
-package com.concurrentperformance.ringingmaster.fxui.desktop.property.methods;
+package com.concurrentperformance.ringingmaster.fxui.desktop.notationpanel;
 
 import com.concurrentperformance.ringingmaster.engine.NumberOfBells;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentmanager.DocumentManager;

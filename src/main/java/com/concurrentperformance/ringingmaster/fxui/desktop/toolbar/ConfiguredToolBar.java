@@ -6,7 +6,7 @@ import com.concurrentperformance.ringingmaster.fxui.desktop.documentmanager.Save
 import com.concurrentperformance.ringingmaster.fxui.desktop.edit.CopyButton;
 import com.concurrentperformance.ringingmaster.fxui.desktop.edit.CutButton;
 import com.concurrentperformance.ringingmaster.fxui.desktop.edit.PasteButton;
-import com.concurrentperformance.ringingmaster.fxui.desktop.property.methods.AddNotationButton;
+import com.concurrentperformance.ringingmaster.fxui.desktop.notationpanel.AddNotationButton;
 import com.concurrentperformance.ringingmaster.fxui.desktop.undo.RedoButton;
 import com.concurrentperformance.ringingmaster.fxui.desktop.undo.UndoButton;
 import javafx.geometry.Orientation;

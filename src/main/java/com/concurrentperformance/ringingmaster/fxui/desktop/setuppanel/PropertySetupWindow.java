@@ -1,4 +1,4 @@
-package com.concurrentperformance.ringingmaster.fxui.desktop.property.setup;
+package com.concurrentperformance.ringingmaster.fxui.desktop.setuppanel;
 
 import com.concurrentperformance.fxutils.propertyeditor.*;
 import com.concurrentperformance.ringingmaster.engine.NumberOfBells;

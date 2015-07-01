@@ -1,4 +1,4 @@
-package com.concurrentperformance.ringingmaster.fxui.desktop.property.methods;
+package com.concurrentperformance.ringingmaster.fxui.desktop.notationpanel;
 
 import com.concurrentperformance.fxutils.propertyeditor.LabelPropertyValue;
 import com.concurrentperformance.fxutils.propertyeditor.PropertyEditor;

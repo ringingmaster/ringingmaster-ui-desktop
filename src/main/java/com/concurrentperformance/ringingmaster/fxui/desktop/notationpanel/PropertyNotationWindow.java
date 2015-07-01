@@ -1,4 +1,4 @@
-package com.concurrentperformance.ringingmaster.fxui.desktop.property.methods;
+package com.concurrentperformance.ringingmaster.fxui.desktop.notationpanel;
 
 import javafx.scene.Node;
 import javafx.scene.control.ToolBar;

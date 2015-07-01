@@ -4,6 +4,7 @@ import com.concurrentperformance.ringingmaster.engine.NumberOfBells;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentmanager.DocumentManager;
 import com.concurrentperformance.ringingmaster.fxui.desktop.notationeditor.NotationEditorDialogBuilder;
 import javafx.scene.control.Button;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import org.slf4j.Logger;
@@ -22,6 +23,7 @@ public class AddNotationButton extends Button {
 
 	public AddNotationButton() {
 		super("", new ImageView(IMAGE));
+		setTooltip(new Tooltip("Add a new method"));
 
 		setOnAction(event -> {
 			NumberOfBells numberOfBells = DocumentManager.getCurrentDocument().getNumberOfBells();

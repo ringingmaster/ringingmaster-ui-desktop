@@ -4,6 +4,7 @@ import com.concurrentperformance.ringingmaster.engine.notation.NotationBody;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentmanager.DocumentManager;
 import com.concurrentperformance.ringingmaster.fxui.desktop.notationeditor.NotationEditorDialogBuilder;
 import javafx.scene.control.Button;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import org.slf4j.Logger;
@@ -19,11 +20,15 @@ import java.util.Optional;
 public class EditNotationButton extends Button implements PropertyNotationPanelListener {
 
 	private final static Logger log = LoggerFactory.getLogger(EditNotationButton.class);
+	public static final String TOOLTIP_BAST_TEXT = "Edit method";
+	public final Tooltip TOOLTIP = new Tooltip(TOOLTIP_BAST_TEXT);
 
 	private static Image IMAGE = new Image(EditNotationButton.class.getResourceAsStream("/images/method_edit.png"));
 
 	public EditNotationButton() {
 		super("", new ImageView(IMAGE));
+		setTooltip(TOOLTIP);
+
 		PropertyNotationPanel.getInstance().addListener(this);
 
 		setOnAction(event -> doEditCurrentSelectedNotation());
@@ -46,5 +51,12 @@ public class EditNotationButton extends Button implements PropertyNotationPanelL
 	@Override
 	public void propertyMethod_setSelectedNotation(Optional<NotationBody> selectedNotation) {
 		setDisable(!selectedNotation.isPresent());
+
+		if (selectedNotation.isPresent()) {
+			TOOLTIP.setText(TOOLTIP_BAST_TEXT + " '" + selectedNotation.get().getNameIncludingNumberOfBells() + "'");
+		}
+		else {
+			TOOLTIP.setText(TOOLTIP_BAST_TEXT);
+		}
 	}
 }

@@ -2,6 +2,7 @@ package com.concurrentperformance.ringingmaster.fxui.desktop.undo;
 
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentmanager.DocumentManager;
 import javafx.scene.control.Button;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import org.slf4j.Logger;
@@ -20,8 +21,11 @@ public class RedoButton extends Button {
 
 	public RedoButton() {
 		super("", new ImageView(IMAGE));
+		setTooltip(new Tooltip("Redo"));// TODO more informative Redo M=message
 
 		setOnAction(event -> DocumentManager.buildNewDocument());
+
+
 	}
 
 }

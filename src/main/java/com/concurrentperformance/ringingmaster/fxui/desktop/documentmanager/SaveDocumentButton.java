@@ -1,6 +1,7 @@
 package com.concurrentperformance.ringingmaster.fxui.desktop.documentmanager;
 
 import javafx.scene.control.Button;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import org.slf4j.Logger;
@@ -19,6 +20,8 @@ public class SaveDocumentButton extends Button {
 
 	public SaveDocumentButton() {
 		super("", new ImageView(IMAGE));
+		setTooltip(new Tooltip("Save"));
+
 
 		//TODO setOnAction(event -> DocumentManager.buildNewDocument());
 	}

@@ -2,6 +2,7 @@ package com.concurrentperformance.ringingmaster.fxui.desktop.edit;
 
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentmanager.DocumentManager;
 import javafx.scene.control.Button;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import org.slf4j.Logger;
@@ -20,6 +21,7 @@ public class CutButton extends Button {
 
 	public CutButton() {
 		super("", new ImageView(IMAGE));
+		setTooltip(new Tooltip("Cut"));
 
 		setOnAction(event -> DocumentManager.buildNewDocument());
 	}

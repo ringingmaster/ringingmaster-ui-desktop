@@ -1,6 +1,7 @@
 package com.concurrentperformance.ringingmaster.fxui.desktop.undo;
 
 import javafx.scene.control.Button;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import org.slf4j.Logger;
@@ -19,6 +20,7 @@ public class UndoButton extends Button {
 
 	public UndoButton() {
 		super("", new ImageView(IMAGE));
+		setTooltip(new Tooltip("Undo"));// TODO more informative Redo M=message
 
 		//TODO setOnAction(event -> DocumentManager.buildNewDocument());
 	}

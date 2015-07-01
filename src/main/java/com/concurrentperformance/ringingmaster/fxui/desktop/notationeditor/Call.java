@@ -93,7 +93,7 @@ public class Call extends SkeletalNotationEditorTabController implements Notatio
 					call.getNotationDisplayString(false),
 					(call == defaultCall)? DEFAULT_CALL_TOKEN :""));
 		}
-		//TODO Would be really nice to keep the selected item. callsList.getSelectionModel().selectedIndexProperty(selectedIndex);
+		callsList.getSelectionModel().select(selectedIndex);
 
 		leadHeadCode.setText(notation.getLeadHeadCode());
 	}

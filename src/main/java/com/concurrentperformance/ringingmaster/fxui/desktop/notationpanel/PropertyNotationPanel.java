@@ -1,13 +1,16 @@
 package com.concurrentperformance.ringingmaster.fxui.desktop.notationpanel;
 
-import com.concurrentperformance.fxutils.propertyeditor.LabelPropertyValue;
-import com.concurrentperformance.fxutils.propertyeditor.PropertyEditor;
+import com.concurrentperformance.fxutils.namevaluepair.NameValueColumnDescriptor;
+import com.concurrentperformance.fxutils.namevaluepair.NameValuePairModel;
+import com.concurrentperformance.fxutils.namevaluepair.NameValuePairTable;
 import com.concurrentperformance.ringingmaster.engine.notation.NotationBody;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentmanager.DocumentManager;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentmodel.TouchDocument;
 import com.concurrentperformance.util.listener.ConcurrentListenable;
 import com.concurrentperformance.util.listener.Listenable;
 import com.google.common.base.Strings;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,7 +22,7 @@ import java.util.Optional;
  *
  * @author Lake
  */
-public class PropertyNotationPanel extends PropertyEditor implements Listenable<PropertyNotationPanelListener> {
+public class PropertyNotationPanel extends NameValuePairTable implements Listenable<PropertyNotationPanelListener> {
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
@@ -33,26 +36,27 @@ public class PropertyNotationPanel extends PropertyEditor implements Listenable<
 
 	private PropertyNotationPanel() {
 		DocumentManager.getInstance().addListener(touchDocument -> {
-			if (hasMethodListChanged(touchDocument)) {
+//TODO			if (hasMethodListChanged(touchDocument)) {
 				rebuildMethodList(touchDocument);
-			}
+//			}
 			updateMethodList(touchDocument);
 			fireSelectionChange();
 
 		});
 
-		setOnDoubleClickListener(index -> EditNotationButton.doEditCurrentSelectedNotation());
-
-		setVertSeparatorPosition(140.0);
-		allowSelection(true);
-		selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
-//			log.info("Index set to " + newValue);
-			fireSelectionChange();
+//TODO		setOnDoubleClickListener(index -> EditNotationButton.doEditCurrentSelectedNotation());
+		getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+			@Override
+			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+				log.info("Index set to " + newValue);
+				fireSelectionChange();
+			}
 		});
 	}
 
 	private void fireSelectionChange() {
-		int selectedIndex = getSelectedIndex();
+
+		int selectedIndex = getSelectionModel().getSelectedIndex();
 		Optional<NotationBody> selectedNotation = Optional.ofNullable(getNotation(selectedIndex));
 
 		for (PropertyNotationPanelListener propertyNotationPanelListener : listenableDelegate.getListeners()) {
@@ -62,33 +66,33 @@ public class PropertyNotationPanel extends PropertyEditor implements Listenable<
 	}
 
 	private void rebuildMethodList(TouchDocument touchDocument) {
-		int selectedIndex = getSelectedIndex();
-		clear();
+		int selectedIndex = getSelectionModel().getSelectedIndex();
+		getItems().clear();
 		for (NotationBody notation : touchDocument.getSortedAllNotations()) {
-			add(new LabelPropertyValue(getDisplayName(notation)));
+			getItems().add(new NameValuePairModel(getDisplayName(notation)));
 		}
 
 		if (selectedIndex >= 0) {
-			if (selectedIndex >= sizeAll()) {
-				selectedIndex = sizeAll()-1;
+			if (selectedIndex >= getItems().size()) {
+				selectedIndex = getItems().size()-1;
 			}
 		}
 		if (selectedIndex >= 0) {
-			setSelectedIndex(selectedIndex);
+			getSelectionModel().select(selectedIndex);
 		}
 	}
 
-	private boolean hasMethodListChanged(TouchDocument touchDocument) {
-		List<NotationBody> allNotations = touchDocument.getSortedAllNotations();
-		for (NotationBody notation : allNotations) {
-			String name = getDisplayName(notation);
-			if (findPropertyByName(name) == null) {
-				return true;
-			}
-		}
-
-		return (allNotations.size() != sizeAll());
-	}
+//TODO	private boolean hasMethodListChanged(TouchDocument touchDocument) {
+//		List<NotationBody> allNotations = touchDocument.getSortedAllNotations();
+//		for (NotationBody notation : allNotations) {
+//			String name = getDisplayName(notation);
+//			if (findPropertyByName(name) == null) {
+//				return true;
+//			}
+//		}
+//
+//		return (allNotations.size() != sizeAll());
+//	}
 
 	private void updateMethodList(TouchDocument touchDocument) {
 		List<NotationBody> allNotations = touchDocument.getSortedAllNotations();
@@ -96,31 +100,33 @@ public class PropertyNotationPanel extends PropertyEditor implements Listenable<
 
 		for (NotationBody notation : allNotations) {
 			String name = getDisplayName(notation);
-			LabelPropertyValue property = (LabelPropertyValue)findPropertyByName(name);
 
 			if (notation.getNumberOfWorkingBells().getBellCount() > touchDocument.getNumberOfBells().getBellCount()) {
-				property.setValue("Too many bells");
-				property.setDisable(true);
+				updateDisplayProperty(name, "Too many bells", true);
 			}
 			else if (spliced) {
 				if (Strings.isNullOrEmpty(notation.getSpliceIdentifier())) {
-					property.setValue("No splice letter");
-					property.setDisable(true);
+					updateDisplayProperty(name, "No splice letter", true);
 
 				} else {
-					property.setValue(TouchDocument.SPLICED_TOKEN + " " + notation.getSpliceIdentifier());
-					property.setDisable(false);
+					updateDisplayProperty(name, TouchDocument.SPLICED_TOKEN + " " + notation.getSpliceIdentifier(), false);
 				}
 			}
 			else if (notation == touchDocument.getSingleMethodActiveNotation()) {
-				property.setValue("<Active>");
-				property.setDisable(false);
+				updateDisplayProperty(name, "<Active>", false);
 			}
 			else {
-				property.setValue("");
-				property.setDisable(false);
+				updateDisplayProperty(name,"", false);
 			}
 		}
+	}
+
+	private void updateDisplayProperty(String propertyName, String value, boolean disabled) {
+		getItems().stream()
+				.filter(columnDescriptor -> columnDescriptor.getName().getText().equals(propertyName))
+				.forEach(pair -> {pair.setValue(new NameValueColumnDescriptor(value, null, disabled));
+								  pair.setName(new NameValueColumnDescriptor(propertyName, null, disabled));
+				});
 	}
 
 	private String getDisplayName(NotationBody notation) {

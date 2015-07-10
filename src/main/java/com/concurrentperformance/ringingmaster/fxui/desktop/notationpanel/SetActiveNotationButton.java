@@ -31,7 +31,7 @@ public class SetActiveNotationButton extends Button implements PropertyNotationP
 		PropertyNotationPanel.getInstance().addListener(this);
 
 		setOnAction(event -> {
-			int index = PropertyNotationPanel.getInstance().getSelectedIndex();
+			int index = PropertyNotationPanel.getInstance().getSelectionModel().getSelectedIndex();
 			NotationBody selectedNotation = PropertyNotationPanel.getInstance().getNotation(index);
 
 			if (selectedNotation != null) {

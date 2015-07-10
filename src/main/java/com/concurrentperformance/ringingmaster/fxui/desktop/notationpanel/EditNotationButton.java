@@ -35,7 +35,7 @@ public class EditNotationButton extends Button implements PropertyNotationPanelL
 	}
 
 	public static void doEditCurrentSelectedNotation() {
-		int index = PropertyNotationPanel.getInstance().getSelectedIndex();
+		int index = PropertyNotationPanel.getInstance().getSelectionModel().getSelectedIndex();
 		NotationBody notation =  PropertyNotationPanel.getInstance().getNotation(index);
 		if (notation != null) {
 			NotationEditorDialogBuilder.editNotationShowDialog(notation, result -> {

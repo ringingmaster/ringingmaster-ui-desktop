@@ -1,11 +1,11 @@
 package com.concurrentperformance.ringingmaster.fxui.desktop.analysis;
 
-import com.concurrentperformance.fxutils.propertyeditor.LabelPropertyValue;
-import com.concurrentperformance.fxutils.propertyeditor.PropertyEditor;
+import com.concurrentperformance.fxutils.namevaluepair.ColumnDescriptor;
+import com.concurrentperformance.fxutils.namevaluepair.NameValuePairModel;
+import com.concurrentperformance.fxutils.namevaluepair.NameValuePairTable;
 import com.concurrentperformance.ringingmaster.engine.touch.proof.Proof;
 import com.concurrentperformance.ringingmaster.fxui.desktop.proof.ProofManager;
 import com.concurrentperformance.ringingmaster.fxui.desktop.util.ColorManager;
-import javafx.application.Platform;
 import javafx.scene.paint.Color;
 
 /**
@@ -13,7 +13,7 @@ import javafx.scene.paint.Color;
  *
  * @author Lake
  */
-public class AnalysisStatusWindow extends PropertyEditor {
+public class AnalysisStatusWindow extends NameValuePairTable {
 
 	public static final String TOUCH_TRUE_PROPERTY_NAME = "The touch is";
 	public static final String TERMINATION_PROPERTY_NAME = "Termination";
@@ -42,19 +42,17 @@ public class AnalysisStatusWindow extends PropertyEditor {
 			updateProofTime(proof);
 		});
 
-		add(new LabelPropertyValue(TOUCH_TRUE_PROPERTY_NAME));
-		add(new LabelPropertyValue(TERMINATION_PROPERTY_NAME));
-		add(new LabelPropertyValue(PART_COUNT_PROPERTY_NAME));
-		add(new LabelPropertyValue(LEAD_COUNT_PROPERTY_NAME));
-		add(new LabelPropertyValue(ROW_COUNT_PROPERTY_NAME));
-		add(new LabelPropertyValue(CALL_COUNT_PROPERTY_NAME));
-		add(new LabelPropertyValue(START_ROW_PROPERTY_NAME));
-		add(new LabelPropertyValue(END_ROW_PROPERTY_NAME));
-		add(new LabelPropertyValue(END_STROKE_PROPERTY_NAME));
-		add(new LabelPropertyValue(PROOF_TIME_PROPERTY_NAME));
+		getItems().add(new NameValuePairModel(TOUCH_TRUE_PROPERTY_NAME));
+		getItems().add(new NameValuePairModel(TERMINATION_PROPERTY_NAME));
+		getItems().add(new NameValuePairModel(PART_COUNT_PROPERTY_NAME));
+		getItems().add(new NameValuePairModel(LEAD_COUNT_PROPERTY_NAME));
+		getItems().add(new NameValuePairModel(ROW_COUNT_PROPERTY_NAME));
+		getItems().add(new NameValuePairModel(CALL_COUNT_PROPERTY_NAME));
+		getItems().add(new NameValuePairModel(START_ROW_PROPERTY_NAME));
+		getItems().add(new NameValuePairModel(END_ROW_PROPERTY_NAME));
+		getItems().add(new NameValuePairModel(END_STROKE_PROPERTY_NAME));
+		getItems().add(new NameValuePairModel(PROOF_TIME_PROPERTY_NAME));
 	}
-
-
 
 	private void updateTouchTrue(Proof proof) {
 		if (proof.getAnalysis().isPresent()) {
@@ -70,12 +68,13 @@ public class AnalysisStatusWindow extends PropertyEditor {
 		}
 	}
 
+
 	private void updateTermination(Proof proof) {
 		String terminateReasonDisplayString = proof.getTerminateReasonDisplayString();
 
 		switch(proof.getTerminationReason()) {
 			case SPECIFIED_ROW:
-				updateDisplayProperty(TERMINATION_PROPERTY_NAME, terminateReasonDisplayString, ColorManager.getClearHighlight());
+				updateDisplayProperty(TERMINATION_PROPERTY_NAME, terminateReasonDisplayString);
 				break;
 			case ROW_COUNT:
 			case LEAD_COUNT:
@@ -103,34 +102,34 @@ public class AnalysisStatusWindow extends PropertyEditor {
 
 	private void updatePartCount(Proof proof) {
 		if (proof.getCreatedMethod().isPresent()) {
-			updateDisplayProperty(PART_COUNT_PROPERTY_NAME, "TODO", ColorManager.getClearHighlight());
+			updateDisplayProperty(PART_COUNT_PROPERTY_NAME, "TODO");
 		}
 		else {
-			updateDisplayProperty(PART_COUNT_PROPERTY_NAME, "", ColorManager.getClearHighlight());
+			updateDisplayProperty(PART_COUNT_PROPERTY_NAME, "");
 		}
 	}
 
 	private void updateLeadCount(Proof proof) {
 		if (proof.getCreatedMethod().isPresent()) {
-			updateDisplayProperty(LEAD_COUNT_PROPERTY_NAME, Integer.toString(proof.getCreatedMethod().get().getLeadCount()), ColorManager.getClearHighlight());
+			updateDisplayProperty(LEAD_COUNT_PROPERTY_NAME, Integer.toString(proof.getCreatedMethod().get().getLeadCount()));
 		}
 		else {
-			updateDisplayProperty(LEAD_COUNT_PROPERTY_NAME, "", ColorManager.getClearHighlight());
+			updateDisplayProperty(LEAD_COUNT_PROPERTY_NAME, "");
 		}
 	}
 
 	private void updateRowCount(Proof proof) {
 		if (proof.getCreatedMethod().isPresent()) {
-			updateDisplayProperty(ROW_COUNT_PROPERTY_NAME, Integer.toString(proof.getCreatedMethod().get().getRowCount()), ColorManager.getClearHighlight());
+			updateDisplayProperty(ROW_COUNT_PROPERTY_NAME, Integer.toString(proof.getCreatedMethod().get().getRowCount()));
 		}
 		else {
-			updateDisplayProperty(ROW_COUNT_PROPERTY_NAME, "", ColorManager.getClearHighlight());
+			updateDisplayProperty(ROW_COUNT_PROPERTY_NAME, "");
 		}
 	}
 
 	private void updateCallCount(Proof proof) {
 		if (proof.getCreatedMethod().isPresent()) {
-			updateDisplayProperty(CALL_COUNT_PROPERTY_NAME, "TODO", ColorManager.getClearHighlight());
+			updateDisplayProperty(CALL_COUNT_PROPERTY_NAME, "TODO");
 
 //TODO - From C++ - note Pain Course message
 //	//number of calls.
@@ -139,46 +138,48 @@ public class AnalysisStatusWindow extends PropertyEditor {
 //	addLine("Number of calls:" , str);
 		}
 		else {
-			updateDisplayProperty(CALL_COUNT_PROPERTY_NAME, "", ColorManager.getClearHighlight());
+			updateDisplayProperty(CALL_COUNT_PROPERTY_NAME, "");
 		}
 	}
 
 	private void updateStartRow(Proof proof) {
 		if (proof.getCreatedMethod().isPresent()) {
-			updateDisplayProperty(START_ROW_PROPERTY_NAME, proof.getCreatedMethod().get().getFirstRow().getDisplayString(true), ColorManager.getClearHighlight());
+			updateDisplayProperty(START_ROW_PROPERTY_NAME, proof.getCreatedMethod().get().getFirstRow().getDisplayString(true));
 		}
 		else {
-			updateDisplayProperty(START_ROW_PROPERTY_NAME, "", ColorManager.getClearHighlight());
+			updateDisplayProperty(START_ROW_PROPERTY_NAME, "");
 		}
 	}
 
 	private void updateEndRow(Proof proof) {
 		if (proof.getCreatedMethod().isPresent()) {
-			updateDisplayProperty(END_ROW_PROPERTY_NAME, proof.getCreatedMethod().get().getLastRow().getDisplayString(true), ColorManager.getClearHighlight());
+			updateDisplayProperty(END_ROW_PROPERTY_NAME, proof.getCreatedMethod().get().getLastRow().getDisplayString(true));
 		}
 		else {
-			updateDisplayProperty(END_ROW_PROPERTY_NAME, "", ColorManager.getClearHighlight());
+			updateDisplayProperty(END_ROW_PROPERTY_NAME, "");
 		}
 	}
 
 	private void updateEndStroke(Proof proof) {
 		if (proof.getCreatedMethod().isPresent()) {
-			updateDisplayProperty(END_STROKE_PROPERTY_NAME, proof.getCreatedMethod().get().getLastRow().getStroke().getDisplayString(), ColorManager.getClearHighlight());
+			updateDisplayProperty(END_STROKE_PROPERTY_NAME, proof.getCreatedMethod().get().getLastRow().getStroke().getDisplayString());
 		}
 		else {
-			updateDisplayProperty(END_STROKE_PROPERTY_NAME, "", ColorManager.getClearHighlight());
+			updateDisplayProperty(END_STROKE_PROPERTY_NAME, "");
 		}
 	}
 
 	private void updateProofTime(Proof proof) {
-		updateDisplayProperty(PROOF_TIME_PROPERTY_NAME, String.format("%.3f", (proof.getProofTimeMs()) / 1000.0) + " seconds", ColorManager.getClearHighlight());
+		updateDisplayProperty(PROOF_TIME_PROPERTY_NAME, String.format("%.3f", (proof.getProofTimeMs()) / 1000.0) + " seconds");
 	}
 
-	public void updateDisplayProperty(String propertyName, String value, Color color) {
-		Platform.runLater(() -> {
-			LabelPropertyValue propertyByName = (LabelPropertyValue) findPropertyByName(propertyName);
-			propertyByName.setValue(value);
-			propertyByName.setColor(color);
-		});
+
+	private void updateDisplayProperty(String propertyName, String value) {
+		updateDisplayProperty(propertyName, value, null);
+	}
+	private void updateDisplayProperty(String propertyName, String value, Color valueColor) {
+		getItems().stream()
+				.filter(columnDescriptor -> columnDescriptor.getName().getText().equals(propertyName))
+				.forEach(pair -> pair.setValue(new ColumnDescriptor(value, valueColor)));
 	}
 }

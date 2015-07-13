@@ -44,11 +44,11 @@ public class PropertyNotationPanel extends NameValuePairTable implements Listena
 
 		});
 
-//TODO		setOnDoubleClickListener(index -> EditNotationButton.doEditCurrentSelectedNotation());
+		setOnMouseClicked(event -> {if(event.getClickCount() == 2) {EditNotationButton.doEditCurrentSelectedNotation();} });
+
 		getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
 			@Override
 			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-				log.info("Index set to " + newValue);
 				fireSelectionChange();
 			}
 		});

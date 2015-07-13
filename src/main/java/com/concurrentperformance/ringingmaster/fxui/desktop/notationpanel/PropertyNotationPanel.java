@@ -36,9 +36,9 @@ public class PropertyNotationPanel extends NameValuePairTable implements Listena
 
 	private PropertyNotationPanel() {
 		DocumentManager.getInstance().addListener(touchDocument -> {
-//TODO			if (hasMethodListChanged(touchDocument)) {
+			if (hasMethodListChanged(touchDocument)) {
 				rebuildMethodList(touchDocument);
-//			}
+			}
 			updateMethodList(touchDocument);
 			fireSelectionChange();
 
@@ -82,17 +82,19 @@ public class PropertyNotationPanel extends NameValuePairTable implements Listena
 		}
 	}
 
-//TODO	private boolean hasMethodListChanged(TouchDocument touchDocument) {
-//		List<NotationBody> allNotations = touchDocument.getSortedAllNotations();
-//		for (NotationBody notation : allNotations) {
-//			String name = getDisplayName(notation);
-//			if (findPropertyByName(name) == null) {
-//				return true;
-//			}
-//		}
-//
-//		return (allNotations.size() != sizeAll());
-//	}
+	private boolean hasMethodListChanged(TouchDocument touchDocument) {
+		List<NotationBody> allNotations = touchDocument.getSortedAllNotations();
+		for (NotationBody notation : allNotations) {
+			String name = getDisplayName(notation);
+			if (getItems().stream()
+					.filter(columnDescriptor -> columnDescriptor.getName().getText().equals(name))
+					.count() < 1 ) {
+				return true;
+			}
+		}
+
+		return (allNotations.size() != getItems().size());
+	}
 
 	private void updateMethodList(TouchDocument touchDocument) {
 		List<NotationBody> allNotations = touchDocument.getSortedAllNotations();

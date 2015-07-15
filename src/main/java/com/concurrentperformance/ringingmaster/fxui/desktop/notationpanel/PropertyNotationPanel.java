@@ -9,8 +9,6 @@ import com.concurrentperformance.ringingmaster.fxui.desktop.documentmodel.TouchD
 import com.concurrentperformance.util.listener.ConcurrentListenable;
 import com.concurrentperformance.util.listener.Listenable;
 import com.google.common.base.Strings;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,13 +42,14 @@ public class PropertyNotationPanel extends NameValuePairTable implements Listena
 
 		});
 
-		setOnMouseClicked(event -> {if(event.getClickCount() == 2) {EditNotationButton.doEditCurrentSelectedNotation();} });
-
-		getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
-			@Override
-			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-				fireSelectionChange();
+		setOnMouseClicked(event -> {
+			if(event.getClickCount() == 2) {
+				EditNotationButton.doEditCurrentSelectedNotation();
 			}
+		});
+
+		getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
+			fireSelectionChange();
 		});
 	}
 

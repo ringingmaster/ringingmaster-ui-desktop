@@ -6,7 +6,6 @@ import com.google.common.base.Strings;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.event.EventHandler;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
@@ -77,40 +76,15 @@ public class InteractionLayer extends Pane {
 			}
 		});
 
-		setOnKeyPressed(new EventHandler<KeyEvent>() {
-			@Override
-			public void handle(KeyEvent event) {
-				handleKeyPressed(event);
-			}
-		});
+		setOnKeyPressed(event -> handleKeyPressed(event));
 
-		setOnKeyTyped(new EventHandler<KeyEvent>() {
-			@Override
-			public void handle(KeyEvent event) {
-				handleKeyTyped(event);
-			}
-		});
+		setOnKeyTyped(event -> handleKeyTyped(event));
 
-		setOnMousePressed(new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent event) {
-				handleMousePressed(event);
-			}
-		});
+		setOnMousePressed(event -> handleMousePressed(event));
 
-		setOnMouseReleased(new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent event) {
-				handleMouseReleased(event);
-			}
-		});
+		setOnMouseReleased(event -> handleMouseReleased(event));
 
-		setOnMouseDragged(new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent event) {
-				handleMouseDragged(event);
-			}
-		});
+		setOnMouseDragged(event -> handleMouseDragged(event));
 
 		timer.schedule(blinkTask, BLINK_RATE_MS, BLINK_RATE_MS);
 

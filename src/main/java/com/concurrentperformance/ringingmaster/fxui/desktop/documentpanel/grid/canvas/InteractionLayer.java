@@ -356,6 +356,7 @@ public class InteractionLayer extends Pane {
 		}
 		mouseDown = true;
 		requestFocus();
+		e.consume();
 	}
 
 	private void handleMouseReleased(MouseEvent e) {
@@ -365,6 +366,7 @@ public class InteractionLayer extends Pane {
 		if (gridPosition.isPresent()) {
 			parent.getModel().setSelectionEndPosition(gridPosition.get());
 		}
+		e.consume();
 	}
 
 	private void handleMouseDragged(MouseEvent e) {
@@ -375,6 +377,7 @@ public class InteractionLayer extends Pane {
 				parent.getModel().setSelectionEndPosition(gridPosition.get());
 			}
 		}
+		e.consume();
 	}
 
 	public Optional<GridPosition> mouseCoordinatesToGridPosition(final double x, final double y) {

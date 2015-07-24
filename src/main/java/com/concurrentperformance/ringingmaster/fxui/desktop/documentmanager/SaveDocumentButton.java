@@ -16,7 +16,7 @@ public class SaveDocumentButton extends Button {
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-	private static Image IMAGE = new Image(SaveDocumentButton.class.getResourceAsStream("/images/save.png"));
+	private static final Image IMAGE = new Image(SaveDocumentButton.class.getResourceAsStream("/images/save.png"));
 
 	public SaveDocumentButton() {
 		super("", new ImageView(IMAGE));

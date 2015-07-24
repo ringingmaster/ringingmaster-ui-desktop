@@ -16,7 +16,7 @@ public class OpenDocumentButton extends Button {
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-	private static Image IMAGE = new Image(OpenDocumentButton.class.getResourceAsStream("/images/open_file.png"));
+	private static final Image IMAGE = new Image(OpenDocumentButton.class.getResourceAsStream("/images/open_file.png"));
 
 	public OpenDocumentButton() {
 		super("", new ImageView(IMAGE));

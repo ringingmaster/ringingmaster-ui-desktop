@@ -38,8 +38,10 @@ public class TouchPanel extends ScrollPane {
 		setFitToHeight(true);
 		setFitToWidth(false);
 		setFocusTraversable(false);
+	}
 
-		DocumentManager.getInstance().addListener(document -> {
+	public void setDocumentManager(DocumentManager documentManager) {
+		documentManager.addListener(document -> {
 			titlePane.setText(document.getTitle(), document.getAuthor());
 
 			GridModel gridModel = document.getMainGridModel();
@@ -50,7 +52,7 @@ public class TouchPanel extends ScrollPane {
 		});
 	}
 
-	@Override
+		@Override
 	public void requestFocus() {
 		// Prevent grabbing focus
 		//super.requestFocus();

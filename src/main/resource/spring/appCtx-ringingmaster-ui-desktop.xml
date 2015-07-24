@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       default-autowire="no"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:c="http://www.springframework.org/schema/c"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+
+
+    <import resource="appCtx-ringingmaster-ui-desktop-*.xml"/>
+
+    <bean id="mainWindow" class="com.concurrentperformance.ringingmaster.fxui.desktop.MainParentWindow"
+          p:menuBar-ref="menuBar"
+          p:toolBar-ref="toolBar"
+          p:statusBar-ref="statusBar"
+          p:documentWindow-ref="documentWindow"
+          p:propertyWindow-ref="propertyWindow"
+          p:analysisLeftWindow-ref="analysisWindow.left"
+          p:analysisRightWindow-ref="analysisWindow.right"
+          init-method="layoutWindows"/>
+
+</beans>

@@ -10,53 +10,66 @@ import javafx.scene.image.ImageView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Optional;
-
 /**
  * TODO Comments
  *
  * @author Lake
  */
-public class EditNotationButton extends Button implements PropertyNotationPanelListener {
+public class EditNotationButton extends Button {
 
 	private final static Logger log = LoggerFactory.getLogger(EditNotationButton.class);
 	public static final String TOOLTIP_BAST_TEXT = "Edit method";
 	public final Tooltip TOOLTIP = new Tooltip(TOOLTIP_BAST_TEXT);
 
-	private static Image IMAGE = new Image(EditNotationButton.class.getResourceAsStream("/images/method_edit.png"));
+	private static final Image IMAGE = new Image(EditNotationButton.class.getResourceAsStream("/images/method_edit.png"));
+
+	private DocumentManager documentManager;
+	private PropertyNotationPanel propertyNotationPanel;
+	private NotationEditorDialogBuilder notationEditorDialogBuilder;
+
 
 	public EditNotationButton() {
 		super("", new ImageView(IMAGE));
 		setTooltip(TOOLTIP);
 
-		PropertyNotationPanel.getInstance().addListener(this);
-
-		setOnAction(event -> doEditCurrentSelectedNotation());
 	}
 
-	public static void doEditCurrentSelectedNotation() {
-		int index = PropertyNotationPanel.getInstance().getSelectionModel().getSelectedIndex();
-		NotationBody notation =  PropertyNotationPanel.getInstance().getNotation(index);
+	public void setDocumentManager(DocumentManager documentManager) {
+		this.documentManager = documentManager;
+	}
+
+	public void setPropertyNotationPanel(PropertyNotationPanel propertyNotationPanel) {
+		this.propertyNotationPanel = propertyNotationPanel;
+
+		propertyNotationPanel.addListener(selectedNotation -> {
+			setDisable(!selectedNotation.isPresent());
+
+			if (selectedNotation.isPresent()) {
+				TOOLTIP.setText(TOOLTIP_BAST_TEXT + " '" + selectedNotation.get().getNameIncludingNumberOfBells() + "'");
+			}
+			else {
+				TOOLTIP.setText(TOOLTIP_BAST_TEXT);
+			}
+		});
+
+		setOnAction(event -> doEditCurrentSelectedNotation());
+
+	}
+
+	public void doEditCurrentSelectedNotation() {
+		int index = propertyNotationPanel.getSelectionModel().getSelectedIndex();
+		NotationBody notation =  propertyNotationPanel.getNotation(index);
 		if (notation != null) {
-			NotationEditorDialogBuilder.editNotationShowDialog(notation, result -> {
+			notationEditorDialogBuilder.editNotationShowDialog(notation, result -> {
 				log.info("EditNotationButton - adding", result.toString());
-				DocumentManager.getCurrentDocument().exchangeNotationAfterEdit(notation, result);
+				documentManager.getCurrentDocument().exchangeNotationAfterEdit(notation, result);
 				// TODO what checks do we need here?
 				return true; //TODO common this code from double click -
 			});
 		}
 	}
 
-
-	@Override
-	public void propertyMethod_setSelectedNotation(Optional<NotationBody> selectedNotation) {
-		setDisable(!selectedNotation.isPresent());
-
-		if (selectedNotation.isPresent()) {
-			TOOLTIP.setText(TOOLTIP_BAST_TEXT + " '" + selectedNotation.get().getNameIncludingNumberOfBells() + "'");
-		}
-		else {
-			TOOLTIP.setText(TOOLTIP_BAST_TEXT);
-		}
+	public void setNotationEditorDialogBuilder(NotationEditorDialogBuilder notationEditorDialogBuilder) {
+		this.notationEditorDialogBuilder = notationEditorDialogBuilder;
 	}
 }

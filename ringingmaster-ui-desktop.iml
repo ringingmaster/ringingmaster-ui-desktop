@@ -11,7 +11,10 @@
     <facet type="Spring" name="Spring">
       <configuration>
         <fileset id="fileset1" name="XML Application Context" removed="false">
-          <file>file://$MODULE_DIR$/../desktop-fxui/src/main/resource/spring/applicationContext-desktop-ui.xml</file>
+          <file>file://$MODULE_DIR$/src/main/resource/spring/appCtx-ringingmaster-ui-desktop-document.xml</file>
+          <file>file://$MODULE_DIR$/src/main/resource/spring/appCtx-ringingmaster-ui-desktop-engine.xml</file>
+          <file>file://$MODULE_DIR$/src/main/resource/spring/appCtx-ringingmaster-ui-desktop-main.xml</file>
+          <file>file://$MODULE_DIR$/src/main/resource/spring/appCtx-ringingmaster-ui-desktop.xml</file>
         </fileset>
       </configuration>
     </facet>
@@ -40,6 +43,12 @@
           <root url="jar://$IVY_CACHE_HOME$/cache/org.slf4j/slf4j-api/jars/slf4j-api-1.7.5.jar!/" />
           <root url="jar://$IVY_CACHE_HOME$/cache/org.slf4j/slf4j-log4j12/jars/slf4j-log4j12-1.7.5.jar!/" />
           <root url="jar://$IVY_CACHE_HOME$/cache/log4j/log4j/jars/log4j-1.2.16.jar!/" />
+          <root url="jar://$IVY_CACHE_HOME$/cache/org.springframework/spring-context/jars/spring-context-4.1.7.RELEASE.jar!/" />
+          <root url="jar://$IVY_CACHE_HOME$/cache/org.springframework/spring-beans/jars/spring-beans-4.1.7.RELEASE.jar!/" />
+          <root url="jar://$IVY_CACHE_HOME$/cache/org.springframework/spring-core/jars/spring-core-4.1.7.RELEASE.jar!/" />
+          <root url="jar://$IVY_CACHE_HOME$/cache/org.springframework/spring-aop/jars/spring-aop-4.1.7.RELEASE.jar!/" />
+          <root url="jar://$IVY_CACHE_HOME$/cache/org.springframework/spring-expression/jars/spring-expression-4.1.7.RELEASE.jar!/" />
+          <root url="jar://$IVY_CACHE_HOME$/cache/commons-logging/commons-logging/jars/commons-logging-1.2.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

@@ -26,25 +26,26 @@ public class PropertyNotationPanel extends NameValuePairTable implements Listena
 
 	private ConcurrentListenable<PropertyNotationPanelListener> listenableDelegate = new ConcurrentListenable<>();
 
-	static PropertyNotationPanel INSTANCE = new PropertyNotationPanel();
+	private DocumentManager documentManager;
+	private EditNotationButton editNotationButton;
 
-	static PropertyNotationPanel getInstance() {
-		return INSTANCE;
+	public PropertyNotationPanel() {
+		//TODO add an empty table hint i.e. setPlaceholder(new Label("No Calls Defined"));
 	}
 
-	private PropertyNotationPanel() {
-		DocumentManager.getInstance().addListener(touchDocument -> {
+	public void setDocumentManager(DocumentManager documentManager) {
+		this.documentManager = documentManager;
+		documentManager.addListener(touchDocument -> {
 			if (hasMethodListChanged(touchDocument)) {
 				rebuildMethodList(touchDocument);
 			}
 			updateMethodList(touchDocument);
 			fireSelectionChange();
-
 		});
 
 		setOnMouseClicked(event -> {
 			if(event.getClickCount() == 2) {
-				EditNotationButton.doEditCurrentSelectedNotation();
+				editNotationButton.doEditCurrentSelectedNotation();
 			}
 		});
 
@@ -134,17 +135,22 @@ public class PropertyNotationPanel extends NameValuePairTable implements Listena
 		return notation.getNameIncludingNumberOfBells();
 	}
 
-	@Override
-	public void addListener(PropertyNotationPanelListener listener) {
-		listenableDelegate.addListener(listener);
-	}
 
 	public NotationBody getNotation(int index) {
-		List<NotationBody> sortedAllNotations = DocumentManager.getCurrentDocument().getSortedAllNotations();
+		List<NotationBody> sortedAllNotations = documentManager.getCurrentDocument().getSortedAllNotations();
 		if (index >= 0 && index < sortedAllNotations.size()) {
 			return sortedAllNotations.get(index);
 		}
 
 		return null;
+	}
+
+	@Override
+	public void addListener(PropertyNotationPanelListener listener) {
+		listenableDelegate.addListener(listener);
+	}
+
+	public void setEditNotationButton(EditNotationButton editNotationButton) {
+		this.editNotationButton = editNotationButton;
 	}
 }

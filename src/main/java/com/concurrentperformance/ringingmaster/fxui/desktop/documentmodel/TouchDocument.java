@@ -57,8 +57,10 @@ public class TouchDocument extends ConcurrentListenable<TouchDocumentListener> i
 	private final MainGridModel mainGridModel;
 	private final List<GridModel> definitionModels = new ArrayList<>();
 
+	private final ProofManager proofManager;
 
-	public TouchDocument() {
+	public TouchDocument(ProofManager proofManager) {
+		this.proofManager = proofManager;
 
 		//TODO all this must be persisted.
 		touch = createDummyTouch();
@@ -607,7 +609,7 @@ public class TouchDocument extends ConcurrentListenable<TouchDocumentListener> i
 	}
 
 	public void parseAndProve() {
-		ProofManager.getInstance().parseAndProve(touch);
+		proofManager.parseAndProve(touch);
 	}
 
 	//TODO remove this

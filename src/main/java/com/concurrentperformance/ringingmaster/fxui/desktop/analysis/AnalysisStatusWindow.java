@@ -28,8 +28,8 @@ public class AnalysisStatusWindow extends NameValuePairTable {
 
 
 
-	public AnalysisStatusWindow() {
-		ProofManager.getInstance().addListener(proof -> {
+	public void setProofManager(ProofManager proofManager) {
+		proofManager.addListener(proof -> {
 			updateTouchTrue(proof);
 			updateTermination(proof);
 			updatePartCount(proof);

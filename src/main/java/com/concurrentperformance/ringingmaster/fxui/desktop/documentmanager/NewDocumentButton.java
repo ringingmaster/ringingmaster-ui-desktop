@@ -16,13 +16,18 @@ public class NewDocumentButton extends Button {
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-	private static Image IMAGE = new Image(NewDocumentButton.class.getResourceAsStream("/images/new_file.png"));
+	private static final Image IMAGE = new Image(NewDocumentButton.class.getResourceAsStream("/images/new_file.png"));
+
+	private DocumentManager documentManager;
 
 	public NewDocumentButton() {
 		super("", new ImageView(IMAGE));
 		setTooltip(new Tooltip("New Touch"));
 
-		setOnAction(event -> DocumentManager.buildNewDocument());
+		setOnAction(event -> documentManager.buildNewDocument());
 	}
 
+	public void setDocumentManager(DocumentManager documentManager) {
+		this.documentManager = documentManager;
+	}
 }

@@ -13,6 +13,16 @@
     </configurations>
 
     <dependencies>
+
+        <dependency org="org.springframework" name="spring-context" rev="4.1.7.RELEASE" />
+        <dependency org="org.springframework" name="spring-beans" rev="4.1.7.RELEASE" />
+        <dependency org="org.springframework" name="spring-core" rev="4.1.7.RELEASE" />
+        <dependency org="org.springframework" name="spring-aop" rev="4.1.7.RELEASE" />
+        <dependency org="org.springframework" name="spring-asm" rev="4.1.7.RELEASE" />
+        <dependency org="org.springframework" name="spring-expression" rev="4.1.7.RELEASE" />
+        <dependency org="commons-logging" name="commons-logging" rev="1.2"/>
+
+
         <dependency org="org.controlsfx" name="controlsfx" rev="8.20.7"/>
         <dependency org="org.controlsfx" name="openjfx-dialogs" rev="1.0.2"/>
         <dependency org="com.google.guava" name="guava" rev="18.0"/>

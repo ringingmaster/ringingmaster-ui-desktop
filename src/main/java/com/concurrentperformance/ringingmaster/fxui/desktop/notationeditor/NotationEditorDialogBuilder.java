@@ -18,9 +18,9 @@ import java.util.function.Function;
  */
 public class NotationEditorDialogBuilder {
 
-	private static final Logger log = LoggerFactory.getLogger(NotationEditorDialogBuilder.class);
+	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-	public static void newNotationShowDialog(NumberOfBells numberOfWorkingBells, Function<NotationBody, Boolean> onSuccessHandler) {
+	public void newNotationShowDialog(NumberOfBells numberOfWorkingBells, Function<NotationBody, Boolean> onSuccessHandler) {
 		NotationBuilder builder = NotationBuilder.getInstance();
 		builder.setNumberOfWorkingBells(numberOfWorkingBells);
 		builder.setFoldedPalindromeNotationShorthand("");
@@ -31,11 +31,11 @@ public class NotationEditorDialogBuilder {
 		showDialog(builder.build(), NotationEditorEditMode.ADD_NOTATION, onSuccessHandler);
 	}
 
-	public static void editNotationShowDialog(NotationBody notation, Function<NotationBody, Boolean> onSuccessHandler) {
+	public void editNotationShowDialog(NotationBody notation, Function<NotationBody, Boolean> onSuccessHandler) {
 		showDialog(notation, NotationEditorEditMode.EDIT_NOTATION, onSuccessHandler);
 	}
 
-	private static void showDialog(NotationBody notation, NotationEditorEditMode editMode, Function<NotationBody, Boolean> onSuccessHandler) {
+	private void showDialog(NotationBody notation, NotationEditorEditMode editMode, Function<NotationBody, Boolean> onSuccessHandler) {
 		FXMLLoader fxmlLoader = new FXMLLoader(NotationEditorDialog.class.getResource("NotationEditorDialog.fxml"));
 
 		try {

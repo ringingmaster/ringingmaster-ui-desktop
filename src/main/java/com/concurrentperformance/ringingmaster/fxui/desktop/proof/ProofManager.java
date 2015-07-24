@@ -21,13 +21,11 @@ import java.util.concurrent.atomic.AtomicLong;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * TODO comments ???
+ * Manages all asynchronous requests for a proof
  *
  * @author Lake
  */
 public class ProofManager extends ConcurrentListenable<ProofManagerListener> implements Listenable<ProofManagerListener> {
-
-	private final static ProofManager INSTANCE = new ProofManager();
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
@@ -37,12 +35,7 @@ public class ProofManager extends ConcurrentListenable<ProofManagerListener> imp
 	private final Executor updateExecutor;
 	private final AtomicLong nextProofId = new AtomicLong(0);
 
-
-	public static ProofManager getInstance() {
-		return INSTANCE;
-	}
-
-	private ProofManager() {
+	public ProofManager() {
 		proofExecutor =  new ThreadPoolExecutor(1, 1,
 						0L, TimeUnit.MILLISECONDS,
 						new LinkedBlockingQueue<>(),

@@ -16,7 +16,7 @@ public class UndoButton extends Button {
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-	private static Image IMAGE = new Image(UndoButton.class.getResourceAsStream("/images/undo.png"));
+	private static final Image IMAGE = new Image(UndoButton.class.getResourceAsStream("/images/undo.png"));
 
 	public UndoButton() {
 		super("", new ImageView(IMAGE));

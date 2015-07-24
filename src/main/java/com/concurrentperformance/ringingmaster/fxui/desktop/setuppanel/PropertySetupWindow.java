@@ -1,13 +1,16 @@
 package com.concurrentperformance.ringingmaster.fxui.desktop.setuppanel;
 
-import com.concurrentperformance.fxutils.propertyeditor.*;
+import com.concurrentperformance.fxutils.propertyeditor.CallbackStyle;
+import com.concurrentperformance.fxutils.propertyeditor.IntegerPropertyValue;
+import com.concurrentperformance.fxutils.propertyeditor.PropertyEditor;
+import com.concurrentperformance.fxutils.propertyeditor.SelectionPropertyValue;
+import com.concurrentperformance.fxutils.propertyeditor.TextPropertyValue;
 import com.concurrentperformance.ringingmaster.engine.NumberOfBells;
 import com.concurrentperformance.ringingmaster.engine.method.Bell;
 import com.concurrentperformance.ringingmaster.engine.method.Stroke;
 import com.concurrentperformance.ringingmaster.engine.notation.NotationBody;
 import com.concurrentperformance.ringingmaster.engine.touch.container.TouchType;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentmanager.DocumentManager;
-import com.concurrentperformance.ringingmaster.fxui.desktop.documentmanager.DocumentManagerListener;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentmodel.TouchDocument;
 import com.google.common.collect.Lists;
 import javafx.application.Platform;
@@ -22,7 +25,7 @@ import java.util.List;
  *
  * @author Lake
  */
-public class PropertySetupWindow extends PropertyEditor implements DocumentManagerListener {
+public class PropertySetupWindow extends PropertyEditor {
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
@@ -49,9 +52,16 @@ public class PropertySetupWindow extends PropertyEditor implements DocumentManag
 	public static final String TERMINATION_PART_LIMIT_PROPERTY_NAME = "Part Limit";
 	public static final String TERMINATION_CIRCULAR_TOUCH_LIMIT_PROPERTY_NAME = "Circular Touch Limit";
 
+	private DocumentManager documentManager;
 
-	public PropertySetupWindow() {
-		DocumentManager.getInstance().addListener(this);
+
+	public void init() {
+		documentManager.addListener(touchDocument -> {
+			updateSetupSection(touchDocument);
+			updateAdvancedSetupSection(touchDocument);
+			updateStartSection(touchDocument);
+			updateTerminationSection(touchDocument);
+		});
 
 		buildSetupSection();
 		buildAdvancedSetupSection();
@@ -59,27 +69,19 @@ public class PropertySetupWindow extends PropertyEditor implements DocumentManag
 		buildTerminationSection();
 	}
 
-	@Override
-	public void documentManager_updateDocument(TouchDocument touchDocument) {
-		updateSetupSection(touchDocument);
-		updateAdvancedSetupSection(touchDocument);
-		updateStartSection(touchDocument);
-		updateTerminationSection(touchDocument);
-	}
-
 	private void buildSetupSection() {
 		add( new TextPropertyValue(TITLE_PROPERTY_NAME));
 		((TextPropertyValue)findPropertyByName(TITLE_PROPERTY_NAME)).setListener((observable, oldValue, newValue) ->
-				DocumentManager.getCurrentDocument().setTitle(newValue), CallbackStyle.EVERY_KEYSTROKE);
+				documentManager.getCurrentDocument().setTitle(newValue), CallbackStyle.EVERY_KEYSTROKE);
 
 		add( new TextPropertyValue(AUTHOR_PROPERTY_NAME));
 		((TextPropertyValue)findPropertyByName(AUTHOR_PROPERTY_NAME)).setListener((observable, oldValue, newValue) ->
-				DocumentManager.getCurrentDocument().setAuthor(newValue), CallbackStyle.EVERY_KEYSTROKE);
+				documentManager.getCurrentDocument().setAuthor(newValue), CallbackStyle.EVERY_KEYSTROKE);
 
 		add( new SelectionPropertyValue(NUMBER_OF_BELLS_PROPERTY_NAME));
 		((SelectionPropertyValue)findPropertyByName(NUMBER_OF_BELLS_PROPERTY_NAME)).setListener((observable, oldValue, newValue) -> {
 			final NumberOfBells numberOfBells = NumberOfBells.values()[newValue.intValue()];
-			Platform.runLater(() -> DocumentManager.getCurrentDocument().setNumberOfBells(numberOfBells));
+			Platform.runLater(() -> documentManager.getCurrentDocument().setNumberOfBells(numberOfBells));
 
 		});
 		final List<String> numberOfBellItems = new ArrayList<>();
@@ -91,7 +93,7 @@ public class PropertySetupWindow extends PropertyEditor implements DocumentManag
 		add( new SelectionPropertyValue(CALL_FROM_PROPERTY_NAME));
 		((SelectionPropertyValue)findPropertyByName(CALL_FROM_PROPERTY_NAME)).setListener((observable, oldValue, newValue) -> {
 			final Bell callFrom = Bell.values()[newValue.intValue()];
-			Platform.runLater(() -> DocumentManager.getCurrentDocument().setCallFrom(callFrom));
+			Platform.runLater(() -> documentManager.getCurrentDocument().setCallFrom(callFrom));
 
 		});
 
@@ -102,13 +104,13 @@ public class PropertySetupWindow extends PropertyEditor implements DocumentManag
 		add( new SelectionPropertyValue(CALL_TYPE_PROPERTY_NAME));
 		((SelectionPropertyValue)findPropertyByName(CALL_TYPE_PROPERTY_NAME)).setListener((observable, oldValue, newValue) -> {
 			final TouchType touchType = TouchType.values()[newValue.intValue()];
-			Platform.runLater(() -> DocumentManager.getCurrentDocument().setTouchType(touchType));
+			Platform.runLater(() -> documentManager.getCurrentDocument().setTouchType(touchType));
 
 		});
 
 		add( new TextPropertyValue(PLAIN_LEAD_TOKEN_PROPERTY_NAME));
 		((TextPropertyValue)findPropertyByName(PLAIN_LEAD_TOKEN_PROPERTY_NAME)).setListener((observable, oldValue, newValue) ->
-				Platform.runLater(() -> DocumentManager.getCurrentDocument().setPlainLeadToken(newValue)),
+				Platform.runLater(() -> documentManager.getCurrentDocument().setPlainLeadToken(newValue)),
 				CallbackStyle.EVERY_KEYSTROKE);
 	}
 
@@ -184,7 +186,7 @@ public class PropertySetupWindow extends PropertyEditor implements DocumentManag
 	}
 
 	private void setActiveValidNotation(int index) {
-		TouchDocument touchDocument = DocumentManager.getCurrentDocument();
+		TouchDocument touchDocument = documentManager.getCurrentDocument();
 
 		if (index==0) {
 			touchDocument.setSpliced(true);
@@ -210,23 +212,23 @@ public class PropertySetupWindow extends PropertyEditor implements DocumentManag
 	private void buildStartSection() {
 		add(START_GROUP_NAME, new TextPropertyValue(START_WITH_CHANGE_PROPERTY_NAME));
 		((TextPropertyValue)findPropertyByName(START_WITH_CHANGE_PROPERTY_NAME)).setListener((observable, oldValue, newValue) ->
-				Platform.runLater(() -> DocumentManager.getCurrentDocument().setStartChange(newValue)),
+				Platform.runLater(() -> documentManager.getCurrentDocument().setStartChange(newValue)),
 				CallbackStyle.WHEN_FINISHED);
 
 		add(START_GROUP_NAME, new IntegerPropertyValue(START_AT_ROW_PROPERTY_NAME));
 		((IntegerPropertyValue)findPropertyByName(START_AT_ROW_PROPERTY_NAME)).setListener((observable, oldValue, newValue) ->
-				Platform.runLater(() -> DocumentManager.getCurrentDocument().setStartAtRow(newValue.intValue())), CallbackStyle.WHEN_FINISHED);
+				Platform.runLater(() -> documentManager.getCurrentDocument().setStartAtRow(newValue.intValue())), CallbackStyle.WHEN_FINISHED);
 
 		add(START_GROUP_NAME, new SelectionPropertyValue(START_STROKE_PROPERTY_NAME));
 		((SelectionPropertyValue)findPropertyByName(START_STROKE_PROPERTY_NAME)).setListener((observable, oldValue, newValue) ->
 				Platform.runLater(() -> {
 			final Stroke startStroke = Stroke.values()[newValue.intValue()];
-			DocumentManager.getCurrentDocument().setStartStroke(startStroke);
+			documentManager.getCurrentDocument().setStartStroke(startStroke);
 		}));
 
 		add(START_GROUP_NAME, new TextPropertyValue(START_NOTATION_PROPERTY_NAME));
 		((TextPropertyValue)findPropertyByName(START_NOTATION_PROPERTY_NAME)).setListener((observable, oldValue, newValue) ->
-				Platform.runLater(() -> DocumentManager.getCurrentDocument().setStartNotation(newValue)),
+				Platform.runLater(() -> documentManager.getCurrentDocument().setStartNotation(newValue)),
 				CallbackStyle.WHEN_FINISHED);
 
 		showGroupByName(START_GROUP_NAME, false); // TODO save state in app
@@ -255,27 +257,27 @@ public class PropertySetupWindow extends PropertyEditor implements DocumentManag
 	private void buildTerminationSection() {
 		add(TERMINATION_GROUP_NAME, new TextPropertyValue(TERMINATION_WITH_CHANGE_PROPERTY_NAME));
 		((TextPropertyValue)findPropertyByName(TERMINATION_WITH_CHANGE_PROPERTY_NAME)).setListener((observable, oldValue, newValue) ->
-				Platform.runLater(() -> DocumentManager.getCurrentDocument().setTerminationChange(newValue)),
+				Platform.runLater(() -> documentManager.getCurrentDocument().setTerminationChange(newValue)),
 				CallbackStyle.WHEN_FINISHED);
 
 		add(TERMINATION_GROUP_NAME, new IntegerPropertyValue(TERMINATION_ROW_LIMIT_PROPERTY_NAME));
 		((IntegerPropertyValue)findPropertyByName(TERMINATION_ROW_LIMIT_PROPERTY_NAME)).setListener((observable, oldValue, newValue) ->
-				Platform.runLater(() -> DocumentManager.getCurrentDocument().setTerminationMaxRows(newValue == null?null:newValue.intValue())),
+				Platform.runLater(() -> documentManager.getCurrentDocument().setTerminationMaxRows(newValue == null?null:newValue.intValue())),
 				CallbackStyle.WHEN_FINISHED);
 
 		add(TERMINATION_GROUP_NAME, new IntegerPropertyValue(TERMINATION_LEAD_LIMIT_PROPERTY_NAME));
 		((IntegerPropertyValue)findPropertyByName(TERMINATION_LEAD_LIMIT_PROPERTY_NAME)).setListener((observable, oldValue, newValue) ->
-						Platform.runLater(() -> DocumentManager.getCurrentDocument().setTerminationMaxLeads(newValue == null ? null : newValue.intValue())),
+						Platform.runLater(() -> documentManager.getCurrentDocument().setTerminationMaxLeads(newValue == null ? null : newValue.intValue())),
 				CallbackStyle.WHEN_FINISHED);
 
 		add(TERMINATION_GROUP_NAME, new IntegerPropertyValue(TERMINATION_PART_LIMIT_PROPERTY_NAME));
 		((IntegerPropertyValue)findPropertyByName(TERMINATION_PART_LIMIT_PROPERTY_NAME)).setListener((observable, oldValue, newValue) ->
-						Platform.runLater(() -> DocumentManager.getCurrentDocument().setTerminationMaxParts(newValue == null ? null : newValue.intValue())),
+						Platform.runLater(() -> documentManager.getCurrentDocument().setTerminationMaxParts(newValue == null ? null : newValue.intValue())),
 				CallbackStyle.WHEN_FINISHED);
 
 		add(TERMINATION_GROUP_NAME, new IntegerPropertyValue(TERMINATION_CIRCULAR_TOUCH_LIMIT_PROPERTY_NAME));
 		((IntegerPropertyValue)findPropertyByName(TERMINATION_CIRCULAR_TOUCH_LIMIT_PROPERTY_NAME)).setListener((observable, oldValue, newValue) ->
-						Platform.runLater(() -> DocumentManager.getCurrentDocument().setTerminationCircularTouch(newValue == null ? null : newValue.intValue())),
+						Platform.runLater(() -> documentManager.getCurrentDocument().setTerminationCircularTouch(newValue == null ? null : newValue.intValue())),
 				CallbackStyle.WHEN_FINISHED);
 
 		showGroupByName(TERMINATION_GROUP_NAME, false); // TODO save state in app
@@ -299,4 +301,7 @@ public class PropertySetupWindow extends PropertyEditor implements DocumentManag
 
 	}
 
+	public void setDocumentManager(DocumentManager documentManager) {
+		this.documentManager = documentManager;
+	}
 }

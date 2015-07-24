@@ -19,20 +19,27 @@ public class AddNotationButton extends Button {
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-	private static Image IMAGE = new Image(AddNotationButton.class.getResourceAsStream("/images/add.png"));
+	private static final Image IMAGE = new Image(AddNotationButton.class.getResourceAsStream("/images/add.png"));
+
+	private NotationEditorDialogBuilder notationEditorDialogBuilder;
 
 	public AddNotationButton() {
 		super("", new ImageView(IMAGE));
 		setTooltip(new Tooltip("Add a new method"));
+	}
 
+	public void setDocumentManager(DocumentManager documentManager) {
 		setOnAction(event -> {
-			NumberOfBells numberOfBells = DocumentManager.getCurrentDocument().getNumberOfBells();
+			NumberOfBells numberOfBells = documentManager.getCurrentDocument().getNumberOfBells();
 
-			NotationEditorDialogBuilder.newNotationShowDialog(numberOfBells, result -> {
+			notationEditorDialogBuilder.newNotationShowDialog(numberOfBells, result -> {
 				log.info("AddMethodButton - adding", result.toString());
-				return DocumentManager.getCurrentDocument().addNotation(result);
+				return documentManager.getCurrentDocument().addNotation(result);
 			});
 		});
 	}
 
+	public void setNotationEditorDialogBuilder(NotationEditorDialogBuilder notationEditorDialogBuilder) {
+		this.notationEditorDialogBuilder = notationEditorDialogBuilder;
+	}
 }

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+       default-autowire="byName"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:c="http://www.springframework.org/schema/c"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+
+    <!-- Statusbar -->
+    <bean id="statusBar" class="com.concurrentperformance.fxutils.box.InjectableHBox"
+            p:minHeight="20.0">
+        <property name="padding">
+            <bean class="javafx.geometry.Insets" c:_0="3.0"/>
+        </property>
+        <property name="boxLayoutDefinitions">
+            <util:list>
+                <bean class="com.concurrentperformance.fxutils.box.BoxLayoutDefinition" c:node-ref="statusBar.label" c:priority="NEVER"/>
+                <bean class="com.concurrentperformance.fxutils.box.BoxLayoutDefinition" c:node-ref="statusBar.expansion" c:priority="ALWAYS"/>
+                <bean class="com.concurrentperformance.fxutils.box.BoxLayoutDefinition" c:node-ref="statusBar.proofState" c:priority="NEVER"/>
+            </util:list>
+        </property>
+    </bean>
+
+
+
+    <bean id="statusBar.label" class="javafx.scene.control.Label" p:text="TEST"/>
+    <bean id="statusBar.expansion" class="javafx.scene.layout.Pane" />
+    <bean id="statusBar.proofState" class="com.concurrentperformance.ringingmaster.fxui.desktop.statusbar.ProofState" />
+
+</beans>

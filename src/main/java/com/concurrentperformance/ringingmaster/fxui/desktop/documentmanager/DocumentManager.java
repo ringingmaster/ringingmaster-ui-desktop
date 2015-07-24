@@ -2,10 +2,9 @@ package com.concurrentperformance.ringingmaster.fxui.desktop.documentmanager;
 
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentmodel.TouchDocument;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentpanel.TouchPanel;
+import com.concurrentperformance.ringingmaster.fxui.desktop.proof.ProofManager;
 import com.concurrentperformance.util.listener.ConcurrentListenable;
 import com.concurrentperformance.util.listener.Listenable;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.scene.Node;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -21,46 +20,36 @@ public class DocumentManager extends ConcurrentListenable<DocumentManagerListene
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-	private static final DocumentManager INSTANCE = new DocumentManager();
-
 	private TouchDocument currentDocument = null;
-	private TabPane docTabPane = new TabPane();
+	private TabPane documentWindow;
 	private int docNumber = 0;
 
+	private ProofManager proofManager;
 
-	public static DocumentManager getInstance() {
-		return INSTANCE;
-	}
-
-	private DocumentManager() {
-		docTabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.ALL_TABS);
-		docTabPane.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Tab>() {
-			@Override
-			public void changed(ObservableValue<? extends Tab> observable, Tab oldValue, Tab newValue) {
-				log.info("Got Tab " + newValue.toString());
-			}
+	public void init() {
+		documentWindow.setTabClosingPolicy(TabPane.TabClosingPolicy.ALL_TABS);
+		documentWindow.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+			log.info("Got Tab " + newValue.toString());
+			//TODO
 		});
 	}
 
-	public static void buildNewDocument() {
-		INSTANCE.doBuildNewDocument();
-	}
+	public void buildNewDocument() {
+		TouchPanel touchPanel = new TouchPanel();;// TODO SPRING should this be a spring builder?
+		touchPanel.setDocumentManager(this);
+		createTab("New Touch #" + ++docNumber, touchPanel);
 
-	private void doBuildNewDocument() {
-		createTab("New Touch #" + ++docNumber, new TouchPanel());
-
-		currentDocument = new TouchDocument();
+		currentDocument = new TouchDocument(proofManager);// TODO SPRING should this be a spring builder?
 		currentDocument.addListener(touchDocument -> fireUpdateDocument());
 		fireUpdateDocument();
 	}
-
 
 
 	private void createTab(String name, Node node) {
 		Tab tab = new Tab();
 		tab.setText(name);
 		tab.setContent(node);
-		docTabPane.getTabs().add(tab);
+		documentWindow.getTabs().add(tab);
 	}
 
 	private void fireUpdateDocument() {
@@ -69,13 +58,15 @@ public class DocumentManager extends ConcurrentListenable<DocumentManagerListene
 		}
 	}
 
-	public static TouchDocument getCurrentDocument() {
-		return INSTANCE.currentDocument;
+	public TouchDocument getCurrentDocument() {
+		return currentDocument;
 	}
 
+	public void setDocumentWindow(TabPane documentWindow) {
+		this.documentWindow = documentWindow;
+	}
 
-	public Node getDocPane() {
-
-		return docTabPane;
+	public void setProofManager(ProofManager proofManager) {
+		this.proofManager = proofManager;
 	}
 }

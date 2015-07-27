@@ -22,7 +22,7 @@ public class ProofState extends ImageView {
 	private final Image proofCross = new Image(this.getClass().getResourceAsStream("/images/proof_cross.png"));
 
 	public void setProofManager(ProofManager proofManager) {
-		proofManager.addListener(proof -> {
+		proofManager.addListener(proof -> Platform.runLater(() -> {
 			if (proof.getTerminationReason() == ProofTerminationReason.INVALID_TOUCH) {
 				updateImage(proofWait);//TODO could make this a question mark.
 			}
@@ -37,7 +37,8 @@ public class ProofState extends ImageView {
 			else {
 				updateImage(proofWait);
 			}
-		});
+
+		}));
 	}
 
 	private void updateImage(Image image) {

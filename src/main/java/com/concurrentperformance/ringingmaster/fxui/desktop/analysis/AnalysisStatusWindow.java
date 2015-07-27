@@ -6,6 +6,7 @@ import com.concurrentperformance.fxutils.namevaluepair.NameValuePairTable;
 import com.concurrentperformance.ringingmaster.engine.touch.proof.Proof;
 import com.concurrentperformance.ringingmaster.fxui.desktop.proof.ProofManager;
 import com.concurrentperformance.ringingmaster.fxui.desktop.util.ColorManager;
+import javafx.application.Platform;
 import javafx.scene.paint.Color;
 
 /**
@@ -29,7 +30,7 @@ public class AnalysisStatusWindow extends NameValuePairTable {
 
 
 	public void setProofManager(ProofManager proofManager) {
-		proofManager.addListener(proof -> {
+		proofManager.addListener(proof -> Platform.runLater(() -> {
 			updateTouchTrue(proof);
 			updateTermination(proof);
 			updatePartCount(proof);
@@ -40,7 +41,9 @@ public class AnalysisStatusWindow extends NameValuePairTable {
 			updateEndRow(proof);
 			updateEndStroke(proof);
 			updateProofTime(proof);
-		});
+
+		}));
+
 
 		getItems().add(new NameValuePairModel(TOUCH_TRUE_PROPERTY_NAME));
 		getItems().add(new NameValuePairModel(TERMINATION_PROPERTY_NAME));

@@ -29,7 +29,7 @@ public class DocumentManager extends ConcurrentListenable<DocumentManagerListene
 	public void init() {
 		documentWindow.setTabClosingPolicy(TabPane.TabClosingPolicy.ALL_TABS);
 		documentWindow.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-			log.info("Got Tab " + newValue.toString());
+			log.info("Got Tab [{}]", newValue);
 			//TODO
 		});
 	}

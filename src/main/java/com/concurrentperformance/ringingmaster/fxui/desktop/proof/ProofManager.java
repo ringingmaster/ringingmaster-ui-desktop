@@ -51,7 +51,8 @@ public class ProofManager extends ConcurrentListenable<ProofManagerListener> imp
 								.setDaemon(true)
 								.build());
 	}
-
+	//			2) When adding method that is not valid (bell count) need to prevent it becomming active.
+//			3) Need to sort layout of name value pairs.
 	public void parseAndProve(Touch touch) {
 		parser.parseAndAnnotate(touch);
 

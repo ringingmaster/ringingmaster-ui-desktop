@@ -11,6 +11,8 @@ import javafx.scene.control.TabPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Optional;
+
 /**
  * TODO comments ???
  *
@@ -20,7 +22,7 @@ public class DocumentManager extends ConcurrentListenable<DocumentManagerListene
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-	private TouchDocument currentDocument = null;
+	private Optional<TouchDocument> currentDocument = Optional.empty();
 	private TabPane documentWindow;
 	private int docNumber = 0;
 
@@ -29,8 +31,11 @@ public class DocumentManager extends ConcurrentListenable<DocumentManagerListene
 	public void init() {
 		documentWindow.setTabClosingPolicy(TabPane.TabClosingPolicy.ALL_TABS);
 		documentWindow.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-			log.info("Got Tab [{}]", newValue);
-			//TODO
+			newValue.getContent();
+			if (newValue == null) {
+				currentDocument = Optional.empty();
+			}
+			fireUpdateDocument();
 		});
 	}
 
@@ -39,8 +44,9 @@ public class DocumentManager extends ConcurrentListenable<DocumentManagerListene
 		touchPanel.setDocumentManager(this);
 		createTab("New Touch #" + ++docNumber, touchPanel);
 
-		currentDocument = new TouchDocument(proofManager);// TODO SPRING should this be a spring builder?
-		currentDocument.addListener(touchDocument -> fireUpdateDocument());
+		currentDocument = Optional.of(new TouchDocument(proofManager));// TODO SPRING should this be a spring builder?
+		currentDocument.get().addListener(touchDocument -> fireUpdateDocument());
+
 		fireUpdateDocument();
 	}
 
@@ -58,7 +64,7 @@ public class DocumentManager extends ConcurrentListenable<DocumentManagerListene
 		}
 	}
 
-	public TouchDocument getCurrentDocument() {
+	public Optional<TouchDocument> getCurrentDocument() {
 		return currentDocument;
 	}
 

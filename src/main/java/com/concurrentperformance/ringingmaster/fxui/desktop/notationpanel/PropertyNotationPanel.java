@@ -65,10 +65,14 @@ public class PropertyNotationPanel extends NameValuePairTable implements Listena
 		}
 	}
 
-	private void rebuildMethodList(TouchDocument touchDocument) {
+	private void rebuildMethodList(Optional<TouchDocument> touchDocument) {
 		int selectedIndex = getSelectionModel().getSelectedIndex();
 		getItems().clear();
-		for (NotationBody notation : touchDocument.getSortedAllNotations()) {
+		if (!touchDocument.isPresent()) {
+			return;
+		}
+
+		for (NotationBody notation : touchDocument.get().getSortedAllNotations()) {
 			getItems().add(new NameValuePairModel(getDisplayName(notation)));
 		}
 
@@ -82,8 +86,11 @@ public class PropertyNotationPanel extends NameValuePairTable implements Listena
 		}
 	}
 
-	private boolean hasMethodListChanged(TouchDocument touchDocument) {
-		List<NotationBody> allNotations = touchDocument.getSortedAllNotations();
+	private boolean hasMethodListChanged(Optional<TouchDocument> touchDocument) {
+		if (!touchDocument.isPresent()) {
+			return (getItems().size() != 0);
+		}
+		List<NotationBody> allNotations = touchDocument.get().getSortedAllNotations();
 		for (NotationBody notation : allNotations) {
 			String name = getDisplayName(notation);
 			if (getItems().stream()
@@ -96,14 +103,18 @@ public class PropertyNotationPanel extends NameValuePairTable implements Listena
 		return (allNotations.size() != getItems().size());
 	}
 
-	private void updateMethodList(TouchDocument touchDocument) {
-		List<NotationBody> allNotations = touchDocument.getSortedAllNotations();
-		boolean spliced = touchDocument.isSpliced();
+	private void updateMethodList(Optional<TouchDocument> touchDocument) {
+		if (!touchDocument.isPresent()) {
+			return;
+		}
+
+		List<NotationBody> allNotations = touchDocument.get().getSortedAllNotations();
+		boolean spliced = touchDocument.get().isSpliced();
 
 		for (NotationBody notation : allNotations) {
 			String name = getDisplayName(notation);
 
-			if (notation.getNumberOfWorkingBells().getBellCount() > touchDocument.getNumberOfBells().getBellCount()) {
+			if (notation.getNumberOfWorkingBells().getBellCount() > touchDocument.get().getNumberOfBells().getBellCount()) {
 				updateDisplayProperty(name, "Too many bells", true);
 			}
 			else if (spliced) {
@@ -114,7 +125,7 @@ public class PropertyNotationPanel extends NameValuePairTable implements Listena
 					updateDisplayProperty(name, TouchDocument.SPLICED_TOKEN + " " + notation.getSpliceIdentifier(), false);
 				}
 			}
-			else if (notation == touchDocument.getSingleMethodActiveNotation()) {
+			else if (notation == touchDocument.get().getSingleMethodActiveNotation()) {
 				updateDisplayProperty(name, "<Active>", false);
 			}
 			else {
@@ -137,7 +148,11 @@ public class PropertyNotationPanel extends NameValuePairTable implements Listena
 
 
 	public NotationBody getNotation(int index) {
-		List<NotationBody> sortedAllNotations = documentManager.getCurrentDocument().getSortedAllNotations();
+		if (!documentManager.getCurrentDocument().isPresent()) {
+			return null;
+		}
+
+		List<NotationBody> sortedAllNotations = documentManager.getCurrentDocument().get().getSortedAllNotations();
 		if (index >= 0 && index < sortedAllNotations.size()) {
 			return sortedAllNotations.get(index);
 		}

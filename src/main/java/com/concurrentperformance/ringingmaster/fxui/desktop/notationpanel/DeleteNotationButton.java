@@ -2,12 +2,15 @@ package com.concurrentperformance.ringingmaster.fxui.desktop.notationpanel;
 
 import com.concurrentperformance.ringingmaster.engine.notation.NotationBody;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentmanager.DocumentManager;
+import com.concurrentperformance.ringingmaster.fxui.desktop.documentmodel.TouchDocument;
 import javafx.scene.control.Button;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Optional;
 
 /**
  * TODO Comments
@@ -28,6 +31,7 @@ public class DeleteNotationButton extends Button {
 	public DeleteNotationButton() {
 		super("", new ImageView(IMAGE));
 		setTooltip(TOOLTIP);
+		setDisable(true);
 	}
 
 	public void setDocumentManager(DocumentManager documentManager) {
@@ -49,7 +53,10 @@ public class DeleteNotationButton extends Button {
 		setOnAction(event -> {
 			int index = propertyNotationPanel.getSelectionModel().getSelectedIndex();
 			NotationBody notation =  propertyNotationPanel.getNotation(index);
-			documentManager.getCurrentDocument().removeNotation(notation);
+			Optional<TouchDocument> currentDocument = documentManager.getCurrentDocument();
+			if (currentDocument.isPresent()) {
+				currentDocument.get().removeNotation(notation);
+			}
 		});
 
 	}

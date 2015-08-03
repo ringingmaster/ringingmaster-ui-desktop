@@ -2,12 +2,15 @@ package com.concurrentperformance.ringingmaster.fxui.desktop.notationpanel;
 
 import com.concurrentperformance.ringingmaster.engine.notation.NotationBody;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentmanager.DocumentManager;
+import com.concurrentperformance.ringingmaster.fxui.desktop.documentmodel.TouchDocument;
 import javafx.scene.control.Button;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Optional;
 
 /**
  * TODO Comments
@@ -18,7 +21,7 @@ public class SetActiveNotationButton extends Button {
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 	public static final String TOOLTIP_BAST_TEXT = "Set active method";
-	public final Tooltip TOOLTIP = new Tooltip(TOOLTIP_BAST_TEXT);
+	public final Tooltip tooltip = new Tooltip(TOOLTIP_BAST_TEXT);
 
 	private static final Image IMAGE = new Image(SetActiveNotationButton.class.getResourceAsStream("/images/flag.png"));
 
@@ -26,28 +29,33 @@ public class SetActiveNotationButton extends Button {
 
 	public SetActiveNotationButton() {
 		super("", new ImageView(IMAGE));
-		setTooltip(TOOLTIP);
+		setTooltip(tooltip);
+		setDisable(true);
 	}
 
 	public void setPropertyNotationPanel(PropertyNotationPanel propertyNotationPanel) {
 		propertyNotationPanel.addListener(selectedNotation -> {
-					setDisable(!selectedNotation.isPresent() ||
-							!documentManager.getCurrentDocument().getSortedValidNotations().contains(selectedNotation.get()));
+				Optional<TouchDocument> currentDocument = documentManager.getCurrentDocument();
+				setDisable(!selectedNotation.isPresent() ||
+						   !currentDocument.isPresent() ||
+						   !currentDocument.get().getSortedValidNotations().contains(selectedNotation.get()));
 
-					setPressed(selectedNotation.isPresent() &&
-							documentManager.getCurrentDocument().getSingleMethodActiveNotation() == selectedNotation.get());
+				setPressed(selectedNotation.isPresent() &&
+						   currentDocument.isPresent() &&
+						   currentDocument.get().getSingleMethodActiveNotation() == selectedNotation.get());
 
-					if (selectedNotation.isPresent()) {
-						if (!documentManager.getCurrentDocument().isSpliced() &&
-								documentManager.getCurrentDocument().getSingleMethodActiveNotation() == selectedNotation.get()) {
-							TOOLTIP.setText("Set Spliced");
-						} else {
-							TOOLTIP.setText(TOOLTIP_BAST_TEXT + " '" + selectedNotation.get().getNameIncludingNumberOfBells() + "'");
-						}
+				if (selectedNotation.isPresent() &&
+					currentDocument.isPresent()){
+					if (!currentDocument.get().isSpliced() &&
+							currentDocument.get().getSingleMethodActiveNotation() == selectedNotation.get()) {
+						tooltip.setText("Set Spliced");
 					} else {
-						TOOLTIP.setText(TOOLTIP_BAST_TEXT);
+						tooltip.setText(TOOLTIP_BAST_TEXT + " '" + selectedNotation.get().getNameIncludingNumberOfBells() + "'");
 					}
+				} else {
+					tooltip.setText(TOOLTIP_BAST_TEXT);
 				}
+			}
 		);
 
 		setOnAction(event -> {
@@ -55,17 +63,17 @@ public class SetActiveNotationButton extends Button {
 			NotationBody selectedNotation = propertyNotationPanel.getNotation(index);
 
 			if (selectedNotation != null) {
-				if (documentManager.getCurrentDocument().isSpliced()) {
-					documentManager.getCurrentDocument().setSpliced(false);
-					documentManager.getCurrentDocument().setSingleMethodActiveNotation(selectedNotation);
+				if (documentManager.getCurrentDocument().get().isSpliced()) {
+					documentManager.getCurrentDocument().get().setSpliced(false);
+					documentManager.getCurrentDocument().get().setSingleMethodActiveNotation(selectedNotation);
 				}
 				else {
 					// Not Spliced
-					if (documentManager.getCurrentDocument().getSingleMethodActiveNotation() == selectedNotation) {
-						documentManager.getCurrentDocument().setSpliced(true);
+					if (documentManager.getCurrentDocument().get().getSingleMethodActiveNotation() == selectedNotation) {
+						documentManager.getCurrentDocument().get().setSpliced(true);
 					}
 					else {
-						documentManager.getCurrentDocument().setSingleMethodActiveNotation(selectedNotation);
+						documentManager.getCurrentDocument().get().setSingleMethodActiveNotation(selectedNotation);
 					}
 				}
 			}

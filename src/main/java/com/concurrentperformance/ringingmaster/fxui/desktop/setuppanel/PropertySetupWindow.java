@@ -19,6 +19,8 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Consumer;
 
 /**
  * TODO comments ???
@@ -56,33 +58,36 @@ public class PropertySetupWindow extends PropertyEditor {
 
 
 	public void init() {
+
+		buildSetupSection();
+		buildAdvancedSetupSection();
+		buildStartSection();
+		buildTerminationSection();
+
+
 		documentManager.addListener(touchDocument -> {
 			updateSetupSection(touchDocument);
 			updateAdvancedSetupSection(touchDocument);
 			updateStartSection(touchDocument);
 			updateTerminationSection(touchDocument);
 		});
-
-		buildSetupSection();
-		buildAdvancedSetupSection();
-		buildStartSection();
-		buildTerminationSection();
 	}
 
 	private void buildSetupSection() {
 		add( new TextPropertyValue(TITLE_PROPERTY_NAME));
 		((TextPropertyValue)findPropertyByName(TITLE_PROPERTY_NAME)).setListener((observable, oldValue, newValue) ->
-				documentManager.getCurrentDocument().setTitle(newValue), CallbackStyle.EVERY_KEYSTROKE);
+				updateTouchDocumentIfPresent(touchDocument -> touchDocument.setTitle(newValue)), CallbackStyle.EVERY_KEYSTROKE);
 
 		add( new TextPropertyValue(AUTHOR_PROPERTY_NAME));
 		((TextPropertyValue)findPropertyByName(AUTHOR_PROPERTY_NAME)).setListener((observable, oldValue, newValue) ->
-				documentManager.getCurrentDocument().setAuthor(newValue), CallbackStyle.EVERY_KEYSTROKE);
+				updateTouchDocumentIfPresent(touchDocument -> touchDocument.setAuthor(newValue)), CallbackStyle.EVERY_KEYSTROKE);
 
 		add( new SelectionPropertyValue(NUMBER_OF_BELLS_PROPERTY_NAME));
 		((SelectionPropertyValue)findPropertyByName(NUMBER_OF_BELLS_PROPERTY_NAME)).setListener((observable, oldValue, newValue) -> {
-			final NumberOfBells numberOfBells = NumberOfBells.values()[newValue.intValue()];
-			Platform.runLater(() -> documentManager.getCurrentDocument().setNumberOfBells(numberOfBells));
-
+			if (newValue.intValue() != -1) {
+				final NumberOfBells numberOfBells = NumberOfBells.values()[newValue.intValue()];
+				updateTouchDocumentIfPresent(touchDocument -> touchDocument.setNumberOfBells(numberOfBells));
+			}
 		});
 		final List<String> numberOfBellItems = new ArrayList<>();
 		for (NumberOfBells bells : NumberOfBells.values()) {
@@ -92,49 +97,62 @@ public class PropertySetupWindow extends PropertyEditor {
 
 		add( new SelectionPropertyValue(CALL_FROM_PROPERTY_NAME));
 		((SelectionPropertyValue)findPropertyByName(CALL_FROM_PROPERTY_NAME)).setListener((observable, oldValue, newValue) -> {
-			final Bell callFrom = Bell.values()[newValue.intValue()];
-			Platform.runLater(() -> documentManager.getCurrentDocument().setCallFrom(callFrom));
-
+			if (newValue.intValue() != -1) {
+				final Bell callFrom = Bell.values()[newValue.intValue()];
+				updateTouchDocumentIfPresent(touchDocument -> touchDocument.setCallFrom(callFrom));
+			}
 		});
 
 		add( new SelectionPropertyValue(ACTIVE_METHOD_PROPERTY_NAME));
 		((SelectionPropertyValue)findPropertyByName(ACTIVE_METHOD_PROPERTY_NAME)).setListener((observable, oldValue, newValue) ->
-				Platform.runLater(() -> setActiveValidNotation(newValue.intValue())));
+				updateTouchDocumentIfPresent(touchDocument -> {
+					int index = newValue.intValue();
+					if (index == 0) {
+						touchDocument.setSpliced(true);
+					} else {
+						final List<NotationBody> sortedNotationsBeingDisplayed = touchDocument.getSortedValidNotations();
+
+						final NotationBody selectedNotation = sortedNotationsBeingDisplayed.get(index - 1);// the -1 is the offset for the spliced row
+						touchDocument.setSingleMethodActiveNotation(selectedNotation);
+					}
+				}));
 
 		add( new SelectionPropertyValue(CALL_TYPE_PROPERTY_NAME));
 		((SelectionPropertyValue)findPropertyByName(CALL_TYPE_PROPERTY_NAME)).setListener((observable, oldValue, newValue) -> {
-			final TouchType touchType = TouchType.values()[newValue.intValue()];
-			Platform.runLater(() -> documentManager.getCurrentDocument().setTouchType(touchType));
-
+			if (newValue.intValue() != -1) {
+				final TouchType touchType = TouchType.values()[newValue.intValue()];
+				updateTouchDocumentIfPresent(touchDocument -> touchDocument.setTouchType(touchType));
+			}
 		});
 
 		add( new TextPropertyValue(PLAIN_LEAD_TOKEN_PROPERTY_NAME));
 		((TextPropertyValue)findPropertyByName(PLAIN_LEAD_TOKEN_PROPERTY_NAME)).setListener((observable, oldValue, newValue) ->
-				Platform.runLater(() -> documentManager.getCurrentDocument().setPlainLeadToken(newValue)),
-				CallbackStyle.EVERY_KEYSTROKE);
+				updateTouchDocumentIfPresent(touchDocument -> touchDocument.setPlainLeadToken(newValue)), CallbackStyle.EVERY_KEYSTROKE);
 	}
 
-	private void updateSetupSection(TouchDocument touchDocument) {
-		final String title = touchDocument.getTitle();
+	private void updateSetupSection(Optional<TouchDocument> touchDocument) {
+
+		final String title = touchDocument.isPresent()? touchDocument.get().getTitle():"";
 		((TextPropertyValue)findPropertyByName(TITLE_PROPERTY_NAME)).setValue(title);
 
-		final String author = touchDocument.getAuthor();
+		final String author = touchDocument.isPresent()? touchDocument.get().getAuthor():"";
 		((TextPropertyValue)findPropertyByName(AUTHOR_PROPERTY_NAME)).setValue(author);
 
-		final NumberOfBells numberOfBells = touchDocument.getNumberOfBells();
-		((SelectionPropertyValue)findPropertyByName(NUMBER_OF_BELLS_PROPERTY_NAME)).setSelectedIndex(numberOfBells.ordinal());
+		final int numberOfBellsIndex = touchDocument.isPresent()? touchDocument.get().getNumberOfBells().ordinal():-1;
+		((SelectionPropertyValue)findPropertyByName(NUMBER_OF_BELLS_PROPERTY_NAME)).setSelectedIndex(numberOfBellsIndex);
 
 		final List<String> callFromItems = new ArrayList<>();
-		for (Bell bell : Bell.values()) {
-			if (bell.getZeroBasedBell() <= numberOfBells.getTenor().getZeroBasedBell()) {
-				callFromItems.add(bell.getDisplayString());
+		if (touchDocument.isPresent()) {
+			NumberOfBells numberOfBells = touchDocument.get().getNumberOfBells();
+			for (Bell bell : Bell.values()) {
+				if (bell.getZeroBasedBell() <= numberOfBells.getTenor().getZeroBasedBell()) {
+					callFromItems.add(bell.getDisplayString());
+				}
 			}
+			((SelectionPropertyValue) findPropertyByName(CALL_FROM_PROPERTY_NAME)).setItems(callFromItems);
 		}
-		((SelectionPropertyValue)findPropertyByName(CALL_FROM_PROPERTY_NAME)).setItems(callFromItems);
-		final Bell callFrom = touchDocument.getCallFrom();
-		((SelectionPropertyValue)findPropertyByName(CALL_FROM_PROPERTY_NAME)).setSelectedIndex(callFrom.ordinal());
-
-
+		final int callFromIndex = touchDocument.isPresent()? touchDocument.get().getCallFrom().ordinal():-1;
+		((SelectionPropertyValue)findPropertyByName(CALL_FROM_PROPERTY_NAME)).setSelectedIndex(callFromIndex);
 
 		final List<String> validNotationItems = getValidNotations(touchDocument);
 		int selectedNotationIndex = getActiveValidNotationIndex(touchDocument);
@@ -146,36 +164,43 @@ public class PropertySetupWindow extends PropertyEditor {
 			touchTypes.add(touchType.getName());
 		}
 		((SelectionPropertyValue)findPropertyByName(CALL_TYPE_PROPERTY_NAME)).setItems(touchTypes);
-		final TouchType touchType = touchDocument.getTouchType();
-		((SelectionPropertyValue)findPropertyByName(CALL_TYPE_PROPERTY_NAME)).setSelectedIndex(touchType.ordinal());
+		final int touchTypeIndex = touchDocument.isPresent()? touchDocument.get().getTouchType().ordinal():-1;
+		((SelectionPropertyValue)findPropertyByName(CALL_TYPE_PROPERTY_NAME)).setSelectedIndex(touchTypeIndex);
 
-		final String plainLeadToken = touchDocument.getPlainLeadToken();
+		final String plainLeadToken = touchDocument.isPresent()? touchDocument.get().getPlainLeadToken():"";
 		((TextPropertyValue)findPropertyByName(PLAIN_LEAD_TOKEN_PROPERTY_NAME)).setValue(plainLeadToken);
-		findPropertyByName(PLAIN_LEAD_TOKEN_PROPERTY_NAME).setDisable(touchType == TouchType.COURSE_BASED);
+		findPropertyByName(PLAIN_LEAD_TOKEN_PROPERTY_NAME).setDisable(touchDocument.isPresent() &&
+																		touchDocument.get().getTouchType() == TouchType.COURSE_BASED);
 	}
 
-	public List<String> getValidNotations(TouchDocument touchDocument) {
-		final List<NotationBody> orderedNotations = touchDocument.getSortedValidNotations();
-
+	public List<String> getValidNotations(Optional<TouchDocument> touchDocument) {
 		List<String> result = Lists.newArrayList();
 
-		result.add(TouchDocument.SPLICED_TOKEN);
+		if (touchDocument.isPresent()) {
+			final List<NotationBody> orderedNotations = touchDocument.get().getSortedValidNotations();
 
-		for (int index = 0;index < orderedNotations.size();index++) {
-			final NotationBody notation = orderedNotations.get(index);
-			result.add(notation.getNameIncludingNumberOfBells());
+			result.add(TouchDocument.SPLICED_TOKEN);
+
+			for (int index = 0; index < orderedNotations.size(); index++) {
+				final NotationBody notation = orderedNotations.get(index);
+				result.add(notation.getNameIncludingNumberOfBells());
+			}
 		}
 
 		return result;
 	}
 
-	private int getActiveValidNotationIndex(TouchDocument touchDocument) {
+	private int getActiveValidNotationIndex(Optional<TouchDocument> touchDocument) {
 
-		if (touchDocument.isSpliced()) {
+		if (!touchDocument.isPresent()) {
+			return -1;
+		}
+
+		if (touchDocument.get().isSpliced()) {
 			return 0;
 		}
-		final NotationBody activeNotation = touchDocument.getSingleMethodActiveNotation();
-		final List<NotationBody> sortedNotationsBeingDisplayed = touchDocument.getSortedValidNotations();
+		final NotationBody activeNotation = touchDocument.get().getSingleMethodActiveNotation();
+		final List<NotationBody> sortedNotationsBeingDisplayed = touchDocument.get().getSortedValidNotations();
 		for (int index = 0;index<sortedNotationsBeingDisplayed.size();index++) {
 			final NotationBody notation = sortedNotationsBeingDisplayed.get(index);
 			if (notation == activeNotation) {
@@ -185,26 +210,11 @@ public class PropertySetupWindow extends PropertyEditor {
 		return -1;
 	}
 
-	private void setActiveValidNotation(int index) {
-		TouchDocument touchDocument = documentManager.getCurrentDocument();
-
-		if (index==0) {
-			touchDocument.setSpliced(true);
-		}
-		else {
-			final List<NotationBody> sortedNotationsBeingDisplayed = touchDocument.getSortedValidNotations();
-
-			final NotationBody selectedNotation = sortedNotationsBeingDisplayed.get(index -1);// the -1 is the offset for the spliced row
-			touchDocument.setSingleMethodActiveNotation(selectedNotation);
-		}
-
-	}
-
 	private void buildAdvancedSetupSection() {
 		// TODO
 	}
 
-	private void updateAdvancedSetupSection(TouchDocument touchDocument) {
+	private void updateAdvancedSetupSection(Optional<TouchDocument> touchDocument) {
 		//TODO
 
 	}
@@ -212,34 +222,33 @@ public class PropertySetupWindow extends PropertyEditor {
 	private void buildStartSection() {
 		add(START_GROUP_NAME, new TextPropertyValue(START_WITH_CHANGE_PROPERTY_NAME));
 		((TextPropertyValue)findPropertyByName(START_WITH_CHANGE_PROPERTY_NAME)).setListener((observable, oldValue, newValue) ->
-				Platform.runLater(() -> documentManager.getCurrentDocument().setStartChange(newValue)),
-				CallbackStyle.WHEN_FINISHED);
+				updateTouchDocumentIfPresent(touchDocument -> touchDocument.setStartChange(newValue)), CallbackStyle.WHEN_FINISHED);
 
 		add(START_GROUP_NAME, new IntegerPropertyValue(START_AT_ROW_PROPERTY_NAME));
 		((IntegerPropertyValue)findPropertyByName(START_AT_ROW_PROPERTY_NAME)).setListener((observable, oldValue, newValue) ->
-				Platform.runLater(() -> documentManager.getCurrentDocument().setStartAtRow(newValue.intValue())), CallbackStyle.WHEN_FINISHED);
+				updateTouchDocumentIfPresent(touchDocument -> touchDocument.setStartAtRow(newValue.intValue())), CallbackStyle.WHEN_FINISHED);
 
 		add(START_GROUP_NAME, new SelectionPropertyValue(START_STROKE_PROPERTY_NAME));
-		((SelectionPropertyValue)findPropertyByName(START_STROKE_PROPERTY_NAME)).setListener((observable, oldValue, newValue) ->
-				Platform.runLater(() -> {
-			final Stroke startStroke = Stroke.values()[newValue.intValue()];
-			documentManager.getCurrentDocument().setStartStroke(startStroke);
-		}));
+		((SelectionPropertyValue)findPropertyByName(START_STROKE_PROPERTY_NAME)).setListener((observable, oldValue, newValue) -> {
+			if (newValue.intValue() != -1) {
+				final Stroke startStroke = Stroke.values()[newValue.intValue()];
+				updateTouchDocumentIfPresent(touchDocument -> touchDocument.setStartStroke(startStroke));
+			}
+		});
 
 		add(START_GROUP_NAME, new TextPropertyValue(START_NOTATION_PROPERTY_NAME));
 		((TextPropertyValue)findPropertyByName(START_NOTATION_PROPERTY_NAME)).setListener((observable, oldValue, newValue) ->
-				Platform.runLater(() -> documentManager.getCurrentDocument().setStartNotation(newValue)),
-				CallbackStyle.WHEN_FINISHED);
+			updateTouchDocumentIfPresent(touchDocument -> touchDocument.setStartNotation(newValue)), CallbackStyle.WHEN_FINISHED);
 
 		showGroupByName(START_GROUP_NAME, false); // TODO save state in app
 
 	}
 
-	private void updateStartSection(TouchDocument touchDocument) {
-		final String startChange = touchDocument.getStartChange();
+	private void updateStartSection(Optional<TouchDocument> touchDocument) {
+		final String startChange = touchDocument.isPresent()? touchDocument.get().getStartChange():"";
 		((TextPropertyValue)findPropertyByName(START_WITH_CHANGE_PROPERTY_NAME)).setValue(startChange);
 
-		Integer startAtRow = touchDocument.getStartAtRow();
+		int startAtRow = touchDocument.isPresent()? touchDocument.get().getStartAtRow():0;
 		((IntegerPropertyValue)findPropertyByName(START_AT_ROW_PROPERTY_NAME)).setValue(startAtRow);
 
 		final List<String> startAtStrokeItems = new ArrayList<>();
@@ -247,58 +256,62 @@ public class PropertySetupWindow extends PropertyEditor {
 			startAtStrokeItems.add(stroke.getDisplayString());
 		}
 		((SelectionPropertyValue)findPropertyByName(START_STROKE_PROPERTY_NAME)).setItems(startAtStrokeItems);
-		final Stroke startStroke = touchDocument.getStartStroke();
-		((SelectionPropertyValue)findPropertyByName(START_STROKE_PROPERTY_NAME)).setSelectedIndex(startStroke.ordinal());
+		final int startStroke = touchDocument.isPresent()? touchDocument.get().getStartStroke().ordinal():-1;
+		((SelectionPropertyValue)findPropertyByName(START_STROKE_PROPERTY_NAME)).setSelectedIndex(startStroke);
 
-		final String startNotation = touchDocument.getStartNotation();
+		final String startNotation = touchDocument.isPresent()? touchDocument.get().getStartNotation():"";
 		((TextPropertyValue)findPropertyByName(START_NOTATION_PROPERTY_NAME)).setValue(startNotation);
 	}
 
 	private void buildTerminationSection() {
 		add(TERMINATION_GROUP_NAME, new TextPropertyValue(TERMINATION_WITH_CHANGE_PROPERTY_NAME));
 		((TextPropertyValue)findPropertyByName(TERMINATION_WITH_CHANGE_PROPERTY_NAME)).setListener((observable, oldValue, newValue) ->
-				Platform.runLater(() -> documentManager.getCurrentDocument().setTerminationChange(newValue)),
-				CallbackStyle.WHEN_FINISHED);
+				updateTouchDocumentIfPresent(touchDocument -> touchDocument.setTerminationChange(newValue)),CallbackStyle.WHEN_FINISHED);
 
 		add(TERMINATION_GROUP_NAME, new IntegerPropertyValue(TERMINATION_ROW_LIMIT_PROPERTY_NAME));
 		((IntegerPropertyValue)findPropertyByName(TERMINATION_ROW_LIMIT_PROPERTY_NAME)).setListener((observable, oldValue, newValue) ->
-				Platform.runLater(() -> documentManager.getCurrentDocument().setTerminationMaxRows(newValue == null?null:newValue.intValue())),
-				CallbackStyle.WHEN_FINISHED);
+				updateTouchDocumentIfPresent(touchDocument -> touchDocument.setTerminationMaxRows(newValue == null ? null : newValue.intValue())), CallbackStyle.WHEN_FINISHED);
 
 		add(TERMINATION_GROUP_NAME, new IntegerPropertyValue(TERMINATION_LEAD_LIMIT_PROPERTY_NAME));
 		((IntegerPropertyValue)findPropertyByName(TERMINATION_LEAD_LIMIT_PROPERTY_NAME)).setListener((observable, oldValue, newValue) ->
-						Platform.runLater(() -> documentManager.getCurrentDocument().setTerminationMaxLeads(newValue == null ? null : newValue.intValue())),
-				CallbackStyle.WHEN_FINISHED);
+				updateTouchDocumentIfPresent(touchDocument -> touchDocument.setTerminationMaxLeads(newValue == null ? null : newValue.intValue())), CallbackStyle.WHEN_FINISHED);
 
 		add(TERMINATION_GROUP_NAME, new IntegerPropertyValue(TERMINATION_PART_LIMIT_PROPERTY_NAME));
 		((IntegerPropertyValue)findPropertyByName(TERMINATION_PART_LIMIT_PROPERTY_NAME)).setListener((observable, oldValue, newValue) ->
-						Platform.runLater(() -> documentManager.getCurrentDocument().setTerminationMaxParts(newValue == null ? null : newValue.intValue())),
-				CallbackStyle.WHEN_FINISHED);
+				updateTouchDocumentIfPresent(touchDocument -> touchDocument.setTerminationMaxParts(newValue == null ? null : newValue.intValue())), CallbackStyle.WHEN_FINISHED);
 
 		add(TERMINATION_GROUP_NAME, new IntegerPropertyValue(TERMINATION_CIRCULAR_TOUCH_LIMIT_PROPERTY_NAME));
 		((IntegerPropertyValue)findPropertyByName(TERMINATION_CIRCULAR_TOUCH_LIMIT_PROPERTY_NAME)).setListener((observable, oldValue, newValue) ->
-						Platform.runLater(() -> documentManager.getCurrentDocument().setTerminationCircularTouch(newValue == null ? null : newValue.intValue())),
-				CallbackStyle.WHEN_FINISHED);
+				updateTouchDocumentIfPresent(touchDocument -> touchDocument.setTerminationCircularTouch(newValue == null ? null : newValue.intValue())), CallbackStyle.WHEN_FINISHED);
 
 		showGroupByName(TERMINATION_GROUP_NAME, false); // TODO save state in app
 	}
 
-	private void updateTerminationSection(TouchDocument touchDocument) {
-		final String terminationChange = touchDocument.getTerminationChange();
+	private void updateTerminationSection(Optional<TouchDocument> touchDocument) {
+		final String terminationChange = touchDocument.isPresent()? touchDocument.get().getTerminationChange():"";
 		((TextPropertyValue)findPropertyByName(TERMINATION_WITH_CHANGE_PROPERTY_NAME)).setValue(terminationChange);
 
-		int terminationRowLimit = touchDocument.getTerminationMaxRows();
+		int terminationRowLimit = touchDocument.isPresent()? touchDocument.get().getTerminationMaxRows():0;
 		((IntegerPropertyValue)findPropertyByName(TERMINATION_ROW_LIMIT_PROPERTY_NAME)).setValue(terminationRowLimit);
 
-		Integer terminationLeadLimit = touchDocument.getTerminationMaxLeads();
+		Integer terminationLeadLimit = touchDocument.isPresent()? touchDocument.get().getTerminationMaxLeads():null;
 		((IntegerPropertyValue)findPropertyByName(TERMINATION_LEAD_LIMIT_PROPERTY_NAME)).setValue(terminationLeadLimit);
 
-		Integer terminationPartLimit = touchDocument.getTerminationMaxParts();
+		Integer terminationPartLimit = touchDocument.isPresent()? touchDocument.get().getTerminationMaxParts():null;
 		((IntegerPropertyValue)findPropertyByName(TERMINATION_PART_LIMIT_PROPERTY_NAME)).setValue(terminationPartLimit);
 
-		Integer terminationCircularTouchLimit = touchDocument.getTerminationCircularTouch();
+		Integer terminationCircularTouchLimit = touchDocument.isPresent()? touchDocument.get().getTerminationCircularTouch():null;
 		((IntegerPropertyValue)findPropertyByName(TERMINATION_CIRCULAR_TOUCH_LIMIT_PROPERTY_NAME)).setValue(terminationCircularTouchLimit);
 
+	}
+
+	void updateTouchDocumentIfPresent(Consumer<TouchDocument> consumer) {
+		Optional<TouchDocument> currentDocument = documentManager.getCurrentDocument();
+		if (currentDocument.isPresent()) {
+			// The runLater is to prevent the UI from continuously applying the same wrong update when loosing focus
+			// and switching focus to an error window.
+			Platform.runLater(() -> consumer.accept(currentDocument.get()));
+		}
 	}
 
 	public void setDocumentManager(DocumentManager documentManager) {

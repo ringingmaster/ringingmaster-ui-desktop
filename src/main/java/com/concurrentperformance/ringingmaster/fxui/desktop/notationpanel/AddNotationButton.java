@@ -26,15 +26,19 @@ public class AddNotationButton extends Button {
 	public AddNotationButton() {
 		super("", new ImageView(IMAGE));
 		setTooltip(new Tooltip("Add a new method"));
+		setDisable(true);
 	}
 
 	public void setDocumentManager(DocumentManager documentManager) {
 		setOnAction(event -> {
-			NumberOfBells numberOfBells = documentManager.getCurrentDocument().getNumberOfBells();
+			if (!documentManager.getCurrentDocument().isPresent()) {
+				return;
+			}
+			NumberOfBells numberOfBells = documentManager.getCurrentDocument().get().getNumberOfBells();
 
 			notationEditorDialogBuilder.newNotationShowDialog(numberOfBells, result -> {
 				log.info("AddMethodButton - adding", result.toString());
-				return documentManager.getCurrentDocument().addNotation(result);
+				return documentManager.getCurrentDocument().get().addNotation(result);
 			});
 		});
 	}

@@ -31,7 +31,7 @@ public class EditNotationButton extends Button {
 	public EditNotationButton() {
 		super("", new ImageView(IMAGE));
 		setTooltip(TOOLTIP);
-
+		setDisable(true);
 	}
 
 	public void setDocumentManager(DocumentManager documentManager) {
@@ -57,12 +57,16 @@ public class EditNotationButton extends Button {
 	}
 
 	public void doEditCurrentSelectedNotation() {
+		if (!documentManager.getCurrentDocument().isPresent()) {
+			return;
+		}
+
 		int index = propertyNotationPanel.getSelectionModel().getSelectedIndex();
 		NotationBody notation =  propertyNotationPanel.getNotation(index);
 		if (notation != null) {
 			notationEditorDialogBuilder.editNotationShowDialog(notation, result -> {
 				log.info("EditNotationButton - adding", result.toString());
-				documentManager.getCurrentDocument().exchangeNotationAfterEdit(notation, result);
+				documentManager.getCurrentDocument().get().exchangeNotationAfterEdit(notation, result);
 				// TODO what checks do we need here?
 				return true; //TODO common this code from double click -
 			});

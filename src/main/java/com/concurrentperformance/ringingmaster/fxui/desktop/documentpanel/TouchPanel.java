@@ -41,14 +41,18 @@ public class TouchPanel extends ScrollPane {
 	}
 
 	public void setDocumentManager(DocumentManager documentManager) {
+		// TODO, should this be listening ? or should it be tied together in a builder
+
 		documentManager.addListener(document -> {
-			titlePane.setText(document.getTitle(), document.getAuthor());
+			if (document.isPresent()) {
+				titlePane.setText(document.get().getTitle(), document.get().getAuthor());
 
-			GridModel gridModel = document.getMainGridModel();
-			gridPane.setModel(gridModel);
+				GridModel gridModel = document.get().getMainGridModel();
+				gridPane.setModel(gridModel);
 
-			List<GridModel> gridModels = document.getDefinitionGridModels();
-			definitionPane.setModels(gridModels);
+				List<GridModel> gridModels = document.get().getDefinitionGridModels();
+				definitionPane.setModels(gridModels);
+			}
 		});
 	}
 

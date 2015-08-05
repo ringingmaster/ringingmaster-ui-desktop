@@ -184,5 +184,6 @@ public class AnalysisStatusWindow extends NameValuePairTable {
 		getItems().stream()
 				.filter(columnDescriptor -> columnDescriptor.getName().getText().equals(propertyName))
 				.forEach(pair -> pair.setValue(new NameValueColumnDescriptor(value, valueColor, false)));
+		resizeColumns();
 	}
 }

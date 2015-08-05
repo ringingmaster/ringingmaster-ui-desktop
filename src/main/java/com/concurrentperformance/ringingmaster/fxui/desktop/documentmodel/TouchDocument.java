@@ -17,6 +17,9 @@ import com.concurrentperformance.ringingmaster.engine.touch.container.TouchType;
 import com.concurrentperformance.ringingmaster.engine.touch.container.impl.TouchBuilder;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentmodel.definitiongrid.DefinitionGridModel;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentmodel.maingrid.MainGridModel;
+import com.concurrentperformance.ringingmaster.fxui.desktop.documentpanel.DefinitionPane;
+import com.concurrentperformance.ringingmaster.fxui.desktop.documentpanel.TitlePane;
+import com.concurrentperformance.ringingmaster.fxui.desktop.documentpanel.grid.canvas.GridPane;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentpanel.grid.model.GridModel;
 import com.concurrentperformance.ringingmaster.fxui.desktop.proof.ProofManager;
 import com.concurrentperformance.ringingmaster.ui.common.TouchStyle;
@@ -26,8 +29,15 @@ import com.google.common.base.Optional;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import javafx.application.Platform;
+import javafx.geometry.Insets;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,30 +55,57 @@ import static com.google.common.base.Preconditions.checkNotNull;
  *
  * @author Lake
  */
-public class TouchDocument extends ConcurrentListenable<TouchDocumentListener> implements Listenable<TouchDocumentListener> {
+public class TouchDocument extends ScrollPane implements Listenable<TouchDocumentListener> {
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 	public static final String SPLICED_TOKEN = "<Spliced>";
 
-	private final Touch touch;
+	private Touch touch;
 	private final TouchStyle touchStyle = new TouchStyle();
 
-	private final MainGridModel mainGridModel;
+	private MainGridModel mainGridModel;
 	private final List<GridModel> definitionModels = new ArrayList<>();
 
-	private final ProofManager proofManager;
+	private ProofManager proofManager;
 
-	public TouchDocument(ProofManager proofManager) {
-		this.proofManager = proofManager;
+	// UI components
+	private final TitlePane titlePane = new TitlePane();
+	private final GridPane gridPane = new GridPane("Main");
+	private final DefinitionPane definitionPane = new DefinitionPane();
+
+	private final ConcurrentListenable<TouchDocumentListener> listenerDelegate = new ConcurrentListenable<>();
+
+
+	public void init() {
+		layoutNodes();
 
 		//TODO all this must be persisted.
-		touch = createDummyTouch();
+		touch = createDummyTouch(); //TODO this should load from a document.
 		parseAndProve();
 
 		configureDefinitionModels();
 
 		mainGridModel = new MainGridModel(this, touch);
+
+		//TODO is this lot updated?
+		titlePane.setText(getTitle(), getAuthor());
+		gridPane.setModel(mainGridModel);
+		definitionPane.setModels(definitionModels);
+	}
+
+	private void layoutNodes() {
+		VBox verticalLayout = new VBox(titlePane, gridPane, definitionPane);
+		verticalLayout.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
+		verticalLayout.setSpacing(20.0);
+
+		setContent(verticalLayout);
+		setHbarPolicy(ScrollBarPolicy.AS_NEEDED);
+		setVbarPolicy(ScrollBarPolicy.AS_NEEDED);
+
+		setFitToHeight(true);
+		setFitToWidth(false);
+		setFocusTraversable(false);
 	}
 
 	public String getTitle() {
@@ -579,10 +616,6 @@ public class TouchDocument extends ConcurrentListenable<TouchDocumentListener> i
 		fireDocumentContentChanged();
 	}
 
-	public GridModel getMainGridModel() {
-		return mainGridModel;
-	}
-
 	private void configureDefinitionModels() {
 
 		final Set<TouchDefinition> definitions = touch.getDefinitions();
@@ -594,14 +627,6 @@ public class TouchDocument extends ConcurrentListenable<TouchDocumentListener> i
 
 	public List<GridModel> getDefinitionGridModels() {
 		return definitionModels;
-	}
-
-	private void fireDocumentContentChanged() {
-		Platform.runLater(() -> {
-			for (TouchDocumentListener touchDocumentListener : getListeners()) {
-				touchDocumentListener.touchDocumentListener_documentContentChanged(TouchDocument.this);
-			}
-		});
 	}
 
 	public TouchStyle getTouchStyle() {
@@ -714,5 +739,20 @@ public class TouchDocument extends ConcurrentListenable<TouchDocumentListener> i
 		touch.collapseEmptyRowsAndColumns();
 	}
 
+	public void setProofManager(ProofManager proofManager) {
+		this.proofManager = proofManager;
+	}
 
+	@Override
+	public void addListener(TouchDocumentListener listener) {
+		listenerDelegate.addListener(listener);
+	}
+
+	private void fireDocumentContentChanged() {
+		Platform.runLater(() -> {
+			for (TouchDocumentListener touchDocumentListener : listenerDelegate.getListeners()) {
+				touchDocumentListener.touchDocumentListener_documentContentChanged(TouchDocument.this);
+			}
+		});
+	}
 }

@@ -19,4 +19,6 @@
           p:analysisRightWindow-ref="analysisWindow.right"
           init-method="layoutWindows"/>
 
+    <bean class="com.concurrentperformance.ringingmaster.fxui.desktop.beanfactory.SpringBeanFactory"/>
+
 </beans>

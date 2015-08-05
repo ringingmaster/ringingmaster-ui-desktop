@@ -36,11 +36,7 @@ public class PropertyNotationPanel extends NameValuePairTable implements Listena
 	public void setDocumentManager(DocumentManager documentManager) {
 		this.documentManager = documentManager;
 		documentManager.addListener(touchDocument -> {
-			if (hasMethodListChanged(touchDocument)) {
-				rebuildMethodList(touchDocument);
-			}
-			updateMethodList(touchDocument);
-			fireSelectionChange();
+			updateToReflectDocument(touchDocument);
 		});
 
 		setOnMouseClicked(event -> {
@@ -52,6 +48,14 @@ public class PropertyNotationPanel extends NameValuePairTable implements Listena
 		getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
 			fireSelectionChange();
 		});
+	}
+
+	private void updateToReflectDocument(Optional<TouchDocument> touchDocument) {
+		if (hasMethodListChanged(touchDocument)) {
+			rebuildMethodList(touchDocument);
+		}
+		updateMethodList(touchDocument);
+		fireSelectionChange();
 	}
 
 	private void fireSelectionChange() {

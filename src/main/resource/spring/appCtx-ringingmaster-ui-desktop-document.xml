@@ -6,11 +6,17 @@
        xmlns:c="http://www.springframework.org/schema/c"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
-       <bean id="documentManager" class="com.concurrentperformance.ringingmaster.fxui.desktop.documentmanager.DocumentManager"
-             p:documentWindow-ref="documentWindow"
-             init-method="init"/>
+    <bean id="documentManager" class="com.concurrentperformance.ringingmaster.fxui.desktop.documentmanager.DocumentManager"
+         p:documentWindow-ref="documentWindow"
+         init-method="init"/>
 
-       <bean id="documentWindow" class="javafx.scene.control.TabPane" autowire="no"/>
+    <bean id="documentWindow" class="javafx.scene.control.TabPane" autowire="no"/>
+
+    <bean class="com.concurrentperformance.ringingmaster.fxui.desktop.documentmodel.TouchDocument"
+          p:proofManager-ref="proofManager"
+          init-method="init"
+          scope="prototype"
+          autowire="no"/>
 
 
 </beans>

@@ -66,7 +66,7 @@ public class ProofManager extends ConcurrentListenable<ProofManagerListener> imp
 			Proof proof = compiler.compile(true);
 			final long currentProofId = nextProofId.get();
 			if (proofId == currentProofId) {
-				updateProofState(proof);
+				fireUpdateProofState(proof);
 			}
 			else {
 				log.info("Ignoring finished proof [{}] as not current [{}]", proofId, currentProofId); //TODO need a mech of cancelling a proof mid term.
@@ -75,7 +75,7 @@ public class ProofManager extends ConcurrentListenable<ProofManagerListener> imp
 		});
 	}
 
-	private void updateProofState(final Proof proof) {
+	private void fireUpdateProofState(final Proof proof) {
 
 		checkNotNull(proof);
 		updateExecutor.execute(() -> {

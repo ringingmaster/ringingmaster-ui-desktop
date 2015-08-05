@@ -7,5 +7,5 @@ package com.concurrentperformance.ringingmaster.fxui.desktop.documentmodel;
  */
 public interface TouchDocumentListener {
 
-	public void touchDocumentListener_documentContentChanged(TouchDocument touchDocument);
+	void touchDocumentListener_documentContentChanged(TouchDocument touchDocument);
 }

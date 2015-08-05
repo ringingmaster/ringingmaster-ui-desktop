@@ -53,8 +53,7 @@ public class MainParentWindow extends VBox {
 		VBox.setVgrow(topBottomSplit, Priority.ALWAYS);
 		VBox.setVgrow(statusBar, Priority.NEVER);
 
-	//	DocumentManager.buildNewDocument();
-	//	DocumentManager.buildNewDocument();
+	//TODO	DocumentManager.buildNewDocument();
 	}
 
 

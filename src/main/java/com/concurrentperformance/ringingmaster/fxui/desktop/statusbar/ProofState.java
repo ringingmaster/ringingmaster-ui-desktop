@@ -18,27 +18,28 @@ public class ProofState extends ImageView {
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 	private final Image proofTick = new Image(this.getClass().getResourceAsStream("/images/proof_tick.png"));
-	private final Image proofWait = new Image(this.getClass().getResourceAsStream("/images/proof_wait.png"));
+	private final Image proofWait = new Image(this.getClass().getResourceAsStream("/images/proof_wait.png"));//TODO could make this a question mark.
 	private final Image proofCross = new Image(this.getClass().getResourceAsStream("/images/proof_cross.png"));
 
 	public void setProofManager(ProofManager proofManager) {
-		proofManager.addListener(proof -> Platform.runLater(() -> {
-			if (proof.getTerminationReason() == ProofTerminationReason.INVALID_TOUCH) {
-				updateImage(proofWait);//TODO could make this a question mark.
-			}
-			else if (proof.getAnalysis().isPresent()) {
-				if (proof.getAnalysis().get().isTrueTouch()) {
-					updateImage(proofTick);
-				}
-				else {
-					updateImage(proofCross);
-				}
+		proofManager.addListener(proof -> {
+			if (!proof.isPresent()) {
+				updateImage(null);
 			}
 			else {
-				updateImage(proofWait);
+				if (proof.get().getTerminationReason() == ProofTerminationReason.INVALID_TOUCH) {
+					updateImage(proofWait);
+				} else if (proof.get().getAnalysis().isPresent()) {
+					if (proof.get().getAnalysis().get().isTrueTouch()) {
+						updateImage(proofTick);
+					} else {
+						updateImage(proofCross);
+					}
+				} else {
+					updateImage(proofWait);
+				}
 			}
-
-		}));
+		});
 	}
 
 	private void updateImage(Image image) {

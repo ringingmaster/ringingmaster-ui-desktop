@@ -1,6 +1,7 @@
 package com.concurrentperformance.ringingmaster.fxui.desktop.documentmanager;
 
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentmodel.TouchDocument;
+import com.concurrentperformance.ringingmaster.fxui.desktop.proof.ProofManager;
 import com.concurrentperformance.util.beanfactory.BeanFactory;
 import com.concurrentperformance.util.listener.ConcurrentListenable;
 import com.concurrentperformance.util.listener.Listenable;
@@ -25,6 +26,7 @@ public class DocumentManager extends ConcurrentListenable<DocumentManagerListene
 	private TabPane documentWindow;
 	private int docNumber = 0;
 
+	private ProofManager proofManager;
 	private BeanFactory beanFactory;
 
 	public void init() {
@@ -33,6 +35,7 @@ public class DocumentManager extends ConcurrentListenable<DocumentManagerListene
 			log.info("Tab " + newValue);
 			if (newValue == null) {
 				currentDocument = Optional.empty();
+				proofManager.parseAndProve(null);
 			}
 			else {
 				TouchDocument touchDocument = (TouchDocument) newValue.getContent();
@@ -73,6 +76,10 @@ public class DocumentManager extends ConcurrentListenable<DocumentManagerListene
 
 	public void setDocumentWindow(TabPane documentWindow) {
 		this.documentWindow = documentWindow;
+	}
+
+	public void setProofManager(ProofManager proofManager) {
+		this.proofManager = proofManager;
 	}
 
 	public void setBeanFactory(BeanFactory beanFactory) {

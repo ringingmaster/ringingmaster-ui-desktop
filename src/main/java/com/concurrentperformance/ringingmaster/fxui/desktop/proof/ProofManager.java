@@ -2,16 +2,17 @@ package com.concurrentperformance.ringingmaster.fxui.desktop.proof;
 
 import com.concurrentperformance.ringingmaster.engine.touch.compiler.Compiler;
 import com.concurrentperformance.ringingmaster.engine.touch.compiler.impl.CompilerFactory;
+import com.concurrentperformance.ringingmaster.engine.touch.container.Touch;
 import com.concurrentperformance.ringingmaster.engine.touch.parser.Parser;
 import com.concurrentperformance.ringingmaster.engine.touch.parser.impl.DefaultParser;
 import com.concurrentperformance.ringingmaster.engine.touch.proof.Proof;
-import com.concurrentperformance.ringingmaster.engine.touch.container.Touch;
 import com.concurrentperformance.util.listener.ConcurrentListenable;
 import com.concurrentperformance.util.listener.Listenable;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Optional;
 import java.util.concurrent.Executor;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -54,6 +55,10 @@ public class ProofManager extends ConcurrentListenable<ProofManagerListener> imp
 	//			2) When adding method that is not valid (bell count) need to prevent it becomming active.
 //			3) Need to sort layout of name value pairs.
 	public void parseAndProve(Touch touch) {
+		if (touch == null) {
+			fireUpdateProofState(Optional.empty());
+			return;
+		}
 		parser.parseAndAnnotate(touch);
 
 		// Get the proofId before clearing the proof, so another thread does not preempt us.
@@ -66,7 +71,7 @@ public class ProofManager extends ConcurrentListenable<ProofManagerListener> imp
 			Proof proof = compiler.compile(true);
 			final long currentProofId = nextProofId.get();
 			if (proofId == currentProofId) {
-				fireUpdateProofState(proof);
+				fireUpdateProofState(Optional.of(proof));
 			}
 			else {
 				log.info("Ignoring finished proof [{}] as not current [{}]", proofId, currentProofId); //TODO need a mech of cancelling a proof mid term.
@@ -75,7 +80,7 @@ public class ProofManager extends ConcurrentListenable<ProofManagerListener> imp
 		});
 	}
 
-	private void fireUpdateProofState(final Proof proof) {
+	private void fireUpdateProofState(Optional<Proof> proof) {
 
 		checkNotNull(proof);
 		updateExecutor.execute(() -> {

@@ -21,6 +21,8 @@ public class PasteButton extends Button {
 	public PasteButton() {
 		super("", new ImageView(IMAGE));
 		setTooltip(new Tooltip("Paste"));
+		setDisable(true);
+
 
 		//TODO setOnAction(event -> documentManager.buildNewDocument());
 	}

@@ -21,6 +21,8 @@ public class CutButton extends Button {
 	public CutButton() {
 		super("", new ImageView(IMAGE));
 		setTooltip(new Tooltip("Cut"));
+		setDisable(true);
+
 
 		//TODO setOnAction(event -> DocumentManager.buildNewDocument());
 	}

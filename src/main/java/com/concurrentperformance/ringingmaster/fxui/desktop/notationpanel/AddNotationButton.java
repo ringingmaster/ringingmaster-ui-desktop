@@ -41,6 +41,8 @@ public class AddNotationButton extends Button {
 				return documentManager.getCurrentDocument().get().addNotation(result);
 			});
 		});
+
+		documentManager.addListener(touchDocument -> setDisable(!touchDocument.isPresent()));
 	}
 
 	public void setNotationEditorDialogBuilder(NotationEditorDialogBuilder notationEditorDialogBuilder) {

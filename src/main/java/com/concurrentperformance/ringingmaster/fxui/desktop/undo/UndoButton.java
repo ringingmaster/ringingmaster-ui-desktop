@@ -21,6 +21,8 @@ public class UndoButton extends Button {
 	public UndoButton() {
 		super("", new ImageView(IMAGE));
 		setTooltip(new Tooltip("Undo"));// TODO more informative Redo M=message
+		setDisable(true);
+
 
 		//TODO setOnAction(event -> DocumentManager.buildNewDocument());
 	}

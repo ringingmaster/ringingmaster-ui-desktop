@@ -21,6 +21,8 @@ public class RedoButton extends Button {
 	public RedoButton() {
 		super("", new ImageView(IMAGE));
 		setTooltip(new Tooltip("Redo"));// TODO more informative Redo M=message
+		setDisable(true);
+
 
 		//TODO setOnAction(event -> DocumentManager.buildNewDocument());
 

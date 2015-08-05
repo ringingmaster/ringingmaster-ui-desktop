@@ -21,6 +21,8 @@ public class CopyButton extends Button {
 	public CopyButton() {
 		super("", new ImageView(IMAGE));
 		setTooltip(new Tooltip("Copy"));
+		setDisable(true);
+
 
 
 		//TODO setOnAction(event -> DocumentManager.buildNewDocument());

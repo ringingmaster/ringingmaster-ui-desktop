@@ -21,6 +21,8 @@ public class OpenDocumentButton extends Button {
 	public OpenDocumentButton() {
 		super("", new ImageView(IMAGE));
 		setTooltip(new Tooltip("Open Touch"));
+		setDisable(true);
+
 
 		//TODO setOnAction(event -> DocumentManager.buildNewDocument());
 	}

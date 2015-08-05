@@ -1,13 +1,11 @@
 package com.concurrentperformance.ringingmaster.fxui.desktop.analysis;
 
-import com.concurrentperformance.fxutils.namevaluepair.NameValueColumnDescriptor;
 import com.concurrentperformance.fxutils.namevaluepair.NameValuePairModel;
 import com.concurrentperformance.fxutils.namevaluepair.NameValuePairTable;
 import com.concurrentperformance.ringingmaster.engine.touch.proof.Proof;
 import com.concurrentperformance.ringingmaster.fxui.desktop.proof.ProofManager;
 import com.concurrentperformance.ringingmaster.fxui.desktop.util.ColorManager;
 import javafx.application.Platform;
-import javafx.scene.paint.Color;
 
 import java.util.Optional;
 
@@ -219,14 +217,4 @@ public class AnalysisStatusWindow extends NameValuePairTable {
 		}
 	}
 
-
-	private void updateDisplayProperty(String propertyName, String value) {
-		updateDisplayProperty(propertyName, value, null);
-	}
-	private void updateDisplayProperty(String propertyName, String value, Color valueColor) {
-		getItems().stream()
-				.filter(columnDescriptor -> columnDescriptor.getName().getText().equals(propertyName))
-				.forEach(pair -> pair.setValue(new NameValueColumnDescriptor(value, valueColor, false)));
-		resizeColumns();
-	}
 }

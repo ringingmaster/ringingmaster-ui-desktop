@@ -106,7 +106,7 @@ public class TouchDocument extends ScrollPane implements Listenable<TouchDocumen
 		setVbarPolicy(ScrollBarPolicy.AS_NEEDED);
 
 		setFitToHeight(true);
-		setFitToWidth(false);
+		setFitToWidth(true);
 		setFocusTraversable(false);
 	}
 

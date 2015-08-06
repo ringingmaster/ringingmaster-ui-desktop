@@ -43,7 +43,7 @@ public class GridPane extends Pane implements GridModelListener {
 	public void gridModelListener_dimensionsChanged() {
 		dimensions = new GridDimensionBuilder().setModel(model).build();
 
-		setMinWidth(dimensions.getTableBottom());
+		setMinWidth(dimensions.getTableRight());
 		setMinHeight(dimensions.getTableBottom());
 
 		mainDrawingLayer.setWidth(dimensions.getTableRight());

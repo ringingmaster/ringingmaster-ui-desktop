@@ -26,11 +26,8 @@ public class TitlePane extends VBox {
 	private final TextField titleText = new TextField();
 	private final TextField authorText = new TextField();
 
-	private TouchDocument touchDocument;
 
 	public TitlePane(TouchDocument touchDocument) {
-		this.touchDocument = touchDocument;
-
 		getStylesheets().add(STYLESHEET);
 
 		titleText.setFont(new Font(20));

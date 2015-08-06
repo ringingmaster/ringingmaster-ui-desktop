@@ -70,12 +70,15 @@ public class TouchDocument extends ScrollPane implements Listenable<TouchDocumen
 	private ProofManager proofManager;
 
 	// UI components
-	private final TitlePane titlePane = new TitlePane();
+	private final TitlePane titlePane = new TitlePane(this);
 	private final GridPane gridPane = new GridPane("Main");
 	private final DefinitionPane definitionPane = new DefinitionPane();
 
 	private final ConcurrentListenable<TouchDocumentListener> listenerDelegate = new ConcurrentListenable<>();
 
+	public TouchDocument() {
+		titlePane.setTouchStyle(touchStyle);
+	}
 
 	public void init() {
 		layoutNodes();
@@ -89,7 +92,6 @@ public class TouchDocument extends ScrollPane implements Listenable<TouchDocumen
 		mainGridModel = new MainGridModel(this, touch);
 
 		//TODO is this lot updated?
-		titlePane.setText(getTitle(), getAuthor());
 		gridPane.setModel(mainGridModel);
 		definitionPane.setModels(definitionModels);
 	}
@@ -106,6 +108,10 @@ public class TouchDocument extends ScrollPane implements Listenable<TouchDocumen
 		setFitToHeight(true);
 		setFitToWidth(false);
 		setFocusTraversable(false);
+	}
+
+	private void updateUiComponents() {
+		titlePane.setText(getTitle(), getAuthor());
 	}
 
 	public String getTitle() {
@@ -739,10 +745,6 @@ public class TouchDocument extends ScrollPane implements Listenable<TouchDocumen
 		touch.collapseEmptyRowsAndColumns();
 	}
 
-	public void setProofManager(ProofManager proofManager) {
-		this.proofManager = proofManager;
-	}
-
 	@Override
 	public void addListener(TouchDocumentListener listener) {
 		listenerDelegate.addListener(listener);
@@ -750,9 +752,16 @@ public class TouchDocument extends ScrollPane implements Listenable<TouchDocumen
 
 	private void fireDocumentContentChanged() {
 		Platform.runLater(() -> {
+			updateUiComponents();
+
 			for (TouchDocumentListener touchDocumentListener : listenerDelegate.getListeners()) {
 				touchDocumentListener.touchDocumentListener_documentContentChanged(TouchDocument.this);
 			}
 		});
+	}
+
+
+	public void setProofManager(ProofManager proofManager) {
+		this.proofManager = proofManager;
 	}
 }

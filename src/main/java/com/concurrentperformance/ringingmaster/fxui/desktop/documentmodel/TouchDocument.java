@@ -13,7 +13,7 @@ import com.concurrentperformance.ringingmaster.engine.touch.container.Grid;
 import com.concurrentperformance.ringingmaster.engine.touch.container.Touch;
 import com.concurrentperformance.ringingmaster.engine.touch.container.TouchCell;
 import com.concurrentperformance.ringingmaster.engine.touch.container.TouchDefinition;
-import com.concurrentperformance.ringingmaster.engine.touch.container.TouchType;
+import com.concurrentperformance.ringingmaster.engine.touch.container.TouchCheckingType;
 import com.concurrentperformance.ringingmaster.engine.touch.container.impl.TouchBuilder;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentmodel.definitiongrid.DefinitionGridModel;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentmodel.maingrid.MainGridModel;
@@ -325,14 +325,14 @@ public class TouchDocument extends ScrollPane implements Listenable<TouchDocumen
 		fireDocumentContentChanged();
 	}
 
-	public TouchType getTouchType() {
-		return touch.getTouchType();
+	public TouchCheckingType getTouchCheckingType() {
+		return touch.getTouchCheckingType();
 	}
 
-	public void setTouchType(TouchType touchType) {
-		checkNotNull(touchType);
-		if (touchType != touch.getTouchType()) {
-			touch.setTouchType(touchType);
+	public void setTouchCheckingType(TouchCheckingType touchCheckingType) {
+		checkNotNull(touchCheckingType);
+		if (touchCheckingType != touch.getTouchCheckingType()) {
+			touch.setTouchCheckingType(touchCheckingType);
 			parseAndProve();
 		}
 		fireDocumentContentChanged();
@@ -651,7 +651,7 @@ public class TouchDocument extends ScrollPane implements Listenable<TouchDocumen
 		touch.setTitle("My Touch");
 		touch.setAuthor("by Stephen");
 
-		touch.setTouchType(TouchType.LEAD_BASED);
+		touch.setTouchCheckingType(TouchCheckingType.LEAD_BASED);
 		touch.addNotation(buildPlainBobMinor());
 		touch.addNotation(buildLittleBobMinor());
 		touch.addNotation(buildPlainBobMinimus());

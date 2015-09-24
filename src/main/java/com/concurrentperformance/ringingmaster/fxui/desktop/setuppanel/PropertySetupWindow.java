@@ -9,7 +9,7 @@ import com.concurrentperformance.ringingmaster.engine.NumberOfBells;
 import com.concurrentperformance.ringingmaster.engine.method.Bell;
 import com.concurrentperformance.ringingmaster.engine.method.Stroke;
 import com.concurrentperformance.ringingmaster.engine.notation.NotationBody;
-import com.concurrentperformance.ringingmaster.engine.touch.container.TouchType;
+import com.concurrentperformance.ringingmaster.engine.touch.container.TouchCheckingType;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentmanager.DocumentManager;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentmodel.TouchDocument;
 import com.google.common.collect.Lists;
@@ -36,7 +36,7 @@ public class PropertySetupWindow extends PropertyEditor {
 	public static final String NUMBER_OF_BELLS_PROPERTY_NAME = "Number Of Bells";
 	public static final String CALL_FROM_PROPERTY_NAME = "Call From";
 	public static final String ACTIVE_METHOD_PROPERTY_NAME = "Active Method";
-	public static final String CALL_TYPE_PROPERTY_NAME = "Call Type";
+	public static final String CHECKING_TYPE_PROPERTY_NAME = "Checking Type";
 	public static final String PLAIN_LEAD_TOKEN_PROPERTY_NAME = "Plain Lead Token";
 
 	public static final String ADVANCED_SETUP_GROUP_NAME = "Advanced Setup";
@@ -117,11 +117,11 @@ public class PropertySetupWindow extends PropertyEditor {
 					}
 				}));
 
-		add( new SelectionPropertyValue(CALL_TYPE_PROPERTY_NAME));
-		((SelectionPropertyValue)findPropertyByName(CALL_TYPE_PROPERTY_NAME)).setListener((observable, oldValue, newValue) -> {
+		add( new SelectionPropertyValue(CHECKING_TYPE_PROPERTY_NAME));
+		((SelectionPropertyValue)findPropertyByName(CHECKING_TYPE_PROPERTY_NAME)).setListener((observable, oldValue, newValue) -> {
 			if (newValue.intValue() != -1) {
-				final TouchType touchType = TouchType.values()[newValue.intValue()];
-				updateTouchDocumentIfPresent(touchDocument -> touchDocument.setTouchType(touchType));
+				final TouchCheckingType touchCheckingType = TouchCheckingType.values()[newValue.intValue()];
+				updateTouchDocumentIfPresent(touchDocument -> touchDocument.setTouchCheckingType(touchCheckingType));
 			}
 		});
 
@@ -160,17 +160,17 @@ public class PropertySetupWindow extends PropertyEditor {
 		((SelectionPropertyValue)findPropertyByName(ACTIVE_METHOD_PROPERTY_NAME)).setSelectedIndex(selectedNotationIndex);
 
 		final List<String> touchTypes = new ArrayList<>();
-		for (TouchType touchType : TouchType.values()) {
-			touchTypes.add(touchType.getName());
+		for (TouchCheckingType touchCheckingType : TouchCheckingType.values()) {
+			touchTypes.add(touchCheckingType.getName());
 		}
-		((SelectionPropertyValue)findPropertyByName(CALL_TYPE_PROPERTY_NAME)).setItems(touchTypes);
-		final int touchTypeIndex = touchDocument.isPresent()? touchDocument.get().getTouchType().ordinal():-1;
-		((SelectionPropertyValue)findPropertyByName(CALL_TYPE_PROPERTY_NAME)).setSelectedIndex(touchTypeIndex);
+		((SelectionPropertyValue)findPropertyByName(CHECKING_TYPE_PROPERTY_NAME)).setItems(touchTypes);
+		final int touchTypeIndex = touchDocument.isPresent()? touchDocument.get().getTouchCheckingType().ordinal():-1;
+		((SelectionPropertyValue)findPropertyByName(CHECKING_TYPE_PROPERTY_NAME)).setSelectedIndex(touchTypeIndex);
 
 		final String plainLeadToken = touchDocument.isPresent()? touchDocument.get().getPlainLeadToken():"";
 		((TextPropertyValue)findPropertyByName(PLAIN_LEAD_TOKEN_PROPERTY_NAME)).setValue(plainLeadToken);
 		findPropertyByName(PLAIN_LEAD_TOKEN_PROPERTY_NAME).setDisable(touchDocument.isPresent() &&
-																		touchDocument.get().getTouchType() == TouchType.COURSE_BASED);
+																		touchDocument.get().getTouchCheckingType() == TouchCheckingType.COURSE_BASED);
 	}
 
 	public List<String> getValidNotations(Optional<TouchDocument> touchDocument) {

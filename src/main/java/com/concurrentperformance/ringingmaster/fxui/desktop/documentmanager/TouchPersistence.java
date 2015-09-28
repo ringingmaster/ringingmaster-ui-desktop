@@ -10,7 +10,7 @@ import com.concurrentperformance.ringingmaster.persist.generated.v1.DefinitionTy
 import com.concurrentperformance.ringingmaster.persist.generated.v1.NotationKeyType;
 import com.concurrentperformance.ringingmaster.persist.generated.v1.ObjectFactory;
 import com.concurrentperformance.ringingmaster.persist.generated.v1.TouchCheckingType;
-import com.concurrentperformance.ringingmaster.persist.generated.v1.TouchNotationType;
+import com.concurrentperformance.ringingmaster.persist.generated.v1.TouchNotationPersist;
 import com.concurrentperformance.ringingmaster.persist.generated.v1.TouchType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -78,7 +78,7 @@ public class TouchPersistence {
 		}
 
 		for (NotationBody notation : touch.getAllNotations()) {
-			TouchNotationType notationType = convertNotation(notation);
+			TouchNotationPersist notationType = convertNotation(notation);
 			touchType.getNotation().add(notationType);
 		}
 
@@ -92,8 +92,8 @@ public class TouchPersistence {
 		return definitionType;
 	}
 
-	private TouchNotationType convertNotation(NotationBody notation) {
-		TouchNotationType notationType = new TouchNotationType();
+	private TouchNotationPersist convertNotation(NotationBody notation) {
+		TouchNotationPersist notationType = new TouchNotationPersist();
 		notationType.setName(notation.getName());
 		notationType.setNumberOfBells(notation.getNumberOfWorkingBells().getBellCount());
 		notationType.setFoldedPalindrome(notation.isFoldedPalindrome());

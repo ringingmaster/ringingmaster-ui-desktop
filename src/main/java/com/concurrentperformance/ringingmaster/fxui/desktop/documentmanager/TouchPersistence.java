@@ -11,7 +11,7 @@ import com.concurrentperformance.ringingmaster.persist.generated.v1.NotationKeyT
 import com.concurrentperformance.ringingmaster.persist.generated.v1.ObjectFactory;
 import com.concurrentperformance.ringingmaster.persist.generated.v1.TouchCheckingType;
 import com.concurrentperformance.ringingmaster.persist.generated.v1.TouchNotationPersist;
-import com.concurrentperformance.ringingmaster.persist.generated.v1.TouchType;
+import com.concurrentperformance.ringingmaster.persist.generated.v1.TouchPersist;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,10 +33,10 @@ public class TouchPersistence {
 
 	public void persist(Path path, Touch touch) {
 
-		TouchType touchType = convertToTouchType(touch);
+		TouchPersist touchPersist = convertToTouchType(touch);
 
 		try {
-			documentPersist.writeTouch(touchType, path);
+			documentPersist.writeTouch(touchPersist, path);
 		}
 		catch (IOException e) {
 			log.error("TODO", e);
@@ -46,43 +46,43 @@ public class TouchPersistence {
 		}
 	}
 
-	private TouchType convertToTouchType(Touch touch) { //TODO move into engine.
-		TouchType touchType = new TouchType();
+	private TouchPersist convertToTouchType(Touch touch) { //TODO move into engine.
+		TouchPersist touchPersist = new TouchPersist();
 
-		touchType.setTitle(touch.getTitle());
+		touchPersist.setTitle(touch.getTitle());
 
-		touchType.setAuthor(touch.getAuthor());
+		touchPersist.setAuthor(touch.getAuthor());
 
-		touchType.setNumberOfBells(touch.getNumberOfBells().getBellCount());
+		touchPersist.setNumberOfBells(touch.getNumberOfBells().getBellCount());
 
-		touchType.setTouchChecking(TouchCheckingType.fromValue(touch.getTouchCheckingType().toString()));
+		touchPersist.setTouchChecking(TouchCheckingType.fromValue(touch.getTouchCheckingType().toString()));
 
-		touchType.setCallFrom(touch.getCallFromBell().getZeroBasedBell());
+		touchPersist.setCallFrom(touch.getCallFromBell().getZeroBasedBell());
 
 		if (touch.getNonSplicedActiveNotation() != null) {
 			NotationBody nonSplicedActiveNotation = touch.getNonSplicedActiveNotation();
 			NotationKeyType notationKeyType = new ObjectFactory().createNotationKeyType();
 			notationKeyType.setName(nonSplicedActiveNotation.getName());
 			notationKeyType.setNumberOfBells(nonSplicedActiveNotation.getNumberOfWorkingBells().getBellCount());
-			touchType.setNonSplicedActiveNotation(notationKeyType);
+			touchPersist.setNonSplicedActiveNotation(notationKeyType);
 		}
 
-		touchType.setSpliced(touch.isSpliced());
+		touchPersist.setSpliced(touch.isSpliced());
 
-		touchType.setPlainLeadToken(touch.getPlainLeadToken());
+		touchPersist.setPlainLeadToken(touch.getPlainLeadToken());
 
 		Set<TouchDefinition> definitions = touch.getDefinitions();
 		for (TouchDefinition definition : definitions) {
 			DefinitionType definitionType = convertDefinition(definition);
-			touchType.getDefinition().add(definitionType);
+			touchPersist.getDefinition().add(definitionType);
 		}
 
 		for (NotationBody notation : touch.getAllNotations()) {
 			TouchNotationPersist notationType = convertNotation(notation);
-			touchType.getNotation().add(notationType);
+			touchPersist.getNotation().add(notationType);
 		}
 
-		return touchType;
+		return touchPersist;
 	}
 
 	private DefinitionType convertDefinition(TouchDefinition definition) {

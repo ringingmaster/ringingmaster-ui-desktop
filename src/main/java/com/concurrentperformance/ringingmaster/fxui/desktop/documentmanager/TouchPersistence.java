@@ -6,7 +6,7 @@ import com.concurrentperformance.ringingmaster.engine.touch.container.Touch;
 import com.concurrentperformance.ringingmaster.engine.touch.container.TouchDefinition;
 import com.concurrentperformance.ringingmaster.persist.DocumentPersist;
 import com.concurrentperformance.ringingmaster.persist.generated.v1.CallPersist;
-import com.concurrentperformance.ringingmaster.persist.generated.v1.DefinitionType;
+import com.concurrentperformance.ringingmaster.persist.generated.v1.DefinitionPersist;
 import com.concurrentperformance.ringingmaster.persist.generated.v1.NotationKeyPersist;
 import com.concurrentperformance.ringingmaster.persist.generated.v1.ObjectFactory;
 import com.concurrentperformance.ringingmaster.persist.generated.v1.TouchCheckingPersist;
@@ -73,8 +73,8 @@ public class TouchPersistence {
 
 		Set<TouchDefinition> definitions = touch.getDefinitions();
 		for (TouchDefinition definition : definitions) {
-			DefinitionType definitionType = convertDefinition(definition);
-			touchPersist.getDefinition().add(definitionType);
+			DefinitionPersist definitionPersist = convertDefinition(definition);
+			touchPersist.getDefinition().add(definitionPersist);
 		}
 
 		for (NotationBody notation : touch.getAllNotations()) {
@@ -85,11 +85,11 @@ public class TouchPersistence {
 		return touchPersist;
 	}
 
-	private DefinitionType convertDefinition(TouchDefinition definition) {
-		DefinitionType definitionType = new DefinitionType();
-		definitionType.setNotation(definition.getAsString());
-		definitionType.setShorthand(definition.getShorthand());
-		return definitionType;
+	private DefinitionPersist convertDefinition(TouchDefinition definition) {
+		DefinitionPersist definitionPersist = new DefinitionPersist();
+		definitionPersist.setNotation(definition.getAsString());
+		definitionPersist.setShorthand(definition.getShorthand());
+		return definitionPersist;
 	}
 
 	private TouchNotationPersist convertNotation(NotationBody notation) {

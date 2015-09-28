@@ -7,7 +7,7 @@ import com.concurrentperformance.ringingmaster.engine.touch.container.TouchDefin
 import com.concurrentperformance.ringingmaster.persist.DocumentPersist;
 import com.concurrentperformance.ringingmaster.persist.generated.v1.CallPersist;
 import com.concurrentperformance.ringingmaster.persist.generated.v1.DefinitionType;
-import com.concurrentperformance.ringingmaster.persist.generated.v1.NotationKeyType;
+import com.concurrentperformance.ringingmaster.persist.generated.v1.NotationKeyPersist;
 import com.concurrentperformance.ringingmaster.persist.generated.v1.ObjectFactory;
 import com.concurrentperformance.ringingmaster.persist.generated.v1.TouchCheckingType;
 import com.concurrentperformance.ringingmaster.persist.generated.v1.TouchNotationPersist;
@@ -61,10 +61,10 @@ public class TouchPersistence {
 
 		if (touch.getNonSplicedActiveNotation() != null) {
 			NotationBody nonSplicedActiveNotation = touch.getNonSplicedActiveNotation();
-			NotationKeyType notationKeyType = new ObjectFactory().createNotationKeyType();
-			notationKeyType.setName(nonSplicedActiveNotation.getName());
-			notationKeyType.setNumberOfBells(nonSplicedActiveNotation.getNumberOfWorkingBells().getBellCount());
-			touchPersist.setNonSplicedActiveNotation(notationKeyType);
+			NotationKeyPersist notationKeyPersist = new ObjectFactory().createNotationKeyPersist();
+			notationKeyPersist.setName(nonSplicedActiveNotation.getName());
+			notationKeyPersist.setNumberOfBells(nonSplicedActiveNotation.getNumberOfWorkingBells().getBellCount());
+			touchPersist.setNonSplicedActiveNotation(notationKeyPersist);
 		}
 
 		touchPersist.setSpliced(touch.isSpliced());

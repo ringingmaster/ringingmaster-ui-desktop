@@ -9,7 +9,7 @@ import com.concurrentperformance.ringingmaster.persist.generated.v1.CallPersist;
 import com.concurrentperformance.ringingmaster.persist.generated.v1.DefinitionType;
 import com.concurrentperformance.ringingmaster.persist.generated.v1.NotationKeyPersist;
 import com.concurrentperformance.ringingmaster.persist.generated.v1.ObjectFactory;
-import com.concurrentperformance.ringingmaster.persist.generated.v1.TouchCheckingType;
+import com.concurrentperformance.ringingmaster.persist.generated.v1.TouchCheckingPersist;
 import com.concurrentperformance.ringingmaster.persist.generated.v1.TouchNotationPersist;
 import com.concurrentperformance.ringingmaster.persist.generated.v1.TouchPersist;
 import org.slf4j.Logger;
@@ -55,7 +55,7 @@ public class TouchPersistence {
 
 		touchPersist.setNumberOfBells(touch.getNumberOfBells().getBellCount());
 
-		touchPersist.setTouchChecking(TouchCheckingType.fromValue(touch.getTouchCheckingType().toString()));
+		touchPersist.setTouchChecking(TouchCheckingPersist.fromValue(touch.getTouchCheckingType().toString()));
 
 		touchPersist.setCallFrom(touch.getCallFromBell().getZeroBasedBell());
 

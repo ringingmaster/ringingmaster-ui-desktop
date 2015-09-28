@@ -12,9 +12,9 @@ import com.concurrentperformance.ringingmaster.engine.notation.impl.NotationBuil
 import com.concurrentperformance.ringingmaster.engine.touch.container.Grid;
 import com.concurrentperformance.ringingmaster.engine.touch.container.Touch;
 import com.concurrentperformance.ringingmaster.engine.touch.container.TouchCell;
-import com.concurrentperformance.ringingmaster.engine.touch.container.TouchDefinition;
 import com.concurrentperformance.ringingmaster.engine.touch.container.TouchCheckingType;
-import com.concurrentperformance.ringingmaster.engine.touch.container.impl.TouchBuilder;
+import com.concurrentperformance.ringingmaster.engine.touch.container.TouchDefinition;
+import com.concurrentperformance.ringingmaster.engine.touch.container.impl.ImmutableTouch;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentmodel.definitiongrid.DefinitionGridModel;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentmodel.maingrid.MainGridModel;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentpanel.DefinitionPane;
@@ -80,11 +80,11 @@ public class TouchDocument extends ScrollPane implements Listenable<TouchDocumen
 		titlePane.setTouchStyle(touchStyle);
 	}
 
-	public void init() {
+	public void init(Touch touch) {
 		layoutNodes();
 
-		//TODO all this must be persisted.
-		touch = createDummyTouch(); //TODO this should load from a document.
+		this.touch = touch;
+
 		parseAndProve();
 
 		configureDefinitionModels();
@@ -94,6 +94,10 @@ public class TouchDocument extends ScrollPane implements Listenable<TouchDocumen
 		//TODO is this lot updated?
 		gridPane.setModel(mainGridModel);
 		definitionPane.setModels(definitionModels);
+	}
+
+	public Touch getTouch() {
+		return new ImmutableTouch(touch);
 	}
 
 	private void layoutNodes() {
@@ -172,11 +176,11 @@ public class TouchDocument extends ScrollPane implements Listenable<TouchDocumen
 			}
 
 			if (!touch.isSpliced() &&
-					touch.getSingleMethodActiveNotation() != null &&
-					touch.getSingleMethodActiveNotation().getNumberOfWorkingBells().getBellCount() > numberOfBells.getBellCount()) {
+					touch.getNonSplicedActiveNotation() != null &&
+					touch.getNonSplicedActiveNotation().getNumberOfWorkingBells().getBellCount() > numberOfBells.getBellCount()) {
 				final List<NotationBody> filteredNotations = NotationBuilderHelper.filterNotations(touch.getAllNotations(), numberOfBells);
 				message.append(pointNumber++).append(") Active method '")
-						.append(touch.getSingleMethodActiveNotation().getNameIncludingNumberOfBells())
+						.append(touch.getNonSplicedActiveNotation().getNameIncludingNumberOfBells())
 						.append("' ");
 				if (filteredNotations.size() == 0) {
 					message.append("will be unset. There is no suitable replacement.");
@@ -302,12 +306,12 @@ public class TouchDocument extends ScrollPane implements Listenable<TouchDocumen
 	}
 
 	public NotationBody getSingleMethodActiveNotation() {
-		return touch.getSingleMethodActiveNotation();
+		return touch.getNonSplicedActiveNotation();
 	}
 
 	public void setSingleMethodActiveNotation(NotationBody notation) {
-		if (!notation.equals(touch.getSingleMethodActiveNotation())) {
-			touch.setSingleMethodActiveNotation(notation);
+		if (!notation.equals(touch.getNonSplicedActiveNotation())) {
+			touch.setNonSplicedActiveNotation(notation);
 			parseAndProve();
 		}
 		fireDocumentContentChanged();
@@ -403,6 +407,7 @@ public class TouchDocument extends ScrollPane implements Listenable<TouchDocumen
 		return touch.getStartAtRow();
 	}
 
+
 	public void setStartAtRow(Integer startAtRow) {
 		if (startAtRow != null) {
 			if (startAtRow > Touch.START_AT_ROW_MAX) {
@@ -418,7 +423,6 @@ public class TouchDocument extends ScrollPane implements Listenable<TouchDocumen
 		}
 		fireDocumentContentChanged();
 	}
-
 
 	public Stroke getStartStroke() {
 		return touch.getStartStroke();
@@ -643,80 +647,6 @@ public class TouchDocument extends ScrollPane implements Listenable<TouchDocumen
 		proofManager.parseAndProve(touch);
 	}
 
-	//TODO remove this
-	private static Touch createDummyTouch() {
-
-		Touch touch = TouchBuilder.getInstance(NumberOfBells.BELLS_6, 2, 2);
-
-		touch.setTitle("My Touch");
-		touch.setAuthor("by Stephen");
-
-		touch.setTouchCheckingType(TouchCheckingType.LEAD_BASED);
-		touch.addNotation(buildPlainBobMinor());
-		touch.addNotation(buildLittleBobMinor());
-		touch.addNotation(buildPlainBobMinimus());
-		touch.addNotation(buildPlainBobMajor());
-
-
-		touch.insertCharacter(0, 0, 0, '-');
-		touch.insertCharacter(0, 1, 0, 's');
-		touch.insertCharacter(0, 0, 1, 's');
-		touch.insertCharacter(0, 1, 1, '-');
-		touch.insertCharacter(1, 0, 0, 'p');
-		touch.insertCharacter(1, 0, 1, ' ');
-		touch.insertCharacter(1, 0, 2, '3');
-		touch.insertCharacter(1, 0, 3, '*');
-
-
-		touch.addDefinition("3*", "-s-");
-		touch.addDefinition("tr", "sps");
-
-		touch.setTerminationSpecificRow(MethodBuilder.buildRoundsRow(touch.getNumberOfBells()));
-		return touch;
-	}
-
-	// TODO remove this
-	private static NotationBody buildPlainBobMinor() {
-		return NotationBuilder.getInstance()
-				.setNumberOfWorkingBells(NumberOfBells.BELLS_6)
-				.setName("Plain Bob")
-				.setFoldedPalindromeNotationShorthand("-16-16-16", "12")
-				.setCannedCalls()
-				.setSpliceIdentifier("P")
-				.build();
-	}
-
-	// TODO remove this
-	private static NotationBody buildLittleBobMinor() {
-		return NotationBuilder.getInstance()
-				.setNumberOfWorkingBells(NumberOfBells.BELLS_6)
-				.setName("Little Bob")
-				.setFoldedPalindromeNotationShorthand("-16-14", "12")
-				.setCannedCalls()
-				.build();
-	}
-
-	// TODO remove this
-	private static NotationBody buildPlainBobMinimus() {
-		return NotationBuilder.getInstance()
-				.setNumberOfWorkingBells(NumberOfBells.BELLS_4)
-				.setName("Little Bob")
-				.setFoldedPalindromeNotationShorthand("-14-14", "12")
-				.setCannedCalls()
-				.build();
-	}
-
-	// TODO remove this
-	public static NotationBody buildPlainBobMajor() {
-		return NotationBuilder.getInstance()
-				.setNumberOfWorkingBells(NumberOfBells.BELLS_8)
-				.setName("Plain Bob")
-				.setFoldedPalindromeNotationShorthand("-18-18-18-18", "12")
-				.setCannedCalls()
-				.setSpliceIdentifier("X")
-				.build();
-	}
-
 	public int getColumnCount() {
 		return touch.getColumnCount();
 	}
@@ -750,6 +680,7 @@ public class TouchDocument extends ScrollPane implements Listenable<TouchDocumen
 		listenerDelegate.addListener(listener);
 	}
 
+
 	private void fireDocumentContentChanged() {
 		Platform.runLater(() -> {
 			updateUiComponents();
@@ -759,7 +690,6 @@ public class TouchDocument extends ScrollPane implements Listenable<TouchDocumen
 			}
 		});
 	}
-
 
 	public void setProofManager(ProofManager proofManager) {
 		this.proofManager = proofManager;

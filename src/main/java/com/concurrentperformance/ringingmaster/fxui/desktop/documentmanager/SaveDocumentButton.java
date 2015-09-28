@@ -21,10 +21,12 @@ public class SaveDocumentButton extends Button {
 	public SaveDocumentButton() {
 		super("", new ImageView(IMAGE));
 		setTooltip(new Tooltip("Save"));
-		setDisable(true);
-
-
-		//TODO setOnAction(event -> DocumentManager.buildNewDocument());
+		setDisable(true);//TODO
 	}
 
+	public void setDocumentManager(DocumentManager documentManager) {
+		setOnAction(event -> documentManager.saveCurrentDocument());
+
+		documentManager.addListener(touchDocument -> setDisable(!touchDocument.isPresent()));
+	}
 }

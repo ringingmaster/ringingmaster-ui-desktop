@@ -32,7 +32,7 @@ class DefinitionName extends SkeletalGridCellModel implements GridCharacterGroup
 
 	@Override
 	public int getLength() {
-		return definition.getName().length() + 3;
+		return definition.getShorthand().length() + 3;
 	}
 
 	@Override
@@ -40,8 +40,8 @@ class DefinitionName extends SkeletalGridCellModel implements GridCharacterGroup
 		return new GridCharacterModel() {
 			@Override
 			public char getCharacter() {
-				final String name = definition.getName() + " = ";
-				return name.charAt(index);
+				final String shorthand = definition.getShorthand() + " = ";
+				return shorthand.charAt(index);
 			}
 
 			@Override

@@ -1,5 +1,12 @@
 package com.concurrentperformance.ringingmaster.fxui.desktop.documentmanager;
 
+import com.concurrentperformance.ringingmaster.engine.NumberOfBells;
+import com.concurrentperformance.ringingmaster.engine.method.impl.MethodBuilder;
+import com.concurrentperformance.ringingmaster.engine.notation.NotationBody;
+import com.concurrentperformance.ringingmaster.engine.notation.impl.NotationBuilder;
+import com.concurrentperformance.ringingmaster.engine.touch.container.Touch;
+import com.concurrentperformance.ringingmaster.engine.touch.container.TouchCheckingType;
+import com.concurrentperformance.ringingmaster.engine.touch.container.impl.TouchBuilder;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentmodel.TouchDocument;
 import com.concurrentperformance.ringingmaster.fxui.desktop.proof.ProofManager;
 import com.concurrentperformance.util.beanfactory.BeanFactory;
@@ -11,6 +18,8 @@ import javafx.scene.control.TabPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Optional;
 
 /**
@@ -28,6 +37,7 @@ public class DocumentManager extends ConcurrentListenable<DocumentManagerListene
 
 	private ProofManager proofManager;
 	private BeanFactory beanFactory;
+	private TouchPersistence touchPersistence = new TouchPersistence();
 
 	public void init() {
 		documentWindow.setTabClosingPolicy(TabPane.TabClosingPolicy.ALL_TABS);
@@ -48,6 +58,7 @@ public class DocumentManager extends ConcurrentListenable<DocumentManagerListene
 
 	public void buildNewDocument() {
 		final TouchDocument touchDocument = beanFactory.build(TouchDocument.class);
+		touchDocument.init(createDummyTouch());
 		// this is needed to listn to document updates that are not changed with proof's.
 		// example -> alter the start change to something that will fail, and this will
 		// allow it to be put back to its original value.
@@ -55,6 +66,14 @@ public class DocumentManager extends ConcurrentListenable<DocumentManagerListene
 		createTab("New Touch #" + ++docNumber, touchDocument);
 
 		currentDocument = Optional.of(touchDocument);
+	}
+
+	public void saveCurrentDocument() {
+		if (currentDocument.isPresent()) {
+			Touch touch = currentDocument.get().getTouch();
+			Path path = Paths.get("Temp.touch"); //TODO Need to start a file dialog.
+			touchPersistence.persist(path, touch);
+		}
 	}
 
 	private void createTab(String name, Node node) {
@@ -84,5 +103,79 @@ public class DocumentManager extends ConcurrentListenable<DocumentManagerListene
 
 	public void setBeanFactory(BeanFactory beanFactory) {
 		this.beanFactory = beanFactory;
+	}
+
+	//TODO remove this
+	private static Touch createDummyTouch() {
+
+		Touch touch = TouchBuilder.getInstance(NumberOfBells.BELLS_6, 2, 2);
+
+		touch.setTitle("My Touch");
+		touch.setAuthor("by Stephen");
+
+		touch.setTouchCheckingType(TouchCheckingType.LEAD_BASED);
+		touch.addNotation(buildPlainBobMinor());
+		touch.addNotation(buildLittleBobMinor());
+		touch.addNotation(buildPlainBobMinimus());
+		touch.addNotation(buildPlainBobMajor());
+
+
+		touch.insertCharacter(0, 0, 0, '-');
+		touch.insertCharacter(0, 1, 0, 's');
+		touch.insertCharacter(0, 0, 1, 's');
+		touch.insertCharacter(0, 1, 1, '-');
+		touch.insertCharacter(1, 0, 0, 'p');
+		touch.insertCharacter(1, 0, 1, ' ');
+		touch.insertCharacter(1, 0, 2, '3');
+		touch.insertCharacter(1, 0, 3, '*');
+
+
+		touch.addDefinition("3*", "-s-");
+		touch.addDefinition("tr", "sps");
+
+		touch.setTerminationSpecificRow(MethodBuilder.buildRoundsRow(touch.getNumberOfBells()));
+		return touch;
+	}
+
+	// TODO remove this
+	private static NotationBody buildPlainBobMinor() {
+		return NotationBuilder.getInstance()
+				.setNumberOfWorkingBells(NumberOfBells.BELLS_6)
+				.setName("Plain Bob")
+				.setFoldedPalindromeNotationShorthand("-16-16-16", "12")
+				.setCannedCalls()
+				.setSpliceIdentifier("P")
+				.build();
+	}
+
+	// TODO remove this
+	private static NotationBody buildLittleBobMinor() {
+		return NotationBuilder.getInstance()
+				.setNumberOfWorkingBells(NumberOfBells.BELLS_6)
+				.setName("Little Bob")
+				.setFoldedPalindromeNotationShorthand("-16-14", "12")
+				.setCannedCalls()
+				.build();
+	}
+
+	// TODO remove this
+	private static NotationBody buildPlainBobMinimus() {
+		return NotationBuilder.getInstance()
+				.setNumberOfWorkingBells(NumberOfBells.BELLS_4)
+				.setName("Little Bob")
+				.setFoldedPalindromeNotationShorthand("-14-14", "12")
+				.setCannedCalls()
+				.build();
+	}
+
+	// TODO remove this
+	public static NotationBody buildPlainBobMajor() {
+		return NotationBuilder.getInstance()
+				.setNumberOfWorkingBells(NumberOfBells.BELLS_8)
+				.setName("Plain Bob")
+				.setFoldedPalindromeNotationShorthand("-18-18-18-18", "12")
+				.setCannedCalls()
+				.setSpliceIdentifier("X")
+				.build();
 	}
 }

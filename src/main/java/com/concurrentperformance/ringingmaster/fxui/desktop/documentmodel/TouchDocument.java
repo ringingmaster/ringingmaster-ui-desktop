@@ -164,8 +164,8 @@ public class TouchDocument extends ScrollPane implements Listenable<TouchDocumen
 					.append(newInitialRow.getDisplayString(false))
 					.append("'.").append(System.lineSeparator());
 
-			if (touch.getTerminationSpecificRow().isPresent()) {
-				final MethodRow existingTerminationRow = touch.getTerminationSpecificRow().get();
+			if (touch.getTerminationChange().isPresent()) {
+				final MethodRow existingTerminationRow = touch.getTerminationChange().get();
 				final MethodRow newTerminationRow = MethodBuilder.transformToNewNumberOfBells(existingTerminationRow, numberOfBells);
 
 				message.append(pointNumber++).append(") Termination row will change from '")
@@ -469,7 +469,7 @@ public class TouchDocument extends ScrollPane implements Listenable<TouchDocumen
 	}
 
 	public String getTerminationChange() {
-		final Optional<MethodRow> terminationChange = touch.getTerminationSpecificRow();
+		final Optional<MethodRow> terminationChange = touch.getTerminationChange();
 		if (terminationChange.isPresent()) {
 			return terminationChange.get().getDisplayString(true);
 		}
@@ -486,20 +486,20 @@ public class TouchDocument extends ScrollPane implements Listenable<TouchDocumen
 		}
 
 		if (terminationChangeText.isEmpty()) {
-			touch.removeTerminationSpecificRow();
+			touch.removeTerminationChange();
 			parseAndProve();
 		}
 		// first look for rounds token
 		else if (terminationChangeText.compareToIgnoreCase(MethodRow.ROUNDS_TOKEN) == 0) {
 			final MethodRow rounds = MethodBuilder.buildRoundsRow(touch.getNumberOfBells());
-			touch.setTerminationSpecificRow(rounds);
+			touch.setTerminationChange(rounds);
 			parseAndProve();
 		}
 		// Now check for valid row
 		else {
 			try {
 				final MethodRow parsedRow = MethodBuilder.parse(touch.getNumberOfBells(), terminationChangeText);
-				touch.setTerminationSpecificRow(parsedRow);
+				touch.setTerminationChange(parsedRow);
 				parseAndProve();
 			}
 			catch (RuntimeException e) {
@@ -511,7 +511,7 @@ public class TouchDocument extends ScrollPane implements Listenable<TouchDocumen
 				msg.append(e.getMessage())
 						.append(System.lineSeparator());
 				msg.append("The original termination change '")
-						.append(touch.getTerminationSpecificRow().isPresent()? touch.getTerminationSpecificRow().get().getDisplayString(true):"")
+						.append(touch.getTerminationChange().isPresent()? touch.getTerminationChange().get().getDisplayString(true):"")
 						.append("' will be restored.");
 
 				Alert dialog = new Alert(Alert.AlertType.ERROR, msg.toString(), ButtonType.OK);
@@ -600,7 +600,7 @@ public class TouchDocument extends ScrollPane implements Listenable<TouchDocumen
 	}
 
 	public Integer getTerminationCircularTouch() {
-		return touch.getTerminationCircularTouch().orNull();
+		return touch.getTerminationMaxCircularTouch().orNull();
 	}
 
 	public void setTerminationCircularTouch(Integer terminationCircularTouch) {
@@ -613,13 +613,13 @@ public class TouchDocument extends ScrollPane implements Listenable<TouchDocumen
 			}
 			if (!terminationCircularTouch.equals(getTerminationCircularTouch())) {
 
-				touch.setTerminationCircularTouch(terminationCircularTouch);
+				touch.setTerminationMaxCircularTouch(terminationCircularTouch);
 				parseAndProve();
 			}
 		}
 		else {
-			if (touch.getTerminationCircularTouch() != null) {
-				touch.removeTerminationCircularTouch();
+			if (touch.getTerminationMaxCircularTouch() != null) {
+				touch.removeTerminationMaxCircularTouch();
 				parseAndProve();
 			}
 		}

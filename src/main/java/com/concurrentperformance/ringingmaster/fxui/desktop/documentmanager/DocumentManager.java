@@ -1,6 +1,7 @@
 package com.concurrentperformance.ringingmaster.fxui.desktop.documentmanager;
 
 import com.concurrentperformance.ringingmaster.engine.NumberOfBells;
+import com.concurrentperformance.ringingmaster.engine.method.Stroke;
 import com.concurrentperformance.ringingmaster.engine.method.impl.MethodBuilder;
 import com.concurrentperformance.ringingmaster.engine.notation.NotationBody;
 import com.concurrentperformance.ringingmaster.engine.notation.impl.NotationBuilder;
@@ -133,7 +134,20 @@ public class DocumentManager extends ConcurrentListenable<DocumentManagerListene
 		touch.addDefinition("3*", "-s-");
 		touch.addDefinition("tr", "sps");
 
-		touch.setTerminationSpecificRow(MethodBuilder.buildRoundsRow(touch.getNumberOfBells()));
+		touch.setStartChange(MethodBuilder.parse(touch.getNumberOfBells(),"654321"));
+		touch.setStartAtRow(10);
+		touch.setStartNotation(NotationBuilder.getInstance()
+				.setNumberOfWorkingBells(touch.getNumberOfBells())
+				.setUnfoldedNotationShorthand("x12x34")
+				.build());
+		touch.setStartStroke(Stroke.HANDSTROKE);
+
+		touch.setTerminationChange(MethodBuilder.parse(touch.getNumberOfBells(), "132546"));
+		touch.setTerminationMaxRows(2345);
+		touch.setTerminationMaxParts(123);
+		touch.setTerminationMaxLeads(999);
+		touch.setTerminationMaxCircularTouch(12);
+
 		return touch;
 	}
 
@@ -174,7 +188,8 @@ public class DocumentManager extends ConcurrentListenable<DocumentManagerListene
 				.setNumberOfWorkingBells(NumberOfBells.BELLS_8)
 				.setName("Plain Bob")
 				.setFoldedPalindromeNotationShorthand("-18-18-18-18", "12")
-				.setCannedCalls()
+				.addCall("MyCall", "C", "145678", true)
+				.addCall("OtherCall", "O", "1234", false)
 				.setSpliceIdentifier("X")
 				.build();
 	}

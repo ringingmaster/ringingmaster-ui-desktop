@@ -26,10 +26,9 @@ import java.io.IOException;
  */
 public class RingingMasterDesktopApp extends Application {
 
+
 	private final static Logger log = LoggerFactory.getLogger(RingingMasterDesktopApp.class);
 	public static final String STYLESHEET = "com/concurrentperformance/ringingmaster/fxui/desktop/RingingmasterDesktopApp.css";
-
-	private final ApplicationContext applicationContext = new ClassPathXmlApplicationContext("spring/appCtx-ringingmaster-ui-desktop.xml");
 
 
 	public static void main(String[] args) {
@@ -44,6 +43,8 @@ public class RingingMasterDesktopApp extends Application {
 
 	@Override
 	public void start(Stage stage) throws IOException {
+		StageFactory.stage = stage;
+		final ApplicationContext applicationContext = new ClassPathXmlApplicationContext("spring/appCtx-ringingmaster-ui-desktop.xml");
 		Parent parent = (Parent)applicationContext.getBean("mainWindow");
 
 		Scene scene = new Scene(parent, 900,650);
@@ -60,5 +61,4 @@ public class RingingMasterDesktopApp extends Application {
 	@Override
 	public void stop() throws Exception {
 	}
-
 }

@@ -16,9 +16,12 @@ import com.concurrentperformance.util.listener.Listenable;
 import javafx.scene.Node;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Optional;
@@ -38,6 +41,7 @@ public class DocumentManager extends ConcurrentListenable<DocumentManagerListene
 
 	private ProofManager proofManager;
 	private BeanFactory beanFactory;
+	private Stage globalStage;
 	private TouchPersistence touchPersistence = new TouchPersistence();
 
 	public void init() {
@@ -71,8 +75,19 @@ public class DocumentManager extends ConcurrentListenable<DocumentManagerListene
 
 	public void saveCurrentDocument() {
 		if (currentDocument.isPresent()) {
+			FileChooser fileChooser = new FileChooser();
+			fileChooser.setTitle("Open Resource File");
+			fileChooser.getExtensionFilters().addAll(
+					new FileChooser.ExtensionFilter("Text Files", "*.txt"),
+					new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.gif"),
+					new FileChooser.ExtensionFilter("Audio Files", "*.wav", "*.mp3", "*.aac"),
+					new FileChooser.ExtensionFilter("All Files", "*.*"));
+			File selectedFile = fileChooser.showOpenDialog(globalStage);
+
+
 			Touch touch = currentDocument.get().getTouch();
 			Path path = Paths.get("Temp.touch"); //TODO Need to start a file dialog.
+
 			touchPersistence.persist(path, touch);
 		}
 	}
@@ -104,6 +119,10 @@ public class DocumentManager extends ConcurrentListenable<DocumentManagerListene
 
 	public void setBeanFactory(BeanFactory beanFactory) {
 		this.beanFactory = beanFactory;
+	}
+
+	public void setGlobalStage(Stage globalStage) {
+		this.globalStage = globalStage;
 	}
 
 	//TODO remove this

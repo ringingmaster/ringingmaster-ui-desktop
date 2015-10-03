@@ -21,4 +21,10 @@
 
     <bean class="com.concurrentperformance.ringingmaster.fxui.desktop.beanfactory.SpringBeanFactory"/>
 
+    <bean id="globalStage" class="javafx.stage.Stage"
+          factory-bean="stageFactory"
+          factory-method="getStage"
+          scope="singleton"/>
+    <bean id="stageFactory" class="com.concurrentperformance.ringingmaster.fxui.desktop.StageFactory"/>
+
 </beans>

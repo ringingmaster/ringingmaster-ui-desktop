@@ -13,6 +13,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.io.IOException;
+import java.util.prefs.Preferences;
 
 /**
  * Spring based launcher for the JavaFX App.
@@ -43,7 +44,7 @@ public class RingingMasterDesktopApp extends Application {
 
 	@Override
 	public void start(Stage stage) throws IOException {
-		StageFactory.stage = stage;
+		StageFactory.primaryStage = stage;
 		final ApplicationContext applicationContext = new ClassPathXmlApplicationContext("spring/appCtx-ringingmaster-ui-desktop.xml");
 		Parent parent = (Parent)applicationContext.getBean("mainWindow");
 
@@ -60,5 +61,10 @@ public class RingingMasterDesktopApp extends Application {
 
 	@Override
 	public void stop() throws Exception {
+		Preferences userPrefs = Preferences.userNodeForPackage(getClass());
+		userPrefs.putDouble("primaryStage.x", StageFactory.primaryStage.getX());
+		userPrefs.putDouble("primaryStage.y", StageFactory.primaryStage.getY());
+		userPrefs.putDouble("primaryStage.width", StageFactory.primaryStage.getWidth());
+		userPrefs.putDouble("primaryStage.height", StageFactory.primaryStage.getHeight());
 	}
 }

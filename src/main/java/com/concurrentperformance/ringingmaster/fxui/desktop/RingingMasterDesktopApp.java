@@ -48,10 +48,17 @@ public class RingingMasterDesktopApp extends Application {
 		final ApplicationContext applicationContext = new ClassPathXmlApplicationContext("spring/appCtx-ringingmaster-ui-desktop.xml");
 		Parent parent = (Parent)applicationContext.getBean("mainWindow");
 
-		Scene scene = new Scene(parent, 900,650);
-		scene.getStylesheets().add(STYLESHEET);
+		Preferences userPrefs = Preferences.userNodeForPackage(getClass());
+		double x = userPrefs.getDouble("primaryStage.x", 100);
+		double y = userPrefs.getDouble("primaryStage.y", 100);
+		double width = userPrefs.getDouble("primaryStage.width", 900);
+		double height = userPrefs.getDouble("primaryStage.height", 650);
 
+		Scene scene = new Scene(parent, width,height);
+		scene.getStylesheets().add(STYLESHEET);
 		stage.setScene(scene);
+		stage.setX(x);
+		stage.setY(y);
 		stage.initStyle(StageStyle.DECORATED);
 		stage.getIcons().add(new Image(	RingingMasterDesktopApp.class.getResourceAsStream("/images/RingingMaster.png")));
 		stage.setTitle("Ringingmaster Desktop");

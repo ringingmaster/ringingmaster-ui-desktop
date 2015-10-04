@@ -23,7 +23,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Optional;
 
 /**
@@ -75,19 +74,26 @@ public class DocumentManager extends ConcurrentListenable<DocumentManagerListene
 
 	public void saveCurrentDocument() {
 		if (currentDocument.isPresent()) {
-			FileChooser fileChooser = new FileChooser();
-			fileChooser.setTitle("Open Resource File");
-			fileChooser.getExtensionFilters().addAll(
-					new FileChooser.ExtensionFilter("Text Files", "*.txt"),
-					new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.gif"),
-					new FileChooser.ExtensionFilter("Audio Files", "*.wav", "*.mp3", "*.aac"),
-					new FileChooser.ExtensionFilter("All Files", "*.*"));
-			File selectedFile = fileChooser.showOpenDialog(globalStage);
+			TouchDocument touchDocument = currentDocument.get();
 
+			if (!touchDocument.getPath().isPresent()) {
 
-			Touch touch = currentDocument.get().getTouch();
-			Path path = Paths.get("Temp.touch"); //TODO Need to start a file dialog.
+				FileChooser fileChooser = new FileChooser();
+				fileChooser.setTitle("Save Touch File");
+				fileChooser.setInitialFileName("new.touch");
+				fileChooser.getExtensionFilters().addAll(
+						new FileChooser.ExtensionFilter("Touch Files", "*.touch"));
+				File selectedFile = fileChooser.showSaveDialog(globalStage);
+				if (selectedFile == null) {
+					return;
+				}
+				else {
+					touchDocument.setPath(selectedFile.toPath());
+				}
+			}
 
+			Touch touch = touchDocument.getTouch();
+			Path path = touchDocument.getPath().get();
 			touchPersistence.persist(path, touch);
 		}
 	}

@@ -41,6 +41,7 @@ import javafx.scene.paint.Color;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -61,8 +62,10 @@ public class TouchDocument extends ScrollPane implements Listenable<TouchDocumen
 
 	public static final String SPLICED_TOKEN = "<Spliced>";
 
+	//Raw Data
 	private Touch touch;
 	private final TouchStyle touchStyle = new TouchStyle();
+	private Optional<Path> path = Optional.absent();
 
 	private MainGridModel mainGridModel;
 	private final List<GridModel> definitionModels = new ArrayList<>();
@@ -693,5 +696,13 @@ public class TouchDocument extends ScrollPane implements Listenable<TouchDocumen
 
 	public void setProofManager(ProofManager proofManager) {
 		this.proofManager = proofManager;
+	}
+
+	public Optional<Path> getPath() {
+		return path;
+	}
+
+	public void setPath(Path path) {
+		this.path = Optional.of(path);
 	}
 }

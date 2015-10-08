@@ -9,10 +9,15 @@
 
     <bean id="menuBar" class="com.concurrentperformance.fxutils.menu.InjectableMenuBar">
         <property name="menuBarElements">
-            <list>
-                <bean class="javafx.scene.control.Menu" p:text="File"/>
-            </list>
+            <bean class="com.concurrentperformance.fxutils.menu.MenuDefinitionContainer"
+                  c:events-ref="menu.file"
+                    c:name="File"/>
         </property>
     </bean>
+
+
+    <util:list id="menu.file">
+            <ref bean="event.save"/>
+    </util:list>
 
 </beans>

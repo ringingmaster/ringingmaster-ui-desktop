@@ -17,6 +17,8 @@
           scope="prototype"
           autowire="no"/>
 
+    <bean id="event.new" class="com.concurrentperformance.ringingmaster.fxui.desktop.documentmanager.NewDocumentEvent"/>
+    <bean id="event.open" class="com.concurrentperformance.ringingmaster.fxui.desktop.documentmanager.OpenDocumentEvent"/>
     <bean id="event.save" class="com.concurrentperformance.ringingmaster.fxui.desktop.documentmanager.SaveDocumentEvent"/>
 
 

@@ -8,20 +8,21 @@
 
 
     <bean id="toolBar" class="com.concurrentperformance.fxutils.toolbar.InjectableToolBar">
-        <property name="toolBarElements">
+        <property name="definitions">
             <util:list>
-                <bean class="com.concurrentperformance.ringingmaster.fxui.desktop.documentmanager.NewDocumentButton"/>
-                <bean class="com.concurrentperformance.ringingmaster.fxui.desktop.documentmanager.OpenDocumentButton"/>
-                <bean class="com.concurrentperformance.ringingmaster.fxui.desktop.documentmanager.SaveDocumentButton"/>
-                <bean class="javafx.scene.control.Separator" p:orientation="VERTICAL"/>
-                <bean class="com.concurrentperformance.ringingmaster.fxui.desktop.undo.UndoButton"/>
-                <bean class="com.concurrentperformance.ringingmaster.fxui.desktop.undo.RedoButton"/>
-                <bean class="javafx.scene.control.Separator" p:orientation="VERTICAL"/>
-                <bean class="com.concurrentperformance.ringingmaster.fxui.desktop.edit.CutButton"/>
-                <bean class="com.concurrentperformance.ringingmaster.fxui.desktop.edit.CopyButton"/>
-                <bean class="com.concurrentperformance.ringingmaster.fxui.desktop.edit.PasteButton"/>
-                <bean class="javafx.scene.control.Separator" p:orientation="VERTICAL"/>
-                <bean class="com.concurrentperformance.ringingmaster.fxui.desktop.notationpanel.AddNotationButton"/>
+                <bean class="com.concurrentperformance.fxutils.toolbar.ToolbarDefinitionEvent" c:eventDefinition-ref="event.new"/>
+                <bean class="com.concurrentperformance.fxutils.toolbar.ToolbarDefinitionEvent" c:eventDefinition-ref="event.open"/>
+                <bean class="com.concurrentperformance.fxutils.toolbar.ToolbarDefinitionEvent" c:eventDefinition-ref="event.save"/>
+                <bean class="com.concurrentperformance.fxutils.toolbar.ToolbarDefinitionSeparator" c:orientation="VERTICAL"/>
+                <bean class="com.concurrentperformance.fxutils.toolbar.ToolbarDefinitionEvent" c:eventDefinition-ref="event.undo"/>
+                <!--<bean class="com.concurrentperformance.ringingmaster.fxui.desktop.undo.UndoButton"/>-->
+                <!--<bean class="com.concurrentperformance.ringingmaster.fxui.desktop.undo.RedoButton"/>-->
+                <!--<bean class="javafx.scene.control.Separator" p:orientation="VERTICAL"/>-->
+                <!--<bean class="com.concurrentperformance.ringingmaster.fxui.desktop.edit.CutButton"/>-->
+                <!--<bean class="com.concurrentperformance.ringingmaster.fxui.desktop.edit.CopyButton"/>-->
+                <!--<bean class="com.concurrentperformance.ringingmaster.fxui.desktop.edit.PasteButton"/>-->
+                <!--<bean class="javafx.scene.control.Separator" p:orientation="VERTICAL"/>-->
+                <!--<bean class="com.concurrentperformance.ringingmaster.fxui.desktop.notationpanel.AddNotationButton"/>-->
             </util:list>
         </property>
     </bean>

@@ -11,24 +11,24 @@ import org.slf4j.LoggerFactory;
  *
  * @author Lake
  */
-public class SaveDocumentEvent extends SkeletalEventDefinition implements EventDefinition {
+public class NewDocumentEvent extends SkeletalEventDefinition implements EventDefinition {
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 	private DocumentManager documentManager;
 
-	public SaveDocumentEvent() {
-		super("/images/save.png", "Save");
-		tooltipTextProperty().setValue("Save Touch");
+	public NewDocumentEvent() {
+		super("/images/new_file.png", "New");
+		disableProperty().set(false);
+		tooltipTextProperty().setValue("New Touch");
 	}
 
 	@Override
 	public void handle(ActionEvent event) {
-		documentManager.saveCurrentDocument();
+		documentManager.buildNewDocument();
 	}
 
 	public void setDocumentManager(DocumentManager documentManager) {
 		this.documentManager = documentManager;
-		documentManager.addListener(touchDocument -> disableProperty().set(!touchDocument.isPresent()));
 	}
 }

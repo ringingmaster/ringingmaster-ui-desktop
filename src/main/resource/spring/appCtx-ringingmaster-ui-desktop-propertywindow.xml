@@ -34,7 +34,7 @@
         </property>
     </bean>
 
-    <bean id="propertyWindow.toolBar" class="com.concurrentperformance.fxutils.toolbar.InjectableToolBar">
+    <bean id="propertyWindow.toolBar" class="com.concurrentperformance.fxutils.toolbar.InjectableToolBarOld">
         <property name="toolBarElements">
             <util:list>
                 <bean class="com.concurrentperformance.ringingmaster.fxui.desktop.notationpanel.AddNotationButton"/>

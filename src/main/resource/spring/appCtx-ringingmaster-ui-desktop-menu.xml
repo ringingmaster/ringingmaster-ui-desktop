@@ -9,15 +9,24 @@
 
     <bean id="menuBar" class="com.concurrentperformance.fxutils.menu.InjectableMenuBar">
         <property name="menuBarElements">
-            <bean class="com.concurrentperformance.fxutils.menu.MenuDefinitionContainer"
-                  c:events-ref="menu.file"
-                    c:name="File"/>
+            <list>
+                <bean class="com.concurrentperformance.fxutils.menu.MenuDefinitionBranch"
+                      c:menuDefinitions-ref="menu.file" c:name="File"/>
+                <bean class="com.concurrentperformance.fxutils.menu.MenuDefinitionBranch"
+                      c:menuDefinitions-ref="menu.edit" c:name="Edit"/>
+            </list>
         </property>
     </bean>
 
 
-    <util:list id="menu.file">
-            <ref bean="event.save"/>
+    <util:list id="menu.file" >
+        <bean class="com.concurrentperformance.fxutils.menu.MenuDefinitionLeafEvent" c:event-ref="event.new"/>
+        <bean class="com.concurrentperformance.fxutils.menu.MenuDefinitionLeafEvent" c:event-ref="event.open"/>
+        <bean class="com.concurrentperformance.fxutils.menu.MenuDefinitionLeafEvent" c:event-ref="event.save"/>
     </util:list>
 
+    <util:list id="menu.edit" >
+        <bean class="com.concurrentperformance.fxutils.menu.MenuDefinitionLeafEvent" c:event-ref="event.undo"/>
+        <bean class="com.concurrentperformance.fxutils.menu.MenuDefinitionLeafSeparator"/>
+    </util:list>
 </beans>

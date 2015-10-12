@@ -14,6 +14,8 @@
                       c:menuDefinitions-ref="menu.file" c:name="File"/>
                 <bean class="com.concurrentperformance.fxutils.menu.MenuDefinitionBranch"
                       c:menuDefinitions-ref="menu.edit" c:name="Edit"/>
+                <bean class="com.concurrentperformance.fxutils.menu.MenuDefinitionBranch"
+                      c:menuDefinitions-ref="menu.touch" c:name="Touch"/>
             </list>
         </property>
     </bean>
@@ -27,6 +29,14 @@
 
     <util:list id="menu.edit" >
         <bean class="com.concurrentperformance.fxutils.menu.MenuDefinitionLeafEvent" c:event-ref="event.undo"/>
+        <bean class="com.concurrentperformance.fxutils.menu.MenuDefinitionLeafEvent" c:event-ref="event.redo"/>
         <bean class="com.concurrentperformance.fxutils.menu.MenuDefinitionLeafSeparator"/>
+        <bean class="com.concurrentperformance.fxutils.menu.MenuDefinitionLeafEvent" c:event-ref="event.cut"/>
+        <bean class="com.concurrentperformance.fxutils.menu.MenuDefinitionLeafEvent" c:event-ref="event.copy"/>
+        <bean class="com.concurrentperformance.fxutils.menu.MenuDefinitionLeafEvent" c:event-ref="event.paste"/>
+    </util:list>
+
+    <util:list id="menu.touch" >
+        <bean class="com.concurrentperformance.fxutils.menu.MenuDefinitionLeafEvent" c:event-ref="event.addNotation"/>
     </util:list>
 </beans>

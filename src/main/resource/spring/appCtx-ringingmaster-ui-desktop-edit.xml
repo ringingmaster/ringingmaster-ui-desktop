@@ -8,6 +8,10 @@
 
 
     <bean id="event.undo" class="com.concurrentperformance.ringingmaster.fxui.desktop.undo.UndoEvent"/>
+    <bean id="event.redo" class="com.concurrentperformance.ringingmaster.fxui.desktop.undo.RedoEvent"/>
 
+    <bean id="event.cut" class="com.concurrentperformance.ringingmaster.fxui.desktop.edit.CutEvent"/>
+    <bean id="event.copy" class="com.concurrentperformance.ringingmaster.fxui.desktop.edit.CopyEvent"/>
+    <bean id="event.paste" class="com.concurrentperformance.ringingmaster.fxui.desktop.edit.PasteEvent"/>
 
 </beans>

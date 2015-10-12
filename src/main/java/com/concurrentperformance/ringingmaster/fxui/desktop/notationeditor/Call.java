@@ -71,7 +71,7 @@ public class Call extends SkeletalNotationEditorTabController implements Notatio
 	private void updateDefaultCallButtonDisableState() {
 		defaultCallButton.setDisable(cannedCalls.isSelected() ||
 									 callsList.getSelectionModel().selectedItemProperty().get() == null);
-		defaultCallButton.setPressedState(!cannedCalls.isSelected() &&
+		defaultCallButton.setPressedOverride(!cannedCalls.isSelected() &&
 				callsList.getSelectionModel().selectedItemProperty().get() != null &&
 				DEFAULT_CALL_TOKEN.equals(callsList.getSelectionModel().selectedItemProperty().get().getSelected()));
 	}

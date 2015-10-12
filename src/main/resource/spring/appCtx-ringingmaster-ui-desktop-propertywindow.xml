@@ -34,22 +34,24 @@
         </property>
     </bean>
 
-    <bean id="propertyWindow.toolBar" class="com.concurrentperformance.fxutils.toolbar.InjectableToolBarOld">
-        <property name="toolBarElements">
+    <bean id="propertyWindow.toolBar" class="com.concurrentperformance.fxutils.toolbar.InjectableToolBar">
+        <property name="definitions">
             <util:list>
-                <bean class="com.concurrentperformance.ringingmaster.fxui.desktop.notationpanel.AddNotationButton"/>
-                <bean class="com.concurrentperformance.ringingmaster.fxui.desktop.notationpanel.DeleteNotationButton"
-                        p:propertyNotationPanel-ref="propertyWindow.notation.panel"/>
-                <ref bean="editNotationButton"/>
-                <bean class="javafx.scene.control.Separator" p:orientation="VERTICAL"/>
-                <ref bean="setActiveNotationButton"/>
+                <bean class="com.concurrentperformance.fxutils.toolbar.ToolbarDefinitionEvent" c:eventDefinition-ref="event.addNotation"/>
+                <bean class="com.concurrentperformance.fxutils.toolbar.ToolbarDefinitionEvent" c:eventDefinition-ref="event.deleteNotation"/>
+                <bean class="com.concurrentperformance.fxutils.toolbar.ToolbarDefinitionEvent" c:eventDefinition-ref="event.editNotation"/>
+                <bean class="com.concurrentperformance.fxutils.toolbar.ToolbarDefinitionSeparator" c:orientation="VERTICAL"/>
+                <bean class="com.concurrentperformance.fxutils.toolbar.ToolbarDefinitionEvent" c:eventDefinition-ref="event.setActiveNotation"/>
             </util:list>
         </property>
     </bean>
 
-    <bean id="editNotationButton" class="com.concurrentperformance.ringingmaster.fxui.desktop.notationpanel.EditNotationButton"
+    <bean id="event.addNotation" class="com.concurrentperformance.ringingmaster.fxui.desktop.notationpanel.AddNotationEvent"/>
+    <bean id="event.deleteNotation" class="com.concurrentperformance.ringingmaster.fxui.desktop.notationpanel.DeleteNotationEvent"
           p:propertyNotationPanel-ref="propertyWindow.notation.panel"/>
-    <bean id="setActiveNotationButton" class="com.concurrentperformance.ringingmaster.fxui.desktop.notationpanel.SetActiveNotationButton"
+    <bean id="event.editNotation" class="com.concurrentperformance.ringingmaster.fxui.desktop.notationpanel.EditNotationEvent"
+          p:propertyNotationPanel-ref="propertyWindow.notation.panel"/>
+    <bean id="event.setActiveNotation" class="com.concurrentperformance.ringingmaster.fxui.desktop.notationpanel.SetActiveNotationEvent"
           p:propertyNotationPanel-ref="propertyWindow.notation.panel"/>
 
     <bean id="propertyWindow.notation.panel" class="com.concurrentperformance.ringingmaster.fxui.desktop.notationpanel.PropertyNotationPanel"/>

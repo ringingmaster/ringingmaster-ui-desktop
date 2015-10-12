@@ -26,7 +26,7 @@ public class PropertyNotationPanel extends NameValuePairTable implements Listena
 	private ConcurrentListenable<PropertyNotationPanelListener> listenableDelegate = new ConcurrentListenable<>();
 
 	private DocumentManager documentManager;
-	private EditNotationButton editNotationButton;
+	private EditNotationEvent editNotationEvent;
 
 	public PropertyNotationPanel() {
 		//TODO add an empty table hint i.e. setPlaceholder(new Label("No Calls Defined"));
@@ -40,7 +40,7 @@ public class PropertyNotationPanel extends NameValuePairTable implements Listena
 
 		setOnMouseClicked(event -> {
 			if(event.getClickCount() == 2) {
-				editNotationButton.doEditCurrentSelectedNotation();
+				editNotationEvent.handle(null);
 			}
 		});
 
@@ -160,7 +160,7 @@ public class PropertyNotationPanel extends NameValuePairTable implements Listena
 		listenableDelegate.addListener(listener);
 	}
 
-	public void setEditNotationButton(EditNotationButton editNotationButton) {
-		this.editNotationButton = editNotationButton;
+	public void setEditNotationEvent(EditNotationEvent editNotationEvent) {
+		this.editNotationEvent = editNotationEvent;
 	}
 }

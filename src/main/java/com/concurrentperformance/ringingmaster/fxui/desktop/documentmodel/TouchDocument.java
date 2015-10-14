@@ -25,7 +25,6 @@ import com.concurrentperformance.ringingmaster.fxui.desktop.proof.ProofManager;
 import com.concurrentperformance.ringingmaster.ui.common.TouchStyle;
 import com.concurrentperformance.util.listener.ConcurrentListenable;
 import com.concurrentperformance.util.listener.Listenable;
-import com.google.common.base.Optional;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import javafx.application.Platform;
@@ -45,6 +44,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -65,7 +65,7 @@ public class TouchDocument extends ScrollPane implements Listenable<TouchDocumen
 	//Raw Data
 	private Touch touch;
 	private final TouchStyle touchStyle = new TouchStyle();
-	private Optional<Path> path = Optional.absent();
+	private Optional<Path> path = Optional.empty();
 
 	private MainGridModel mainGridModel;
 	private final List<GridModel> definitionModels = new ArrayList<>();
@@ -551,7 +551,7 @@ public class TouchDocument extends ScrollPane implements Listenable<TouchDocumen
 	}
 
 	public Integer getTerminationMaxLeads() {
-		return touch.getTerminationMaxLeads().orNull();
+		return touch.getTerminationMaxLeads().orElse(null);
 	}
 
 	public void setTerminationMaxLeads(Integer terminationMaxLeads) {
@@ -577,7 +577,7 @@ public class TouchDocument extends ScrollPane implements Listenable<TouchDocumen
 	}
 
 	public Integer getTerminationMaxParts() {
-		return touch.getTerminationMaxParts().orNull();
+		return touch.getTerminationMaxParts().orElse(null);
 	}
 
 	public void setTerminationMaxParts(Integer terminationMaxParts) {
@@ -603,7 +603,7 @@ public class TouchDocument extends ScrollPane implements Listenable<TouchDocumen
 	}
 
 	public Integer getTerminationCircularTouch() {
-		return touch.getTerminationMaxCircularTouch().orNull();
+		return touch.getTerminationMaxCircularTouch().orElse(null);
 	}
 
 	public void setTerminationCircularTouch(Integer terminationCircularTouch) {

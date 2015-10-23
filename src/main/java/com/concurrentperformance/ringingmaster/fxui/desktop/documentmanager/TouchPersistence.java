@@ -44,7 +44,7 @@ public class TouchPersistence {
 
 	private DocumentPersist documentPersist = new DocumentPersist();
 
-	public void persist(Path path, Touch touch) {
+	public void save(Path path, Touch touch) {
 
 		TouchPersist touchPersist = buildTouchPersist(touch);
 
@@ -55,6 +55,12 @@ public class TouchPersistence {
 		} catch (JAXBException e) {
 			log.error("TODO", e);
 		}
+	}
+
+	public Touch load(Path path) {
+		TouchPersist touchPersist = documentPersist.readTouch(path);
+		Touch touch = buildTouch(touchPersist);
+		return touch;
 	}
 
 	TouchPersist buildTouchPersist(Touch touch) {

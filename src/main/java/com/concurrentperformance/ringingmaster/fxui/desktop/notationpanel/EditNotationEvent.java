@@ -3,7 +3,7 @@ package com.concurrentperformance.ringingmaster.fxui.desktop.notationpanel;
 import com.concurrentperformance.fxutils.events.EventDefinition;
 import com.concurrentperformance.fxutils.events.SkeletalEventDefinition;
 import com.concurrentperformance.ringingmaster.engine.notation.NotationBody;
-import com.concurrentperformance.ringingmaster.fxui.desktop.documentmanager.DocumentManager;
+import com.concurrentperformance.ringingmaster.fxui.desktop.documentmodel.TouchDocumentTypeManager;
 import com.concurrentperformance.ringingmaster.fxui.desktop.notationeditor.NotationEditorDialogBuilder;
 import javafx.event.ActionEvent;
 import org.slf4j.Logger;
@@ -19,7 +19,7 @@ public class EditNotationEvent extends SkeletalEventDefinition implements EventD
 	private final static Logger log = LoggerFactory.getLogger(EditNotationEvent.class);
 	public static final String TOOLTIP_BAST_TEXT = "Edit method";
 
-	private DocumentManager documentManager;
+	private TouchDocumentTypeManager touchDocumentTypeManager;
 	private PropertyNotationPanel propertyNotationPanel;
 	private NotationEditorDialogBuilder notationEditorDialogBuilder;
 
@@ -32,7 +32,7 @@ public class EditNotationEvent extends SkeletalEventDefinition implements EventD
 	@Override
 	public void handle(ActionEvent event) {
 
-		if (!documentManager.getCurrentDocument().isPresent()) {
+		if (!touchDocumentTypeManager.getCurrentDocument().isPresent()) {
 			return;
 		}
 
@@ -41,7 +41,7 @@ public class EditNotationEvent extends SkeletalEventDefinition implements EventD
 		if (notation != null) {
 			notationEditorDialogBuilder.editNotationShowDialog(notation, result -> {
 				log.info("EditNotationButton - adding", result.toString());
-				documentManager.getCurrentDocument().get().exchangeNotationAfterEdit(notation, result);
+				touchDocumentTypeManager.getCurrentDocument().get().exchangeNotationAfterEdit(notation, result);
 				// TODO what checks do we need here?
 				return true; //TODO common this code from double click -
 			});
@@ -63,8 +63,8 @@ public class EditNotationEvent extends SkeletalEventDefinition implements EventD
 		});
 	}
 
-	public void setDocumentManager(DocumentManager documentManager) {
-		this.documentManager = documentManager;
+	public void setTouchDocumentTypeManager(TouchDocumentTypeManager touchDocumentTypeManager) {
+		this.touchDocumentTypeManager = touchDocumentTypeManager;
 	}
 
 	public void setNotationEditorDialogBuilder(NotationEditorDialogBuilder notationEditorDialogBuilder) {

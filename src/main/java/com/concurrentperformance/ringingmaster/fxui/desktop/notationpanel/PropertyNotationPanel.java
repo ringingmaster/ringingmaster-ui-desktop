@@ -3,8 +3,8 @@ package com.concurrentperformance.ringingmaster.fxui.desktop.notationpanel;
 import com.concurrentperformance.fxutils.namevaluepair.NameValuePairModel;
 import com.concurrentperformance.fxutils.namevaluepair.NameValuePairTable;
 import com.concurrentperformance.ringingmaster.engine.notation.NotationBody;
-import com.concurrentperformance.ringingmaster.fxui.desktop.documentmanager.DocumentManager;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentmodel.TouchDocument;
+import com.concurrentperformance.ringingmaster.fxui.desktop.documentmodel.TouchDocumentTypeManager;
 import com.concurrentperformance.util.listener.ConcurrentListenable;
 import com.concurrentperformance.util.listener.Listenable;
 import com.google.common.base.Strings;
@@ -25,18 +25,16 @@ public class PropertyNotationPanel extends NameValuePairTable implements Listena
 
 	private ConcurrentListenable<PropertyNotationPanelListener> listenableDelegate = new ConcurrentListenable<>();
 
-	private DocumentManager documentManager;
+	private TouchDocumentTypeManager touchDocumentTypeManager;
 	private EditNotationEvent editNotationEvent;
 
 	public PropertyNotationPanel() {
 		//TODO add an empty table hint i.e. setPlaceholder(new Label("No Calls Defined"));
 	}
 
-	public void setDocumentManager(DocumentManager documentManager) {
-		this.documentManager = documentManager;
-		documentManager.addListener(touchDocument -> {
-			updateToReflectDocument(touchDocument);
-		});
+	public void setTouchDocumentTypeManager(TouchDocumentTypeManager touchDocumentTypeManager) {
+		this.touchDocumentTypeManager = touchDocumentTypeManager;
+		touchDocumentTypeManager.addListener(document -> updateToReflectDocument(document));
 
 		setOnMouseClicked(event -> {
 			if(event.getClickCount() == 2) {
@@ -143,11 +141,11 @@ public class PropertyNotationPanel extends NameValuePairTable implements Listena
 
 
 	public NotationBody getNotation(int index) {
-		if (!documentManager.getCurrentDocument().isPresent()) {
+		if (!touchDocumentTypeManager.getCurrentDocument().isPresent()) {
 			return null;
 		}
 
-		List<NotationBody> sortedAllNotations = documentManager.getCurrentDocument().get().getSortedAllNotations();
+		List<NotationBody> sortedAllNotations = touchDocumentTypeManager.getCurrentDocument().get().getSortedAllNotations();
 		if (index >= 0 && index < sortedAllNotations.size()) {
 			return sortedAllNotations.get(index);
 		}

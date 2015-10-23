@@ -3,7 +3,7 @@ package com.concurrentperformance.ringingmaster.fxui.desktop.notationpanel;
 import com.concurrentperformance.fxutils.events.EventDefinition;
 import com.concurrentperformance.fxutils.events.SkeletalEventDefinition;
 import com.concurrentperformance.ringingmaster.engine.NumberOfBells;
-import com.concurrentperformance.ringingmaster.fxui.desktop.documentmanager.DocumentManager;
+import com.concurrentperformance.ringingmaster.fxui.desktop.documentmodel.TouchDocumentTypeManager;
 import com.concurrentperformance.ringingmaster.fxui.desktop.notationeditor.NotationEditorDialogBuilder;
 import javafx.event.ActionEvent;
 import org.slf4j.Logger;
@@ -18,7 +18,7 @@ public class AddNotationEvent extends SkeletalEventDefinition implements EventDe
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-	private DocumentManager documentManager;
+	private TouchDocumentTypeManager touchDocumentTypeManager;
 	private NotationEditorDialogBuilder notationEditorDialogBuilder;
 
 	public AddNotationEvent() {
@@ -28,20 +28,20 @@ public class AddNotationEvent extends SkeletalEventDefinition implements EventDe
 
 	@Override
 	public void handle(ActionEvent event) {
-		if (!documentManager.getCurrentDocument().isPresent()) {
+		if (!touchDocumentTypeManager.getCurrentDocument().isPresent()) {
 			return;
 		}
-		NumberOfBells numberOfBells = documentManager.getCurrentDocument().get().getNumberOfBells();
+		NumberOfBells numberOfBells = touchDocumentTypeManager.getCurrentDocument().get().getNumberOfBells();
 
 		notationEditorDialogBuilder.newNotationShowDialog(numberOfBells, result -> {
 			log.info("AddMethodButton - adding", result.toString());
-			return documentManager.getCurrentDocument().get().addNotation(result);
+			return touchDocumentTypeManager.getCurrentDocument().get().addNotation(result);
 		});
 	}
 
-	public void setDocumentManager(DocumentManager documentManager) {
-		this.documentManager = documentManager;
-		documentManager.addListener(touchDocument -> disableProperty().set(!touchDocument.isPresent()));
+	public void setTouchDocumentTypeManager(TouchDocumentTypeManager touchDocumentTypeManager) {
+		this.touchDocumentTypeManager = touchDocumentTypeManager;
+		touchDocumentTypeManager.addListener(document -> disableProperty().set(!document.isPresent()));
 	}
 
 	public void setNotationEditorDialogBuilder(NotationEditorDialogBuilder notationEditorDialogBuilder) {

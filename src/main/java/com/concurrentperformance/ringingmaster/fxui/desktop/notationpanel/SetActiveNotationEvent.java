@@ -3,8 +3,8 @@ package com.concurrentperformance.ringingmaster.fxui.desktop.notationpanel;
 import com.concurrentperformance.fxutils.events.EventDefinition;
 import com.concurrentperformance.fxutils.events.SkeletalEventDefinition;
 import com.concurrentperformance.ringingmaster.engine.notation.NotationBody;
-import com.concurrentperformance.ringingmaster.fxui.desktop.documentmanager.DocumentManager;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentmodel.TouchDocument;
+import com.concurrentperformance.ringingmaster.fxui.desktop.documentmodel.TouchDocumentTypeManager;
 import javafx.event.ActionEvent;
 
 import java.util.Optional;
@@ -18,7 +18,7 @@ public class SetActiveNotationEvent  extends SkeletalEventDefinition implements 
 
 	public static final String TOOLTIP_BAST_TEXT = "Set active method";
 
-	private DocumentManager documentManager;
+	private TouchDocumentTypeManager touchDocumentTypeManager;
 	private PropertyNotationPanel propertyNotationPanel;
 
 	public SetActiveNotationEvent() {
@@ -32,17 +32,17 @@ public class SetActiveNotationEvent  extends SkeletalEventDefinition implements 
 		NotationBody selectedNotation = propertyNotationPanel.getNotation(index);
 
 		if (selectedNotation != null) {
-			if (documentManager.getCurrentDocument().get().isSpliced()) {
-				documentManager.getCurrentDocument().get().setSpliced(false);
-				documentManager.getCurrentDocument().get().setSingleMethodActiveNotation(selectedNotation);
+			if (touchDocumentTypeManager.getCurrentDocument().get().isSpliced()) {
+				touchDocumentTypeManager.getCurrentDocument().get().setSpliced(false);
+				touchDocumentTypeManager.getCurrentDocument().get().setSingleMethodActiveNotation(selectedNotation);
 			}
 			else {
 				// Not Spliced
-				if (documentManager.getCurrentDocument().get().getSingleMethodActiveNotation() == selectedNotation) {
-					documentManager.getCurrentDocument().get().setSpliced(true);
+				if (touchDocumentTypeManager.getCurrentDocument().get().getSingleMethodActiveNotation() == selectedNotation) {
+					touchDocumentTypeManager.getCurrentDocument().get().setSpliced(true);
 				}
 				else {
-					documentManager.getCurrentDocument().get().setSingleMethodActiveNotation(selectedNotation);
+					touchDocumentTypeManager.getCurrentDocument().get().setSingleMethodActiveNotation(selectedNotation);
 				}
 			}
 		}
@@ -52,7 +52,7 @@ public class SetActiveNotationEvent  extends SkeletalEventDefinition implements 
 		this.propertyNotationPanel = propertyNotationPanel;
 
 		propertyNotationPanel.addListener(selectedNotation -> {
-				Optional<TouchDocument> currentDocument = documentManager.getCurrentDocument();
+				Optional<TouchDocument> currentDocument = touchDocumentTypeManager.getCurrentDocument();
 				disableProperty().set(!selectedNotation.isPresent() ||
 						!currentDocument.isPresent() ||
 						!currentDocument.get().getSortedValidNotations().contains(selectedNotation.get()));
@@ -77,7 +77,7 @@ public class SetActiveNotationEvent  extends SkeletalEventDefinition implements 
 
 	}
 
-	public void setDocumentManager(DocumentManager documentManager) {
-		this.documentManager = documentManager;
+	public void setTouchDocumentTypeManager(TouchDocumentTypeManager touchDocumentTypeManager) {
+		this.touchDocumentTypeManager = touchDocumentTypeManager;
 	}
 }

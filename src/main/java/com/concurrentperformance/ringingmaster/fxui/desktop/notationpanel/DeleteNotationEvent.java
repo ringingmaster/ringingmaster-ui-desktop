@@ -3,8 +3,8 @@ package com.concurrentperformance.ringingmaster.fxui.desktop.notationpanel;
 import com.concurrentperformance.fxutils.events.EventDefinition;
 import com.concurrentperformance.fxutils.events.SkeletalEventDefinition;
 import com.concurrentperformance.ringingmaster.engine.notation.NotationBody;
-import com.concurrentperformance.ringingmaster.fxui.desktop.documentmanager.DocumentManager;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentmodel.TouchDocument;
+import com.concurrentperformance.ringingmaster.fxui.desktop.documentmodel.TouchDocumentTypeManager;
 import javafx.event.ActionEvent;
 
 import java.util.Optional;
@@ -18,7 +18,7 @@ public class DeleteNotationEvent extends SkeletalEventDefinition implements Even
 
 	public static final String TOOLTIP_BAST_TEXT = "Remove method";
 
-	private DocumentManager documentManager;
+	private TouchDocumentTypeManager touchDocumentTypeManager;
 	private PropertyNotationPanel propertyNotationPanel;
 
 
@@ -31,7 +31,7 @@ public class DeleteNotationEvent extends SkeletalEventDefinition implements Even
 	public void handle(ActionEvent event) {
 		int index = propertyNotationPanel.getSelectionModel().getSelectedIndex();
 		NotationBody notation =  propertyNotationPanel.getNotation(index);
-		Optional<TouchDocument> currentDocument = documentManager.getCurrentDocument();
+		Optional<TouchDocument> currentDocument = touchDocumentTypeManager.getCurrentDocument();
 		if (currentDocument.isPresent()) {
 			currentDocument.get().removeNotation(notation);
 		}
@@ -52,7 +52,7 @@ public class DeleteNotationEvent extends SkeletalEventDefinition implements Even
 		});
 	}
 
-	public void setDocumentManager(DocumentManager documentManager) {
-		this.documentManager = documentManager;
+	public void setTouchDocumentTypeManager(TouchDocumentTypeManager touchDocumentTypeManager) {
+		this.touchDocumentTypeManager = touchDocumentTypeManager;
 	}
 }

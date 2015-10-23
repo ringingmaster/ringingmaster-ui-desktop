@@ -1,19 +1,7 @@
 package com.concurrentperformance.ringingmaster.fxui.desktop.documentmanager;
 
-import com.concurrentperformance.ringingmaster.engine.NumberOfBells;
-import com.concurrentperformance.ringingmaster.engine.method.Stroke;
-import com.concurrentperformance.ringingmaster.engine.method.impl.MethodBuilder;
-import com.concurrentperformance.ringingmaster.engine.notation.NotationBody;
-import com.concurrentperformance.ringingmaster.engine.notation.impl.NotationBuilder;
-import com.concurrentperformance.ringingmaster.engine.touch.container.Touch;
-import com.concurrentperformance.ringingmaster.engine.touch.container.TouchCheckingType;
-import com.concurrentperformance.ringingmaster.engine.touch.container.impl.TouchBuilder;
-import com.concurrentperformance.ringingmaster.fxui.desktop.documentmodel.TouchDocument;
-import com.concurrentperformance.ringingmaster.fxui.desktop.proof.ProofManager;
-import com.concurrentperformance.util.beanfactory.BeanFactory;
 import com.concurrentperformance.util.listener.ConcurrentListenable;
 import com.concurrentperformance.util.listener.Listenable;
-import javafx.scene.Node;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.stage.FileChooser;
@@ -23,6 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -36,224 +25,139 @@ public class DocumentManager extends ConcurrentListenable<DocumentManagerListene
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-	private Optional<TouchDocHolder> currentDocument = Optional.empty();
+	private Optional<DocTabHolder> currentDocTab = Optional.empty();
 	private TabPane documentWindow;
-	private int docNumber = 0;
-
-	private ProofManager proofManager;
-	private BeanFactory beanFactory;
 	private Stage globalStage;
-	private TouchPersistence touchPersistence = new TouchPersistence();
+	private DocumentTypeManager documentTypeManager; //TODO eventually this will be a Set of different documents. It can then control a menulist of document types when creating a new document
 
 	public void init() {
 		documentWindow.setTabClosingPolicy(TabPane.TabClosingPolicy.ALL_TABS);
 		documentWindow.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
 			if (newValue == null) {
-				currentDocument = Optional.empty();
-				proofManager.parseAndProve(null);
+				currentDocTab = Optional.empty();
 				setApplicationTitle(null);
 			}
 			else {
-				currentDocument = Optional.of(new TouchDocHolder(newValue));
-				TouchDocument touchDocument = currentDocument.get().getTouchDocument();
-				touchDocument.parseAndProve();
-				if (touchDocument.getPath().isPresent()) {
-					setApplicationTitle(touchDocument.getPath().toString());
-				} else {
-					setApplicationTitle(currentDocument.get().getTab().getText());
-				}
-
+				currentDocTab = Optional.of(new DocTabHolder(newValue));
+				setApplicationTitle(currentDocTab.get().document);
 			}
+
 			fireUpdateDocument();
 		});
 	}
 
-	public void buildNewDocument() {
-		final TouchDocument touchDocument = beanFactory.build(TouchDocument.class);
-		touchDocument.init(createDummyTouch());
-		// this is needed to listen to document updates that are not changed with proof's.
-		// example -> alter the start change to something that will fail, and this will
-		// allow it to be put back to its original value.
-		touchDocument.addListener(touchDoc -> fireUpdateDocument());
-		Tab tab = createTab("Untitled " + ++docNumber, touchDocument);
-
-		currentDocument = Optional.of(new TouchDocHolder(tab));
+	public void newDocument() {
+		Document document =  documentTypeManager.createNewDocument();
+		buildTabForDocument(document);
 	}
 
-	public void saveCurrentDocument() {
-		if (currentDocument.isPresent()) {
-			TouchDocument touchDocument = currentDocument.get().getTouchDocument();
-			Tab tab = currentDocument.get().getTab();
+	public void openDocument() {
+		FileChooser fileChooser = new FileChooser();
+		fileChooser.setTitle("Open " + documentTypeManager.getDocumentTypeName() + " File");
+		fileChooser.getExtensionFilters().addAll(
+				documentTypeManager.getFileChooserExtensionFilters());
+		List<File> files = fileChooser.showOpenMultipleDialog(globalStage);
+		if (files != null) {
+			for (File file : files) {
+				Path path = file.toPath();
+				final Document document = documentTypeManager.openDocument(path);
+				document.setPath(path);
+				buildTabForDocument(document);
+			}
+		}
+	}
 
-			if (!touchDocument.getPath().isPresent()) {
+
+	public void saveCurrentDocument() {
+		if (currentDocTab.isPresent()) {
+			Document document = currentDocTab.get().getDocument();
+			Tab tab = currentDocTab.get().getTab();
+
+			if (!document.isSaved()) {
 
 				FileChooser fileChooser = new FileChooser();
-				fileChooser.setTitle("Save Touch File");
-				fileChooser.setInitialFileName(tab.getText() +  ".touch");
+				fileChooser.setTitle("Save " + documentTypeManager.getDocumentTypeName() + " File");
+				fileChooser.setInitialFileName(document.getNameForTab());
 				fileChooser.getExtensionFilters().addAll(
-						new FileChooser.ExtensionFilter("Touch Files", "*.touch"));
+						documentTypeManager.getFileChooserExtensionFilters());
 				File selectedFile = fileChooser.showSaveDialog(globalStage);
 				if (selectedFile == null) {
 					return;
 				}
 				else {
-					touchDocument.setPath(selectedFile.toPath());
+					document.setPath(selectedFile.toPath());
 				}
 			}
 
-			Touch touch = touchDocument.getTouch();
-			Path path = touchDocument.getPath().get();
-			touchPersistence.persist(path, touch);
-			tab.setText(path.toString());
-			setApplicationTitle(path.toString());
+			documentTypeManager.saveDocument(document);
+
+			tab.setText(document.getNameForTab());
+			setApplicationTitle(document);
 		}
 	}
 
-	private void setApplicationTitle(String fileText) {
-		globalStage.setTitle("Ringingmaster Desktop" +((fileText== null)?"":" - [" + fileText + "]"));
+	private void buildTabForDocument(Document document) {
+		Tab tab = new Tab();
+		tab.setText(document.getNameForTab());
+		tab.setContent(document.getNode());
+		documentWindow.getTabs().add(tab);
+		documentWindow.getSelectionModel().select(tab);
+
+		currentDocTab = Optional.of(new DocTabHolder(tab));
 	}
 
-	private Tab createTab(String name, Node node) {
-		Tab tab = new Tab();
-		tab.setText(name);
-		tab.setContent(node);
-		documentWindow.getTabs().add(tab);
-		return tab;
+
+	private void setApplicationTitle(Document document) {
+		StringBuilder name = new StringBuilder();
+		name.append("Ringingmaster Desktop");
+		if (document != null) {
+			name.append(" - [").append(document.getNameForApplicationTitle()).append("]");
+		}
+
+		globalStage.setTitle(name.toString());
 	}
 
 	private void fireUpdateDocument() {
-		Optional<TouchDocument> currentDocument = getCurrentDocument();
+		Document currentDocument = getCurrentDocument();
 
 		for (DocumentManagerListener listener : getListeners()) {
-			listener.documentManager_updateDocument(currentDocument);
+			listener.documentManager_documentActivated(currentDocument);
 		}
 	}
 
-	public Optional<TouchDocument> getCurrentDocument() {
-		return Optional.ofNullable((currentDocument.isPresent() ? currentDocument.get().getTouchDocument():null));
+	public Document getCurrentDocument() {
+		return (currentDocTab.isPresent() ? currentDocTab.get().getDocument():null);
 	}
 
 	public void setDocumentWindow(TabPane documentWindow) {
 		this.documentWindow = documentWindow;
 	}
 
-	public void setProofManager(ProofManager proofManager) {
-		this.proofManager = proofManager;
-	}
-
-	public void setBeanFactory(BeanFactory beanFactory) {
-		this.beanFactory = beanFactory;
-	}
-
 	public void setGlobalStage(Stage globalStage) {
 		this.globalStage = globalStage;
 	}
 
-	private class TouchDocHolder {
+	public void setDocumentTypeManager(DocumentTypeManager documentTypeManager) {
+		this.documentTypeManager = documentTypeManager;
+	}
+
+	private class DocTabHolder {
 		private final Tab tab;
-		private final TouchDocument touchDocument;
+		private final Document document;
 
 
-		private TouchDocHolder(Tab tab) {
+		private DocTabHolder(Tab tab) {
 			this.tab = checkNotNull(tab);
-			TouchDocument touchDocument = (TouchDocument) tab.getContent();
-			this.touchDocument = checkNotNull(touchDocument);
+			this.document = checkNotNull((Document) tab.getContent());
 		}
 
 		public Tab getTab() {
 			return tab;
 		}
 
-		public TouchDocument getTouchDocument() {
-			return touchDocument;
+		public Document getDocument() {
+			return document;
 		}
 	}
 
-	//TODO remove this
-	private static Touch createDummyTouch() {
-
-		Touch touch = TouchBuilder.getInstance(NumberOfBells.BELLS_6, 2, 2);
-
-		touch.setTitle("My Touch");
-		touch.setAuthor("by Stephen");
-
-		touch.setTouchCheckingType(TouchCheckingType.LEAD_BASED);
-		touch.addNotation(buildPlainBobMinor());
-		touch.addNotation(buildLittleBobMinor());
-		touch.addNotation(buildPlainBobMinimus());
-		touch.addNotation(buildPlainBobMajor());
-
-
-		touch.insertCharacter(0, 0, 0, '-');
-		touch.insertCharacter(0, 1, 0, 's');
-		touch.insertCharacter(0, 0, 1, 's');
-		touch.insertCharacter(0, 1, 1, '-');
-		touch.insertCharacter(1, 0, 0, 'p');
-		touch.insertCharacter(1, 0, 1, ' ');
-		touch.insertCharacter(1, 0, 2, '3');
-		touch.insertCharacter(1, 0, 3, '*');
-
-
-		touch.addDefinition("3*", "-s-");
-		touch.addDefinition("tr", "sps");
-
-		touch.setStartChange(MethodBuilder.parse(touch.getNumberOfBells(),"654321"));
-		touch.setStartAtRow(10);
-		touch.setStartNotation(NotationBuilder.getInstance()
-				.setNumberOfWorkingBells(touch.getNumberOfBells())
-				.setUnfoldedNotationShorthand("x12x34")
-				.build());
-		touch.setStartStroke(Stroke.HANDSTROKE);
-
-		touch.setTerminationChange(MethodBuilder.parse(touch.getNumberOfBells(), "132546"));
-		touch.setTerminationMaxRows(2345);
-		touch.setTerminationMaxParts(123);
-		touch.setTerminationMaxLeads(999);
-		touch.setTerminationMaxCircularTouch(12);
-
-		return touch;
-	}
-
-	// TODO remove this
-	private static NotationBody buildPlainBobMinor() {
-		return NotationBuilder.getInstance()
-				.setNumberOfWorkingBells(NumberOfBells.BELLS_6)
-				.setName("Plain Bob")
-				.setFoldedPalindromeNotationShorthand("-16-16-16", "12")
-				.setCannedCalls()
-				.setSpliceIdentifier("P")
-				.build();
-	}
-
-	// TODO remove this
-	private static NotationBody buildLittleBobMinor() {
-		return NotationBuilder.getInstance()
-				.setNumberOfWorkingBells(NumberOfBells.BELLS_6)
-				.setName("Little Bob")
-				.setFoldedPalindromeNotationShorthand("-16-14", "12")
-				.setCannedCalls()
-				.build();
-	}
-
-	// TODO remove this
-	private static NotationBody buildPlainBobMinimus() {
-		return NotationBuilder.getInstance()
-				.setNumberOfWorkingBells(NumberOfBells.BELLS_4)
-				.setName("Little Bob")
-				.setFoldedPalindromeNotationShorthand("-14-14", "12")
-				.setCannedCalls()
-				.build();
-	}
-
-	// TODO remove this
-	public static NotationBody buildPlainBobMajor() {
-		return NotationBuilder.getInstance()
-				.setNumberOfWorkingBells(NumberOfBells.BELLS_8)
-				.setName("Plain Bob")
-				.setFoldedPalindromeNotationShorthand("-18-18-18-18", "12")
-				.addCall("MyCall", "C", "145678", true)
-				.addCall("OtherCall", "O", "1234", false)
-				.setSpliceIdentifier("X")
-				.build();
-	}
 }

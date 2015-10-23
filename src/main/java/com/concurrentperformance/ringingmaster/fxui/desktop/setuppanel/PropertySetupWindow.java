@@ -10,8 +10,8 @@ import com.concurrentperformance.ringingmaster.engine.method.Bell;
 import com.concurrentperformance.ringingmaster.engine.method.Stroke;
 import com.concurrentperformance.ringingmaster.engine.notation.NotationBody;
 import com.concurrentperformance.ringingmaster.engine.touch.container.TouchCheckingType;
-import com.concurrentperformance.ringingmaster.fxui.desktop.documentmanager.DocumentManager;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentmodel.TouchDocument;
+import com.concurrentperformance.ringingmaster.fxui.desktop.documentmodel.TouchDocumentTypeManager;
 import com.google.common.collect.Lists;
 import javafx.application.Platform;
 import org.slf4j.Logger;
@@ -54,7 +54,7 @@ public class PropertySetupWindow extends PropertyEditor {
 	public static final String TERMINATION_PART_LIMIT_PROPERTY_NAME = "Part Limit";
 	public static final String TERMINATION_CIRCULAR_TOUCH_LIMIT_PROPERTY_NAME = "Circular Touch Limit";
 
-	private DocumentManager documentManager;
+	private TouchDocumentTypeManager touchDocumentTypeManager;
 
 
 	public void init() {
@@ -65,7 +65,7 @@ public class PropertySetupWindow extends PropertyEditor {
 		buildTerminationSection();
 
 
-		documentManager.addListener(touchDocument -> {
+		touchDocumentTypeManager.addListener(touchDocument -> {
 			updateSetupSection(touchDocument);
 			updateAdvancedSetupSection(touchDocument);
 			updateStartSection(touchDocument);
@@ -306,7 +306,7 @@ public class PropertySetupWindow extends PropertyEditor {
 	}
 
 	void updateTouchDocumentIfPresent(Consumer<TouchDocument> consumer) {
-		Optional<TouchDocument> currentDocument = documentManager.getCurrentDocument();
+		Optional<TouchDocument> currentDocument = touchDocumentTypeManager.getCurrentDocument();
 		if (currentDocument.isPresent()) {
 			// The runLater is to prevent the UI from continuously applying the same wrong update when loosing focus
 			// and switching focus to an error window.
@@ -314,7 +314,7 @@ public class PropertySetupWindow extends PropertyEditor {
 		}
 	}
 
-	public void setDocumentManager(DocumentManager documentManager) {
-		this.documentManager = documentManager;
+	public void setTouchDocumentTypeManager(TouchDocumentTypeManager touchDocumentTypeManager) {
+		this.touchDocumentTypeManager = touchDocumentTypeManager;
 	}
 }

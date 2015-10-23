@@ -12,6 +12,9 @@
 
     <bean id="documentWindow" class="javafx.scene.control.TabPane" autowire="no"/>
 
+    <!-- Injected by name -->
+    <bean id="touchDocumentTypeManager" class="com.concurrentperformance.ringingmaster.fxui.desktop.documentmodel.TouchDocumentTypeManager"/>
+
     <bean class="com.concurrentperformance.ringingmaster.fxui.desktop.documentmodel.TouchDocument"
           p:proofManager-ref="proofManager"
           scope="prototype"

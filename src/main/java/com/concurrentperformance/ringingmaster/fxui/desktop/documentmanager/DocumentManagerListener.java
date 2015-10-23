@@ -1,9 +1,5 @@
 package com.concurrentperformance.ringingmaster.fxui.desktop.documentmanager;
 
-import com.concurrentperformance.ringingmaster.fxui.desktop.documentmodel.TouchDocument;
-
-import java.util.Optional;
-
 /**
  * TODO comments ???
  *
@@ -11,5 +7,5 @@ import java.util.Optional;
  */
 public interface DocumentManagerListener {
 
-	void documentManager_updateDocument(Optional<TouchDocument> touchDocument);
+	void documentManager_documentActivated(Document document);
 }

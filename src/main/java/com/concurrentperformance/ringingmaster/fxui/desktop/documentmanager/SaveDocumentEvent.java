@@ -29,6 +29,6 @@ public class SaveDocumentEvent extends SkeletalEventDefinition implements EventD
 
 	public void setDocumentManager(DocumentManager documentManager) {
 		this.documentManager = documentManager;
-		documentManager.addListener(touchDocument -> disableProperty().set(!touchDocument.isPresent()));
+		documentManager.addListener(document -> disableProperty().set(document == null));
 	}
 }

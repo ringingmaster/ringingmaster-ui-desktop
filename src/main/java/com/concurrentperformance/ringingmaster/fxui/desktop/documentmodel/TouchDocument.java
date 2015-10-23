@@ -15,6 +15,8 @@ import com.concurrentperformance.ringingmaster.engine.touch.container.TouchCell;
 import com.concurrentperformance.ringingmaster.engine.touch.container.TouchCheckingType;
 import com.concurrentperformance.ringingmaster.engine.touch.container.TouchDefinition;
 import com.concurrentperformance.ringingmaster.engine.touch.container.impl.ImmutableTouch;
+import com.concurrentperformance.ringingmaster.fxui.desktop.documentmanager.DefaultDocument;
+import com.concurrentperformance.ringingmaster.fxui.desktop.documentmanager.Document;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentmodel.definitiongrid.DefinitionGridModel;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentmodel.maingrid.MainGridModel;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentpanel.DefinitionPane;
@@ -29,6 +31,7 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ScrollPane;
@@ -56,7 +59,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  *
  * @author Lake
  */
-public class TouchDocument extends ScrollPane implements Listenable<TouchDocumentListener> {
+public class TouchDocument extends ScrollPane implements Listenable<TouchDocumentListener>, Document {
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
@@ -65,7 +68,7 @@ public class TouchDocument extends ScrollPane implements Listenable<TouchDocumen
 	//Raw Data
 	private Touch touch;
 	private final TouchStyle touchStyle = new TouchStyle();
-	private Optional<Path> path = Optional.empty();
+	private Document documentDelegate = new DefaultDocument();
 
 	private MainGridModel mainGridModel;
 	private final List<GridModel> definitionModels = new ArrayList<>();
@@ -698,11 +701,38 @@ public class TouchDocument extends ScrollPane implements Listenable<TouchDocumen
 		this.proofManager = proofManager;
 	}
 
-	public Optional<Path> getPath() {
-		return path;
+	@Override
+	public boolean isSaved() {
+		return documentDelegate.isSaved();
 	}
 
+	@Override
+	public Path getPath() {
+		return documentDelegate.getPath();
+	}
+
+	@Override
 	public void setPath(Path path) {
-		this.path = Optional.of(path);
+		documentDelegate.setPath(path);
+	}
+
+	@Override
+	public void setDocumentName(String documentName) {
+		documentDelegate.setDocumentName(documentName);
+	}
+
+	@Override
+	public String getNameForApplicationTitle() {
+		return documentDelegate.getNameForApplicationTitle();
+	}
+
+	@Override
+	public String getNameForTab() {
+		return documentDelegate.getNameForTab();
+	}
+
+	@Override
+	public Node getNode() {
+		return this;
 	}
 }

@@ -54,6 +54,7 @@
     <bean id="event.setActiveNotation" class="com.concurrentperformance.ringingmaster.fxui.desktop.notationpanel.SetActiveNotationEvent"
           p:propertyNotationPanel-ref="propertyWindow.notation.panel"/>
 
-    <bean id="propertyWindow.notation.panel" class="com.concurrentperformance.ringingmaster.fxui.desktop.notationpanel.PropertyNotationPanel"/>
+    <bean id="propertyWindow.notation.panel" class="com.concurrentperformance.ringingmaster.fxui.desktop.notationpanel.PropertyNotationPanel"
+            p:editNotationEvent-ref="event.editNotation"/>
 
 </beans>

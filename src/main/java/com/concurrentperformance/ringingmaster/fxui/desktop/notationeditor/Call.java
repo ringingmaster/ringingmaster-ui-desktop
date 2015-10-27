@@ -13,6 +13,8 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Set;
 
@@ -24,6 +26,8 @@ import java.util.Set;
 
 
 public class Call extends SkeletalNotationEditorTabController implements NotationEditorTabController {
+
+	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 	public static final String DEFAULT_CALL_TOKEN = "<default>";
 
@@ -55,7 +59,7 @@ public class Call extends SkeletalNotationEditorTabController implements Notatio
 
 		callsList.setPlaceholder(new Label("No Calls Defined"));
 		callsList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-			updateDefaultCallButtonDisableState();
+			updateButtonState();
 		});
 		leadHeadCode.setDisable(true);
 
@@ -64,19 +68,23 @@ public class Call extends SkeletalNotationEditorTabController implements Notatio
 	public void useCannedCallsUpdater(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
 		callsList.setDisable(newValue);
 		addCallButton.setDisable(newValue);
-		removeCallButton.setDisable(newValue);
-		updateDefaultCallButtonDisableState();
+		updateButtonState();
 	}
 
-	private void updateDefaultCallButtonDisableState() {
+	private void updateButtonState() {
+		addCallButton.setDisable(cannedCalls.isSelected());
+
+		removeCallButton.setDisable(cannedCalls.isSelected() ||
+				callsList.getSelectionModel().selectedItemProperty().get() == null);
+
 		defaultCallButton.setDisable(cannedCalls.isSelected() ||
-									 callsList.getSelectionModel().selectedItemProperty().get() == null);
+				callsList.getSelectionModel().selectedItemProperty().get() == null);
 		defaultCallButton.setPressedOverride(!cannedCalls.isSelected() &&
 				callsList.getSelectionModel().selectedItemProperty().get() != null &&
 				DEFAULT_CALL_TOKEN.equals(callsList.getSelectionModel().selectedItemProperty().get().getSelected()));
-	}
 
-	@Override
+	}
+		@Override
 	public void buildDialogDataFromNotation(NotationBody notation) {
 		cannedCalls.setSelected(notation.isCannedCalls());
 
@@ -116,11 +124,18 @@ public class Call extends SkeletalNotationEditorTabController implements Notatio
 
 	@FXML
 	private void onAddCall() {
-
 	}
 
 	@FXML
 	private void onRemoveCall() {
+		int selectedIndex = callsList.getSelectionModel().selectedIndexProperty().get();
+		if (selectedIndex == -1) {
+			return;
+		}
+		for (int index = 0;index<callsList.getItems().size();index++) {
+			callsList.getItems().remove(selectedIndex);
+		}
+		parent.rebuildNotationFromDialogData();
 
 	}
 

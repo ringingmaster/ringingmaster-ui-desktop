@@ -1,5 +1,6 @@
 package com.concurrentperformance.ringingmaster.fxui.desktop.notationeditor;
 
+import com.concurrentperformance.fxutils.dialog.EditMode;
 import com.concurrentperformance.ringingmaster.engine.notation.NotationBody;
 import com.concurrentperformance.ringingmaster.engine.notation.impl.NotationBuilder;
 import com.concurrentperformance.ringingmaster.fxui.desktop.RingingMasterDesktopApp;
@@ -35,7 +36,7 @@ public class NotationEditorDialog {
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-	protected NotationEditorEditMode editMode;
+	protected EditMode editMode;
 	protected Stage stage;
 	protected String notationName;
 
@@ -51,7 +52,7 @@ public class NotationEditorDialog {
 	@FXML
 	protected Button okButton;
 
-	void init(NotationEditorEditMode editMode, Scene scene, NotationBody notation, Function<NotationBody, Boolean> onSuccessHandler) throws IOException {
+	void init(EditMode editMode, Scene scene, NotationBody notation, Function<NotationBody, Boolean> onSuccessHandler) throws IOException {
 		this.editMode = checkNotNull(editMode);
 		this.onSuccessHandler = checkNotNull(onSuccessHandler);
 

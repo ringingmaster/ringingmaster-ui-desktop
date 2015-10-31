@@ -2,6 +2,7 @@ package com.concurrentperformance.ringingmaster.fxui.desktop.notationeditor;
 
 
 import com.concurrentperformance.fxutils.components.PressableButton;
+import com.concurrentperformance.fxutils.dialog.EditMode;
 import com.concurrentperformance.ringingmaster.engine.notation.NotationBody;
 import com.concurrentperformance.ringingmaster.engine.notation.NotationCall;
 import com.concurrentperformance.ringingmaster.engine.notation.impl.NotationBuilder;
@@ -51,7 +52,7 @@ public class Call extends SkeletalNotationEditorTabController implements Notatio
 	}
 
 	@Override
-	public void init(NotationEditorDialog parent, NotationEditorEditMode editMode) {
+	public void init(NotationEditorDialog parent, EditMode editMode) {
 		super.init(parent, editMode);
 
 		cannedCalls.selectedProperty().addListener(this::useCannedCallsUpdater);
@@ -124,6 +125,9 @@ public class Call extends SkeletalNotationEditorTabController implements Notatio
 
 	@FXML
 	private void onAddCall() {
+		CallEditor.showDialog(EditMode.ADD, null, getOwner(), callModel -> {
+			log.info("Got Here " + callModel);
+			return true;});
 	}
 
 	@FXML

@@ -1,6 +1,7 @@
 package com.concurrentperformance.ringingmaster.fxui.desktop.notationeditor;
 
 
+import com.concurrentperformance.fxutils.dialog.EditMode;
 import com.concurrentperformance.ringingmaster.engine.notation.NotationBody;
 import com.concurrentperformance.ringingmaster.engine.notation.impl.NotationBuilder;
 
@@ -19,7 +20,7 @@ public class SplicePoint extends SkeletalNotationEditorTabController implements 
 	}
 
 	@Override
-	public void init(NotationEditorDialog parent, NotationEditorEditMode editMode) {
+	public void init(NotationEditorDialog parent, EditMode editMode) {
 		super.init(parent, editMode);
 
 	}

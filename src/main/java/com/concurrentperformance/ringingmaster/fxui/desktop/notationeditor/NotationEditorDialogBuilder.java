@@ -1,5 +1,6 @@
 package com.concurrentperformance.ringingmaster.fxui.desktop.notationeditor;
 
+import com.concurrentperformance.fxutils.dialog.EditMode;
 import com.concurrentperformance.ringingmaster.engine.NumberOfBells;
 import com.concurrentperformance.ringingmaster.engine.notation.NotationBody;
 import com.concurrentperformance.ringingmaster.engine.notation.impl.NotationBuilder;
@@ -28,14 +29,14 @@ public class NotationEditorDialogBuilder {
 		// We set everything to use the canned version.
 		builder.setCannedCalls();
 
-		showDialog(builder.build(), NotationEditorEditMode.ADD_NOTATION, onSuccessHandler);
+		showDialog(builder.build(), EditMode.ADD, onSuccessHandler);
 	}
 
 	public void editNotationShowDialog(NotationBody notation, Function<NotationBody, Boolean> onSuccessHandler) {
-		showDialog(notation, NotationEditorEditMode.EDIT_NOTATION, onSuccessHandler);
+		showDialog(notation, EditMode.EDIT, onSuccessHandler);
 	}
 
-	private void showDialog(NotationBody notation, NotationEditorEditMode editMode, Function<NotationBody, Boolean> onSuccessHandler) {
+	private void showDialog(NotationBody notation, EditMode editMode, Function<NotationBody, Boolean> onSuccessHandler) {
 		FXMLLoader fxmlLoader = new FXMLLoader(NotationEditorDialog.class.getResource("NotationEditorDialog.fxml"));
 
 		try {

@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane hgap="10" minHeight="202" minWidth="278" prefHeight="202.0" prefWidth="278.0" vgap="10.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.concurrentperformance.ringingmaster.fxui.desktop.notationeditor.CallEditor">
+<GridPane hgap="10" minHeight="202" minWidth="278" prefHeight="202.0" prefWidth="278.0" vgap="10.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.concurrentperformance.ringingmaster.fxui.desktop.notationeditor.CallEditorDialog">
    <columnConstraints>
       <ColumnConstraints maxWidth="122.0" minWidth="92.0" prefWidth="96.0" />
       <ColumnConstraints hgrow="ALWAYS" minWidth="126.0" prefWidth="152.0" />

@@ -51,7 +51,7 @@ public class Status {
 		items.add(new NameValuePairModel("Number of Calls", Integer.toString(notation.getCalls().size())));
 
 		status.setBackground(new Background(new BackgroundFill(ColorManager.getClearHighlight(), CornerRadii.EMPTY, Insets.EMPTY)));
-		parent.stage.setTitle(parent.editMode.getEditText() + ": " + notation.getNameIncludingNumberOfBells());
+		parent.getStage().setTitle(parent.getEditMode().getEditText() + ": " + notation.getNameIncludingNumberOfBells());
 		parent.okButton.setDisable(false);
 	}
 
@@ -63,7 +63,7 @@ public class Status {
 		status.updateDisplayProperty(ERROR_PROPERTY_NAME, e.getMessage(), ColorManager.getErrorHighlight());
 
 		status.setBackground(new Background(new BackgroundFill(ColorManager.getErrorHighlight(), CornerRadii.EMPTY, Insets.EMPTY)));
-		parent.stage.setTitle(parent.editMode.getEditText() + ": " + parent.notationName);
+		parent.getStage().setTitle(parent.getEditMode().getEditText() + ": " + parent.notationName);
 		parent.okButton.setDisable(true);
 	}
 }

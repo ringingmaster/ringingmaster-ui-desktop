@@ -125,9 +125,10 @@ public class Call extends SkeletalNotationEditorTabController implements Notatio
 
 	@FXML
 	private void onAddCall() {
-		CallEditor.showDialog(EditMode.ADD, null, getOwner(), callModel -> {
+		CallEditorDialog.showDialog(EditMode.ADD, null, getOwner(), callModel -> {
 			log.info("Got Here " + callModel);
-			return true;});
+			return true;
+		});
 	}
 
 	@FXML

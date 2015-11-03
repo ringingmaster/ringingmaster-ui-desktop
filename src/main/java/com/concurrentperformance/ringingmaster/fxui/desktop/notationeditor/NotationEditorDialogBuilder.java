@@ -4,12 +4,10 @@ import com.concurrentperformance.fxutils.dialog.EditMode;
 import com.concurrentperformance.ringingmaster.engine.NumberOfBells;
 import com.concurrentperformance.ringingmaster.engine.notation.NotationBody;
 import com.concurrentperformance.ringingmaster.engine.notation.impl.NotationBuilder;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
+import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.util.function.Function;
 
 /**
@@ -21,6 +19,9 @@ public class NotationEditorDialogBuilder {
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
+	private Stage globalStage;
+
+
 	public void newNotationShowDialog(NumberOfBells numberOfWorkingBells, Function<NotationBody, Boolean> onSuccessHandler) {
 		NotationBuilder builder = NotationBuilder.getInstance();
 		builder.setNumberOfWorkingBells(numberOfWorkingBells);
@@ -29,22 +30,15 @@ public class NotationEditorDialogBuilder {
 		// We set everything to use the canned version.
 		builder.setCannedCalls();
 
-		showDialog(builder.build(), EditMode.ADD, onSuccessHandler);
+		NotationEditorDialog.showDialog(EditMode.ADD, builder.build(), globalStage, onSuccessHandler);
 	}
 
 	public void editNotationShowDialog(NotationBody notation, Function<NotationBody, Boolean> onSuccessHandler) {
-		showDialog(notation, EditMode.EDIT, onSuccessHandler);
+		NotationEditorDialog.showDialog(EditMode.EDIT, notation, globalStage, onSuccessHandler);
 	}
 
-	private void showDialog(NotationBody notation, EditMode editMode, Function<NotationBody, Boolean> onSuccessHandler) {
-		FXMLLoader fxmlLoader = new FXMLLoader(NotationEditorDialog.class.getResource("NotationEditorDialog.fxml"));
-
-		try {
-			Scene scene = new Scene(fxmlLoader.load());
-			NotationEditorDialog controller = fxmlLoader.getController();
-			controller.init(editMode, scene, notation, onSuccessHandler);
-		} catch (IOException e) {
-			log.error("Error initialising NotationEditorDialog", e);
-		}
+	public void setGlobalStage(Stage globalStage) {
+		this.globalStage = globalStage;
 	}
+
 }

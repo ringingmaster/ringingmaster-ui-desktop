@@ -22,6 +22,6 @@ public abstract class SkeletalNotationEditorTabController implements NotationEdi
 	}
 
 	Window getOwner() {
-		return parent.stage;
+		return parent.getStage();
 	}
 }

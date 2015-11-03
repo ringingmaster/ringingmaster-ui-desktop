@@ -1,22 +1,20 @@
 package com.concurrentperformance.ringingmaster.fxui.desktop.notationeditor;
 
 import com.concurrentperformance.fxutils.dialog.EditMode;
+import com.concurrentperformance.fxutils.dialog.SkeletalDialog;
 import com.concurrentperformance.ringingmaster.engine.notation.NotationBody;
 import com.concurrentperformance.ringingmaster.engine.notation.impl.NotationBuilder;
 import com.concurrentperformance.ringingmaster.fxui.desktop.RingingMasterDesktopApp;
 import com.google.common.base.Objects;
+import com.google.common.collect.Lists;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
-import javafx.scene.input.KeyCode;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
+import javafx.stage.Window;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,22 +23,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 /**
  * TODO Comments
  *
  * @author Lake
  */
-public class NotationEditorDialog {
+public class NotationEditorDialog extends SkeletalDialog<NotationBody> {
+
+	public static final String NOTATION_EDITOR_FXML = "NotationEditorDialog.fxml";
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-	protected EditMode editMode;
-	protected Stage stage;
 	protected String notationName;
-
-	private Function<NotationBody, Boolean> onSuccessHandler;
 
 	private List<NotationEditorTabController> tabControllers = new ArrayList<>();
 	private Status statusController;
@@ -52,43 +46,25 @@ public class NotationEditorDialog {
 	@FXML
 	protected Button okButton;
 
-	void init(EditMode editMode, Scene scene, NotationBody notation, Function<NotationBody, Boolean> onSuccessHandler) throws IOException {
-		this.editMode = checkNotNull(editMode);
-		this.onSuccessHandler = checkNotNull(onSuccessHandler);
-
-		configureScene(scene);
-		buildStage(scene);
-
-		addEditorTabs();
-		addStatusTabs();
-
-		notationName = notation.getNameIncludingNumberOfBells();
-
-		for (NotationEditorTabController tabController : tabControllers) {
-			tabController.init(this, editMode);
-		}
-
-		buildDialogDataFromNotation(notation);
-
-		checkNotationFromDialogData();
-
-		stage.showAndWait();
+	public static void showDialog(EditMode editMode, NotationBody model, Window owner,
+	                              Function<NotationBody, Boolean> onSuccessHandler) {
+		new Launcher().showDialog(editMode, model, owner, CallEditorDialog.class.getResource(NOTATION_EDITOR_FXML),
+				Lists.<String>newArrayList(RingingMasterDesktopApp.STYLESHEET), onSuccessHandler);
 	}
 
-	private void configureScene(Scene scene) {
-		checkNotNull(scene);
-		scene.getStylesheets().add(RingingMasterDesktopApp.STYLESHEET);
-		scene.setOnKeyReleased(event -> {
-			if (event.getCode().equals(KeyCode.ESCAPE)) {
-				OnCancel();
+	protected void buildDialogStructure(EditMode editMode, NotationBody notation) {
+
+		try {
+			addEditorTabs();
+			addStatusTabs();
+			notationName = notation.getNameIncludingNumberOfBells();
+
+			for (NotationEditorTabController tabController : tabControllers) {
+				tabController.init(this, editMode);
 			}
-		});
-	}
-
-	private void buildStage(Scene scene) {
-		this.stage = new Stage(StageStyle.DECORATED);
-		stage.setScene(scene);
-		stage.initModality(Modality.APPLICATION_MODAL);
+		} catch (IOException e) {
+			log.error("Error building dialog structure for [" + notation + "]", e);
+		}
 	}
 
 	private void addEditorTabs() throws IOException {
@@ -150,9 +126,9 @@ public class NotationEditorDialog {
 	protected void rebuildNotationFromDialogData() {
 		try {
 			// build notation
-			NotationBody notation = buildNotationFromDialogData();
+			NotationBody notation = populateModelFromDialogData();
 			statusController.updateNotationStats(notation);
-			buildDialogDataFromNotation(notation);
+			populateDialogFromModel(notation);
 		}
 		catch (Exception e) {
 			log.warn("Problem with re-building notation [{}]", e.getMessage());
@@ -161,10 +137,10 @@ public class NotationEditorDialog {
 		}
 	}
 
-	public void checkNotationFromDialogData() {
+	public void checkModelFromDialogData() {
 		try {
 			// build notation
-			NotationBody notation = buildNotationFromDialogData();
+			NotationBody notation = populateModelFromDialogData();
 			statusController.updateNotationStats(notation);
 		}
 		catch (Exception e) {
@@ -174,7 +150,7 @@ public class NotationEditorDialog {
 		}
 	}
 
-	private NotationBody buildNotationFromDialogData() {
+	protected NotationBody populateModelFromDialogData() {
 		NotationBuilder notationBuilder = NotationBuilder.getInstance();
 		for (NotationEditorTabController tabController : tabControllers) {
 			tabController.buildNotationFromDialogData(notationBuilder);
@@ -182,28 +158,10 @@ public class NotationEditorDialog {
 		return notationBuilder.build();
 	}
 
-	private void buildDialogDataFromNotation(NotationBody notation) {
+	protected void populateDialogFromModel(NotationBody notation) {
 		for (NotationEditorTabController tabController : tabControllers) {
 			tabController.buildDialogDataFromNotation(notation);
 		}
 	}
 
-	@FXML
-	private void OnOk() {
-		NotationBody result = buildNotationFromDialogData();
-
-		try {
-			Boolean success = onSuccessHandler.apply(result);
-			if (success) {
-				stage.close();
-			}
-		} catch (RuntimeException e) {
-			log.error("",e);
-		}
-	}
-
-	@FXML
-	private void OnCancel() {
-		stage.close();
-	}
 }

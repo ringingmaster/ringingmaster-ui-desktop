@@ -92,11 +92,11 @@ public class PlainCourse extends SkeletalNotationEditorTabController implements 
 	}
 
 	public void numberOfBellsUpdater(ObservableValue<? extends NumberOfBells> observable, NumberOfBells oldValue, NumberOfBells newValue) {
-		parent.checkNotationFromDialogData();
+		parent.checkModelFromDialogData();
 	}
 
 	public void keyPressUpdater(KeyEvent event) {
-		parent.checkNotationFromDialogData();
+		parent.checkModelFromDialogData();
 	}
 
 	public void asymmetricUpdater(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
@@ -104,7 +104,7 @@ public class PlainCourse extends SkeletalNotationEditorTabController implements 
 		notation2.setVisible(!newValue);
 		notation2Label.setVisible(!newValue);
 		GridPane.setColumnSpan(this.notation1, (newValue)?5:3);
-		parent.checkNotationFromDialogData();
+		parent.checkModelFromDialogData();
 	}
 
 	@Override

@@ -33,21 +33,21 @@
     <orderEntry type="module" module-name="ringingmaster-ui-common" />
     <orderEntry type="module" module-name="fxutil" />
     <orderEntry type="module" module-name="ringingmaster-engine" />
+    <orderEntry type="module" module-name="ringingmaster-persist" />
     <orderEntry type="module-library">
       <library name="IvyIDEA-ringingmaster-ui-desktop-lib">
         <CLASSES>
-          <root url="jar://$IVY_CACHE_HOME$/cache/org.controlsfx/controlsfx/jars/controlsfx-8.20.7.jar!/" />
-          <root url="jar://$IVY_CACHE_HOME$/cache/com.google.guava/guava/jars/guava-18.0.jar!/" />
-          <root url="jar://$IVY_CACHE_HOME$/cache/net.jcip/jcip-annotations/jars/jcip-annotations-1.0.jar!/" />
-          <root url="jar://$IVY_CACHE_HOME$/cache/org.slf4j/slf4j-api/jars/slf4j-api-1.7.5.jar!/" />
-          <root url="jar://$IVY_CACHE_HOME$/cache/org.slf4j/slf4j-log4j12/jars/slf4j-log4j12-1.7.5.jar!/" />
-          <root url="jar://$IVY_CACHE_HOME$/cache/log4j/log4j/jars/log4j-1.2.16.jar!/" />
           <root url="jar://$IVY_CACHE_HOME$/cache/org.springframework/spring-context/jars/spring-context-4.1.7.RELEASE.jar!/" />
           <root url="jar://$IVY_CACHE_HOME$/cache/org.springframework/spring-beans/jars/spring-beans-4.1.7.RELEASE.jar!/" />
           <root url="jar://$IVY_CACHE_HOME$/cache/org.springframework/spring-core/jars/spring-core-4.1.7.RELEASE.jar!/" />
           <root url="jar://$IVY_CACHE_HOME$/cache/org.springframework/spring-aop/jars/spring-aop-4.1.7.RELEASE.jar!/" />
           <root url="jar://$IVY_CACHE_HOME$/cache/org.springframework/spring-expression/jars/spring-expression-4.1.7.RELEASE.jar!/" />
           <root url="jar://$IVY_CACHE_HOME$/cache/commons-logging/commons-logging/jars/commons-logging-1.2.jar!/" />
+          <root url="jar://$IVY_CACHE_HOME$/cache/com.google.guava/guava/jars/guava-18.0.jar!/" />
+          <root url="jar://$IVY_CACHE_HOME$/cache/net.jcip/jcip-annotations/jars/jcip-annotations-1.0.jar!/" />
+          <root url="jar://$IVY_CACHE_HOME$/cache/org.slf4j/slf4j-api/jars/slf4j-api-1.7.5.jar!/" />
+          <root url="jar://$IVY_CACHE_HOME$/cache/org.slf4j/slf4j-log4j12/jars/slf4j-log4j12-1.7.5.jar!/" />
+          <root url="jar://$IVY_CACHE_HOME$/cache/log4j/log4j/jars/log4j-1.2.16.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -63,6 +63,5 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="module" module-name="ringingmaster-persist" />
   </component>
 </module>

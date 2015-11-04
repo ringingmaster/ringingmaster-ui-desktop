@@ -35,7 +35,7 @@ public class CallEditorDialog extends SkeletalDialog<CallModel> {
 
 
 	public static void showDialog(EditMode editMode, CallModel model, Window owner, Function<CallModel, Boolean> onSuccessHandler) {
-		new Launcher().showDialog(editMode, model, owner, CallEditorDialog.class.getResource(CALL_EDITOR_FXML),
+		new Launcher<CallModel>().showDialog(editMode, model, owner, CallEditorDialog.class.getResource(CALL_EDITOR_FXML),
 				Lists.<String>newArrayList(RingingMasterDesktopApp.STYLESHEET), onSuccessHandler);
 	}
 

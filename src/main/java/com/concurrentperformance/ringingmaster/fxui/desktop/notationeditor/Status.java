@@ -67,3 +67,8 @@ public class Status {
 		parent.okButton.setDisable(true);
 	}
 }
+
+
+problems: when replacng  a notation, loose the <default> notation flag
+Can see errors on notation editor as columns do not resize.
+Need better validation of a new or edited call.

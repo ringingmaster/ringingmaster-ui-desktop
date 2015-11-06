@@ -49,6 +49,7 @@ public class Status {
 		items.add(new NameValuePairModel("Leads in Plain Course", Integer.toString(plainCourse.getLeadCount())));
 		items.add(new NameValuePairModel("Number of Hunt Bells", Integer.toString(plainCourse.getNumberOfBellsInHunt())));
 		items.add(new NameValuePairModel("Number of Calls", Integer.toString(notation.getCalls().size())));
+		status.setSize(200);
 
 		status.setBackground(new Background(new BackgroundFill(ColorManager.getClearHighlight(), CornerRadii.EMPTY, Insets.EMPTY)));
 		parent.getStage().setTitle(parent.getEditMode().getEditText() + ": " + notation.getNameIncludingNumberOfBells());
@@ -63,6 +64,9 @@ public class Status {
 		status.updateDisplayProperty(ERROR_PROPERTY_NAME, e.getMessage(), ColorManager.getErrorHighlight());
 
 		status.setBackground(new Background(new BackgroundFill(ColorManager.getErrorHighlight(), CornerRadii.EMPTY, Insets.EMPTY)));
+
+		status.setSize(50);
+
 		parent.getStage().setTitle(parent.getEditMode().getEditText() + ": " + parent.notationName);
 		parent.okButton.setDisable(true);
 	}

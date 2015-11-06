@@ -138,9 +138,8 @@ public class Call extends SkeletalNotationEditorTabController implements Notatio
 		if (selectedIndex == -1) {
 			return;
 		}
-		for (int index = 0;index<callsList.getItems().size();index++) {
-			callsList.getItems().remove(selectedIndex);
-		}
+
+		callsList.getItems().remove(selectedIndex);
 		parent.rebuildNotationFromDialogData();
 
 	}

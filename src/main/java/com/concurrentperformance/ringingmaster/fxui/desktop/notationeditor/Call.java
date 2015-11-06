@@ -6,6 +6,7 @@ import com.concurrentperformance.fxutils.dialog.EditMode;
 import com.concurrentperformance.ringingmaster.engine.notation.NotationBody;
 import com.concurrentperformance.ringingmaster.engine.notation.NotationCall;
 import com.concurrentperformance.ringingmaster.engine.notation.impl.NotationBuilder;
+import com.concurrentperformance.ringingmaster.engine.notation.impl.NotationBuilderHelper;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -126,6 +127,8 @@ public class Call extends SkeletalNotationEditorTabController implements Notatio
 	@FXML
 	private void onAddCall() {
 		CallEditorDialog.showDialog(EditMode.ADD, null, getOwner(), callModel -> {
+			String validatedNotation = NotationBuilderHelper.validateAsDisplayString(callModel.getNotation(), parent.numberOfBells, true);
+			callModel.setNotation(validatedNotation);
 			callsList.getItems().add(callModel);
 			parent.rebuildNotationFromDialogData();
 			return true;

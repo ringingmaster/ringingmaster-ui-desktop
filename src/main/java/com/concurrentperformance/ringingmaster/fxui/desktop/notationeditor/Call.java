@@ -42,6 +42,8 @@ public class Call extends SkeletalNotationEditorTabController implements Notatio
 	@FXML
 	private Button removeCallButton;
 	@FXML
+	private Button editCallButton;
+	@FXML
 	private PressableButton defaultCallButton;
 
 	@FXML
@@ -137,6 +139,18 @@ public class Call extends SkeletalNotationEditorTabController implements Notatio
 
 	@FXML
 	private void onRemoveCall() {
+		int selectedIndex = callsList.getSelectionModel().selectedIndexProperty().get();
+		if (selectedIndex == -1) {
+			return;
+		}
+
+		callsList.getItems().remove(selectedIndex);
+		parent.roundTripDialogDataToModelToDialogData();
+
+	}
+
+	@FXML
+	private void onEditCall() {
 		int selectedIndex = callsList.getSelectionModel().selectedIndexProperty().get();
 		if (selectedIndex == -1) {
 			return;

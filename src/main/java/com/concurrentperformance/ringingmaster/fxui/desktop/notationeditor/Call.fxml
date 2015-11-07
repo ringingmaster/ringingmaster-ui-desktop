@@ -24,6 +24,7 @@
       <ColumnConstraints />
       <ColumnConstraints />
       <ColumnConstraints />
+      <ColumnConstraints />
       <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" />
    </columnConstraints>
    <rowConstraints>
@@ -37,7 +38,7 @@
          <graphic>
             <ImageView>
                <image>
-                  <Image url="/images/add_mono.png" />
+                  <Image url="/images/add.png" />
                </image>
             </ImageView>
          </graphic>
@@ -47,12 +48,21 @@
          <graphic>
             <ImageView>
                <image>
-                  <Image url="/images/remove_mono.png" />
+                  <Image url="/images/remove.png" />
                </image>
             </ImageView>
          </graphic>
       </Button>
-      <PressableButton fx:id="defaultCallButton" mnemonicParsing="false" onAction="#onDefaultCall" text="" GridPane.columnIndex="4">
+      <Button fx:id="editCallButton" mnemonicParsing="false" onAction="#onEditCall" text="" GridPane.columnIndex="4">
+         <graphic>
+            <ImageView>
+               <image>
+                  <Image url="/images/edit.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </Button>
+      <PressableButton fx:id="defaultCallButton" mnemonicParsing="false" onAction="#onDefaultCall" text="" GridPane.columnIndex="5">
          <graphic>
             <ImageView>
                <image>
@@ -62,9 +72,9 @@
          </graphic>
       </PressableButton>
 
-      <Separator orientation="VERTICAL" GridPane.columnIndex="5" />
-      <Label text="lh:" GridPane.columnIndex="6" />
-      <TextField fx:id="leadHeadCode" editable="false" GridPane.columnIndex="7" />
+      <Separator orientation="VERTICAL" GridPane.columnIndex="6" />
+      <Label text="lh:" GridPane.columnIndex="7" />
+      <TextField fx:id="leadHeadCode" editable="false" GridPane.columnIndex="8" />
 
       <TableView fx:id="callsList" prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="2147483647" GridPane.rowIndex="1">
          <columns>

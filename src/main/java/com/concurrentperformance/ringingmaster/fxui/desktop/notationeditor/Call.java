@@ -127,7 +127,7 @@ public class Call extends SkeletalNotationEditorTabController implements Notatio
 	@FXML
 	private void onAddCall() {
 		CallEditorDialog.showDialog(EditMode.ADD, null, getOwner(), callModel -> {
-			String validatedNotation = NotationBuilderHelper.validateAsDisplayString(callModel.getNotation(), parent.numberOfBells, true);
+			String validatedNotation = NotationBuilderHelper.validateAsDisplayString(callModel.getNotation(), parent.lastGoodNotation.getNumberOfWorkingBells(), true);
 			callModel.setNotation(validatedNotation);
 			callsList.getItems().add(callModel);
 			parent.rebuildNotationFromDialogData();

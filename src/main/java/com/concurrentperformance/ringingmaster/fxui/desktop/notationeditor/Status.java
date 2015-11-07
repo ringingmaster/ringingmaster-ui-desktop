@@ -67,7 +67,7 @@ public class Status {
 
 		status.setSize(50);
 
-		parent.getStage().setTitle(parent.getEditMode().getEditText() + ": " + parent.notationName);
+		parent.getStage().setTitle(parent.getEditMode().getEditText() + ": " + parent.lastGoodNotation.getNameIncludingNumberOfBells());
 		parent.okButton.setDisable(true);
 	}
 }

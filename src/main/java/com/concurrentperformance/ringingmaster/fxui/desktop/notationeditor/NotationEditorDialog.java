@@ -2,7 +2,6 @@ package com.concurrentperformance.ringingmaster.fxui.desktop.notationeditor;
 
 import com.concurrentperformance.fxutils.dialog.EditMode;
 import com.concurrentperformance.fxutils.dialog.SkeletalDialog;
-import com.concurrentperformance.ringingmaster.engine.NumberOfBells;
 import com.concurrentperformance.ringingmaster.engine.notation.NotationBody;
 import com.concurrentperformance.ringingmaster.engine.notation.impl.NotationBuilder;
 import com.concurrentperformance.ringingmaster.fxui.desktop.RingingMasterDesktopApp;
@@ -35,8 +34,7 @@ public class NotationEditorDialog extends SkeletalDialog<NotationBody> {
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-	protected String notationName;
-	protected NumberOfBells numberOfBells;
+	protected NotationBody lastGoodNotation;
 
 	private List<NotationEditorTabController> tabControllers = new ArrayList<>();
 	private Status statusController;
@@ -59,8 +57,6 @@ public class NotationEditorDialog extends SkeletalDialog<NotationBody> {
 		try {
 			addEditorTabs();
 			addStatusTabs();
-			notationName = notation.getNameIncludingNumberOfBells();
-			numberOfBells = notation.getNumberOfWorkingBells();
 
 			for (NotationEditorTabController tabController : tabControllers) {
 				tabController.init(this, editMode);
@@ -130,6 +126,7 @@ public class NotationEditorDialog extends SkeletalDialog<NotationBody> {
 		try {
 			// build notation
 			NotationBody notation = populateModelFromDialogData();
+			lastGoodNotation = notation;
 			statusController.updateNotationStats(notation);
 			populateDialogFromModel(notation);
 		}
@@ -147,7 +144,7 @@ public class NotationEditorDialog extends SkeletalDialog<NotationBody> {
 			statusController.updateNotationStats(notation);
 		}
 		catch (Exception e) {
-			log.warn("Problem with checking notation [{}]", e.getMessage());
+			log.info("Problem with checking notation [{}]", e.getMessage());
 			log.debug("", e);
 			statusController.updateNotationStats(e);
 		}

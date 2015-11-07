@@ -57,7 +57,7 @@ public class Call extends SkeletalNotationEditorTabController implements Notatio
 		super.init(parent, editMode);
 
 		cannedCalls.selectedProperty().addListener(this::useCannedCallsUpdater);
-		cannedCalls.selectedProperty().addListener(parent::rebuildNotationUpdater);
+		cannedCalls.selectedProperty().addListener(parent::roundTripDialogDataUpdater);
 
 		callsList.setPlaceholder(new Label("No Calls Defined"));
 		callsList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
@@ -130,7 +130,7 @@ public class Call extends SkeletalNotationEditorTabController implements Notatio
 			String validatedNotation = NotationBuilderHelper.validateAsDisplayString(callModel.getNotation(), parent.lastGoodNotation.getNumberOfWorkingBells(), true);
 			callModel.setNotation(validatedNotation);
 			callsList.getItems().add(callModel);
-			parent.rebuildNotationFromDialogData();
+			parent.roundTripDialogDataToModelToDialogData();
 			return true;
 		});
 	}
@@ -143,7 +143,7 @@ public class Call extends SkeletalNotationEditorTabController implements Notatio
 		}
 
 		callsList.getItems().remove(selectedIndex);
-		parent.rebuildNotationFromDialogData();
+		parent.roundTripDialogDataToModelToDialogData();
 
 	}
 
@@ -157,6 +157,6 @@ public class Call extends SkeletalNotationEditorTabController implements Notatio
 		for (int index = 0;index<callsList.getItems().size();index++) {
 			callsList.getItems().get(index).setSelected((index == selectedIndex)?DEFAULT_CALL_TOKEN:"");
 		}
-		parent.rebuildNotationFromDialogData();
+		parent.roundTripDialogDataToModelToDialogData();
 	}
 }

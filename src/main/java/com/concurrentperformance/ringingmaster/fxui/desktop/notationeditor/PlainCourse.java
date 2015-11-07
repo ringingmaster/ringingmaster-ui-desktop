@@ -61,24 +61,24 @@ public class PlainCourse extends SkeletalNotationEditorTabController implements 
 		name.setOnKeyReleased(this::keyPressUpdater);
 
 		spliceIndntifier.setOnKeyReleased(this::keyPressUpdater);
-		spliceIndntifier.focusedProperty().addListener(parent::rebuildNotationOnFocusLossUpdater);
+		spliceIndntifier.focusedProperty().addListener(parent::roundTripDialogDataOnFocusLossUpdater);
 
 		this.notation1.setOnKeyReleased(this::keyPressUpdater);
-		this.notation1.focusedProperty().addListener(parent::rebuildNotationOnFocusLossUpdater);
+		this.notation1.focusedProperty().addListener(parent::roundTripDialogDataOnFocusLossUpdater);
 
 		notationSearchButton.setTooltip(new Tooltip("Search for method to populate editor."));
 
 		notation2.setOnKeyReleased(this::keyPressUpdater);
-		notation2.focusedProperty().addListener(parent::rebuildNotationOnFocusLossUpdater);
+		notation2.focusedProperty().addListener(parent::roundTripDialogDataOnFocusLossUpdater);
 
 		for (NumberOfBells numberOfBells : NumberOfBells.values()) {
 			this.numberOfBells.getItems().add(numberOfBells);
 		}
 		numberOfBells.getSelectionModel().selectedItemProperty().addListener(this::numberOfBellsUpdater);
-		numberOfBells.focusedProperty().addListener(parent::rebuildNotationOnFocusLossUpdater);
+		numberOfBells.focusedProperty().addListener(parent::roundTripDialogDataOnFocusLossUpdater);
 
 		asymmetric.selectedProperty().addListener(this::asymmetricUpdater);
-		asymmetric.focusedProperty().addListener(parent::rebuildNotationOnFocusLossUpdater);
+		asymmetric.focusedProperty().addListener(parent::roundTripDialogDataOnFocusLossUpdater);
 	}
 
 	@Override
@@ -92,11 +92,11 @@ public class PlainCourse extends SkeletalNotationEditorTabController implements 
 	}
 
 	public void numberOfBellsUpdater(ObservableValue<? extends NumberOfBells> observable, NumberOfBells oldValue, NumberOfBells newValue) {
-		parent.checkModelFromDialogData();
+		parent.buildModelFromDialogData();
 	}
 
 	public void keyPressUpdater(KeyEvent event) {
-		parent.checkModelFromDialogData();
+		parent.buildModelFromDialogData();
 	}
 
 	public void asymmetricUpdater(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
@@ -104,7 +104,7 @@ public class PlainCourse extends SkeletalNotationEditorTabController implements 
 		notation2.setVisible(!newValue);
 		notation2Label.setVisible(!newValue);
 		GridPane.setColumnSpan(this.notation1, (newValue)?5:3);
-		parent.checkModelFromDialogData();
+		parent.buildModelFromDialogData();
 	}
 
 	@Override

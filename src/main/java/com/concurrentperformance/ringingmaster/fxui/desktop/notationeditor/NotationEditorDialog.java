@@ -52,7 +52,7 @@ public class NotationEditorDialog extends SkeletalDialog<NotationBody> {
 				Lists.<String>newArrayList(RingingMasterDesktopApp.STYLESHEET), onSuccessHandler);
 	}
 
-	protected void buildDialogStructure(EditMode editMode, NotationBody notation) {
+	protected void initialiseDialog(EditMode editMode, NotationBody notation) {
 
 		try {
 			addEditorTabs();
@@ -112,50 +112,41 @@ public class NotationEditorDialog extends SkeletalDialog<NotationBody> {
 	}
 
 
-	public void rebuildNotationOnFocusLossUpdater(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+	public void roundTripDialogDataOnFocusLossUpdater(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
 		if (Objects.equal(Boolean.FALSE, newValue)) {
-			rebuildNotationFromDialogData();
+			roundTripDialogDataToModelToDialogData();
 		}
 	}
 
-	public void rebuildNotationUpdater(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-		rebuildNotationFromDialogData();
+	public void roundTripDialogDataUpdater(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+		roundTripDialogDataToModelToDialogData();
 	}
 
-	protected void rebuildNotationFromDialogData() {
-		try {
-			// build notation
-			NotationBody notation = populateModelFromDialogData();
-			lastGoodNotation = notation;
-			statusController.updateNotationStats(notation);
+	protected void roundTripDialogDataToModelToDialogData() {
+		NotationBody notation = buildModelFromDialogData();
+		if (notation != null) {
 			populateDialogFromModel(notation);
 		}
-		catch (Exception e) {
-			log.warn("Problem with re-building notation [{}]", e.getMessage());
-			log.debug("", e);
-			statusController.updateNotationStats(e);
-		}
 	}
 
-	public void checkModelFromDialogData() {
+	protected NotationBody buildModelFromDialogData() {
 		try {
-			// build notation
-			NotationBody notation = populateModelFromDialogData();
-			statusController.updateNotationStats(notation);
+			NotationBuilder notationBuilder = NotationBuilder.getInstance();
+			for (NotationEditorTabController tabController : tabControllers) {
+				tabController.buildNotationFromDialogData(notationBuilder);
+			}
+
+			NotationBody notationBody = notationBuilder.build();
+			lastGoodNotation = notationBody;
+			statusController.updateNotationStats(notationBody);
+			return notationBody;
 		}
 		catch (Exception e) {
 			log.info("Problem with checking notation [{}]", e.getMessage());
 			log.debug("", e);
 			statusController.updateNotationStats(e);
+			return null;
 		}
-	}
-
-	protected NotationBody populateModelFromDialogData() {
-		NotationBuilder notationBuilder = NotationBuilder.getInstance();
-		for (NotationEditorTabController tabController : tabControllers) {
-			tabController.buildNotationFromDialogData(notationBuilder);
-		}
-		return notationBuilder.build();
 	}
 
 	protected void populateDialogFromModel(NotationBody notation) {

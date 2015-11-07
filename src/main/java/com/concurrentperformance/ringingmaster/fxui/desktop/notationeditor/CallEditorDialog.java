@@ -47,7 +47,7 @@ public class CallEditorDialog extends SkeletalDialog<CallModel> {
 	}
 
 	@Override
-	protected CallModel populateModelFromDialogData() {
+	protected CallModel buildModelFromDialogData() {
 		CallModel callModel = new CallModel();
 		callModel.setCallName(callName.getText());
 		callModel.setCallShorthand(callShorthand.getText());

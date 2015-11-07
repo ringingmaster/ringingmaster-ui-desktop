@@ -25,7 +25,7 @@ public class EditNotationEvent extends SkeletalEventDefinition implements EventD
 
 
 	public EditNotationEvent() {
-		super("/images/method_edit.png", TOOLTIP_BAST_TEXT);
+		super("/images/edit.png", TOOLTIP_BAST_TEXT);
 		tooltipTextProperty().setValue(TOOLTIP_BAST_TEXT);
 	}
 

@@ -11,14 +11,18 @@
 		</layout>
 	</appender>
 
+	<logger name="org.springframework">
+		<level value="warn"/>
+	</logger>
+
     <logger name="com.concurrentperformance.ringingmaster.engine.touch">
-        <level value="INFO"/>
+        <level value="info"/>
     </logger>
     <logger name="com.concurrentperformance.ringingmaster.engine">
-        <level value="WARN"/>
+        <level value="warn"/>
     </logger>
   	<logger name="com.concurrentperformance.ringingmaster">
-		<level value="INFO"/>
+		<level value="info"/>
 	</logger>
   
   	<root>

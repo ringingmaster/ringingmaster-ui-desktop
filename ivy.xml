@@ -14,12 +14,11 @@
 
     <dependencies>
 
-        <dependency org="org.springframework" name="spring-context" rev="4.1.7.RELEASE" />
-        <dependency org="org.springframework" name="spring-beans" rev="4.1.7.RELEASE" />
-        <dependency org="org.springframework" name="spring-core" rev="4.1.7.RELEASE" />
-        <dependency org="org.springframework" name="spring-aop" rev="4.1.7.RELEASE" />
-        <dependency org="org.springframework" name="spring-asm" rev="4.1.7.RELEASE" />
-        <dependency org="org.springframework" name="spring-expression" rev="4.1.7.RELEASE" />
+        <dependency org="org.springframework" name="spring-context" rev="4.2.2.RELEASE" />
+        <dependency org="org.springframework" name="spring-beans" rev="4.2.2.RELEASE" />
+        <dependency org="org.springframework" name="spring-core" rev="4.2.2.RELEASE" />
+        <dependency org="org.springframework" name="spring-aop" rev="4.2.2.RELEASE" />
+        <dependency org="org.springframework" name="spring-expression" rev="4.2.2.RELEASE" />
         <dependency org="commons-logging" name="commons-logging" rev="1.2"/>
 
 

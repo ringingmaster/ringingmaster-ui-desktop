@@ -67,10 +67,12 @@ public class ProofManager extends ConcurrentListenable<ProofManagerListener> imp
 		final long proofId = this.nextProofId.incrementAndGet();
 		log.info("**** Submit Proof [{}]", proofId);
 
+		//Do this on the calling thread so the Touch has not changed by the time it is processed.
+		final Compiler compiler = CompilerFactory.getInstance(touch, "Proof-" + Long.toString(proofId));
+
 		proofExecutor.execute(() -> {
 			long start = System.currentTimeMillis();
 			log.info(">>>> Proof of [{}]", proofId);
-			final Compiler compiler = CompilerFactory.getInstance(touch,"Proof-" + Long.toString(proofId));
 			Proof proof = null;
 			try {
 				proof = compiler.compile(true, () -> !isCurrentProof(proofId));

@@ -34,7 +34,7 @@ public class RingingMasterDesktopApp extends Application {
 
 	public static void main(String[] args) {
 		ThreadUncaughtExceptionHelper.setLoggingDefaultUncaughtException();
-		log.info("Starting RingingMasterDesktopApp");
+		log.info("Starting...");
 		launch(RingingMasterDesktopApp.class, args);
 	}
 
@@ -64,6 +64,9 @@ public class RingingMasterDesktopApp extends Application {
 		stage.setTitle("Ringingmaster Desktop");
 
 		stage.show();
+
+		log.info("Started...");
+
 	}
 
 	@Override

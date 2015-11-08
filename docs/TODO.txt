@@ -1,2 +1,3 @@
-//			2) When adding method that is not valid (bell count) need to prevent it becomming active.
-//			3) Need to sort layout of name value pairs.
+Problems where changes to the properties are not being updated with the parsing highlighting
+
+ When adding method that is not valid (bell count) need to prevent it becomming active.

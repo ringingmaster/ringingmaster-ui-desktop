@@ -37,17 +37,19 @@
     <orderEntry type="module-library">
       <library name="IvyIDEA-ringingmaster-ui-desktop-lib">
         <CLASSES>
-          <root url="jar://$IVY_CACHE_HOME$/cache/commons-logging/commons-logging/jars/commons-logging-1.2.jar!/" />
           <root url="jar://$IVY_CACHE_HOME$/cache/com.google.guava/guava/jars/guava-18.0.jar!/" />
           <root url="jar://$IVY_CACHE_HOME$/cache/net.jcip/jcip-annotations/jars/jcip-annotations-1.0.jar!/" />
-          <root url="jar://$IVY_CACHE_HOME$/cache/org.slf4j/slf4j-api/jars/slf4j-api-1.7.5.jar!/" />
-          <root url="jar://$IVY_CACHE_HOME$/cache/org.slf4j/slf4j-log4j12/jars/slf4j-log4j12-1.7.5.jar!/" />
-          <root url="jar://$IVY_CACHE_HOME$/cache/log4j/log4j/jars/log4j-1.2.16.jar!/" />
           <root url="jar://$IVY_CACHE_HOME$/cache/org.springframework/spring-context/jars/spring-context-4.2.2.RELEASE.jar!/" />
           <root url="jar://$IVY_CACHE_HOME$/cache/org.springframework/spring-beans/jars/spring-beans-4.2.2.RELEASE.jar!/" />
           <root url="jar://$IVY_CACHE_HOME$/cache/org.springframework/spring-core/jars/spring-core-4.2.2.RELEASE.jar!/" />
           <root url="jar://$IVY_CACHE_HOME$/cache/org.springframework/spring-aop/jars/spring-aop-4.2.2.RELEASE.jar!/" />
           <root url="jar://$IVY_CACHE_HOME$/cache/org.springframework/spring-expression/jars/spring-expression-4.2.2.RELEASE.jar!/" />
+          <root url="jar://$IVY_CACHE_HOME$/cache/org.slf4j/slf4j-api/jars/slf4j-api-1.7.12.jar!/" />
+          <root url="jar://$IVY_CACHE_HOME$/cache/org.apache.logging.log4j/log4j-core/jars/log4j-core-2.4.1.jar!/" />
+          <root url="jar://$IVY_CACHE_HOME$/cache/org.apache.logging.log4j/log4j-api/jars/log4j-api-2.4.1.jar!/" />
+          <root url="jar://$IVY_CACHE_HOME$/cache/org.apache.logging.log4j/log4j-slf4j-impl/jars/log4j-slf4j-impl-2.4.1.jar!/" />
+          <root url="jar://$IVY_CACHE_HOME$/cache/org.apache.logging.log4j/log4j-jcl/jars/log4j-jcl-2.4.1.jar!/" />
+          <root url="jar://$IVY_CACHE_HOME$/cache/commons-logging/commons-logging/jars/commons-logging-1.2.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -56,8 +58,8 @@
     <orderEntry type="module-library">
       <library name="IvyIDEA-ringingmaster-ui-desktop-testlib">
         <CLASSES>
-          <root url="jar://$IVY_CACHE_HOME$/cache/junit/junit/jars/junit-4.10.jar!/" />
-          <root url="jar://$IVY_CACHE_HOME$/cache/org.mockito/mockito-all/jars/mockito-all-1.9.0.jar!/" />
+          <root url="jar://$IVY_CACHE_HOME$/cache/junit/junit/jars/junit-4.12.jar!/" />
+          <root url="jar://$IVY_CACHE_HOME$/cache/org.mockito/mockito-all/jars/mockito-all-1.10.19.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

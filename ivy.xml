@@ -14,24 +14,30 @@
 
     <dependencies>
 
+        <!-- General -->
+        <dependency org="com.google.guava" name="guava" rev="18.0"/>
+        <dependency org="net.jcip" name="jcip-annotations" rev="1.0"/>
+
+        <!-- Spring -->
         <dependency org="org.springframework" name="spring-context" rev="4.2.2.RELEASE" />
         <dependency org="org.springframework" name="spring-beans" rev="4.2.2.RELEASE" />
         <dependency org="org.springframework" name="spring-core" rev="4.2.2.RELEASE" />
         <dependency org="org.springframework" name="spring-aop" rev="4.2.2.RELEASE" />
         <dependency org="org.springframework" name="spring-expression" rev="4.2.2.RELEASE" />
-        <dependency org="commons-logging" name="commons-logging" rev="1.2"/>
+
+        <!-- Logging -->
+        <dependency org="org.slf4j" name="slf4j-api" rev="1.7.12"/>
+        <dependency org="org.apache.logging.log4j" name="log4j-core" rev="2.4.1"/>
+        <dependency org="org.apache.logging.log4j" name="log4j-api" rev="2.4.1"/>
+        <dependency org="org.apache.logging.log4j" name="log4j-slf4j-impl" rev="2.4.1"/>
+        <dependency org="commons-logging" name="commons-logging" rev="1.2"/><!-- Needed for Spring -->
+        <dependency org="org.apache.logging.log4j" name="log4j-jcl" rev="2.4.1"/><!-- Needed for Spring -->
 
 
-        <dependency org="com.google.guava" name="guava" rev="18.0"/>
-		<dependency org="net.jcip" name="jcip-annotations" rev="1.0"/>
+        <!-- TEST: General  -->
+        <dependency org="junit" name="junit" rev="4.12" conf="testlib"/>
+ 		<dependency org="org.mockito" name="mockito-all" rev="1.10.19" conf="testlib"/>
 
-        <dependency org="org.slf4j" name="slf4j-api" rev="1.7.5"/>
-        <dependency org="org.slf4j" name="slf4j-log4j12" rev="1.7.5"/>
-        <dependency org="log4j" name="log4j" rev="1.2.16" />
-
-
-        <dependency org="junit" name="junit" rev="4.10" conf="testlib"/>
- 		<dependency org="org.mockito" name="mockito-all" rev="1.9.0" conf="testlib"/>
  	</dependencies>
 
 </ivy-module>

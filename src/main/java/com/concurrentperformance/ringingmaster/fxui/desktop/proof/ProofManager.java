@@ -2,6 +2,7 @@ package com.concurrentperformance.ringingmaster.fxui.desktop.proof;
 
 import com.concurrentperformance.ringingmaster.engine.touch.compiler.Compiler;
 import com.concurrentperformance.ringingmaster.engine.touch.compiler.impl.CompilerFactory;
+import com.concurrentperformance.ringingmaster.engine.touch.compiler.impl.TerminateEarlyException;
 import com.concurrentperformance.ringingmaster.engine.touch.container.Touch;
 import com.concurrentperformance.ringingmaster.engine.touch.parser.Parser;
 import com.concurrentperformance.ringingmaster.engine.touch.parser.impl.DefaultParser;
@@ -37,7 +38,7 @@ public class ProofManager extends ConcurrentListenable<ProofManagerListener> imp
 	private final AtomicLong nextProofId = new AtomicLong(0);
 
 	public ProofManager() {
-		proofExecutor =  new ThreadPoolExecutor(1, 1,
+		proofExecutor =  new ThreadPoolExecutor(5, 5,
 						0L, TimeUnit.MILLISECONDS,
 						new LinkedBlockingQueue<>(),
 						new ThreadFactoryBuilder()
@@ -52,32 +53,45 @@ public class ProofManager extends ConcurrentListenable<ProofManagerListener> imp
 								.setDaemon(true)
 								.build());
 	}
-	//			2) When adding method that is not valid (bell count) need to prevent it becomming active.
-//			3) Need to sort layout of name value pairs.
+
 	public void parseAndProve(Touch touch) {
+		fireUpdateProofState(Optional.empty());
+
 		if (touch == null) {
-			fireUpdateProofState(Optional.empty());
 			return;
 		}
+
 		parser.parseAndAnnotate(touch);
 
 		// Get the proofId before clearing the proof, so another thread does not preempt us.
 		final long proofId = this.nextProofId.incrementAndGet();
+		log.info("**** Submit Proof [{}]", proofId);
 
 		proofExecutor.execute(() -> {
 			long start = System.currentTimeMillis();
 			log.info(">>>> Proof of [{}]", proofId);
 			final Compiler compiler = CompilerFactory.getInstance(touch,"Proof-" + Long.toString(proofId));
-			Proof proof = compiler.compile(true);
-			final long currentProofId = nextProofId.get();
-			if (proofId == currentProofId) {
-				fireUpdateProofState(Optional.of(proof));
+			Proof proof = null;
+			try {
+				proof = compiler.compile(true, () -> !isCurrentProof(proofId));
+				if (isCurrentProof(proofId)) {
+					fireUpdateProofState(Optional.of(proof));
+				}
+				else {
+					log.info("Ignoring finished proof [{}] as not current [{}]", proofId, nextProofId.get());
+				}
 			}
-			else {
-				log.info("Ignoring finished proof [{}] as not current [{}]", proofId, currentProofId); //TODO need a mech of cancelling a proof mid term.
+			catch (TerminateEarlyException e) {
+				log.info("<<<< Terminate early request for proof [{}]", proofId);
+				return;
 			}
+
 			log.info("<<<< Proof of [{}], [{}ms], Calculation Time [{}ms]", proofId, System.currentTimeMillis()-start, proof.getProofTimeMs());
 		});
+	}
+
+	private boolean isCurrentProof(long proofId) {
+		return nextProofId.get() == proofId;
 	}
 
 	private void fireUpdateProofState(Optional<Proof> proof) {

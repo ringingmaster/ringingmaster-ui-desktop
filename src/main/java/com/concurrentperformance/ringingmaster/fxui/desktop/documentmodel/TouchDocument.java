@@ -48,7 +48,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -634,7 +633,8 @@ public class TouchDocument extends ScrollPane implements Listenable<TouchDocumen
 
 	private void configureDefinitionModels() {
 
-		final Set<TouchDefinition> definitions = touch.getDefinitions();
+		final List<TouchDefinition> definitions = new ArrayList<>(touch.getDefinitions());
+		Collections.sort(definitions, TouchDefinition.BY_SHORTHAND);
 
 		for (TouchDefinition definition : definitions) {
 			definitionModels.add(new DefinitionGridModel(this, definition));

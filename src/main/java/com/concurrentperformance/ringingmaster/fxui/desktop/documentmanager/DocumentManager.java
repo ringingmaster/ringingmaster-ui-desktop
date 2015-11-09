@@ -44,6 +44,17 @@ public class DocumentManager extends ConcurrentListenable<DocumentManagerListene
 
 			fireUpdateDocument();
 		});
+
+		globalStage.setOnCloseRequest(event -> {
+			log.info("Attempt at shutting down");
+			if (currentDocTab.isPresent()) {
+				log.info("Prevent shut down");
+				event.consume();
+			}
+			else {
+				log.info("Allowing shut down");
+			}
+		});
 	}
 
 	public void newDocument() {

@@ -1,7 +1,6 @@
 package com.concurrentperformance.ringingmaster.fxui.desktop.documentmodel;
 
 import com.concurrentperformance.ringingmaster.engine.NumberOfBells;
-import com.concurrentperformance.ringingmaster.engine.method.Stroke;
 import com.concurrentperformance.ringingmaster.engine.method.impl.MethodBuilder;
 import com.concurrentperformance.ringingmaster.engine.notation.NotationBody;
 import com.concurrentperformance.ringingmaster.engine.notation.impl.NotationBuilder;
@@ -117,7 +116,6 @@ public class TouchDocumentTypeManager extends ConcurrentListenable<TouchDocument
 
 	//TODO Make this return a new touch.
 	private Touch createEmptyTouch() {
-
 		Touch touch = TouchBuilder.getInstance(NumberOfBells.BELLS_6, 2, 2);
 
 		touch.setTitle("My Touch");
@@ -129,33 +127,14 @@ public class TouchDocumentTypeManager extends ConcurrentListenable<TouchDocument
 		touch.addNotation(buildPlainBobMinimus());
 		touch.addNotation(buildPlainBobMajor());
 
-
-		touch.insertCharacter(0, 0, 0, '-');
-		touch.insertCharacter(0, 1, 0, 's');
-		touch.insertCharacter(0, 0, 1, 's');
-		touch.insertCharacter(0, 1, 1, '-');
-		touch.insertCharacter(1, 0, 0, 'p');
-		touch.insertCharacter(1, 0, 1, ' ');
-		touch.insertCharacter(1, 0, 2, '3');
-		touch.insertCharacter(1, 0, 3, '*');
-
+		touch.addCharacters(0,0,"-s");
+		touch.addCharacters(1,0,"p 3*");
+		touch.addCharacters(0,1,"s-");
 
 		touch.addDefinition("3*", "-s-");
 		touch.addDefinition("tr", "sps");
 
-		touch.setStartChange(MethodBuilder.parse(touch.getNumberOfBells(), "654321"));
-		touch.setStartAtRow(10);
-		touch.setStartNotation(NotationBuilder.getInstance()
-				.setNumberOfWorkingBells(touch.getNumberOfBells())
-				.setUnfoldedNotationShorthand("x12x34")
-				.build());
-		touch.setStartStroke(Stroke.HANDSTROKE);
-
-		touch.setTerminationChange(MethodBuilder.parse(touch.getNumberOfBells(), "132546"));
-		touch.setTerminationMaxRows(2345);
-		touch.setTerminationMaxParts(123);
-		touch.setTerminationMaxLeads(999);
-		touch.setTerminationMaxCircularTouch(12);
+		touch.setTerminationChange(MethodBuilder.buildRoundsRow(touch.getNumberOfBells()));
 
 		return touch;
 	}

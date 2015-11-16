@@ -11,12 +11,16 @@ import java.nio.file.Path;
  */
 public interface Document {
 
-	boolean isSaved();
+	boolean hasFileLocation();
+	boolean isDirty();
+	void setDirty(boolean dirty);
+
 	Path getPath();
 	void setPath(Path path);
-	void setDocumentName(String documentName);
 
+	void setDocumentName(String documentName);
 	String getNameForApplicationTitle();
+
 	String getNameForTab();
 
 	default Node getNode() {return null;};

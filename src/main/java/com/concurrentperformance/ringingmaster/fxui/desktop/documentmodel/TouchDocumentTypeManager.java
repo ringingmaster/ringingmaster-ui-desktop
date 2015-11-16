@@ -17,6 +17,8 @@ import com.concurrentperformance.util.listener.ConcurrentListenable;
 import com.concurrentperformance.util.listener.Listenable;
 import com.google.common.collect.Lists;
 import javafx.stage.FileChooser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
 import java.util.Collection;
@@ -29,9 +31,12 @@ import java.util.Optional;
  */
 public class TouchDocumentTypeManager extends ConcurrentListenable<TouchDocumentTypeListener> implements DocumentTypeManager, Listenable<TouchDocumentTypeListener> {
 
+	private final Logger log = LoggerFactory.getLogger(this.getClass());
+
 	public static final String DOCUMENT_TYPE_NAME = "Touch";
 	private BeanFactory beanFactory;
 	private ProofManager proofManager;
+	private DocumentManager documentManager;
 	private TouchPersistence touchPersistence = new TouchPersistence();
 	private Optional<TouchDocument> currentDocument = Optional.empty();
 
@@ -43,7 +48,6 @@ public class TouchDocumentTypeManager extends ConcurrentListenable<TouchDocument
 		final TouchDocument touchDocument = buildTouchDocumentForTouch(touch);
 		touchDocument.setDocumentName("Untitled "+ DOCUMENT_TYPE_NAME + " " + ++docNumber);
 		return touchDocument;
-
 	}
 
 	@Override
@@ -59,6 +63,7 @@ public class TouchDocumentTypeManager extends ConcurrentListenable<TouchDocument
 		Path path = document.getPath();
 		Touch touch = touchDocument.getTouch();
 		touchPersistence.save(path, touch);
+		document.setDirty(false);
 	}
 
 	public Collection<FileChooser.ExtensionFilter> getFileChooserExtensionFilters() {
@@ -82,6 +87,9 @@ public class TouchDocumentTypeManager extends ConcurrentListenable<TouchDocument
 	}
 
 	private void fireUpdateDocument() {
+		log.info("*************************");
+		documentManager.updateTitles();
+
 		for (TouchDocumentTypeListener touchDocumentTypeListener : getListeners()) {
 			touchDocumentTypeListener.touchDocumentType_updateDocument(currentDocument);
 		}
@@ -92,6 +100,7 @@ public class TouchDocumentTypeManager extends ConcurrentListenable<TouchDocument
 	}
 
 	public void setDocumentManager(DocumentManager documentManager) {
+		this.documentManager = documentManager;
 		documentManager.addListener(document -> {
 			if (document instanceof TouchDocument) {
 				TouchDocument touchDocument = (TouchDocument) document;

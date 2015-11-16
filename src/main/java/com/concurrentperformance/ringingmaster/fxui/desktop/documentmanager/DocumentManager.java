@@ -1,5 +1,7 @@
 package com.concurrentperformance.ringingmaster.fxui.desktop.documentmanager;
 
+import com.concurrentperformance.fxutils.shutdown.ShutdownService;
+import com.concurrentperformance.fxutils.shutdown.ShutdownServiceVeto;
 import com.concurrentperformance.util.listener.ConcurrentListenable;
 import com.concurrentperformance.util.listener.Listenable;
 import javafx.scene.control.Tab;
@@ -12,7 +14,6 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.nio.file.Path;
 import java.util.List;
-import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -25,35 +26,34 @@ public class DocumentManager extends ConcurrentListenable<DocumentManagerListene
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-	private Optional<DocTabHolder> currentDocTab = Optional.empty();
 	private TabPane documentWindow;
 	private Stage globalStage;
+	ShutdownService shutdownService;
 	private DocumentTypeManager documentTypeManager; //TODO eventually this will be a Set of different documents. It can then control a menulist of document types when creating a new document
 
 	public void init() {
 		documentWindow.setTabClosingPolicy(TabPane.TabClosingPolicy.ALL_TABS);
 		documentWindow.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-			if (newValue == null) {
-				currentDocTab = Optional.empty();
-				setApplicationTitle(null);
-			}
-			else {
-				currentDocTab = Optional.of(new DocTabHolder(newValue));
-				setApplicationTitle(currentDocTab.get().document);
-			}
+			updateTitles();
 
 			fireUpdateDocument();
 		});
 
-		globalStage.setOnCloseRequest(event -> {
-			log.info("Attempt at shutting down");
-			if (currentDocTab.isPresent()) {
-				log.info("Prevent shut down");
-				event.consume();
+		shutdownService.addListener(() -> {
+			for (Tab tab : documentWindow.getTabs()) {
+				Document document = getDocument(tab);
+
+				log.info("Checking if [{}] is dirty", document.getNameForTab());
+				if (document.isDirty()) {
+
+					log.info("Requesting save for [{}]", document.getNameForTab());
+					boolean successfulSave = save(tab);
+					if (!successfulSave) {
+						return ShutdownServiceVeto.ShutdownOptions.PREVENT_SHUTDOWN;
+					}
+				}
 			}
-			else {
-				log.info("Allowing shut down");
-			}
+			return ShutdownServiceVeto.ShutdownOptions.ALLOW_SHUTDOWN;
 		});
 	}
 
@@ -78,55 +78,73 @@ public class DocumentManager extends ConcurrentListenable<DocumentManagerListene
 		}
 	}
 
-
 	public void saveCurrentDocument() {
-		if (currentDocTab.isPresent()) {
-			Document document = currentDocTab.get().getDocument();
-			Tab tab = currentDocTab.get().getTab();
-
-			if (!document.isSaved()) {
-
-				FileChooser fileChooser = new FileChooser();
-				fileChooser.setTitle("Save " + documentTypeManager.getDocumentTypeName() + " File");
-				fileChooser.setInitialFileName(document.getNameForTab());
-				fileChooser.getExtensionFilters().addAll(
-						documentTypeManager.getFileChooserExtensionFilters());
-				File selectedFile = fileChooser.showSaveDialog(globalStage);
-				if (selectedFile == null) {
-					return;
-				}
-				else {
-					document.setPath(selectedFile.toPath());
-				}
-			}
-
-			documentTypeManager.saveDocument(document);
-
-			tab.setText(document.getNameForTab());
-			setApplicationTitle(document);
+		Tab currentTab = getCurrentTab();
+		if (currentTab != null) {
+			save(currentTab);
 		}
+	}
+
+
+	/**
+	 * Save the document associated with the tab, prompting for a new file location
+	 * if one does not exist
+	 *
+	 * @param tab
+	 * @return true if save successful
+	 */
+	private boolean save(Tab tab) {
+		Document document = getDocument(tab);
+
+		if (!document.hasFileLocation()) {
+
+			FileChooser fileChooser = new FileChooser();
+			fileChooser.setTitle("Save " + documentTypeManager.getDocumentTypeName() + " File");
+			fileChooser.setInitialFileName(document.getNameForTab());
+			fileChooser.getExtensionFilters().addAll(
+					documentTypeManager.getFileChooserExtensionFilters());
+			File selectedFile = fileChooser.showSaveDialog(globalStage);
+			if (selectedFile == null) {
+				return false;
+			}
+			else {
+				document.setPath(selectedFile.toPath());
+			}
+		}
+
+		documentTypeManager.saveDocument(document);
+		updateTitles();
+
+		return true;
 	}
 
 	private void buildTabForDocument(Document document) {
 		Tab tab = new Tab();
-		tab.setText(document.getNameForTab());
 		tab.setContent(document.getNode());
 		documentWindow.getTabs().add(tab);
 		documentWindow.getSelectionModel().select(tab);
 
-		currentDocTab = Optional.of(new DocTabHolder(tab));
+		updateTitles();
 	}
 
+	public void updateTitles() {
+		StringBuilder applicationTitle = new StringBuilder();
+		applicationTitle.append("Ringingmaster Desktop");
 
-	private void setApplicationTitle(Document document) {
-		StringBuilder name = new StringBuilder();
-		name.append("Ringingmaster Desktop");
-		if (document != null) {
-			name.append(" - [").append(document.getNameForApplicationTitle()).append("]");
+		Tab tab = getCurrentTab();
+		if (tab != null) {
+			Document document = getDocument(tab);
+			boolean dirty = document.isDirty();
+			tab.setText(document.getNameForTab() + (dirty?"*":""));
+			applicationTitle.append(" - [")
+					.append(document.getNameForApplicationTitle())
+					.append(dirty?"*":"")
+					.append("]");
 		}
 
-		globalStage.setTitle(name.toString());
+		globalStage.setTitle(applicationTitle.toString());
 	}
+
 
 	private void fireUpdateDocument() {
 		Document currentDocument = getCurrentDocument();
@@ -137,7 +155,20 @@ public class DocumentManager extends ConcurrentListenable<DocumentManagerListene
 	}
 
 	public Document getCurrentDocument() {
-		return (currentDocTab.isPresent() ? currentDocTab.get().getDocument():null);
+		Tab selectedItem = getCurrentTab();
+		if (selectedItem == null) {
+			return null;
+		}
+		return getDocument(selectedItem);
+	}
+
+	private Tab getCurrentTab() {
+		return documentWindow.getSelectionModel().getSelectedItem();
+	}
+
+	private Document getDocument(Tab tab) {
+
+		return checkNotNull((Document) tab.getContent());
 	}
 
 	public void setDocumentWindow(TabPane documentWindow) {
@@ -152,23 +183,7 @@ public class DocumentManager extends ConcurrentListenable<DocumentManagerListene
 		this.documentTypeManager = documentTypeManager;
 	}
 
-	private class DocTabHolder {
-		private final Tab tab;
-		private final Document document;
-
-
-		private DocTabHolder(Tab tab) {
-			this.tab = checkNotNull(tab);
-			this.document = checkNotNull((Document) tab.getContent());
-		}
-
-		public Tab getTab() {
-			return tab;
-		}
-
-		public Document getDocument() {
-			return document;
-		}
+	public void setShutdownService(ShutdownService shutdownService) {
+		this.shutdownService = shutdownService;
 	}
-
 }

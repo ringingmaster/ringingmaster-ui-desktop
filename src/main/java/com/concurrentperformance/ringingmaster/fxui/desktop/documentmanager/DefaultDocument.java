@@ -1,6 +1,7 @@
 package com.concurrentperformance.ringingmaster.fxui.desktop.documentmanager;
 
-import javafx.scene.Node;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
 
@@ -13,12 +14,26 @@ import static com.google.common.base.Preconditions.checkState;
  */
 public class DefaultDocument implements Document {
 
+	private final Logger log = LoggerFactory.getLogger(this.getClass());
+
 	private Path path = null;
 	private String documentName = null;
+	private boolean dirty = true;
 
 	@Override
-	public boolean isSaved() {
+	public boolean hasFileLocation() {
 		return path != null;
+	}
+
+	@Override
+	public boolean isDirty() {
+		return dirty;
+	}
+
+	@Override
+	public void setDirty(boolean dirty) {
+		log.info("Setting document [{}] dirty [{}]", getNameForTab(), dirty);
+		this.dirty = dirty;
 	}
 
 	@Override

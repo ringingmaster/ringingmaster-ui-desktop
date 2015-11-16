@@ -650,6 +650,7 @@ public class TouchDocument extends ScrollPane implements Listenable<TouchDocumen
 	}
 
 	public void parseAndProve() {
+		setDirty(true);
 		proofManager.parseAndProve(touch);
 	}
 
@@ -702,8 +703,18 @@ public class TouchDocument extends ScrollPane implements Listenable<TouchDocumen
 	}
 
 	@Override
-	public boolean isSaved() {
-		return documentDelegate.isSaved();
+	public boolean hasFileLocation() {
+		return documentDelegate.hasFileLocation();
+	}
+
+	@Override
+	public boolean isDirty() {
+		return documentDelegate.isDirty();
+	}
+
+	@Override
+	public void setDirty(boolean dirty) {
+		documentDelegate.setDirty(dirty);
 	}
 
 	@Override

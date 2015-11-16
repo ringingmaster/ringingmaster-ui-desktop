@@ -24,6 +24,7 @@ import com.concurrentperformance.ringingmaster.persist.generated.v1.TouchCellsPe
 import com.concurrentperformance.ringingmaster.persist.generated.v1.TouchCheckingPersist;
 import com.concurrentperformance.ringingmaster.persist.generated.v1.TouchNotationPersist;
 import com.concurrentperformance.ringingmaster.persist.generated.v1.TouchPersist;
+import com.google.common.base.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -239,7 +240,7 @@ public class TouchPersistence {
 		touch.setStartStroke(Stroke.valueOf(touchPersist.getStartStroke().name()));
 		touch.setStartNotation(NotationBuilder.getInstance()
 				.setNumberOfWorkingBells(touch.getNumberOfBells())
-				.setUnfoldedNotationShorthand(touchPersist.getStartNotation())
+				.setUnfoldedNotationShorthand(Strings.nullToEmpty(touchPersist.getStartNotation()))
 				.build());
 
 		touch.setTerminationMaxRows(touchPersist.getTerminationMaxRows());

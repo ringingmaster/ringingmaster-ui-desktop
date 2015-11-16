@@ -87,7 +87,6 @@ public class TouchDocumentTypeManager extends ConcurrentListenable<TouchDocument
 	}
 
 	private void fireUpdateDocument() {
-		log.info("*************************");
 		documentManager.updateTitles();
 
 		for (TouchDocumentTypeListener touchDocumentTypeListener : getListeners()) {

@@ -11,6 +11,7 @@ import com.concurrentperformance.ringingmaster.engine.notation.impl.NotationBuil
 import com.concurrentperformance.ringingmaster.engine.notation.impl.NotationBuilderHelper;
 import com.concurrentperformance.ringingmaster.engine.touch.container.Grid;
 import com.concurrentperformance.ringingmaster.engine.touch.container.Touch;
+import com.concurrentperformance.ringingmaster.engine.touch.container.Touch.Mutated;
 import com.concurrentperformance.ringingmaster.engine.touch.container.TouchCell;
 import com.concurrentperformance.ringingmaster.engine.touch.container.TouchCheckingType;
 import com.concurrentperformance.ringingmaster.engine.touch.container.TouchDefinition;
@@ -48,8 +49,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import static com.concurrentperformance.ringingmaster.engine.touch.container.Touch.Mutated.*;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -101,10 +104,6 @@ public class TouchDocument extends ScrollPane implements Listenable<TouchDocumen
 		definitionPane.setModels(definitionModels);
 	}
 
-	public Touch getTouch() {
-		return new ImmutableTouch(touch);
-	}
-
 	private void layoutNodes() {
 		VBox verticalLayout = new VBox(titlePane, gridPane, definitionPane);
 		verticalLayout.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
@@ -119,6 +118,10 @@ public class TouchDocument extends ScrollPane implements Listenable<TouchDocumen
 		setFocusTraversable(false);
 	}
 
+	public Touch getTouch() {
+		return new ImmutableTouch(touch);
+	}
+
 	private void updateUiComponents() {
 		titlePane.setText(getTitle(), getAuthor());
 	}
@@ -128,10 +131,11 @@ public class TouchDocument extends ScrollPane implements Listenable<TouchDocumen
 	}
 
 	public void setTitle(String newTitle) {
+		Mutated mutated = UNCHANGED;
 		if (!newTitle.equals(touch.getTitle())) {
-			touch.setTitle(newTitle);
+			mutated = touch.setTitle(newTitle);
 		}
-		fireDocumentContentChanged();
+		setUpdatePoint(() -> "Set Title", mutated);
 	}
 
 	public String getAuthor() {
@@ -139,10 +143,11 @@ public class TouchDocument extends ScrollPane implements Listenable<TouchDocumen
 	}
 
 	public void setAuthor(String author) {
+		Mutated modified = UNCHANGED;
 		if (!author.equals(touch.getAuthor())) {
-			touch.setAuthor(author);
+			modified = touch.setAuthor(author);
 		}
-		fireDocumentContentChanged();
+		setUpdatePoint(() -> "Set Author", modified);
 	}
 
 	public NumberOfBells getNumberOfBells() {
@@ -150,6 +155,7 @@ public class TouchDocument extends ScrollPane implements Listenable<TouchDocumen
 	}
 
 	public void setNumberOfBells(NumberOfBells numberOfBells) {
+		Mutated mutated = UNCHANGED;
 		if (touch.getNumberOfBells() != numberOfBells) {
 			StringBuilder message = new StringBuilder();
 
@@ -239,8 +245,16 @@ public class TouchDocument extends ScrollPane implements Listenable<TouchDocumen
 
 			if (doAction) {
 				touch.setNumberOfBells(numberOfBells);
-				parseAndProve();
+				mutated = MUTATED;
 			}
+		}
+		setUpdatePoint(()->String.format("Change number of bells to: %s", numberOfBells.getDisplayString()), mutated);
+	}
+
+	private void setUpdatePoint(Supplier<String> updatePointName, Mutated mutated) {
+		if (mutated == MUTATED) {
+			log.info("UPDATE: [{}], [{}]", updatePointName, mutated);
+			setDirty(true);
 		}
 		fireDocumentContentChanged();
 	}

@@ -3,6 +3,7 @@ package com.concurrentperformance.ringingmaster.fxui.desktop.notationpanel;
 import com.concurrentperformance.fxutils.events.EventDefinition;
 import com.concurrentperformance.fxutils.events.SkeletalEventDefinition;
 import com.concurrentperformance.ringingmaster.engine.NumberOfBells;
+import com.concurrentperformance.ringingmaster.engine.touch.container.Touch;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentmodel.TouchDocumentTypeManager;
 import com.concurrentperformance.ringingmaster.fxui.desktop.notationeditor.NotationEditorDialogBuilder;
 import javafx.event.ActionEvent;
@@ -35,7 +36,7 @@ public class AddNotationEvent extends SkeletalEventDefinition implements EventDe
 
 		notationEditorDialogBuilder.newNotationShowDialog(numberOfBells, result -> {
 			log.info("AddMethodButton - adding", result.toString());
-			return touchDocumentTypeManager.getCurrentDocument().get().addNotation(result);
+			return touchDocumentTypeManager.getCurrentDocument().get().addNotation(result) == Touch.Mutated.MUTATED;
 		});
 	}
 

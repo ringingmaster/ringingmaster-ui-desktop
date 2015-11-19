@@ -130,10 +130,12 @@ public class TouchDocument extends ScrollPane implements Listenable<TouchDocumen
 		return touch.getTitle();
 	}
 
-	public void setTitle(String newTitle) {
+	public void setTitle(String title) {
+		checkNotNull(title);
+
 		Mutated mutated = UNCHANGED;
-		if (!newTitle.equals(touch.getTitle())) {
-			mutated = touch.setTitle(newTitle);
+		if (!title.equals(touch.getTitle())) {
+			mutated = touch.setTitle(title);
 		}
 		setUpdatePoint(() -> "Set Title", mutated);
 	}
@@ -143,6 +145,8 @@ public class TouchDocument extends ScrollPane implements Listenable<TouchDocumen
 	}
 
 	public void setAuthor(String author) {
+		checkNotNull(author);
+
 		Mutated modified = UNCHANGED;
 		if (!author.equals(touch.getAuthor())) {
 			modified = touch.setAuthor(author);
@@ -155,6 +159,8 @@ public class TouchDocument extends ScrollPane implements Listenable<TouchDocumen
 	}
 
 	public void setNumberOfBells(NumberOfBells numberOfBells) {
+		checkNotNull(numberOfBells);
+
 		Mutated mutated = UNCHANGED;
 		if (touch.getNumberOfBells() != numberOfBells) {
 			StringBuilder message = new StringBuilder();
@@ -244,19 +250,10 @@ public class TouchDocument extends ScrollPane implements Listenable<TouchDocumen
 			}
 
 			if (doAction) {
-				touch.setNumberOfBells(numberOfBells);
-				mutated = MUTATED;
+				mutated = touch.setNumberOfBells(numberOfBells);
 			}
 		}
-		setUpdatePoint(()->String.format("Change number of bells to: %s", numberOfBells.getDisplayString()), mutated);
-	}
-
-	private void setUpdatePoint(Supplier<String> updatePointName, Mutated mutated) {
-		if (mutated == MUTATED) {
-			log.info("UPDATE: [{}], [{}]", updatePointName, mutated);
-			setDirty(true);
-		}
-		fireDocumentContentChanged();
+		setUpdatePoint(()->String.format("Set number of bells to: %s", numberOfBells.getDisplayString()), mutated);
 	}
 
 	public Bell getCallFrom() {
@@ -264,11 +261,13 @@ public class TouchDocument extends ScrollPane implements Listenable<TouchDocumen
 	}
 
 	public void setCallFrom(Bell callFrom) {
+		checkNotNull(callFrom);
+
+		Mutated mutated = UNCHANGED;
 		if (touch.getCallFromBell() != callFrom) {
-			touch.setCallFromBell(callFrom);
-			parseAndProve();
+			mutated = touch.setCallFromBell(callFrom);
 		}
-		fireDocumentContentChanged();
+		setUpdatePoint(() -> String.format("Set number of bells to: %s", callFrom.getDisplayString()), mutated);
 	}
 
 	public List<NotationBody> getSortedAllNotations() {
@@ -283,43 +282,42 @@ public class TouchDocument extends ScrollPane implements Listenable<TouchDocumen
 		return sortedNotations;
 	}
 
-	public boolean addNotation(NotationBody notationToAdd) {
+	public Mutated addNotation(NotationBody notationToAdd) {
+		checkNotNull(notationToAdd);
 
+		Mutated mutated = UNCHANGED;
 		List<String> messages = touch.checkAddNotation(notationToAdd);
 
 		if (messages.size() == 0) {
-			touch.addNotation(notationToAdd);
-			parseAndProve();
-			fireDocumentContentChanged();
-			return true;
+			mutated = touch.addNotation(notationToAdd);
 		}
 		else {
 			String message = messages.stream().collect(Collectors.joining(System.lineSeparator()));
-			Alert dialog = new Alert(Alert.AlertType.CONFIRMATION, message.toString(), ButtonType.OK);
-			dialog.setTitle("Can't add notation");
+			Alert dialog = new Alert(Alert.AlertType.CONFIRMATION, message, ButtonType.OK);
+			dialog.setTitle("Can't add method");
 			dialog.setHeaderText("Can't add '" + notationToAdd.getNameIncludingNumberOfBells() + "'");
 			dialog.getDialogPane().setMinHeight(280);
 			dialog.getDialogPane().setMinWidth(560);
 			dialog.showAndWait();
-
-			fireDocumentContentChanged();
-			return false;
 		}
+
+		setUpdatePoint(() -> String.format("Add method: %s", notationToAdd.getNameIncludingNumberOfBells()), mutated);
+		return mutated;
 	}
 
 	public void removeNotation(NotationBody notationToRemove) {
-		touch.removeNotation(notationToRemove);
-		parseAndProve();
-		fireDocumentContentChanged();
+		checkNotNull(notationToRemove);
+
+		Mutated mutated = touch.removeNotation(notationToRemove);
+		setUpdatePoint(() -> String.format("Remove method: %s", notationToRemove.getNameIncludingNumberOfBells()), mutated);
 
 //	TODO			Also do checks thate the notation can be removed
 //	TODO			Also what happens to active method.
 	}
 
 	public void exchangeNotationAfterEdit(NotationBody originalNotation, NotationBody replacementNotation) {
-		touch.exchangeNotation(originalNotation, replacementNotation);
-		parseAndProve();
-		fireDocumentContentChanged();
+		Mutated mutated = touch.exchangeNotation(originalNotation, replacementNotation);
+		setUpdatePoint(() -> String.format("Update method: %s", replacementNotation.getNameIncludingNumberOfBells()), mutated);
 
 		// TODO do we need checks here???
 	}
@@ -329,11 +327,11 @@ public class TouchDocument extends ScrollPane implements Listenable<TouchDocumen
 	}
 
 	public void setSingleMethodActiveNotation(NotationBody notation) {
+		Mutated mutated = UNCHANGED;
 		if (!notation.equals(touch.getNonSplicedActiveNotation())) {
-			touch.setNonSplicedActiveNotation(notation);
-			parseAndProve();
+			mutated = touch.setNonSplicedActiveNotation(notation);
 		}
-		fireDocumentContentChanged();
+		setUpdatePoint(() -> String.format("Set active method: %s", notation.getNameIncludingNumberOfBells()), mutated);
 	}
 
 	public boolean isSpliced() {
@@ -341,11 +339,11 @@ public class TouchDocument extends ScrollPane implements Listenable<TouchDocumen
 	}
 
 	public void setSpliced(boolean spliced) {
+		Mutated mutated = UNCHANGED;
 		if (touch.isSpliced() != spliced) {
-			touch.setSpliced(spliced);
-			parseAndProve();
+			mutated = touch.setSpliced(spliced);
 		}
-		fireDocumentContentChanged();
+		setUpdatePoint(() -> (spliced?"Set spliced":"Set non spliced"), mutated);
 	}
 
 	public TouchCheckingType getTouchCheckingType() {
@@ -354,11 +352,12 @@ public class TouchDocument extends ScrollPane implements Listenable<TouchDocumen
 
 	public void setTouchCheckingType(TouchCheckingType touchCheckingType) {
 		checkNotNull(touchCheckingType);
+
+		Mutated mutated = UNCHANGED;
 		if (touchCheckingType != touch.getTouchCheckingType()) {
-			touch.setTouchCheckingType(touchCheckingType);
-			parseAndProve();
+			mutated = touch.setTouchCheckingType(touchCheckingType);
 		}
-		fireDocumentContentChanged();
+		setUpdatePoint(() -> String.format("Set Checking Type: %s", touchCheckingType.getName()), mutated);
 	}
 
 	public String getPlainLeadToken() {
@@ -367,11 +366,12 @@ public class TouchDocument extends ScrollPane implements Listenable<TouchDocumen
 
 	public void setPlainLeadToken(String plainLeadToken) {
 		checkNotNull(plainLeadToken);
+
+		Mutated mutated = UNCHANGED;
 		if (!plainLeadToken.equals(touch.getPlainLeadToken())) {
-			touch.setPlainLeadToken(plainLeadToken);
-			parseAndProve();
+			mutated = touch.setPlainLeadToken(plainLeadToken);
 		}
-		fireDocumentContentChanged();
+		setUpdatePoint(() -> String.format("Set Plain Lead Token: %s", plainLeadToken), mutated);
 	}
 
 	public String getStartChange() {
@@ -426,33 +426,35 @@ public class TouchDocument extends ScrollPane implements Listenable<TouchDocumen
 		return touch.getStartAtRow();
 	}
 
-
-	public void setStartAtRow(Integer startAtRow) {
-		if (startAtRow != null) {
-			if (startAtRow > Touch.START_AT_ROW_MAX) {
-				startAtRow = Touch.START_AT_ROW_MAX;
-			}
-			if (startAtRow < 0) {
-				startAtRow = 0;
-			}
-			if (!startAtRow.equals(getStartAtRow())) {
-				touch.setStartAtRow(startAtRow);
-				parseAndProve();
-			}
+	public void setStartAtRow(int startAtRow) {
+		if (startAtRow > Touch.START_AT_ROW_MAX) {
+			startAtRow = Touch.START_AT_ROW_MAX;
 		}
-		fireDocumentContentChanged();
+		if (startAtRow < 0) {
+			startAtRow = 0;
+		}
+
+		Mutated mutated = UNCHANGED;
+		if (startAtRow != getStartAtRow()) {
+			mutated = touch.setStartAtRow(startAtRow);
+		}
+		final int startAtRowForLambda = startAtRow;
+		setUpdatePoint(() -> String.format("Set Start At Row: %d", startAtRowForLambda), mutated);
 	}
+
 
 	public Stroke getStartStroke() {
 		return touch.getStartStroke();
 	}
 
 	public void setStartStroke(Stroke startStroke) {
+		checkNotNull(startStroke);
+
+		Mutated mutated = UNCHANGED;
 		if (startStroke != touch.getStartStroke()) {
-			touch.setStartStroke(startStroke);
-			parseAndProve();
+			mutated = touch.setStartStroke(startStroke);
 		}
-		fireDocumentContentChanged();
+		setUpdatePoint(() -> String.format("Set Start Stroke: %s", startStroke), mutated);
 	}
 
 	public void setStartNotation(String startNotation) {
@@ -474,6 +476,17 @@ public class TouchDocument extends ScrollPane implements Listenable<TouchDocumen
 		}
 
 		parseAndProve();
+		fireDocumentContentChanged();
+	}
+
+	private void setUpdatePoint(Supplier<String> updatePointName, Mutated mutated) {
+		if (mutated == MUTATED) {
+			log.info("UPDATE: [{}], [{}]", updatePointName.get(), mutated);
+			setDirty(true);
+		}
+		else {
+			log.debug("UPDATE: [{}], [{}]", updatePointName.get(), mutated);
+		}
 		fireDocumentContentChanged();
 	}
 

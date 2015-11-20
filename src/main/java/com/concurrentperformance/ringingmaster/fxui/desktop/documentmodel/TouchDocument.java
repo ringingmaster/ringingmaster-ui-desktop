@@ -386,17 +386,19 @@ public class TouchDocument extends ScrollPane implements Listenable<TouchDocumen
 		}
 
 		// first look for rounds token
+		Mutated mutated = UNCHANGED;
+		String action = "Set Start Change";
 		if (startChangeText.compareToIgnoreCase(MethodRow.ROUNDS_TOKEN) == 0) {
 			final MethodRow rounds = MethodBuilder.buildRoundsRow(touch.getNumberOfBells());
-			touch.setStartChange(rounds);
-			parseAndProve();
+			mutated = touch.setStartChange(rounds);
+			action = ": " + MethodRow.ROUNDS_TOKEN;
 		}
 		// Now check for valid row
 		else {
 			try {
 				final MethodRow parsedRow = MethodBuilder.parse(touch.getNumberOfBells(), startChangeText);
-				touch.setStartChange(parsedRow);
-				parseAndProve();
+				mutated = touch.setStartChange(parsedRow);
+				action += ": " + parsedRow.getDisplayString(true);
 			}
 			catch (RuntimeException e) {
 				StringBuilder msg = new StringBuilder();
@@ -419,7 +421,8 @@ public class TouchDocument extends ScrollPane implements Listenable<TouchDocumen
 			}
 		}
 
-		fireDocumentContentChanged();
+		String actionForLambda = action;
+		setUpdatePoint(() -> actionForLambda, mutated);
 	}
 
 	public int getStartAtRow() {
@@ -458,8 +461,12 @@ public class TouchDocument extends ScrollPane implements Listenable<TouchDocumen
 	}
 
 	public void setStartNotation(String startNotation) {
+		Mutated mutated;
+		String action;
+
 		if (Strings.isNullOrEmpty(startNotation)) {
-			touch.removeStartNotation();
+			mutated = touch.removeStartNotation();
+			action = "Remove Start Notation";
 		}
 		else {
 			NotationBody builtNotation = NotationBuilder.getInstance()
@@ -468,26 +475,16 @@ public class TouchDocument extends ScrollPane implements Listenable<TouchDocumen
 				.build();
 
 			if (builtNotation != null && builtNotation.getRowCount() > 0) {
-				touch.setStartNotation(builtNotation);
+				mutated = touch.setStartNotation(builtNotation);
+				action = "Set Start Notation: " + builtNotation.getNotationDisplayString(true);
 			}
 			else {
-				touch.removeStartNotation();
+				mutated = touch.removeStartNotation();
+				action = "Remove Start Notation";
 			}
 		}
 
-		parseAndProve();
-		fireDocumentContentChanged();
-	}
-
-	private void setUpdatePoint(Supplier<String> updatePointName, Mutated mutated) {
-		if (mutated == MUTATED) {
-			log.info("UPDATE: [{}], [{}]", updatePointName.get(), mutated);
-			setDirty(true);
-		}
-		else {
-			log.debug("UPDATE: [{}], [{}]", updatePointName.get(), mutated);
-		}
-		fireDocumentContentChanged();
+		setUpdatePoint(() -> action, mutated);
 	}
 
 	public String getStartNotation() {
@@ -517,22 +514,25 @@ public class TouchDocument extends ScrollPane implements Listenable<TouchDocumen
 			return;
 		}
 
+		Mutated mutated = UNCHANGED;
+		String action = "Set Termination Change";
+		// first look for removal
 		if (terminationChangeText.isEmpty()) {
-			touch.removeTerminationChange();
-			parseAndProve();
+			mutated = touch.removeTerminationChange();
+			action = ": ";
 		}
-		// first look for rounds token
+		// then look for rounds token
 		else if (terminationChangeText.compareToIgnoreCase(MethodRow.ROUNDS_TOKEN) == 0) {
 			final MethodRow rounds = MethodBuilder.buildRoundsRow(touch.getNumberOfBells());
-			touch.setTerminationChange(rounds);
-			parseAndProve();
+			mutated = touch.setTerminationChange(rounds);
+			action = ": " + MethodRow.ROUNDS_TOKEN;
 		}
 		// Now check for valid row
 		else {
 			try {
 				final MethodRow parsedRow = MethodBuilder.parse(touch.getNumberOfBells(), terminationChangeText);
-				touch.setTerminationChange(parsedRow);
-				parseAndProve();
+				mutated = touch.setTerminationChange(parsedRow);
+				action += ": " + parsedRow.getDisplayString(true);
 			}
 			catch (RuntimeException e) {
 				StringBuilder msg = new StringBuilder();
@@ -555,28 +555,29 @@ public class TouchDocument extends ScrollPane implements Listenable<TouchDocumen
 			}
 		}
 
-		fireDocumentContentChanged();
+		String actionForLambda = action;
+		setUpdatePoint(() -> actionForLambda, mutated);
 	}
 
 	public int getTerminationMaxRows() {
 		return touch.getTerminationMaxRows();
 	}
 
-	public void setTerminationMaxRows(Integer terminationMaxRows) {
-		if (terminationMaxRows != null) {
-			if (terminationMaxRows > Touch.TERMINATION_MAX_ROWS_MAX) {
-				terminationMaxRows = Touch.TERMINATION_MAX_ROWS_MAX;
-			}
-			if (terminationMaxRows < 1) {
-				terminationMaxRows = 1;
-			}
-			if (!terminationMaxRows.equals(getTerminationMaxRows())) {
-				touch.setTerminationMaxRows(terminationMaxRows);
-				parseAndProve();
-			}
+	public void setTerminationMaxRows(int terminationMaxRows) {
+		if (terminationMaxRows > Touch.TERMINATION_MAX_ROWS_MAX) {
+			terminationMaxRows = Touch.TERMINATION_MAX_ROWS_MAX;
+		}
+		if (terminationMaxRows < 1) {
+			terminationMaxRows = 1;
 		}
 
-		fireDocumentContentChanged();
+		Mutated mutated = UNCHANGED;
+		if (terminationMaxRows != getTerminationMaxRows()) {
+			mutated = touch.setTerminationMaxRows(terminationMaxRows);
+		}
+
+		int terminationMaxRowsForLambda = terminationMaxRows;
+		setUpdatePoint(() -> String.format("Set Row Limit: %d", terminationMaxRowsForLambda), mutated);
 	}
 
 	public Integer getTerminationMaxLeads() {
@@ -584,6 +585,8 @@ public class TouchDocument extends ScrollPane implements Listenable<TouchDocumen
 	}
 
 	public void setTerminationMaxLeads(Integer terminationMaxLeads) {
+		Mutated mutated = UNCHANGED;
+		String action = "";
 		if (terminationMaxLeads != null) {
 			if (terminationMaxLeads > Touch.TERMINATION_MAX_LEADS_MAX) {
 				terminationMaxLeads = Touch.TERMINATION_MAX_LEADS_MAX;
@@ -591,18 +594,16 @@ public class TouchDocument extends ScrollPane implements Listenable<TouchDocumen
 			if (terminationMaxLeads < 1) {
 				terminationMaxLeads = 1;
 			}
-			if (!terminationMaxLeads.equals(getTerminationMaxLeads())) {
-				touch.setTerminationMaxLeads(terminationMaxLeads);
-				parseAndProve();
-			}
+
+			action = String.format("Set Lead Limit: %d", terminationMaxLeads);
+			mutated = touch.setTerminationMaxLeads(terminationMaxLeads);
 		}
 		else {
-			if (touch.getTerminationMaxLeads() != null) {
-				touch.removeTerminationMaxLeads();
-				parseAndProve();
-			}
+			action = "Remove Lead Limit";
+			mutated = touch.removeTerminationMaxLeads();
 		}
-		fireDocumentContentChanged();
+		String actionForLambda = action;
+		setUpdatePoint(() -> actionForLambda, mutated);
 	}
 
 	public Integer getTerminationMaxParts() {
@@ -610,6 +611,8 @@ public class TouchDocument extends ScrollPane implements Listenable<TouchDocumen
 	}
 
 	public void setTerminationMaxParts(Integer terminationMaxParts) {
+		Mutated mutated;
+		String action;
 		if (terminationMaxParts != null) {
 			if (terminationMaxParts > Touch.TERMINATION_MAX_PARTS_MAX) {
 				terminationMaxParts = Touch.TERMINATION_MAX_PARTS_MAX;
@@ -617,18 +620,16 @@ public class TouchDocument extends ScrollPane implements Listenable<TouchDocumen
 			if (terminationMaxParts < 1) {
 				terminationMaxParts = 1;
 			}
-			if (!terminationMaxParts.equals(getTerminationMaxParts())) {
-				touch.setTerminationMaxParts(terminationMaxParts);
-				parseAndProve();
-			}
+
+			action = String.format("Set Part Limit: %d", terminationMaxParts);
+			mutated = touch.setTerminationMaxParts(terminationMaxParts);
 		}
 		else {
-			if (touch.getTerminationMaxParts() != null) {
-				touch.removeTerminationMaxParts();
-				parseAndProve();
-			}
+			action = "Remove Part Limit";
+			mutated = touch.removeTerminationMaxParts();
 		}
-		fireDocumentContentChanged();
+		String actionForLambda = action;
+		setUpdatePoint(() -> actionForLambda, mutated);
 	}
 
 	public Integer getTerminationCircularTouch() {
@@ -636,6 +637,8 @@ public class TouchDocument extends ScrollPane implements Listenable<TouchDocumen
 	}
 
 	public void setTerminationCircularTouch(Integer terminationCircularTouch) {
+		Mutated mutated;
+		String action;
 		if (terminationCircularTouch != null) {
 			if (terminationCircularTouch > Touch.TERMINATION_CIRCULAR_TOUCH_MAX) {
 				terminationCircularTouch = Touch.TERMINATION_CIRCULAR_TOUCH_MAX;
@@ -643,17 +646,26 @@ public class TouchDocument extends ScrollPane implements Listenable<TouchDocumen
 			if (terminationCircularTouch < 1) {
 				terminationCircularTouch = 1;
 			}
-			if (!terminationCircularTouch.equals(getTerminationCircularTouch())) {
 
-				touch.setTerminationMaxCircularTouch(terminationCircularTouch);
-				parseAndProve();
-			}
+			action = String.format("Set Circular Touch Limit: %d", terminationCircularTouch);
+			mutated = touch.setTerminationMaxCircularTouch(terminationCircularTouch);
 		}
 		else {
-			if (touch.getTerminationMaxCircularTouch() != null) {
-				touch.removeTerminationMaxCircularTouch();
-				parseAndProve();
-			}
+			action = "Remove Circular Touch Limit";
+			mutated = touch.removeTerminationMaxCircularTouch();
+		}
+		String actionForLambda = action;
+		setUpdatePoint(() -> actionForLambda, mutated);
+	}
+
+	private void setUpdatePoint(Supplier<String> updatePointName, Mutated mutated) {
+		if (mutated == MUTATED) {
+			log.info("UPDATE: [{}], [{}]", updatePointName.get(), mutated);
+			parseAndProve();
+			setDirty(true);
+		}
+		else {
+			log.debug("UPDATE: [{}], [{}]", updatePointName.get(), mutated);
 		}
 		fireDocumentContentChanged();
 	}
@@ -677,7 +689,6 @@ public class TouchDocument extends ScrollPane implements Listenable<TouchDocumen
 	}
 
 	public void parseAndProve() {
-		setDirty(true);
 		proofManager.parseAndProve(touch);
 	}
 

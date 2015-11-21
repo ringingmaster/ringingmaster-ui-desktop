@@ -1,7 +1,8 @@
 package com.concurrentperformance.ringingmaster.fxui.desktop.documentmodel.definitiongrid;
 
+import com.concurrentperformance.ringingmaster.engine.touch.container.Touch;
+import com.concurrentperformance.ringingmaster.engine.touch.container.TouchCell;
 import com.concurrentperformance.ringingmaster.engine.touch.parser.ParseType;
-import com.concurrentperformance.ringingmaster.engine.touch.container.TouchDefinition;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentmodel.TouchDocument;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentpanel.grid.model.GridCellModel;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentpanel.grid.model.GridCharacterModel;
@@ -27,35 +28,32 @@ public class DefinitionCell extends SkeletalGridCellModel implements GridCellMod
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 	private final TouchDocument touchDocument;
-	private final TouchDefinition definition;
+	private final TouchCell cell;
 
-	public DefinitionCell(List<GridModelListener> listeners, TouchDocument touchDocument, TouchDefinition definition) {
+	public DefinitionCell(List<GridModelListener> listeners, TouchDocument touchDocument, TouchCell cell) {
 		super(listeners);
 		this.touchDocument = checkNotNull(touchDocument);
-		this.definition = checkNotNull(definition);
+		this.cell = checkNotNull(cell);
 	}
 
 	@Override
 	public int getLength() {
-		return definition.getLength();
+		return cell.getLength();
 	}
 
 	@Override
 	public void insertCharacter(int index, char character) {
-		definition.insert(character, index);
+		cell.insert(character, index);
+		touchDocument.setUpdatePoint(() -> "Typing", Touch.Mutated.MUTATED);
 		fireCellStructureChanged();
 	}
 
 	@Override
 	public void removeCharacter(int index) {
-		definition.remove(index);
+		cell.remove(index);
 		touchDocument.collapseEmptyRowsAndColumns();
+		touchDocument.setUpdatePoint(() -> "Delete", Touch.Mutated.MUTATED);
 		fireCellStructureChanged();
-	}
-
-	protected void fireCellStructureChanged() {
-		touchDocument.parseAndProve();
-		super.fireCellStructureChanged();
 	}
 
 	@Override
@@ -63,7 +61,7 @@ public class DefinitionCell extends SkeletalGridCellModel implements GridCellMod
 		return new GridCharacterModel() {
 			@Override
 			public char getCharacter() {
-				return definition.getElement(index).getCharacter();
+				return cell.getElement(index).getCharacter();
 			}
 
 			@Override
@@ -73,7 +71,7 @@ public class DefinitionCell extends SkeletalGridCellModel implements GridCellMod
 
 			@Override
 			public Color getColor() {
-				ParseType parseType = definition.getElement(index).getParseType();
+				ParseType parseType = cell.getElement(index).getParseType();
 				return touchDocument.getTouchStyle().getColourFromParseType(parseType);
 			}
 		};

@@ -1,7 +1,8 @@
 package com.concurrentperformance.ringingmaster.fxui.desktop.documentmodel.maingrid;
 
-import com.concurrentperformance.ringingmaster.engine.touch.parser.ParseType;
+import com.concurrentperformance.ringingmaster.engine.touch.container.Touch;
 import com.concurrentperformance.ringingmaster.engine.touch.container.TouchCell;
+import com.concurrentperformance.ringingmaster.engine.touch.parser.ParseType;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentmodel.TouchDocument;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentpanel.grid.model.GridCellModel;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentpanel.grid.model.GridCharacterModel;
@@ -39,6 +40,7 @@ public class StandardCell extends SkeletalGridCellModel implements GridCellModel
 	@Override
 	public void insertCharacter(int index, char character) {
 		cell.insert(character, index);
+		touchDocument.setUpdatePoint(() -> "Typing", Touch.Mutated.MUTATED);
 		fireCellStructureChanged();
 	}
 
@@ -46,12 +48,8 @@ public class StandardCell extends SkeletalGridCellModel implements GridCellModel
 	public void removeCharacter(int index) {
 		cell.remove(index);
 		touchDocument.collapseEmptyRowsAndColumns();
+		touchDocument.setUpdatePoint(() -> "Delete", Touch.Mutated.MUTATED);
 		fireCellStructureChanged();
-	}
-
-	protected void fireCellStructureChanged() {
-		touchDocument.parseAndProve();
-		super.fireCellStructureChanged();
 	}
 
 	@Override
@@ -74,6 +72,4 @@ public class StandardCell extends SkeletalGridCellModel implements GridCellModel
 			}
 		};
 	}
-
-
 }

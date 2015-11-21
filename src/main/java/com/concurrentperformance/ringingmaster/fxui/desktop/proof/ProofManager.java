@@ -65,7 +65,7 @@ public class ProofManager extends ConcurrentListenable<ProofManagerListener> imp
 
 		// Get the proofId before clearing the proof, so another thread does not preempt us.
 		final long proofId = this.nextProofId.incrementAndGet();
-		log.info("**** Submit Proof [{}]", proofId);
+		log.info("Submit Proof [{}]", proofId);
 
 		//Do this on the calling thread so the Touch has not changed by the time it is processed.
 		final Compiler compiler = CompilerFactory.getInstance(touch, "Proof-" + Long.toString(proofId));

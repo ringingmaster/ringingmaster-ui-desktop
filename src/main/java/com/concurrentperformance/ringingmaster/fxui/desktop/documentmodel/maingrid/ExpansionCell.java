@@ -1,5 +1,6 @@
 package com.concurrentperformance.ringingmaster.fxui.desktop.documentmodel.maingrid;
 
+import com.concurrentperformance.ringingmaster.engine.touch.container.Touch;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentmodel.TouchDocument;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentpanel.grid.model.GridCellModel;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentpanel.grid.model.GridCharacterModel;
@@ -51,13 +52,9 @@ public class ExpansionCell extends SkeletalGridCellModel implements GridCellMode
 
 		// We do not use the cell version here as we do not have a cell until the increment above.
 		touchDocument.insertCharacter(column, row, index, character);
+		touchDocument.setUpdatePoint(() -> "Typing", Touch.Mutated.MUTATED);
 
 		fireCellStructureChanged();
-	}
-
-	protected void fireCellStructureChanged() {
-		touchDocument.parseAndProve();
-		super.fireCellStructureChanged();
 	}
 
 	@Override

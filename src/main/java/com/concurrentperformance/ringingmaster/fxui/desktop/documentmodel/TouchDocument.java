@@ -658,18 +658,6 @@ public class TouchDocument extends ScrollPane implements Listenable<TouchDocumen
 		setUpdatePoint(() -> actionForLambda, mutated);
 	}
 
-	private void setUpdatePoint(Supplier<String> updatePointName, Mutated mutated) {
-		if (mutated == MUTATED) {
-			log.info("UPDATE: [{}], [{}]", updatePointName.get(), mutated);
-			parseAndProve();
-			setDirty(true);
-		}
-		else {
-			log.debug("UPDATE: [{}], [{}]", updatePointName.get(), mutated);
-		}
-		fireDocumentContentChanged();
-	}
-
 	private void configureDefinitionModels() {
 
 		final List<TouchDefinition> definitions = new ArrayList<>(touch.getDefinitions());
@@ -686,10 +674,6 @@ public class TouchDocument extends ScrollPane implements Listenable<TouchDocumen
 
 	public TouchStyle getTouchStyle() {
 		return touchStyle;
-	}
-
-	public void parseAndProve() {
-		proofManager.parseAndProve(touch);
 	}
 
 	public int getColumnCount() {
@@ -725,6 +709,21 @@ public class TouchDocument extends ScrollPane implements Listenable<TouchDocumen
 		listenerDelegate.addListener(listener);
 	}
 
+	public void setUpdatePoint(Supplier<String> updatePointName, Mutated mutated) {
+		if (mutated == MUTATED) {
+			log.info("UPDATE: [{}], [{}]", updatePointName.get(), mutated);
+			parseAndProve();
+			setDirty(true);
+		}
+		else {
+			log.debug("UPDATE: [{}], [{}]", updatePointName.get(), mutated);
+		}
+		fireDocumentContentChanged();
+	}
+
+	public void parseAndProve() {
+		proofManager.parseAndProve(touch);
+	}
 
 	private void fireDocumentContentChanged() {
 		Platform.runLater(() -> {

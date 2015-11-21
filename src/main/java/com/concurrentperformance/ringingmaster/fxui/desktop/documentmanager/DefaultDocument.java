@@ -32,7 +32,7 @@ public class DefaultDocument implements Document {
 
 	@Override
 	public void setDirty(boolean dirty) {
-		log.info("Setting document [{}] dirty [{}]", getNameForTab(), dirty);
+		log.info("Setting document [{}] [{}]", getNameForTab(), dirty?"dirty":"clean");
 		this.dirty = dirty;
 	}
 

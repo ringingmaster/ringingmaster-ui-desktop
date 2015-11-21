@@ -4,6 +4,8 @@ import com.concurrentperformance.fxutils.shutdown.ShutdownService;
 import com.concurrentperformance.fxutils.shutdown.ShutdownServiceVeto;
 import com.concurrentperformance.util.listener.ConcurrentListenable;
 import com.concurrentperformance.util.listener.Listenable;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.stage.FileChooser;
@@ -14,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -43,16 +46,37 @@ public class DocumentManager extends ConcurrentListenable<DocumentManagerListene
 			for (Tab tab : documentWindow.getTabs()) {
 				Document document = getDocument(tab);
 
-				log.info("Checking if [{}] is dirty", document.getNameForTab());
+				log.info("Checking if [{}] is dirty", document.getNameForApplicationTitle());
 				if (document.isDirty()) {
+					//TODO it would be nice if the save dialog could have  adont save option instead of this additional Alert.
+					log.info("Ask user if save required for [{}]", document.getNameForApplicationTitle());
+					Alert dialog = new Alert(Alert.AlertType.CONFIRMATION, "Your changes will be lost if you don't save them."  + System.lineSeparator(),
+							ButtonType.YES, ButtonType.NO, ButtonType.CANCEL);
+					dialog.setTitle("Save");
+					dialog.setHeaderText("Do you want to save the changes made to the document:" + System.lineSeparator() +
+							"'"  + document.getNameForApplicationTitle() + "'?");
+					dialog.getDialogPane().setMinHeight(10);
+					dialog.getDialogPane().setMinWidth(10);
+					dialog.getDialogPane().setMaxWidth(500);
+					Optional<ButtonType> buttonType = dialog.showAndWait();
 
-					log.info("Requesting save for [{}]", document.getNameForTab());
-					boolean successfulSave = save(tab);
-					if (!successfulSave) {
+					if (buttonType.get().equals(ButtonType.YES)) {
+						log.info("User requested save for [{}]", document.getNameForApplicationTitle());
+						boolean successfulSave = save(tab);
+						if (!successfulSave) {
+							return ShutdownServiceVeto.ShutdownOptions.PREVENT_SHUTDOWN;
+						}
+					}
+					else if (buttonType.get().equals(ButtonType.CANCEL)) {
+						log.info("User cancelled save for [{}]", document.getNameForApplicationTitle());
 						return ShutdownServiceVeto.ShutdownOptions.PREVENT_SHUTDOWN;
+					}
+					else if (buttonType.get().equals(ButtonType.NO)) {
+						log.info("User declined save for [{}]", document.getNameForApplicationTitle());
 					}
 				}
 			}
+			log.info("All touch documents saved");
 			return ShutdownServiceVeto.ShutdownOptions.ALLOW_SHUTDOWN;
 		});
 	}
@@ -185,5 +209,11 @@ public class DocumentManager extends ConcurrentListenable<DocumentManagerListene
 
 	public void setShutdownService(ShutdownService shutdownService) {
 		this.shutdownService = shutdownService;
+	}
+
+	@Override
+	public String toString() {
+		return "DocumentManager{" +
+				'}';
 	}
 }

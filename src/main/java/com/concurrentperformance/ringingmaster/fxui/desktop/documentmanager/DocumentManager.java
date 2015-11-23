@@ -44,41 +44,49 @@ public class DocumentManager extends ConcurrentListenable<DocumentManagerListene
 
 		shutdownService.addListener(() -> {
 			for (Tab tab : documentWindow.getTabs()) {
-				Document document = getDocument(tab);
-
-				log.info("Checking if [{}] is dirty", document.getNameForApplicationTitle());
-				if (document.isDirty()) {
-					//TODO it would be nice if the save dialog could have  adont save option instead of this additional Alert.
-					log.info("Ask user if save required for [{}]", document.getNameForApplicationTitle());
-					Alert dialog = new Alert(Alert.AlertType.CONFIRMATION, "Your changes will be lost if you don't save them."  + System.lineSeparator(),
-							ButtonType.YES, ButtonType.NO, ButtonType.CANCEL);
-					dialog.setTitle("Save");
-					dialog.setHeaderText("Do you want to save the changes made to the document:" + System.lineSeparator() +
-							"'"  + document.getNameForApplicationTitle() + "'?");
-					dialog.getDialogPane().setMinHeight(10);
-					dialog.getDialogPane().setMinWidth(10);
-					dialog.getDialogPane().setMaxWidth(500);
-					Optional<ButtonType> buttonType = dialog.showAndWait();
-
-					if (buttonType.get().equals(ButtonType.YES)) {
-						log.info("User requested save for [{}]", document.getNameForApplicationTitle());
-						boolean successfulSave = save(tab);
-						if (!successfulSave) {
-							return ShutdownServiceVeto.ShutdownOptions.PREVENT_SHUTDOWN;
-						}
-					}
-					else if (buttonType.get().equals(ButtonType.CANCEL)) {
-						log.info("User cancelled save for [{}]", document.getNameForApplicationTitle());
-						return ShutdownServiceVeto.ShutdownOptions.PREVENT_SHUTDOWN;
-					}
-					else if (buttonType.get().equals(ButtonType.NO)) {
-						log.info("User declined save for [{}]", document.getNameForApplicationTitle());
-					}
+				boolean closeTab = closeDocumentTabAttempt(tab);
+				if (!closeTab) {
+					return ShutdownServiceVeto.ShutdownOptions.PREVENT_SHUTDOWN;
 				}
 			}
 			log.info("All touch documents saved");
 			return ShutdownServiceVeto.ShutdownOptions.ALLOW_SHUTDOWN;
 		});
+	}
+
+	private boolean closeDocumentTabAttempt(Tab tab) {
+		Document document = getDocument(tab);
+
+		log.info("Checking if [{}] is dirty", document.getNameForApplicationTitle());
+		if (document.isDirty()) {
+			//TODO it would be nice if the save dialog could have  adont save option instead of this additional Alert.
+			log.info("Ask user if save required for [{}]", document.getNameForApplicationTitle());
+			Alert dialog = new Alert(Alert.AlertType.CONFIRMATION, "Your changes will be lost if you don't save them."  + System.lineSeparator(),
+					ButtonType.YES, ButtonType.NO, ButtonType.CANCEL);
+			dialog.setTitle("Save");
+			dialog.setHeaderText("Do you want to save the changes made to the document:" + System.lineSeparator() +
+					"'"  + document.getNameForApplicationTitle() + "'?");
+			dialog.getDialogPane().setMinHeight(10);
+			dialog.getDialogPane().setMinWidth(10);
+			dialog.getDialogPane().setMaxWidth(500);
+			Optional<ButtonType> buttonType = dialog.showAndWait();
+
+			if (buttonType.get().equals(ButtonType.YES)) {
+				log.info("User requested save for [{}]", document.getNameForApplicationTitle());
+				boolean successfulSave = save(tab);
+				if (!successfulSave) {
+					return false;
+				}
+			}
+			else if (buttonType.get().equals(ButtonType.CANCEL)) {
+				log.info("User cancelled save for [{}]", document.getNameForApplicationTitle());
+				return false;
+			}
+			else if (buttonType.get().equals(ButtonType.NO)) {
+				log.info("User declined save for [{}]", document.getNameForApplicationTitle());
+			}
+		}
+		return true;
 	}
 
 	public void newDocument() {
@@ -147,6 +155,15 @@ public class DocumentManager extends ConcurrentListenable<DocumentManagerListene
 		tab.setContent(document.getNode());
 		documentWindow.getTabs().add(tab);
 		documentWindow.getSelectionModel().select(tab);
+		tab.setOnCloseRequest(event -> {
+			log.info("Closing individual tab [{}]", document.getNameForApplicationTitle());
+			boolean closeTab = closeDocumentTabAttempt(tab);
+			if (!closeTab) {
+				log.info("Prevent close of tab [{}]", document.getNameForApplicationTitle());
+				// prevent the close by consuming the event
+				event.consume();
+			}
+		});
 
 		updateTitles();
 	}

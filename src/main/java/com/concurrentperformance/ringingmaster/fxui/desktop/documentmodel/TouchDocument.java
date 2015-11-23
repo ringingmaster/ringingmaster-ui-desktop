@@ -515,24 +515,24 @@ public class TouchDocument extends ScrollPane implements Listenable<TouchDocumen
 		}
 
 		Mutated mutated = UNCHANGED;
-		String action = "Set Termination Change";
+		String action;
 		// first look for removal
 		if (terminationChangeText.isEmpty()) {
 			mutated = touch.removeTerminationChange();
-			action = ": ";
+			action = "Remove Termination Change";
 		}
 		// then look for rounds token
 		else if (terminationChangeText.compareToIgnoreCase(MethodRow.ROUNDS_TOKEN) == 0) {
 			final MethodRow rounds = MethodBuilder.buildRoundsRow(touch.getNumberOfBells());
 			mutated = touch.setTerminationChange(rounds);
-			action = ": " + MethodRow.ROUNDS_TOKEN;
+			action = "Set Termination Change: " + MethodRow.ROUNDS_TOKEN;
 		}
 		// Now check for valid row
 		else {
 			try {
 				final MethodRow parsedRow = MethodBuilder.parse(touch.getNumberOfBells(), terminationChangeText);
 				mutated = touch.setTerminationChange(parsedRow);
-				action += ": " + parsedRow.getDisplayString(true);
+				action = "Set Termination Change: " + parsedRow.getDisplayString(true);
 			}
 			catch (RuntimeException e) {
 				StringBuilder msg = new StringBuilder();
@@ -552,6 +552,7 @@ public class TouchDocument extends ScrollPane implements Listenable<TouchDocumen
 				dialog.getDialogPane().setMinHeight(100);
 				dialog.getDialogPane().setMinWidth(400);
 				dialog.showAndWait().filter(response -> response == ButtonType.OK);
+				action = "error";
 			}
 		}
 
@@ -564,11 +565,9 @@ public class TouchDocument extends ScrollPane implements Listenable<TouchDocumen
 	}
 
 	public void setTerminationMaxRows(int terminationMaxRows) {
-		if (terminationMaxRows > Touch.TERMINATION_MAX_ROWS_MAX) {
+		if (terminationMaxRows > Touch.TERMINATION_MAX_ROWS_MAX ||
+			terminationMaxRows < 1) {
 			terminationMaxRows = Touch.TERMINATION_MAX_ROWS_MAX;
-		}
-		if (terminationMaxRows < 1) {
-			terminationMaxRows = 1;
 		}
 
 		Mutated mutated = UNCHANGED;
@@ -585,22 +584,20 @@ public class TouchDocument extends ScrollPane implements Listenable<TouchDocumen
 	}
 
 	public void setTerminationMaxLeads(Integer terminationMaxLeads) {
-		Mutated mutated = UNCHANGED;
-		String action = "";
-		if (terminationMaxLeads != null) {
+		Mutated mutated;
+		String action;
+		if (terminationMaxLeads == null ||
+			terminationMaxLeads < 1) {
+			action = "Remove Lead Limit";
+			mutated = touch.removeTerminationMaxLeads();
+		}
+		else {
 			if (terminationMaxLeads > Touch.TERMINATION_MAX_LEADS_MAX) {
 				terminationMaxLeads = Touch.TERMINATION_MAX_LEADS_MAX;
-			}
-			if (terminationMaxLeads < 1) {
-				terminationMaxLeads = 1;
 			}
 
 			action = String.format("Set Lead Limit: %d", terminationMaxLeads);
 			mutated = touch.setTerminationMaxLeads(terminationMaxLeads);
-		}
-		else {
-			action = "Remove Lead Limit";
-			mutated = touch.removeTerminationMaxLeads();
 		}
 		String actionForLambda = action;
 		setUpdatePoint(() -> actionForLambda, mutated);
@@ -613,21 +610,20 @@ public class TouchDocument extends ScrollPane implements Listenable<TouchDocumen
 	public void setTerminationMaxParts(Integer terminationMaxParts) {
 		Mutated mutated;
 		String action;
-		if (terminationMaxParts != null) {
+		if (terminationMaxParts == null ||
+				terminationMaxParts < 1){
+			action = "Remove Part Limit";
+			mutated = touch.removeTerminationMaxParts();
+		}
+		else {
 			if (terminationMaxParts > Touch.TERMINATION_MAX_PARTS_MAX) {
 				terminationMaxParts = Touch.TERMINATION_MAX_PARTS_MAX;
-			}
-			if (terminationMaxParts < 1) {
-				terminationMaxParts = 1;
 			}
 
 			action = String.format("Set Part Limit: %d", terminationMaxParts);
 			mutated = touch.setTerminationMaxParts(terminationMaxParts);
 		}
-		else {
-			action = "Remove Part Limit";
-			mutated = touch.removeTerminationMaxParts();
-		}
+
 		String actionForLambda = action;
 		setUpdatePoint(() -> actionForLambda, mutated);
 	}
@@ -639,20 +635,18 @@ public class TouchDocument extends ScrollPane implements Listenable<TouchDocumen
 	public void setTerminationCircularTouch(Integer terminationCircularTouch) {
 		Mutated mutated;
 		String action;
-		if (terminationCircularTouch != null) {
+		if (terminationCircularTouch == null ||
+				terminationCircularTouch < 1) {
+			action = "Remove Circular Touch Limit";
+			mutated = touch.removeTerminationMaxCircularTouch();
+		}
+		else {
 			if (terminationCircularTouch > Touch.TERMINATION_CIRCULAR_TOUCH_MAX) {
 				terminationCircularTouch = Touch.TERMINATION_CIRCULAR_TOUCH_MAX;
-			}
-			if (terminationCircularTouch < 1) {
-				terminationCircularTouch = 1;
 			}
 
 			action = String.format("Set Circular Touch Limit: %d", terminationCircularTouch);
 			mutated = touch.setTerminationMaxCircularTouch(terminationCircularTouch);
-		}
-		else {
-			action = "Remove Circular Touch Limit";
-			mutated = touch.removeTerminationMaxCircularTouch();
 		}
 		String actionForLambda = action;
 		setUpdatePoint(() -> actionForLambda, mutated);

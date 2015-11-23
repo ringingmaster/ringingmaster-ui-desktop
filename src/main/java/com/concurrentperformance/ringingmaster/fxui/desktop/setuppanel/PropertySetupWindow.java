@@ -270,7 +270,7 @@ public class PropertySetupWindow extends PropertyEditor {
 
 		add(TERMINATION_GROUP_NAME, new IntegerPropertyValue(TERMINATION_ROW_LIMIT_PROPERTY_NAME));
 		((IntegerPropertyValue)findPropertyByName(TERMINATION_ROW_LIMIT_PROPERTY_NAME)).setListener((observable, oldValue, newValue) ->
-				updateTouchDocumentIfPresent(touchDocument -> touchDocument.setTerminationMaxRows(newValue == null ? null : newValue.intValue())), CallbackStyle.WHEN_FINISHED);
+				updateTouchDocumentIfPresent(touchDocument -> touchDocument.setTerminationMaxRows(newValue == null ? 0 : newValue.intValue())), CallbackStyle.WHEN_FINISHED);
 
 		add(TERMINATION_GROUP_NAME, new IntegerPropertyValue(TERMINATION_LEAD_LIMIT_PROPERTY_NAME));
 		((IntegerPropertyValue)findPropertyByName(TERMINATION_LEAD_LIMIT_PROPERTY_NAME)).setListener((observable, oldValue, newValue) ->

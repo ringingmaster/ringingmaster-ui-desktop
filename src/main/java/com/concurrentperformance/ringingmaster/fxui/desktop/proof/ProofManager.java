@@ -42,14 +42,15 @@ public class ProofManager extends ConcurrentListenable<ProofManagerListener> imp
 						0L, TimeUnit.MILLISECONDS,
 						new LinkedBlockingQueue<>(),
 						new ThreadFactoryBuilder()
-								.setNameFormat("proof-pool-%d")
+								.setNameFormat("ProofManager-proof-%d")
 								.setDaemon(true)
 								.build());
+
 		updateExecutor =  new ThreadPoolExecutor(1, 1,
 						0L, TimeUnit.MILLISECONDS,
 						new LinkedBlockingQueue<>(),
 						new ThreadFactoryBuilder()
-								.setNameFormat("update-pool-%d")
+								.setNameFormat("ProofManager-update-%d")
 								.setDaemon(true)
 								.build());
 	}

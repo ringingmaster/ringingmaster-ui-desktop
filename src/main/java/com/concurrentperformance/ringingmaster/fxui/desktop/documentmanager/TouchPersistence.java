@@ -24,6 +24,7 @@ import com.concurrentperformance.ringingmaster.persist.generated.v1.TouchCellsPe
 import com.concurrentperformance.ringingmaster.persist.generated.v1.TouchCheckingPersist;
 import com.concurrentperformance.ringingmaster.persist.generated.v1.TouchNotationPersist;
 import com.concurrentperformance.ringingmaster.persist.generated.v1.TouchPersist;
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -189,8 +190,8 @@ public class TouchPersistence {
 		return callPersist;
 	}
 
-
-	Touch buildTouch(TouchPersist touchPersist) {
+	@VisibleForTesting
+	protected Touch buildTouch(TouchPersist touchPersist) {
 		int rowCount = touchPersist.getCells().getRows();
 		int columnCount = touchPersist.getCells().getColumns();
 		NumberOfBells numberOfBells = NumberOfBells.valueOf(touchPersist.getNumberOfBells());

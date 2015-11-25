@@ -705,7 +705,7 @@ public class TouchDocument extends ScrollPane implements Listenable<TouchDocumen
 
 	public void setUpdatePoint(Supplier<String> updatePointName, Mutated mutated) {
 		if (mutated == MUTATED) {
-			log.info("UPDATE: [{}], [{}]", updatePointName.get(), mutated);
+			log.info("UPDATE: [{}]", updatePointName.get());
 			parseAndProve();
 			setDirty(true);
 		}

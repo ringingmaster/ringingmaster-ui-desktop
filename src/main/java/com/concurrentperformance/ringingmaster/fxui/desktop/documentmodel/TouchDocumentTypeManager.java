@@ -47,6 +47,7 @@ public class TouchDocumentTypeManager extends ConcurrentListenable<TouchDocument
 		Touch touch = createEmptyTouch();
 		final TouchDocument touchDocument = buildTouchDocumentForTouch(touch);
 		touchDocument.setDocumentName("Untitled "+ DOCUMENT_TYPE_NAME + " " + ++docNumber);
+		touchDocument.setDirty(true);
 		return touchDocument;
 	}
 
@@ -83,6 +84,7 @@ public class TouchDocumentTypeManager extends ConcurrentListenable<TouchDocument
 		// example -> alter the start change to something that will fail, and this will
 		// allow it to be put back to its original value.
 		touchDocument.addListener(touchDoc -> fireUpdateDocument());
+		touchDocument.setDirty(false);
 		return touchDocument;
 	}
 

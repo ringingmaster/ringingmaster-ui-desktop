@@ -16,9 +16,9 @@ public class DefaultDocument implements Document {
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-	private Path path = null;
-	private String documentName = null;
-	private boolean dirty = true;
+	private Path path;
+	private String documentName;
+	private boolean dirty;
 
 	@Override
 	public boolean hasFileLocation() {

@@ -1,9 +1,11 @@
 package com.concurrentperformance.ringingmaster.fxui.desktop.documentmanager;
 
-import com.concurrentperformance.fxutils.shutdown.ShutdownService;
-import com.concurrentperformance.fxutils.shutdown.ShutdownServiceVeto;
+import com.concurrentperformance.fxutils.lifecycle.ShutdownService;
+import com.concurrentperformance.fxutils.lifecycle.ShutdownServiceListener;
+import com.concurrentperformance.fxutils.lifecycle.StartupService;
 import com.concurrentperformance.util.listener.ConcurrentListenable;
 import com.concurrentperformance.util.listener.Listenable;
+import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Tab;
@@ -15,8 +17,10 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
+import java.util.prefs.Preferences;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -31,27 +35,57 @@ public class DocumentManager extends ConcurrentListenable<DocumentManagerListene
 
 	private TabPane documentWindow;
 	private Stage globalStage;
-	ShutdownService shutdownService;
-	private DocumentTypeManager documentTypeManager; //TODO eventually this will be a Set of different documents. It can then control a menulist of document types when creating a new document
+	private ShutdownService shutdownService;
+	private StartupService startupService;
+	private DocumentTypeManager documentTypeManager; //TODO eventually this will be a Set of different document types. It can then control a menulist of document types when creating a new document
 
 	public void init() {
 		documentWindow.setTabClosingPolicy(TabPane.TabClosingPolicy.ALL_TABS);
 		documentWindow.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
 			updateTitles();
-
 			fireUpdateDocument();
 		});
 
-		shutdownService.addListener(() -> {
-			for (Tab tab : documentWindow.getTabs()) {
-				boolean closeTab = closeDocumentTabAttempt(tab);
-				if (!closeTab) {
-					return ShutdownServiceVeto.ShutdownOptions.PREVENT_SHUTDOWN;
-				}
+		startupService.addListener(this::startup);
+		shutdownService.addListener(this::shutdown);
+	}
+
+	public void startup() {
+		Preferences userPrefs = Preferences.userNodeForPackage(getClass());
+		final int docCount = userPrefs.getInt("doc.count", 0);
+		for (int tabIndex=0;tabIndex<docCount;tabIndex++) {
+			Path path = Paths.get(userPrefs.get("doc." + tabIndex, ""));
+			log.info("Loading document [{}]", path);
+			final Document document = documentTypeManager.openDocument(path);
+			buildTabForDocument(document);
+		}
+
+	}
+
+	public ShutdownServiceListener.ShutdownOptions shutdown() {
+		ObservableList<Tab> tabs = documentWindow.getTabs();
+		for (Tab tab : tabs) {
+			boolean closeTab = DocumentManager.this.closeDocumentTabAttempt(tab);
+			if (!closeTab) {
+				return ShutdownServiceListener.ShutdownOptions.PREVENT_SHUTDOWN;
 			}
-			log.info("All touch documents saved");
-			return ShutdownServiceVeto.ShutdownOptions.ALLOW_SHUTDOWN;
-		});
+		}
+		log.info("All touch documents saved");
+
+		// Now save document list
+		Preferences userPrefs = Preferences.userNodeForPackage(getClass());
+		int docsToRestoreCount = 0;
+		for (int tabIndex=0;tabIndex<tabs.size();tabIndex++) {
+			Tab tab = tabs.get(tabIndex);
+			Document document = getDocument(tab);
+			if (document.getPath() != null) {
+				userPrefs.put("doc." + docsToRestoreCount, document.getPath().toString());
+				docsToRestoreCount++;
+			}
+		}
+		userPrefs.putInt("doc.count", docsToRestoreCount);
+
+		return ShutdownServiceListener.ShutdownOptions.ALLOW_SHUTDOWN;
 	}
 
 	private boolean closeDocumentTabAttempt(Tab tab) {
@@ -59,7 +93,7 @@ public class DocumentManager extends ConcurrentListenable<DocumentManagerListene
 
 		log.info("Checking if [{}] is dirty", document.getNameForApplicationTitle());
 		if (document.isDirty()) {
-			//TODO it would be nice if the save dialog could have  adont save option instead of this additional Alert.
+			//TODO it would be nice if the save dialog could have a don't save option instead of this additional Alert.
 			log.info("Ask user if save required for [{}]", document.getNameForApplicationTitle());
 			Alert dialog = new Alert(Alert.AlertType.CONFIRMATION, "Your changes will be lost if you don't save them."  + System.lineSeparator(),
 					ButtonType.YES, ButtonType.NO, ButtonType.CANCEL);
@@ -104,7 +138,6 @@ public class DocumentManager extends ConcurrentListenable<DocumentManagerListene
 			for (File file : files) {
 				Path path = file.toPath();
 				final Document document = documentTypeManager.openDocument(path);
-				document.setPath(path);
 				buildTabForDocument(document);
 			}
 		}
@@ -226,6 +259,10 @@ public class DocumentManager extends ConcurrentListenable<DocumentManagerListene
 
 	public void setShutdownService(ShutdownService shutdownService) {
 		this.shutdownService = shutdownService;
+	}
+
+	public void setStartupService(StartupService startupService) {
+		this.startupService = startupService;
 	}
 
 	@Override

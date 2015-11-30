@@ -9,9 +9,9 @@ import javafx.stage.Stage;
  */
 public class StageFactory {
 
-	static Stage primaryStage;
+	static Stage globalStage;
 
 	public Stage getStage() {
-		return primaryStage;
+		return globalStage;
 	}
 }

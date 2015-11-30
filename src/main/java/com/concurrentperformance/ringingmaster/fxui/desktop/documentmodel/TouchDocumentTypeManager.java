@@ -55,6 +55,7 @@ public class TouchDocumentTypeManager extends ConcurrentListenable<TouchDocument
 	public Document openDocument(Path path) {
 		Touch touch = touchPersistence.load(path);
 		TouchDocument touchDocument = buildTouchDocumentForTouch(touch);
+		touchDocument.setPath(path);
 		return touchDocument;
 	}
 

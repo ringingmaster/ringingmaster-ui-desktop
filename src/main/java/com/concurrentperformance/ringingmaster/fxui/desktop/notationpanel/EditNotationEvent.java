@@ -3,6 +3,7 @@ package com.concurrentperformance.ringingmaster.fxui.desktop.notationpanel;
 import com.concurrentperformance.fxutils.events.EventDefinition;
 import com.concurrentperformance.fxutils.events.SkeletalEventDefinition;
 import com.concurrentperformance.ringingmaster.engine.notation.NotationBody;
+import com.concurrentperformance.ringingmaster.engine.touch.container.Touch;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentmodel.TouchDocumentTypeManager;
 import com.concurrentperformance.ringingmaster.fxui.desktop.notationeditor.NotationEditorDialogBuilder;
 import javafx.event.ActionEvent;
@@ -41,9 +42,8 @@ public class EditNotationEvent extends SkeletalEventDefinition implements EventD
 		if (notation != null) {
 			notationEditorDialogBuilder.editNotationShowDialog(notation, result -> {
 				log.info("EditNotationButton - adding", result.toString());
-				touchDocumentTypeManager.getCurrentDocument().get().exchangeNotationAfterEdit(notation, result);
-				// TODO what checks do we need here?
-				return true; //TODO common this code from double click -
+				return touchDocumentTypeManager.getCurrentDocument().get().exchangeNotationAfterEdit(notation, result) == Touch.Mutated.MUTATED;
+				//TODO common this code from double click -
 			});
 		}
 	}

@@ -8,11 +8,14 @@ import com.concurrentperformance.ringingmaster.fxui.desktop.documentmodel.TouchD
 import com.concurrentperformance.util.listener.ConcurrentListenable;
 import com.concurrentperformance.util.listener.Listenable;
 import com.google.common.base.Strings;
+import com.google.common.collect.Sets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * TODO Comments
@@ -92,16 +95,10 @@ public class PropertyNotationPanel extends NameValuePairTable implements Listena
 			return (getItems().size() != 0);
 		}
 		List<NotationBody> allNotations = touchDocument.get().getSortedAllNotations();
-		for (NotationBody notation : allNotations) {
-			String name = getDisplayName(notation);
-			if (getItems().stream()
-					.filter(columnDescriptor -> columnDescriptor.getName().getText().equals(name))
-					.count() < 1 ) {
-				return true;
-			}
-		}
+		Set<String> namesInDocument = allNotations.stream().map(this::getDisplayName).collect(Collectors.toSet());
+		Set<String> namesInUI = getItems().stream().map(nameValuePairModel -> nameValuePairModel.getName().getText()).collect(Collectors.toSet());
 
-		return (allNotations.size() != getItems().size());
+		return Sets.difference(namesInDocument,namesInUI).size() != 0;
 	}
 
 	private void updateMethodList(Optional<TouchDocument> touchDocument) {

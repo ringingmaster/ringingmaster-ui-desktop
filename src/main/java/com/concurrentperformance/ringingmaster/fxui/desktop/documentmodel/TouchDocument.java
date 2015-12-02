@@ -315,11 +315,29 @@ public class TouchDocument extends ScrollPane implements Listenable<TouchDocumen
 //	TODO			Also what happens to active method.
 	}
 
-	public void exchangeNotationAfterEdit(NotationBody originalNotation, NotationBody replacementNotation) {
-		Mutated mutated = touch.exchangeNotation(originalNotation, replacementNotation);
-		setUpdatePoint(() -> String.format("Update method: %s", replacementNotation.getNameIncludingNumberOfBells()), mutated);
+	public Mutated exchangeNotationAfterEdit(NotationBody originalNotation, NotationBody replacementNotation) {
+		checkNotNull(originalNotation);
+		checkNotNull(replacementNotation);
 
-		// TODO do we need checks here???
+		Mutated mutated = UNCHANGED;
+		List<String> messages = touch.checkUpdateNotation(originalNotation, replacementNotation);
+
+		if (messages.size() == 0) {
+			mutated = touch.updateNotation(originalNotation, replacementNotation);
+		}
+		else {
+			String message = messages.stream().collect(Collectors.joining(System.lineSeparator()));
+			Alert dialog = new Alert(Alert.AlertType.CONFIRMATION, message, ButtonType.OK);
+			dialog.setTitle("Can't update method");
+			dialog.setHeaderText("Can't update '" + originalNotation.getNameIncludingNumberOfBells() + "'" +
+					(originalNotation.getNameIncludingNumberOfBells().equals(replacementNotation.getNameIncludingNumberOfBells())?"":" to '" + replacementNotation.getNameIncludingNumberOfBells() + "'"  ));
+			dialog.getDialogPane().setMinHeight(280);
+			dialog.getDialogPane().setMinWidth(560);
+			dialog.showAndWait();
+		}
+
+		setUpdatePoint(() -> String.format("Update method: %s", replacementNotation.getNameIncludingNumberOfBells()), mutated);
+		return mutated;
 	}
 
 	public NotationBody getSingleMethodActiveNotation() {

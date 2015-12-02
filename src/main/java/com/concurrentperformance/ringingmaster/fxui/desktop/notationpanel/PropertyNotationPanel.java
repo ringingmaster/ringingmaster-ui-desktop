@@ -37,7 +37,7 @@ public class PropertyNotationPanel extends NameValuePairTable implements Listena
 
 	public void setTouchDocumentTypeManager(TouchDocumentTypeManager touchDocumentTypeManager) {
 		this.touchDocumentTypeManager = touchDocumentTypeManager;
-		touchDocumentTypeManager.addListener(document -> updateToReflectDocument(document));
+		touchDocumentTypeManager.addListener(this::updateToReflectDocument);
 
 		setOnMouseClicked(event -> {
 			if(event.getClickCount() == 2) {
@@ -98,7 +98,7 @@ public class PropertyNotationPanel extends NameValuePairTable implements Listena
 		Set<String> namesInDocument = allNotations.stream().map(this::getDisplayName).collect(Collectors.toSet());
 		Set<String> namesInUI = getItems().stream().map(nameValuePairModel -> nameValuePairModel.getName().getText()).collect(Collectors.toSet());
 
-		return Sets.difference(namesInDocument,namesInUI).size() != 0;
+		return Sets.symmetricDifference(namesInDocument, namesInUI).size() != 0;
 	}
 
 	private void updateMethodList(Optional<TouchDocument> touchDocument) {

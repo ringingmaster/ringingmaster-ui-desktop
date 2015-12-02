@@ -296,8 +296,8 @@ public class TouchDocument extends ScrollPane implements Listenable<TouchDocumen
 			Alert dialog = new Alert(Alert.AlertType.CONFIRMATION, message, ButtonType.OK);
 			dialog.setTitle("Can't add method");
 			dialog.setHeaderText("Can't add '" + notationToAdd.getNameIncludingNumberOfBells() + "'");
-			dialog.getDialogPane().setMinHeight(280);
-			dialog.getDialogPane().setMinWidth(560);
+			dialog.getDialogPane().setMinHeight(180);
+			dialog.getDialogPane().setMinWidth(360);
 			dialog.showAndWait();
 		}
 
@@ -331,8 +331,8 @@ public class TouchDocument extends ScrollPane implements Listenable<TouchDocumen
 			dialog.setTitle("Can't update method");
 			dialog.setHeaderText("Can't update '" + originalNotation.getNameIncludingNumberOfBells() + "'" +
 					(originalNotation.getNameIncludingNumberOfBells().equals(replacementNotation.getNameIncludingNumberOfBells())?"":" to '" + replacementNotation.getNameIncludingNumberOfBells() + "'"  ));
-			dialog.getDialogPane().setMinHeight(280);
-			dialog.getDialogPane().setMinWidth(560);
+			dialog.getDialogPane().setMinHeight(180);
+			dialog.getDialogPane().setMinWidth(360);
 			dialog.showAndWait();
 		}
 

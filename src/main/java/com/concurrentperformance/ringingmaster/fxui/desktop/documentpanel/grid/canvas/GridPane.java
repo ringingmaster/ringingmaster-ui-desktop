@@ -36,11 +36,11 @@ public class GridPane extends Pane implements GridModelListener {
 		}
 		this.model = checkNotNull(model);
 		this.model.registerListener(this);
-		gridModelListener_dimensionsChanged();
+		gridModelListener_contentsChanged();
 	}
 
 	@Override
-	public void gridModelListener_dimensionsChanged() {
+	public void gridModelListener_contentsChanged() {
 		dimensions = new GridDimensionBuilder().setModel(model).build();
 
 		setMinWidth(dimensions.getTableRight());

@@ -20,7 +20,7 @@ public abstract class SkeletalGridCellModel implements GridCellModel {
 
 	protected void fireCellStructureChanged() { //TODO rename
 		for(GridModelListener listener : listeners) {
-			listener.gridModelListener_dimensionsChanged();
+			listener.gridModelListener_contentsChanged();
 		}
 	}
 

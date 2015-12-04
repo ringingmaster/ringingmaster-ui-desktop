@@ -7,7 +7,7 @@ package com.concurrentperformance.ringingmaster.fxui.desktop.documentpanel.grid.
  */
 public interface GridModelListener {
 
-	void gridModelListener_dimensionsChanged();
+	void gridModelListener_contentsChanged();
 	void gridModelListener_caretMoved();
 	void gridModelListener_selectionChanged();
 }

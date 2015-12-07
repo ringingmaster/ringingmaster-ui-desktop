@@ -2,6 +2,7 @@ package com.concurrentperformance.ringingmaster.fxui.desktop.documentpanel;
 
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentpanel.grid.canvas.GridPane;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentpanel.grid.model.GridModel;
+import javafx.scene.Node;
 import javafx.scene.layout.VBox;
 
 import java.util.List;
@@ -38,6 +39,12 @@ public class DefinitionPane extends VBox {
 
 		while (getChildren().size() > gridModels.size()) {
 			getChildren().remove(0);
+		}
+	}
+
+	public void contentsChanged() {
+		for (Node node : getChildren()) {
+			((GridPane)node).gridModelListener_contentsChanged();
 		}
 	}
 }

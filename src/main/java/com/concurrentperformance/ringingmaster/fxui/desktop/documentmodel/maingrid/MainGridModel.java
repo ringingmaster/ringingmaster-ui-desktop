@@ -1,6 +1,5 @@
 package com.concurrentperformance.ringingmaster.fxui.desktop.documentmodel.maingrid;
 
-import com.concurrentperformance.ringingmaster.engine.touch.container.Touch;
 import com.concurrentperformance.ringingmaster.engine.touch.container.TouchCell;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentmodel.TouchDocument;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentpanel.grid.model.GridCellModel;
@@ -28,7 +27,7 @@ public class MainGridModel extends SkeletalGridModel implements GridModel {
 
 	private final TouchDocument touchDocument;
 
-	public MainGridModel(TouchDocument touchDocument, Touch touch) {
+	public MainGridModel(TouchDocument touchDocument) {
 		this.touchDocument = checkNotNull(touchDocument);
 	}
 

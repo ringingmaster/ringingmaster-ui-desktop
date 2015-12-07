@@ -97,7 +97,7 @@ public class TouchDocument extends ScrollPane implements Listenable<TouchDocumen
 
 		configureDefinitionModels();
 
-		mainGridModel = new MainGridModel(this, touch);
+		mainGridModel = new MainGridModel(this);
 
 		//TODO is this lot updated?
 		gridPane.setModel(mainGridModel);
@@ -124,6 +124,8 @@ public class TouchDocument extends ScrollPane implements Listenable<TouchDocumen
 
 	private void updateUiComponents() {
 		titlePane.setText(getTitle(), getAuthor());
+		gridPane.gridModelListener_contentsChanged();
+		definitionPane.contentsChanged();
 	}
 
 	public String getTitle() {

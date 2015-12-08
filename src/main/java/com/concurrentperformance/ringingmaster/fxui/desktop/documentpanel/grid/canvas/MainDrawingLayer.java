@@ -105,8 +105,7 @@ class MainDrawingLayer extends Canvas {
 
 		final int bottomOffset = 2;
 		final int pixelPitch = 2;
-		final double bottomUpper = textBottom + bottomOffset;
-		final double bottomLower = bottomUpper + pixelPitch;
+		final double bottom = textBottom + bottomOffset;
 
 		//     spxzpdsf
 
@@ -114,29 +113,40 @@ class MainDrawingLayer extends Canvas {
 		for (int characterIndex=0;characterIndex<gridCharacterGroup.getLength();characterIndex++) {
 			GridCharacterModel gridCharacterModel = gridCharacterGroup.getGridCharacterModel(characterIndex);
 			if (gridCharacterModel.getAdditionalStyle().contains(AdditionalStyleType.WIGGLY_UNDERLINE)) {
-				int textLeft = alignToPixelPitch(tableCellDimension.getVerticalCharacterStartPosition(characterIndex),pixelPitch, false);
-				int textRight = alignToPixelPitch(tableCellDimension.getVerticalCharacterEndPosition(characterIndex),pixelPitch, true);
+				final double textLeft = tableCellDimension.getVerticalCharacterStartPosition(characterIndex);
+				final double textRight = tableCellDimension.getVerticalCharacterEndPosition(characterIndex);
 
-				for (int horzPos = textLeft;horzPos < textRight; horzPos+=pixelPitch ) {
-					boolean upStroke = isUpStroke(horzPos,pixelPitch);
-					gc.strokeLine(horzPos,
-							upStroke?bottomLower:bottomUpper,
-							horzPos+pixelPitch,
-							upStroke?bottomUpper:bottomLower
-							);
+				double horzPos = textLeft;
+				while (horzPos < textRight) {
+					double leftHorz = horzPos;
+					double leftVert = getVerticalWiggleOffset(horzPos, pixelPitch) + bottom;
+
+					horzPos = alignToNextPixelPitch(horzPos, pixelPitch);
+					double rightHorz = horzPos;
+					double rightVert = getVerticalWiggleOffset(horzPos, pixelPitch) + bottom;
+
+					gc.strokeLine(leftHorz, leftVert, rightHorz, rightVert);
 				}
 			}
 		}
 	}
 
 	@VisibleForTesting
-	static int alignToPixelPitch(double value, int pixelPitch, boolean roundDown) {
-		return ((int)(roundDown?Math.floor(value/pixelPitch):Math.ceil(value/pixelPitch))) * pixelPitch;
+	static double getVerticalWiggleOffset(double horizontalValue, int pixelPitch) {
+		int nextLeftUptickPeakPixelAlignment = (int) Math.floor(horizontalValue / (pixelPitch*2)) * pixelPitch* 2;
+		double distanceFromUptickPeak = horizontalValue - nextLeftUptickPeakPixelAlignment;
+		if (distanceFromUptickPeak <= pixelPitch) {
+			return distanceFromUptickPeak;
+		}
+		else {
+			return pixelPitch - (distanceFromUptickPeak - pixelPitch);
+		}
 	}
 
 	@VisibleForTesting
-	static boolean isUpStroke(int value, int pixelPitch) {
-		return  ((value/pixelPitch) % 2) == 0;
+	static int alignToNextPixelPitch(double value, int pixelPitch) {
+		// The hacky 0.0000001 value ensures that a value that aligns to the pixel boundary rolls over to the next
+		return ((int)(Math.ceil((value + 0.0000001) / pixelPitch))) * pixelPitch;
 	}
 
 	private void drawRowHeadersText(GraphicsContext gc, GridModel model, GridDimension dimensions) {

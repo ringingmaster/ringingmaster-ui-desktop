@@ -4,6 +4,7 @@ import com.concurrentperformance.ringingmaster.engine.touch.container.Touch;
 import com.concurrentperformance.ringingmaster.engine.touch.container.TouchCell;
 import com.concurrentperformance.ringingmaster.engine.touch.parser.ParseType;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentmodel.TouchDocument;
+import com.concurrentperformance.ringingmaster.fxui.desktop.documentpanel.grid.model.AdditionalStyleType;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentpanel.grid.model.GridCellModel;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentpanel.grid.model.GridCharacterModel;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentpanel.grid.model.GridModelListener;
@@ -12,7 +13,10 @@ import com.concurrentperformance.ringingmaster.ui.common.TouchStyle;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
+import java.util.Collections;
+import java.util.EnumSet;
 import java.util.List;
+import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -69,6 +73,14 @@ public class StandardCell extends SkeletalGridCellModel implements GridCellModel
 			public Color getColor() {
 				ParseType parseType = cell.getElement(index).getParseType();
 				return touchDocument.getTouchStyle().getColourFromParseType(parseType);
+			}
+			@Override
+			public Set<AdditionalStyleType> getAdditionalStyle() {
+				ParseType parseType = cell.getElement(index).getParseType();
+				if (parseType == ParseType.UNPARSED) {
+					return EnumSet.of(AdditionalStyleType.WIGGLY_UNDERLINE);
+				}
+				return Collections.emptySet();
 			}
 		};
 	}

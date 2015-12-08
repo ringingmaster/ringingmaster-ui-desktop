@@ -30,6 +30,11 @@ public class GridCellDimension {
 		return characterMids[characterIndex];
 	}
 
+	public double getVerticalCharacterEndPosition(int characterIndex) {
+		checkElementIndex(characterIndex, characterStart.length +1);
+		return characterStart[characterIndex +1];
+	}
+
 	public int getCharacterCount() {
 		// Each character has a start and there is an additional value for the end.
 		// Therefore there is always at least one value here, the -1 makeing the character count a min of 0

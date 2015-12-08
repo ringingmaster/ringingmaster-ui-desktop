@@ -1,10 +1,13 @@
 package com.concurrentperformance.ringingmaster.fxui.desktop.documentpanel.grid.canvas;
 
+import com.concurrentperformance.ringingmaster.fxui.desktop.documentpanel.grid.model.AdditionalStyleType;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentpanel.grid.model.GridCharacterGroup;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentpanel.grid.model.GridCharacterModel;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentpanel.grid.model.GridModel;
+import com.google.common.annotations.VisibleForTesting;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontSmoothingType;
 import org.slf4j.Logger;
@@ -31,8 +34,8 @@ class MainDrawingLayer extends Canvas {
 		gc.setFontSmoothingType(FontSmoothingType.LCD);
 		clearBackground(gc);
 		drawGrid(gc, parent.getModel(), parent.getDimensions());
-		drawCellText(gc, parent.getModel(), parent.getDimensions());
-		drawRowHeaderText(gc, parent.getModel(), parent.getDimensions());
+		drawCellsText(gc, parent.getModel(), parent.getDimensions());
+		drawRowHeadersText(gc, parent.getModel(), parent.getDimensions());
 	}
 
 	private void clearBackground(GraphicsContext gc) {
@@ -65,7 +68,7 @@ class MainDrawingLayer extends Canvas {
 		}
 	}
 
-	private void drawCellText(final GraphicsContext gc, GridModel model, GridDimension dimensions) {
+	private void drawCellsText(final GraphicsContext gc, GridModel model, GridDimension dimensions) {
 		final int rowCount = model.getRowCount();
 		final int colCount = model.getColumnCount();
 
@@ -75,12 +78,13 @@ class MainDrawingLayer extends Canvas {
 				final GridCharacterGroup gridCharacterGroup = model.getCellModel(col, row);
 				final GridCellDimension tableCellDimension = dimensions.getTableCellDimension(col, row);
 
-				drawCell(gc, gridCharacterGroup, tableCellDimension, textBottom);
+				drawCellText(gc, gridCharacterGroup, tableCellDimension, textBottom);
+				drawCellUnderline(gc, gridCharacterGroup, tableCellDimension, textBottom);
 			}
 		}
 	}
 
-	private void drawCell(GraphicsContext gc, GridCharacterGroup gridCharacterGroup, GridCellDimension tableCellDimension, double textBottom) {
+	private void drawCellText(GraphicsContext gc, GridCharacterGroup gridCharacterGroup, GridCellDimension tableCellDimension, double textBottom) {
 		for (int characterIndex=0;characterIndex<gridCharacterGroup.getLength();characterIndex++) {
 			double textLeft = tableCellDimension.getVerticalCharacterStartPosition(characterIndex);
 
@@ -94,7 +98,48 @@ class MainDrawingLayer extends Canvas {
 		}
 	}
 
-	private void drawRowHeaderText(GraphicsContext gc, GridModel model, GridDimension dimensions) {
+	private void drawCellUnderline(GraphicsContext gc, GridCharacterGroup gridCharacterGroup, GridCellDimension tableCellDimension, double textBottom) {
+		gc.setFill(Color.RED);
+		gc.setStroke(Color.RED);
+		gc.setLineWidth(1.0);
+
+		final int bottomOffset = 2;
+		final int pixelPitch = 2;
+		final double bottomUpper = textBottom + bottomOffset;
+		final double bottomLower = bottomUpper + pixelPitch;
+
+		//     spxzpdsf
+
+
+		for (int characterIndex=0;characterIndex<gridCharacterGroup.getLength();characterIndex++) {
+			GridCharacterModel gridCharacterModel = gridCharacterGroup.getGridCharacterModel(characterIndex);
+			if (gridCharacterModel.getAdditionalStyle().contains(AdditionalStyleType.WIGGLY_UNDERLINE)) {
+				int textLeft = alignToPixelPitch(tableCellDimension.getVerticalCharacterStartPosition(characterIndex),pixelPitch, false);
+				int textRight = alignToPixelPitch(tableCellDimension.getVerticalCharacterEndPosition(characterIndex),pixelPitch, true);
+
+				for (int horzPos = textLeft;horzPos < textRight; horzPos+=pixelPitch ) {
+					boolean upStroke = isUpStroke(horzPos,pixelPitch);
+					gc.strokeLine(horzPos,
+							upStroke?bottomLower:bottomUpper,
+							horzPos+pixelPitch,
+							upStroke?bottomUpper:bottomLower
+							);
+				}
+			}
+		}
+	}
+
+	@VisibleForTesting
+	static int alignToPixelPitch(double value, int pixelPitch, boolean roundDown) {
+		return ((int)(roundDown?Math.floor(value/pixelPitch):Math.ceil(value/pixelPitch))) * pixelPitch;
+	}
+
+	@VisibleForTesting
+	static boolean isUpStroke(int value, int pixelPitch) {
+		return  ((value/pixelPitch) % 2) == 0;
+	}
+
+	private void drawRowHeadersText(GraphicsContext gc, GridModel model, GridDimension dimensions) {
 		final int rowCount = model.getRowCount();
 
 		for(int row = 0;row<rowCount;row++) {
@@ -102,7 +147,7 @@ class MainDrawingLayer extends Canvas {
 			final GridCharacterGroup cellModel = model.getRowHeader(row);
 			final GridCellDimension tableCellDimension = dimensions.getRowHeaderCellDimension(row);
 
-			drawCell(gc, cellModel, tableCellDimension, textBottom);
+			drawCellText(gc, cellModel, tableCellDimension, textBottom);
 		}
 	}
 }

@@ -4,23 +4,29 @@ package com.concurrentperformance.ringingmaster.fxui.desktop.documentpanel.grid.
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
+import java.util.Set;
+
 /**
  * TODO comments???
  * User: Stephen
  */
 public interface GridCharacterModel {
 
-	public char getCharacter();
+	char getCharacter();
 
 	/**
 	 * Get the font that will render this character.
-	 * @return
 	 */
-	public Font getFont();
+	Font getFont();
 
 	/**
 	 * Get the colour of the font that will render this cell.
-	 * @return
 	 */
-	public Color getColor();
+	Color getColor();
+
+	/**
+	 * Additional Styles that can't be represented in the Font
+	 */
+	Set<AdditionalStyleType> getAdditionalStyle();
+
 }

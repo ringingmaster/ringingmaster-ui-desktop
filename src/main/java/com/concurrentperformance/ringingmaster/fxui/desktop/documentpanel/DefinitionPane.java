@@ -8,7 +8,7 @@ import javafx.scene.layout.VBox;
 import java.util.List;
 
 /**
- * TODO comments ???
+ * A single pane that holds multiple definition panes. One for each definition.
  *
  * @author Lake
  */

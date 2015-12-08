@@ -4,6 +4,7 @@ import com.concurrentperformance.ringingmaster.engine.touch.container.Touch;
 import com.concurrentperformance.ringingmaster.engine.touch.container.TouchCell;
 import com.concurrentperformance.ringingmaster.engine.touch.parser.ParseType;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentmodel.TouchDocument;
+import com.concurrentperformance.ringingmaster.fxui.desktop.documentpanel.grid.model.AdditionalStyleType;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentpanel.grid.model.GridCellModel;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentpanel.grid.model.GridCharacterModel;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentpanel.grid.model.GridModelListener;
@@ -14,7 +15,9 @@ import javafx.scene.text.Font;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -74,6 +77,11 @@ public class DefinitionCell extends SkeletalGridCellModel implements GridCellMod
 				ParseType parseType = cell.getElement(index).getParseType();
 				return touchDocument.getTouchStyle().getColourFromParseType(parseType);
 			}
+			@Override
+			public Set<AdditionalStyleType> getAdditionalStyle() {
+				return Collections.emptySet();
+			}
+
 		};
 	}
 }

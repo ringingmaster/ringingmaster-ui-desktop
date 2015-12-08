@@ -2,6 +2,7 @@ package com.concurrentperformance.ringingmaster.fxui.desktop.documentmodel.maing
 
 import com.concurrentperformance.ringingmaster.engine.touch.container.TouchCell;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentmodel.TouchDocument;
+import com.concurrentperformance.ringingmaster.fxui.desktop.documentpanel.grid.model.AdditionalStyleType;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentpanel.grid.model.GridCellModel;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentpanel.grid.model.GridCharacterGroup;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentpanel.grid.model.GridCharacterModel;
@@ -11,7 +12,9 @@ import com.concurrentperformance.ringingmaster.ui.common.TouchStyle;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
+import java.util.Collections;
 import java.util.Iterator;
+import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkElementIndex;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -87,6 +90,12 @@ public class MainGridModel extends SkeletalGridModel implements GridModel {
 					public Color getColor() {
 						return (index%2==0)?Color.LIGHTGRAY:Color.BLUE;
 					}
+
+					@Override
+					public Set<AdditionalStyleType> getAdditionalStyle() {
+						return Collections.emptySet();
+					}
+
 				};
 			}
 

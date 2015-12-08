@@ -6,7 +6,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Iterator;
+import java.util.Set;
 
 /**
  * TODO comments???
@@ -141,6 +143,11 @@ public class StubGridEditorModel implements GridModel {
 				@Override
 				public Color getColor() {
 					return Color.AQUA;
+				}
+
+				@Override
+				public Set<AdditionalStyleType> getAdditionalStyle() {
+					return Collections.emptySet();
 				}
 			};
 		}

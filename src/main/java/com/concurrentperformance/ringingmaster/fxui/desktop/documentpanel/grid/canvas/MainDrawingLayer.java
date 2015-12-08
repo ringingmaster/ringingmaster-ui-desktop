@@ -116,16 +116,16 @@ class MainDrawingLayer extends Canvas {
 				final double textLeft = tableCellDimension.getVerticalCharacterStartPosition(characterIndex);
 				final double textRight = tableCellDimension.getVerticalCharacterEndPosition(characterIndex);
 
-				double horzPos = textLeft;
-				while (horzPos < textRight) {
-					double leftHorz = horzPos;
-					double leftVert = getVerticalWiggleOffset(horzPos, pixelPitch) + bottom;
+				double X = textLeft;
+				while (X < textRight) {
+					double leftX = X;
+					double leftY = getVerticalWiggleOffset(X, pixelPitch) + bottom;
 
-					horzPos = alignToNextPixelPitch(horzPos, pixelPitch);
-					double rightHorz = horzPos;
-					double rightVert = getVerticalWiggleOffset(horzPos, pixelPitch) + bottom;
+					X = Math.min(alignToNextPixelPitch(X, pixelPitch), textRight);
+					double rightX = X;
+					double rightY = getVerticalWiggleOffset(X, pixelPitch) + bottom;
 
-					gc.strokeLine(leftHorz, leftVert, rightHorz, rightVert);
+					gc.strokeLine(leftX, leftY, rightX, rightY);
 				}
 			}
 		}

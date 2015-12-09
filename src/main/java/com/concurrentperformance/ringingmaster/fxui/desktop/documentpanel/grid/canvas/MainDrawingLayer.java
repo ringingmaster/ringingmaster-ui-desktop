@@ -145,7 +145,7 @@ class MainDrawingLayer extends Canvas {
 
 	@VisibleForTesting
 	static int alignToNextPixelPitch(double value, int pixelPitch) {
-		// The hacky 0.0000001 value ensures that a value that aligns to the pixel boundary rolls over to the next
+		// The hacky 0.0000001 value ensures that a value that aligns exactly to the pixel boundary rolls over to the next
 		return ((int)(Math.ceil((value + 0.0000001) / pixelPitch))) * pixelPitch;
 	}
 

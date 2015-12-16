@@ -90,7 +90,12 @@ public class DefinitionCell extends SkeletalGridCellModel implements GridCellMod
 
 			@Override
 			public Optional<String> getTooltipText() {
-				return Optional.empty();
+				if (index >= cell.getLength()) {
+					return Optional.empty();
+				}
+
+				String tooltipText = cell.getElement(index).getParseType().name();
+				return Optional.of(tooltipText);
 			}
 		};
 	}

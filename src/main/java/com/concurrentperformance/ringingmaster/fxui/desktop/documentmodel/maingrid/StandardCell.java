@@ -86,6 +86,10 @@ public class StandardCell extends SkeletalGridCellModel implements GridCellModel
 
 			@Override
 			public Optional<String> getTooltipText() {
+				if (index >= cell.getLength()) {
+					return Optional.empty();
+				}
+
 				String tooltipText = cell.getElement(index).getParseType().name();
 				return Optional.of(tooltipText);
 			}

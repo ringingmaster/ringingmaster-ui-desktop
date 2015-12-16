@@ -9,7 +9,6 @@ package com.concurrentperformance.ringingmaster.fxui.desktop.documentpanel.grid.
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.Skin;
-import javafx.scene.control.Tooltip;
 
 /**
  * CSS based skin for Tooltip. It deals mostly with show hide logic for

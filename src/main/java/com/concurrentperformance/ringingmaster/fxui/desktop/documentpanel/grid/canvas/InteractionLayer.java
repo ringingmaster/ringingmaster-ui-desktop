@@ -1,11 +1,11 @@
 package com.concurrentperformance.ringingmaster.fxui.desktop.documentpanel.grid.canvas;
 
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentpanel.grid.GridPosition;
+import com.concurrentperformance.ringingmaster.fxui.desktop.documentpanel.grid.canvas.tooltip.Tooltip;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentpanel.grid.model.GridCellModel;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentpanel.grid.model.GridCharacterModel;
 import com.google.common.base.Strings;
 import javafx.application.Platform;
-import javafx.scene.control.Tooltip;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;

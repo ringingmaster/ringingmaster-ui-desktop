@@ -14,6 +14,7 @@ import javafx.scene.text.Font;
 
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.Optional;
 import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkElementIndex;
@@ -94,6 +95,11 @@ public class MainGridModel extends SkeletalGridModel implements GridModel {
 					@Override
 					public Set<AdditionalStyleType> getAdditionalStyle() {
 						return Collections.emptySet();
+					}
+
+					@Override
+					public Optional<String> getTooltipText() {
+						return Optional.empty();
 					}
 
 				};

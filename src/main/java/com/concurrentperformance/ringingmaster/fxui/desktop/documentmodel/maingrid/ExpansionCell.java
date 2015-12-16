@@ -64,7 +64,7 @@ public class ExpansionCell extends SkeletalGridCellModel implements GridCellMode
 
 	@Override
 	public GridCharacterModel getGridCharacterModel(int index) {
-		throw new IllegalStateException("Attempt to call getGridEditorCharacterModel on empty ExpansionCell");
+		return null;
 	}
 }
 

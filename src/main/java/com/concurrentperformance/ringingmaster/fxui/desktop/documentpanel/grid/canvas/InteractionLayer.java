@@ -2,10 +2,10 @@ package com.concurrentperformance.ringingmaster.fxui.desktop.documentpanel.grid.
 
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentpanel.grid.GridPosition;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentpanel.grid.model.GridCellModel;
+import com.concurrentperformance.ringingmaster.fxui.desktop.documentpanel.grid.model.GridCharacterModel;
 import com.google.common.base.Strings;
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
+import javafx.scene.control.Tooltip;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
@@ -45,6 +45,8 @@ public class InteractionLayer extends Pane {
 
 	private final Runnable setVisibleTask;
 
+	private Tooltip tooltip = new Tooltip("");
+
 
 	public InteractionLayer(GridPane parent) {
 		this.parent = parent;
@@ -66,29 +68,30 @@ public class InteractionLayer extends Pane {
 
 		getChildren().add(caret);
 
-		focusedProperty().addListener(new ChangeListener<Boolean>() {
-			@Override
-			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-				//log.info("[{}] focussed [{}]", parent.getName(), newValue);
-				showCaret = newValue;
-				caretBlinkOn = true;
-				Platform.runLater(setVisibleTask);
-			}
+		focusedProperty().addListener((observable, oldValue, newValue) -> {
+			//log.info("[{}] focussed [{}]", parent.getName(), newValue);
+			showCaret = newValue;
+			caretBlinkOn = true;
+			Platform.runLater(setVisibleTask);
 		});
 
-		setOnKeyPressed(event -> handleKeyPressed(event));
+		setOnKeyPressed(this::handleKeyPressed);
 
-		setOnKeyTyped(event -> handleKeyTyped(event));
+		setOnKeyTyped(this::handleKeyTyped);
 
-		setOnMousePressed(event -> handleMousePressed(event));
+		setOnMousePressed(this::handleMousePressed);
 
-		setOnMouseReleased(event -> handleMouseReleased(event));
+		setOnMouseReleased(this::handleMouseReleased);
 
-		setOnMouseDragged(event -> handleMouseDragged(event));
+		setOnMouseDragged(this::handleMouseDragged);
+
+		setOnMouseMoved(this::handleMouseMoved);
 
 		timer.schedule(blinkTask, BLINK_RATE_MS, BLINK_RATE_MS);
 
 		setFocusTraversable(true);
+
+		Tooltip.install(this, tooltip);
 	}
 
 	private void handleKeyTyped(KeyEvent e) {
@@ -352,6 +355,27 @@ public class InteractionLayer extends Pane {
 			}
 		}
 		e.consume();
+	}
+
+	private void handleMouseMoved(MouseEvent e) {
+		if (tooltip.isShowing()) {
+			return;
+		}
+		Optional<GridPosition> gridPosition = mouseCoordinatesToGridPosition(e.getX(), e.getY());
+		if (!gridPosition.isPresent()) {
+			return;
+		}
+
+		GridCharacterModel characterModel = parent.getModel().getCharacterModel(gridPosition.get());
+		if (characterModel!= null) {
+			Optional<String> tooltipText = characterModel.getTooltipText();
+			if (tooltipText.isPresent()) {
+				tooltip.setText(tooltipText.get());
+			}
+			else {
+				tooltip.setText("");
+			}
+		}
 	}
 
 	public Optional<GridPosition> mouseCoordinatesToGridPosition(final double x, final double y) {

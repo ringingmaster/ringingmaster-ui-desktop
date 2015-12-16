@@ -7,7 +7,7 @@ package com.concurrentperformance.ringingmaster.fxui.desktop.documentpanel.grid.
  */
 public interface GridCharacterGroup extends Iterable<GridCharacterModel>  {
 
-	public int getLength();
+	int getLength();
 
-	public GridCharacterModel getGridCharacterModel(int index);
+	GridCharacterModel getGridCharacterModel(int index);
 }

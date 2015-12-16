@@ -107,4 +107,15 @@ public abstract class SkeletalGridModel implements GridModel {
 	public boolean isZeroSized() {
 		return (getColumnCount() == 0 || getRowCount() == 0);
 	}
+
+	@Override
+	public GridCharacterModel getCharacterModel(GridPosition gridPosition) {
+		checkNotNull(gridPosition);
+		GridCellModel cellModel = getCellModel(gridPosition.getColumn(), gridPosition.getRow());
+		if (cellModel != null) {
+			return cellModel.getGridCharacterModel(gridPosition.getCharacterIndex());
+		}
+		return null;
+	}
+
 }

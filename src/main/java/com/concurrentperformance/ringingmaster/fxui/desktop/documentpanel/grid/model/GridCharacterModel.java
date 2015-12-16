@@ -4,6 +4,7 @@ package com.concurrentperformance.ringingmaster.fxui.desktop.documentpanel.grid.
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -29,4 +30,8 @@ public interface GridCharacterModel {
 	 */
 	Set<AdditionalStyleType> getAdditionalStyle();
 
+	/**
+	 * Tooltip Text
+	 */
+	Optional<String> getTooltipText();
 }

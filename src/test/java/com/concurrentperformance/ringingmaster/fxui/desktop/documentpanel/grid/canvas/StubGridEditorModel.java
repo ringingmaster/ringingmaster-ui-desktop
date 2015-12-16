@@ -8,6 +8,7 @@ import javafx.scene.text.Font;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -69,6 +70,11 @@ public class StubGridEditorModel implements GridModel {
 	@Override
 	public GridCellModel getCellModel(int column, int row) {
 		return new StubGridCellModel(model[row][column]);
+	}
+
+	@Override
+	public GridCharacterModel getCharacterModel(GridPosition gridPosition) {
+		return null;
 	}
 
 	@Override
@@ -148,6 +154,11 @@ public class StubGridEditorModel implements GridModel {
 				@Override
 				public Set<AdditionalStyleType> getAdditionalStyle() {
 					return Collections.emptySet();
+				}
+
+				@Override
+				public Optional<String> getTooltipText() {
+					return Optional.empty();
 				}
 			};
 		}

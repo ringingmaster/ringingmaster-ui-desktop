@@ -16,6 +16,7 @@ import javafx.scene.text.Font;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -81,6 +82,12 @@ public class StandardCell extends SkeletalGridCellModel implements GridCellModel
 					return EnumSet.of(AdditionalStyleType.WIGGLY_UNDERLINE);
 				}
 				return Collections.emptySet();
+			}
+
+			@Override
+			public Optional<String> getTooltipText() {
+				String tooltipText = cell.getElement(index).getParseType().name();
+				return Optional.of(tooltipText);
 			}
 		};
 	}

@@ -16,7 +16,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
+import java.util.EnumSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -79,9 +81,17 @@ public class DefinitionCell extends SkeletalGridCellModel implements GridCellMod
 			}
 			@Override
 			public Set<AdditionalStyleType> getAdditionalStyle() {
+				ParseType parseType = cell.getElement(index).getParseType();
+				if (parseType == ParseType.UNPARSED) {
+					return EnumSet.of(AdditionalStyleType.WIGGLY_UNDERLINE);
+				}
 				return Collections.emptySet();
 			}
 
+			@Override
+			public Optional<String> getTooltipText() {
+				return Optional.empty();
+			}
 		};
 	}
 }

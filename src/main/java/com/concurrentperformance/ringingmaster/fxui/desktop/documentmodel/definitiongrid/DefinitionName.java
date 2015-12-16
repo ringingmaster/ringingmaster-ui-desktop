@@ -13,6 +13,7 @@ import javafx.scene.text.Font;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -60,6 +61,11 @@ class DefinitionName extends SkeletalGridCellModel implements GridCharacterGroup
 			@Override
 			public Set<AdditionalStyleType> getAdditionalStyle() {
 				return Collections.emptySet();
+			}
+
+			@Override
+			public Optional<String> getTooltipText() {
+				return Optional.empty();
 			}
 		};
 	}

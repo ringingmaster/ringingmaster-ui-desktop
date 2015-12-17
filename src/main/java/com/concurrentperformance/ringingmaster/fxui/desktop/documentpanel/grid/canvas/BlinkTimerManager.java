@@ -1,0 +1,47 @@
+package com.concurrentperformance.ringingmaster.fxui.desktop.documentpanel.grid.canvas;
+
+import com.concurrentperformance.util.listener.ConcurrentListenable;
+import com.concurrentperformance.util.listener.Listenable;
+
+import java.util.Timer;
+import java.util.TimerTask;
+
+/**
+ * A wrapper to prevent each grid having its own thread for a timer.
+ *
+ * @author Lake
+ */
+public class BlinkTimerManager extends ConcurrentListenable<InteractionLayer> implements Listenable<InteractionLayer> {
+
+	private static final int BLINK_RATE_MS = 500;
+
+	private final Timer timer = new Timer("Caret", true);
+	private volatile boolean blinkOn = false;
+
+
+	private final static BlinkTimerManager INSTANCE = new BlinkTimerManager();
+
+	private BlinkTimerManager() {
+		startTimer();
+	}
+
+	public static BlinkTimerManager getInstance() {
+		return INSTANCE;
+	}
+
+	private void startTimer() {
+		timer.schedule(new TimerTask() {
+			@Override
+			public void run() {
+				blinkOn = !blinkOn;
+				for (InteractionLayer interactionLayer : getListeners()) {
+					interactionLayer.triggerBlink(blinkOn);
+				}
+
+			}
+		}, BLINK_RATE_MS, BLINK_RATE_MS);
+	}
+
+
+
+}

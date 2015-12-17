@@ -14,8 +14,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Optional;
-import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  * TODO comments ???
@@ -26,13 +24,10 @@ public class InteractionLayer extends Pane {
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-	private final Timer timer = new Timer("Caret", true);
-	private final TimerTask blinkTask;
 
-	private static final int BLINK_RATE_MS = 500;
 	private static final double CARET_WIDTH = 2.0;
 
-	private volatile boolean showCaret = false;
+	private volatile boolean caretVisible = false;
 	private volatile boolean caretBlinkOn = false;
 
 	private final Rectangle caret = new Rectangle(0,0,0,0);
@@ -43,36 +38,20 @@ public class InteractionLayer extends Pane {
 
 	private final GridPane parent;
 
-	private final Runnable setVisibleTask;
-
 	private Tooltip tooltip = new Tooltip("");
 
 
 	public InteractionLayer(GridPane parent) {
 		this.parent = parent;
 
-		setVisibleTask = new Runnable() {
-			public void run() {
-				caret.setVisible(showCaret && caretBlinkOn);
-			}
-		};
-		Platform.runLater(setVisibleTask);
-
-		blinkTask = new TimerTask() {
-			@Override
-			public void run() {
-				caretBlinkOn = !caretBlinkOn;
-				Platform.runLater(setVisibleTask);
-			}
-		};
+		BlinkTimerManager.getInstance().addListener(this);
 
 		getChildren().add(caret);
 
 		focusedProperty().addListener((observable, oldValue, newValue) -> {
 			//log.info("[{}] focussed [{}]", parent.getName(), newValue);
-			showCaret = newValue;
-			caretBlinkOn = true;
-			Platform.runLater(setVisibleTask);
+			caretVisible = newValue;
+			forceCaretBlinkOnIfVisible();
 		});
 
 		setOnKeyPressed(this::handleKeyPressed);
@@ -87,11 +66,19 @@ public class InteractionLayer extends Pane {
 
 		setOnMouseMoved(this::handleMouseMoved);
 
-		timer.schedule(blinkTask, BLINK_RATE_MS, BLINK_RATE_MS);
-
 		setFocusTraversable(true);
 
 		Tooltip.install(this, tooltip);
+	}
+
+	void triggerBlink(boolean blinkOn) {
+		caretBlinkOn = blinkOn;
+		Platform.runLater(() -> caret.setVisible(caretVisible && caretBlinkOn));
+	}
+
+	void forceCaretBlinkOnIfVisible() {
+		caretBlinkOn = false;
+		Platform.runLater(() -> caret.setVisible(caretVisible));
 	}
 
 	private void handleKeyTyped(KeyEvent e) {
@@ -107,7 +94,6 @@ public class InteractionLayer extends Pane {
 			//log.info("keyTyped:" + e);
 		}
 	}
-
 
 	private void handleKeyPressed(KeyEvent event) {
 		switch (event.getCode()) {
@@ -157,11 +143,6 @@ public class InteractionLayer extends Pane {
 		caret.setY(cellTop);
 		caret.setHeight(cellHeight);
 		caret.setWidth(CARET_WIDTH);
-	}
-
-	void showCaret() {
-		caretBlinkOn = true;
-		Platform.runLater(setVisibleTask);
 	}
 
 	protected void moveRight() {
@@ -435,5 +416,4 @@ public class InteractionLayer extends Pane {
 
 		return Optional.of(new GridPosition(columnIndex,rowIndex,characterIndex));
 	}
-
 }

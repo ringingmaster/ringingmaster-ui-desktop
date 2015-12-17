@@ -61,7 +61,7 @@ public class GridPane extends Pane implements GridModelListener {
 
 	@Override
 	public void gridModelListener_caretMoved() {
-		interactionLayer.showCaret();
+		interactionLayer.forceCaretBlinkOnIfVisible();
 		interactionLayer.draw();
 	}
 

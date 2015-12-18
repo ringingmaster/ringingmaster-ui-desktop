@@ -10,7 +10,7 @@ import static org.mockito.Mockito.when;
 /**
  * @author Lake
  */
-public class InteractionLayerTest {
+public class CaretPositionMoverTest {
 
 	@Test
 	public void allCallsHandleEmptyModel() {
@@ -18,18 +18,18 @@ public class InteractionLayerTest {
 		GridPane mockGridPane = mock(GridPane.class);
 		when(mockGridPane.getModel()).thenReturn(model);
 
-		InteractionLayer interactionLayer = new InteractionLayer(mockGridPane);
-		interactionLayer.moveLeft();
+		CaretPositionMover caretPositionMover = new CaretPositionMover(mockGridPane);
+		caretPositionMover.moveLeft();
 		assertEquals(new GridPosition(0, 0, 0), model.getCaretPosition());
-		interactionLayer.moveRight();
+		caretPositionMover.moveRight();
 		assertEquals(new GridPosition(0,0,0), model.getCaretPosition());
-		interactionLayer.moveUp();
+		caretPositionMover.moveUp();
 		assertEquals(new GridPosition(0,0,0), model.getCaretPosition());
-		interactionLayer.moveDown();
+		caretPositionMover.moveDown();
 		assertEquals(new GridPosition(0,0,0), model.getCaretPosition());
-		interactionLayer.moveToStartOfLastCellIfItHasContentsElseLastButOne();
+		caretPositionMover.moveToStartOfLastCellIfItHasContentsElseLastButOne();
 		assertEquals(new GridPosition(0,0,0), model.getCaretPosition());
-		interactionLayer.moveToStartOfRow();
+		caretPositionMover.moveToStartOfRow();
 		assertEquals(new GridPosition(0,0,0), model.getCaretPosition());
 	}
 
@@ -40,25 +40,25 @@ public class InteractionLayerTest {
 		StubGridEditorModel model = new StubGridEditorModel(characters, new GridPosition(0,0,0));
 		GridPane mockGridPane = mock(GridPane.class);
 		when(mockGridPane.getModel()).thenReturn(model);
-		InteractionLayer interactionLayer = new InteractionLayer(mockGridPane);
+		CaretPositionMover caretPositionMover = new CaretPositionMover(mockGridPane);
 
-		interactionLayer.moveRight();
+		caretPositionMover.moveRight();
 		assertEquals(new GridPosition(0, 0, 1), model.getCaretPosition());
-		interactionLayer.moveRight();
+		caretPositionMover.moveRight();
 		assertEquals(new GridPosition(0, 0, 2), model.getCaretPosition());
-		interactionLayer.moveRight();
+		caretPositionMover.moveRight();
 		assertEquals(new GridPosition(1, 0, 0), model.getCaretPosition());
-		interactionLayer.moveRight();
+		caretPositionMover.moveRight();
 		assertEquals(new GridPosition(1, 0, 1), model.getCaretPosition());
-		interactionLayer.moveRight();
+		caretPositionMover.moveRight();
 		assertEquals(new GridPosition(1, 0, 2), model.getCaretPosition());
-		interactionLayer.moveRight();
+		caretPositionMover.moveRight();
 		assertEquals(new GridPosition(0, 1, 0), model.getCaretPosition());
-		interactionLayer.moveRight();
+		caretPositionMover.moveRight();
 		assertEquals(new GridPosition(1, 1, 0), model.getCaretPosition());
-		interactionLayer.moveRight();
+		caretPositionMover.moveRight();
 		assertEquals(new GridPosition(1, 1, 1), model.getCaretPosition());
-		interactionLayer.moveRight();
+		caretPositionMover.moveRight();
 		assertEquals(new GridPosition(1,1,1), model.getCaretPosition());
 	}
 
@@ -69,25 +69,25 @@ public class InteractionLayerTest {
 		StubGridEditorModel model = new StubGridEditorModel(characters, new GridPosition(1,1,1));
 		GridPane mockGridPane = mock(GridPane.class);
 		when(mockGridPane.getModel()).thenReturn(model);
-		InteractionLayer interactionLayer = new InteractionLayer(mockGridPane);
+		CaretPositionMover caretPositionMover = new CaretPositionMover(mockGridPane);
 
-		interactionLayer.moveLeft();
+		caretPositionMover.moveLeft();
 		assertEquals(new GridPosition(1, 1, 0), model.getCaretPosition());
-		interactionLayer.moveLeft();
+		caretPositionMover.moveLeft();
 		assertEquals(new GridPosition(0, 1, 0), model.getCaretPosition());
-		interactionLayer.moveLeft();
+		caretPositionMover.moveLeft();
 		assertEquals(new GridPosition(1, 0, 2), model.getCaretPosition());
-		interactionLayer.moveLeft();
+		caretPositionMover.moveLeft();
 		assertEquals(new GridPosition(1, 0, 1), model.getCaretPosition());
-		interactionLayer.moveLeft();
+		caretPositionMover.moveLeft();
 		assertEquals(new GridPosition(1, 0, 0), model.getCaretPosition());
-		interactionLayer.moveLeft();
+		caretPositionMover.moveLeft();
 		assertEquals(new GridPosition(0, 0, 2), model.getCaretPosition());
-		interactionLayer.moveLeft();
+		caretPositionMover.moveLeft();
 		assertEquals(new GridPosition(0, 0, 1), model.getCaretPosition());
-		interactionLayer.moveLeft();
+		caretPositionMover.moveLeft();
 		assertEquals(new GridPosition(0, 0, 0), model.getCaretPosition());
-		interactionLayer.moveLeft();
+		caretPositionMover.moveLeft();
 		assertEquals(new GridPosition(0, 0, 0), model.getCaretPosition());
 	}
 
@@ -100,16 +100,16 @@ public class InteractionLayerTest {
 		StubGridEditorModel model = new StubGridEditorModel(characters, new GridPosition(0,0,1));
 		GridPane mockGridPane = mock(GridPane.class);
 		when(mockGridPane.getModel()).thenReturn(model);
-		InteractionLayer interactionLayer = new InteractionLayer(mockGridPane);
+		CaretPositionMover caretPositionMover = new CaretPositionMover(mockGridPane);
 
-		interactionLayer.moveRight();//to set the sticky position
-		interactionLayer.moveDown();
+		caretPositionMover.moveRight();//to set the sticky position
+		caretPositionMover.moveDown();
 		assertEquals(new GridPosition(0, 1, 1), model.getCaretPosition());
-		interactionLayer.moveDown();
+		caretPositionMover.moveDown();
 		assertEquals(new GridPosition(0, 2, 0), model.getCaretPosition());
-		interactionLayer.moveDown();
+		caretPositionMover.moveDown();
 		assertEquals(new GridPosition(0, 3, 2), model.getCaretPosition());
-		interactionLayer.moveDown();
+		caretPositionMover.moveDown();
 		assertEquals(new GridPosition(0, 3, 2), model.getCaretPosition());
 	}
 
@@ -122,16 +122,16 @@ public class InteractionLayerTest {
 		StubGridEditorModel model = new StubGridEditorModel(characters, new GridPosition(0,3,1));
 		GridPane mockGridPane = mock(GridPane.class);
 		when(mockGridPane.getModel()).thenReturn(model);
-		InteractionLayer interactionLayer = new InteractionLayer(mockGridPane);
+		CaretPositionMover caretPositionMover = new CaretPositionMover(mockGridPane);
 
-		interactionLayer.moveRight();//to set the sticky position
-		interactionLayer.moveUp();
+		caretPositionMover.moveRight();//to set the sticky position
+		caretPositionMover.moveUp();
 		assertEquals(new GridPosition(0, 2, 1), model.getCaretPosition());
-		interactionLayer.moveUp();
+		caretPositionMover.moveUp();
 		assertEquals(new GridPosition(0, 1, 0), model.getCaretPosition());
-		interactionLayer.moveUp();
+		caretPositionMover.moveUp();
 		assertEquals(new GridPosition(0, 0, 2), model.getCaretPosition());
-		interactionLayer.moveUp();
+		caretPositionMover.moveUp();
 		assertEquals(new GridPosition(0, 0, 2), model.getCaretPosition());
 	}
 
@@ -142,11 +142,11 @@ public class InteractionLayerTest {
 		StubGridEditorModel model = new StubGridEditorModel(characters, new GridPosition(0,0,1));
 		GridPane mockGridPane = mock(GridPane.class);
 		when(mockGridPane.getModel()).thenReturn(model);
-		InteractionLayer interactionLayer = new InteractionLayer(mockGridPane);
+		CaretPositionMover caretPositionMover = new CaretPositionMover(mockGridPane);
 
-		interactionLayer.moveToStartOfLastCellIfItHasContentsElseLastButOne();
+		caretPositionMover.moveToStartOfLastCellIfItHasContentsElseLastButOne();
 		assertEquals(new GridPosition(2, 0, 0), model.getCaretPosition());
-		interactionLayer.moveDown();
+		caretPositionMover.moveDown();
 		assertEquals(new GridPosition(2, 1, 0), model.getCaretPosition());
 	}
 
@@ -157,11 +157,11 @@ public class InteractionLayerTest {
 		StubGridEditorModel model = new StubGridEditorModel(characters, new GridPosition(1,1,0));
 		GridPane mockGridPane = mock(GridPane.class);
 		when(mockGridPane.getModel()).thenReturn(model);
-		InteractionLayer interactionLayer = new InteractionLayer(mockGridPane);
+		CaretPositionMover caretPositionMover = new CaretPositionMover(mockGridPane);
 
-		interactionLayer.moveToStartOfLastCellIfItHasContentsElseLastButOne();
+		caretPositionMover.moveToStartOfLastCellIfItHasContentsElseLastButOne();
 		assertEquals(new GridPosition(1, 1, 0), model.getCaretPosition());
-		interactionLayer.moveUp();
+		caretPositionMover.moveUp();
 		assertEquals(new GridPosition(1, 0, 0), model.getCaretPosition());
 	}
 
@@ -172,11 +172,11 @@ public class InteractionLayerTest {
 		StubGridEditorModel model = new StubGridEditorModel(characters, new GridPosition(0, 0, 2));
 		GridPane mockGridPane = mock(GridPane.class);
 		when(mockGridPane.getModel()).thenReturn(model);
-		InteractionLayer interactionLayer = new InteractionLayer(mockGridPane);
+		CaretPositionMover caretPositionMover = new CaretPositionMover(mockGridPane);
 
-		interactionLayer.moveToStartOfLastCellIfItHasContentsElseLastButOne();
+		caretPositionMover.moveToStartOfLastCellIfItHasContentsElseLastButOne();
 		assertEquals(new GridPosition(0, 0, 0), model.getCaretPosition());
-		interactionLayer.moveUp();
+		caretPositionMover.moveUp();
 		assertEquals(new GridPosition(0, 0, 0), model.getCaretPosition());
 	}
 
@@ -187,11 +187,11 @@ public class InteractionLayerTest {
 		StubGridEditorModel model = new StubGridEditorModel(characters, new GridPosition(1,0,1));
 		GridPane mockGridPane = mock(GridPane.class);
 		when(mockGridPane.getModel()).thenReturn(model);
-		InteractionLayer interactionLayer = new InteractionLayer(mockGridPane);
+		CaretPositionMover caretPositionMover = new CaretPositionMover(mockGridPane);
 
-		interactionLayer.moveToStartOfRow();
+		caretPositionMover.moveToStartOfRow();
 		assertEquals(new GridPosition(0, 0, 0), model.getCaretPosition());
-		interactionLayer.moveDown();
+		caretPositionMover.moveDown();
 		assertEquals(new GridPosition(0, 1, 0), model.getCaretPosition());
 	}
 }

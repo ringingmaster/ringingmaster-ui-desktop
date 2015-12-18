@@ -7,11 +7,11 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 /**
- * A wrapper to prevent each grid having its own thread for a timer.
+ * A wrapper to prevent each grid having its own thread for a blink timer.
  *
  * @author Lake
  */
-public class BlinkTimerManager extends ConcurrentListenable<InteractionLayer> implements Listenable<InteractionLayer> {
+public class BlinkTimerManager extends ConcurrentListenable<BlinkTimerListener> implements Listenable<BlinkTimerListener> {
 
 	private static final int BLINK_RATE_MS = 500;
 
@@ -34,8 +34,8 @@ public class BlinkTimerManager extends ConcurrentListenable<InteractionLayer> im
 			@Override
 			public void run() {
 				blinkOn = !blinkOn;
-				for (InteractionLayer interactionLayer : getListeners()) {
-					interactionLayer.triggerBlink(blinkOn);
+				for (BlinkTimerListener listener : getListeners()) {
+					listener.blinkTimerManager_triggerBlink(blinkOn);
 				}
 
 			}

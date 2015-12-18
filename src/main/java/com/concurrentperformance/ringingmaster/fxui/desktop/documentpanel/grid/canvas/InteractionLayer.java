@@ -2,7 +2,6 @@ package com.concurrentperformance.ringingmaster.fxui.desktop.documentpanel.grid.
 
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentpanel.grid.GridPosition;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentpanel.grid.canvas.tooltip.Tooltip;
-import com.concurrentperformance.ringingmaster.fxui.desktop.documentpanel.grid.model.GridCellModel;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentpanel.grid.model.GridCharacterModel;
 import com.google.common.base.Strings;
 import javafx.application.Platform;
@@ -20,29 +19,26 @@ import java.util.Optional;
  *
  * @author Lake
  */
-public class InteractionLayer extends Pane {
+public class InteractionLayer extends Pane implements BlinkTimerListener {
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 
-	private static final double CARET_WIDTH = 2.0;
+	private final GridPane parent;
 
+	private static final double CARET_WIDTH = 2.0;
 	private volatile boolean caretVisible = false;
 	private volatile boolean caretBlinkOn = false;
-
 	private final Rectangle caret = new Rectangle(0,0,0,0);
-	// This allows the character position to be held when navigating up and down.
-	private static final int NOT_SET = -1;
-	private int stickyCharacterPosition = NOT_SET;
-	boolean mouseDown = false;
 
-	private final GridPane parent;
+	private final CaretPositionMover caretPositionMover;
+	boolean mouseDown = false;
 
 	private Tooltip tooltip = new Tooltip("");
 
-
 	public InteractionLayer(GridPane parent) {
 		this.parent = parent;
+		caretPositionMover = new CaretPositionMover(parent);
 
 		BlinkTimerManager.getInstance().addListener(this);
 
@@ -71,7 +67,8 @@ public class InteractionLayer extends Pane {
 		Tooltip.install(this, tooltip);
 	}
 
-	void triggerBlink(boolean blinkOn) {
+	@Override
+	public void blinkTimerManager_triggerBlink(boolean blinkOn) {
 		caretBlinkOn = blinkOn;
 		Platform.runLater(() -> caret.setVisible(caretVisible && caretBlinkOn));
 	}
@@ -90,7 +87,7 @@ public class InteractionLayer extends Pane {
 		if (character >= 32 && character < 127 ) {
 			GridPosition caretPosition = parent.getModel().getCaretPosition();
 			parent.getModel().getCellModel(caretPosition.getColumn(), caretPosition.getRow()).insertCharacter(caretPosition.getCharacterIndex(), character);
-			moveRight();
+			caretPositionMover.moveRight();
 			//log.info("keyTyped:" + e);
 		}
 	}
@@ -98,32 +95,32 @@ public class InteractionLayer extends Pane {
 	private void handleKeyPressed(KeyEvent event) {
 		switch (event.getCode()) {
 			case RIGHT:
-				moveRight();
+				caretPositionMover.moveRight();
 				break;
 			case LEFT:
-				moveLeft();
+				caretPositionMover.moveLeft();
 				break;
 			case UP:
-				moveUp();
+				caretPositionMover.moveUp();
 				break;
 			case DOWN:
-				moveDown();
+				caretPositionMover.moveDown();
 				break;
 			case END:
 				if (event.isAltDown() && !event.isShiftDown() && !event.isControlDown()){
-					moveToStartOfLastCellIfItHasContentsElseLastButOne();
+					caretPositionMover.moveToStartOfLastCellIfItHasContentsElseLastButOne();
 				}
 				break;
 			case HOME:
 				if (event.isAltDown() && !event.isShiftDown() && !event.isControlDown()){
-					moveToStartOfRow();
+					caretPositionMover.moveToStartOfRow();
 				}
 				break;
 			case BACK_SPACE:
-				deleteBack();
+				caretPositionMover.deleteBack();
 				break;
 			case DELETE:
-				deleteForward();
+				caretPositionMover.deleteForward();
 				break;
 		}
 
@@ -143,167 +140,6 @@ public class InteractionLayer extends Pane {
 		caret.setY(cellTop);
 		caret.setHeight(cellHeight);
 		caret.setWidth(CARET_WIDTH);
-	}
-
-	protected void moveRight() {
-		if (parent.getModel().isZeroSized()) {
-			return;
-		}
-
-		GridPosition caretPosition = parent.getModel().getCaretPosition();
-
-		// If in selection, the just move to the right end of the selection
-		if (parent.getModel().isSelection()) {
-			GridPosition selectionStartPosition = parent.getModel().getSelectionStartPosition();
-			parent.getModel().setCaretPosition((selectionStartPosition.compareTo(caretPosition) > 0 )?selectionStartPosition:caretPosition);
-			return;
-		}
-
-		int col = caretPosition.getColumn();
-		int row = caretPosition.getRow();
-		int character = caretPosition.getCharacterIndex()+1;
-		GridCellModel cellModel = parent.getModel().getCellModel(col, row);
-		if (character > cellModel.getLength()) {
-			// roll to start of next cell
-			col++;
-			character = 0;
-			if (col >= parent.getModel().getColumnCount()) {
-				// roll to next row
-				row++;
-				col=0;
-			}
-		}
-		// if we have blown the row count, then there is nowhere else to go
-		// (we are in as far right and down as we can go), ignore the move.
-		if (row < parent.getModel().getRowCount()) {
-			parent.getModel().setCaretPosition(new GridPosition(col, row, character));
-			stickyCharacterPosition = character;
-		}
-
-	}
-
-	protected void moveLeft() {
-		if (parent.getModel().isZeroSized()) {
-			return;
-		}
-
-		GridPosition caretPosition = parent.getModel().getCaretPosition();
-
-		// If in selection, the just move to the left end of the selection
-		if (parent.getModel().isSelection()) {
-			GridPosition selectionStartPosition = parent.getModel().getSelectionStartPosition();
-			parent.getModel().setCaretPosition((selectionStartPosition.compareTo(caretPosition) < 0 )?selectionStartPosition:caretPosition);
-			return;
-		}
-
-		int col = caretPosition.getColumn();
-		int row = caretPosition.getRow();
-		int character = caretPosition.getCharacterIndex()-1;
-		if (character < 0) {
-			// roll to end of previous cell
-			col--;
-			if (col < 0) {
-				// roll to previous row
-				row--;
-				col = parent.getModel().getColumnCount()-1;
-			}
-			if (row >= 0) {
-				character = parent.getModel().getCellModel(col, row).getLength();
-			}
-		}
-
-		// if we have blown the row count, then there is nowhere else to go
-		// (we are in as far right and down as we can go), ignore the move.
-		if (row >= 0) {
-			parent.getModel().setCaretPosition(new GridPosition(col, row, character));
-			stickyCharacterPosition = character;
-		}
-
-	}
-
-	protected void moveUp() {
-		if (parent.getModel().isZeroSized()) {
-			return;
-		}
-
-		GridPosition pos = parent.getModel().getCaretPosition();
-		int col = pos.getColumn();
-		int row = pos.getRow()-1;
-		int character = pos.getCharacterIndex();
-		if (row >= 0) {
-			int cellLength = parent.getModel().getCellModel(col, row).getLength();
-			if (stickyCharacterPosition != NOT_SET) {
-				character = stickyCharacterPosition;
-			}
-			character = Math.min(cellLength, character);
-			parent.getModel().setCaretPosition(new GridPosition(col, row, character));
-		}
-	}
-
-	protected void moveDown() {
-		if (parent.getModel().isZeroSized()) {
-			return;
-		}
-
-		GridPosition pos = parent.getModel().getCaretPosition();
-		int col = pos.getColumn();
-		int row = pos.getRow()+1;
-		int character = pos.getCharacterIndex();
-		if (row < parent.getModel().getRowCount()) {
-			int cellLength = parent.getModel().getCellModel(col, row).getLength();
-			if (stickyCharacterPosition != NOT_SET) {
-				character = stickyCharacterPosition;
-			}
-			character = Math.min(cellLength, character);
-			parent.getModel().setCaretPosition(new GridPosition(col, row, character));
-		}
-	}
-
-	protected void moveToStartOfLastCellIfItHasContentsElseLastButOne() {
-		if (parent.getModel().isZeroSized()) {
-			return;
-		}
-
-		GridPosition pos = parent.getModel().getCaretPosition();
-		int col = parent.getModel().getColumnCount()-1;
-		int row = pos.getRow();
-		int character = 0;
-		if (parent.getModel().getCellModel(col, row).getLength() == 0 &&
-				col-1 >= 0 ) {
-			col--;
-		}
-		parent.getModel().setCaretPosition(new GridPosition(col, row, character));
-		stickyCharacterPosition = 0;
-	}
-
-	protected void moveToStartOfRow() {
-		if (parent.getModel().isZeroSized()) {
-			return;
-		}
-
-		GridPosition pos = parent.getModel().getCaretPosition();
-		int col = 0;
-		int row = pos.getRow();
-		int character = 0;
-		parent.getModel().setCaretPosition(new GridPosition(col, row, character));
-		stickyCharacterPosition = 0;
-
-	}
-
-	protected void deleteBack() {
-		if(parent.getModel().getCaretPosition().getCharacterIndex() > 0) {
-			GridPosition caretPosition = parent.getModel().getCaretPosition();
-			moveLeft();
-			parent.getModel().getCellModel(caretPosition.getColumn(), caretPosition.getRow()).removeCharacter(caretPosition.getCharacterIndex()-1);
-		}
-	}
-
-	protected void deleteForward() {
-		GridPosition caretPosition = parent.getModel().getCaretPosition();
-		GridCellModel cellModel = parent.getModel().getCellModel(caretPosition.getColumn(), caretPosition.getRow());
-		if (caretPosition.getCharacterIndex() < cellModel.getLength()) {
-			cellModel.removeCharacter(caretPosition.getCharacterIndex());
-		}
 	}
 
 	private void handleMousePressed(MouseEvent e) {
@@ -407,7 +243,9 @@ public class InteractionLayer extends Pane {
 			}
 
 			// Now calculate the character index.
-			for (characterIndex=0;characterIndex<dimensions.getCharacterCountInCell(columnIndex, rowIndex);characterIndex++) {
+			characterIndex = 0;
+			for (int i =0; i <dimensions.getCharacterCountInCell(columnIndex, rowIndex); i++) {
+				characterIndex = i;
 				if (x <= dimensions.getTableCellDimension(columnIndex, rowIndex).getVerticalCharacterMidPosition(characterIndex)) {
 					break;
 				}

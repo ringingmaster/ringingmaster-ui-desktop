@@ -3,6 +3,7 @@ package com.concurrentperformance.ringingmaster.fxui.desktop.documentpanel.grid.
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentpanel.grid.model.GridCellModel;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentpanel.grid.model.GridCharacterGroup;
 import com.concurrentperformance.ringingmaster.fxui.desktop.documentpanel.grid.model.GridModel;
+import com.google.common.annotations.VisibleForTesting;
 
 /**
  * Contains all the calculations to turn a model, first into a list of width and height measurements
@@ -152,15 +153,19 @@ public class GridDimensionBuilder {
 		return cells;
 	}
 
-	private GridCellDimension calculateCell(double vertLinePosition, double horizontalPadding, double[] characterWidths) {
-		double[] characterStarts = new double[characterWidths.length+1];
-		double[] characterMids = new double[characterWidths.length+1];
+	@VisibleForTesting
+	protected GridCellDimension calculateCell(double vertLinePosition, double horizontalPadding, double[] characterWidths) {
+		double[] characterStarts = new double[characterWidths.length];
+		double[] characterMids = new double[characterWidths.length];
+		double[] characterEnds = new double[characterWidths.length];
 
-		characterStarts[0] = vertLinePosition + horizontalPadding;
-		for (int characterIndex=1;characterIndex<characterWidths.length+1;characterIndex++) {
-			characterStarts[characterIndex] = characterStarts[characterIndex-1] + characterWidths[characterIndex-1];
-			characterMids[characterIndex] = characterStarts[characterIndex] + (characterWidths[characterIndex-1]/2);
+		double nextStart = vertLinePosition + horizontalPadding;
+		for (int characterIndex=0;characterIndex<characterWidths.length;characterIndex++) {
+			characterStarts[characterIndex] = nextStart;
+			characterMids[characterIndex] = nextStart + (characterWidths[characterIndex]/2);
+			characterEnds[characterIndex] = nextStart +  characterWidths[characterIndex];
+			nextStart = characterEnds[characterIndex];
 		}
-		return new GridCellDimension(characterStarts, characterMids);
+		return new GridCellDimension(characterStarts, characterMids, characterEnds);
 	}
 }

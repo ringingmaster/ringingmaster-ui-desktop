@@ -11,18 +11,21 @@ import static com.google.common.base.Preconditions.checkState;
  */
 public class GridCellDimension {
 
-	private final double[] characterStart;
+	private final double[] characterStarts;
 	private final double[] characterMids;
+	private final double[] characterEnds;
 
-	public GridCellDimension(double[] characterStart, double[] characterMids) {
-		this.characterStart = checkNotNull(characterStart);
+	public GridCellDimension(double[] characterStarts, double[] characterMids, double[] characterEnds) {
+		this.characterStarts = checkNotNull(characterStarts);
 		this.characterMids = checkNotNull(characterMids);
-		checkState(characterStart.length == characterMids.length);
+		this.characterEnds = checkNotNull(characterEnds);
+		checkState(characterStarts.length == characterMids.length);
+		checkState(characterMids.length == characterEnds.length);
 	}
 
 	public double getVerticalCharacterStartPosition(int characterIndex) {
-		checkElementIndex(characterIndex, characterStart.length);
-		return characterStart[characterIndex];
+		checkElementIndex(characterIndex, characterStarts.length);
+		return characterStarts[characterIndex];
 	}
 
 	public double getVerticalCharacterMidPosition(int characterIndex) {
@@ -31,13 +34,11 @@ public class GridCellDimension {
 	}
 
 	public double getVerticalCharacterEndPosition(int characterIndex) {
-		checkElementIndex(characterIndex, characterStart.length +1);
-		return characterStart[characterIndex +1];
+		checkElementIndex(characterIndex, characterEnds.length);
+		return characterEnds[characterIndex];
 	}
 
 	public int getCharacterCount() {
-		// Each character has a start and there is an additional value for the end.
-		// Therefore there is always at least one value here, the -1 makeing the character count a min of 0
-		return characterStart.length-1;
+		return characterStarts.length;
 	}
 }

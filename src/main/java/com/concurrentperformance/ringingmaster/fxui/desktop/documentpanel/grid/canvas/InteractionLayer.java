@@ -132,7 +132,7 @@ public class InteractionLayer extends Pane implements BlinkTimerListener {
 	void draw() {
 		GridPosition caretPosition = parent.getModel().getCaretPosition();
 
-		final double left = parent.getDimensions().getTableCellDimension(caretPosition.getColumn(), caretPosition.getRow()).getVerticalCharacterStartPosition(caretPosition.getCharacterIndex());
+		final double left = parent.getDimensions().getCell(caretPosition.getColumn(), caretPosition.getRow()).getVerticalCharacterStartPosition(caretPosition.getCharacterIndex());
 		final double cellTop = parent.getDimensions().getTableHorizontalLinePosition(caretPosition.getRow());
 		final double cellHeight = parent.getDimensions().getRowHeight(caretPosition.getRow());
 
@@ -144,7 +144,7 @@ public class InteractionLayer extends Pane implements BlinkTimerListener {
 
 	private void handleMousePressed(MouseEvent e) {
 		//log.info("[{}] mouse pressed", parent.getName());
-		Optional<GridPosition> gridPosition = mouseCoordinatesToGridPosition(e.getX(), e.getY());
+		Optional<GridPosition> gridPosition = mouseCoordinatesToGridPosition(e.getX(), e.getY(), Align.GAPS);
 		if (gridPosition.isPresent()) {
 			parent.getModel().setCaretPosition(gridPosition.get());
 		}
@@ -156,7 +156,7 @@ public class InteractionLayer extends Pane implements BlinkTimerListener {
 	private void handleMouseReleased(MouseEvent e) {
 		//log.info("Mouse Released" + e);
 		mouseDown = false;
-		Optional<GridPosition> gridPosition = mouseCoordinatesToGridPosition(e.getX(), e.getY());
+		Optional<GridPosition> gridPosition = mouseCoordinatesToGridPosition(e.getX(), e.getY(), Align.GAPS);
 		if (gridPosition.isPresent()) {
 			parent.getModel().setSelectionEndPosition(gridPosition.get());
 		}
@@ -166,7 +166,7 @@ public class InteractionLayer extends Pane implements BlinkTimerListener {
 	private void handleMouseDragged(MouseEvent e) {
 		//log.info("mouseDragged " + e);
 		if (mouseDown) {
-			Optional<GridPosition> gridPosition = mouseCoordinatesToGridPosition(e.getX(), e.getY());
+			Optional<GridPosition> gridPosition = mouseCoordinatesToGridPosition(e.getX(), e.getY(), Align.GAPS);
 			if (gridPosition.isPresent()) {
 				parent.getModel().setSelectionEndPosition(gridPosition.get());
 			}
@@ -178,7 +178,7 @@ public class InteractionLayer extends Pane implements BlinkTimerListener {
 		if (tooltip.isShowing()) {
 			return;
 		}
-		Optional<GridPosition> gridPosition = mouseCoordinatesToGridPosition(e.getX(), e.getY());
+		Optional<GridPosition> gridPosition = mouseCoordinatesToGridPosition(e.getX(), e.getY(), Align.CHARACTERS);
 		if (!gridPosition.isPresent()) {
 			return;
 		}
@@ -195,7 +195,12 @@ public class InteractionLayer extends Pane implements BlinkTimerListener {
 		}
 	}
 
-	public Optional<GridPosition> mouseCoordinatesToGridPosition(final double x, final double y) {
+	private enum Align {
+		CHARACTERS,
+		GAPS
+	}
+
+	public Optional<GridPosition> mouseCoordinatesToGridPosition(final double x, final double y, Align align) {
 		GridDimension dimensions = parent.getDimensions();
 		if (dimensions.isZeroSized()) {
 			return Optional.empty();
@@ -232,7 +237,7 @@ public class InteractionLayer extends Pane implements BlinkTimerListener {
 		else if (x >= dimensions.getTableRight()) {
 			// We are to the right of the grid, so set to end of right column.
 			columnIndex = dimensions.getColumnCount() - 1;
-			characterIndex = dimensions.getCharacterCountInCell(columnIndex, rowIndex);
+			characterIndex = dimensions.getCell(columnIndex, rowIndex).getCharacterCount();
 		}
 		else {
 			// We are inside the grid. Calculate what column.
@@ -243,11 +248,20 @@ public class InteractionLayer extends Pane implements BlinkTimerListener {
 			}
 
 			// Now calculate the character index.
+			int characterCount = dimensions.getCell(columnIndex, rowIndex).getCharacterCount();
+			final GridCellDimension cell = dimensions.getCell(columnIndex, rowIndex);
 			characterIndex = 0;
-			for (int i =0; i <dimensions.getCharacterCountInCell(columnIndex, rowIndex); i++) {
-				characterIndex = i;
-				if (x <= dimensions.getTableCellDimension(columnIndex, rowIndex).getVerticalCharacterMidPosition(characterIndex)) {
-					break;
+
+			if (align == Align.GAPS) {
+				while (characterIndex < cell.getCharacterCount() &&
+						x <= cell.getVerticalCharacterMidPosition(characterIndex)) {
+					characterIndex++;
+				}
+			}
+			else if (align == Align.CHARACTERS) {
+				while (characterIndex < cell.getCharacterCount() &&
+						x <= cell.getVerticalCharacterEndPosition(characterIndex)) {
+					characterIndex++;
 				}
 			}
 		}

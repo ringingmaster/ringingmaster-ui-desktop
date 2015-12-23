@@ -76,7 +76,7 @@ class MainDrawingLayer extends Canvas {
 			final double textBottom = dimensions.getTextBottom(row);
 			for(int col = 0;col<colCount;col++) {
 				final GridCharacterGroup gridCharacterGroup = model.getCellModel(col, row);
-				final GridCellDimension tableCellDimension = dimensions.getTableCellDimension(col, row);
+				final GridCellDimension tableCellDimension = dimensions.getCell(col, row);
 
 				drawCellText(gc, gridCharacterGroup, tableCellDimension, textBottom);
 				drawCellUnderline(gc, gridCharacterGroup, tableCellDimension, textBottom);

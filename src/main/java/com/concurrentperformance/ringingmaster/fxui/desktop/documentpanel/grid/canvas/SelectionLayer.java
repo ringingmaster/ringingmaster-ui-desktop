@@ -53,10 +53,10 @@ public class SelectionLayer extends Canvas {
 		gc.setStroke(Color.RED);
 
 		while(true) {
-			double startX = dimensions.getTableCellDimension(caretPosition1.getColumn(), caretPosition1.getRow()).getVerticalCharacterStartPosition(caretPosition1.getCharacterIndex());
+			double startX = dimensions.getCell(caretPosition1.getColumn(), caretPosition1.getRow()).getVerticalCharacterStartPosition(caretPosition1.getCharacterIndex());
 			double endX = 0;
 			if (caretPosition1.getRow() == caretPosition2.getRow()) {
-				endX = dimensions.getTableCellDimension(caretPosition2.getColumn(), caretPosition2.getRow()).getVerticalCharacterStartPosition(caretPosition2.getCharacterIndex());
+				endX = dimensions.getCell(caretPosition2.getColumn(), caretPosition2.getRow()).getVerticalCharacterStartPosition(caretPosition2.getCharacterIndex());
 			}
 			else {
 				endX = dimensions.getTableVerticalLinePosition(dimensions.getColumnCount());

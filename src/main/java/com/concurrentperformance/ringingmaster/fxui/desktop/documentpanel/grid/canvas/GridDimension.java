@@ -70,7 +70,7 @@ public class GridDimension {
 	}
 
 
-	public GridCellDimension getTableCellDimension(int colIndex, int rowIndex) {
+	public GridCellDimension getCell(int colIndex, int rowIndex) {
 		int offsetColIndex = ROW_HEADER_OFFSET + colIndex;
 		checkElementIndex(offsetColIndex, cellDimensions.length);
 		final GridCellDimension[] column = cellDimensions[offsetColIndex];
@@ -89,11 +89,6 @@ public class GridDimension {
 		checkElementIndex(rowIndex, bottomGaps.length);
 		// The +1 is because the horizontal Line positions have a top line that we are not interested in.
 		return getTableHorizontalLinePosition(rowIndex + 1) - bottomGaps[rowIndex];
-	}
-
-	public int getCharacterCountInCell(int columnIndex, int rowIndex) {
-		int characterCount = getTableCellDimension(rowIndex, columnIndex).getCharacterCount();
-		return characterCount;
 	}
 
 	public double getRowHeight(final int rowIndex) {

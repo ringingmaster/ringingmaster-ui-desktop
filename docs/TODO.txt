@@ -1,3 +1,0 @@
-Problems where changes to the properties are not being updated with the parsing highlighting
-
- When adding method that is not valid (bell count) need to prevent it becomming active.

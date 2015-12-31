@@ -1,3 +1,7 @@
+apply plugin: 'application'
+
+mainClassName = 'com.concurrentperformance.ringingmaster.fxui.desktop.RingingMasterDesktopApp'
+
 dependencies {
 
     compile project(':ringingmaster-engine')

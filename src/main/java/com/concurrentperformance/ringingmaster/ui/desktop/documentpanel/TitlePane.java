@@ -21,7 +21,7 @@ import javafx.scene.text.Text;
  */
 public class TitlePane extends VBox {
 
-	public static final String STYLESHEET = "com/concurrentperformance/ringingmaster/fxui/desktop/documentpanel/titlepane.css";
+	public static final String STYLESHEET = "com/concurrentperformance/ringingmaster/ui/desktop/documentpanel/titlepane.css";
 
 	private final TextField titleText = new TextField();
 	private final TextField authorText = new TextField();

@@ -30,7 +30,7 @@ public class RingingMasterDesktopApp extends Application {
 
 
 	private final static Logger log = LoggerFactory.getLogger(RingingMasterDesktopApp.class);
-	public static final String STYLESHEET = "com/concurrentperformance/ringingmaster/fxui/desktop/RingingmasterDesktopApp.css";
+	public static final String STYLESHEET = "com/concurrentperformance/ringingmaster/ui/desktop/RingingmasterDesktopApp.css";
 
 	private ApplicationContext applicationContext;
 

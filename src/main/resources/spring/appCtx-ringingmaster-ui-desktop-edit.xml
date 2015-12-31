@@ -7,11 +7,11 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
 
 
-    <bean id="event.undo" class="com.concurrentperformance.ringingmaster.fxui.desktop.undo.UndoEvent"/>
-    <bean id="event.redo" class="com.concurrentperformance.ringingmaster.fxui.desktop.undo.RedoEvent"/>
+    <bean id="event.undo" class="com.concurrentperformance.ringingmaster.ui.desktop.undo.UndoEvent"/>
+    <bean id="event.redo" class="com.concurrentperformance.ringingmaster.ui.desktop.undo.RedoEvent"/>
 
-    <bean id="event.cut" class="com.concurrentperformance.ringingmaster.fxui.desktop.edit.CutEvent"/>
-    <bean id="event.copy" class="com.concurrentperformance.ringingmaster.fxui.desktop.edit.CopyEvent"/>
-    <bean id="event.paste" class="com.concurrentperformance.ringingmaster.fxui.desktop.edit.PasteEvent"/>
+    <bean id="event.cut" class="com.concurrentperformance.ringingmaster.ui.desktop.edit.CutEvent"/>
+    <bean id="event.copy" class="com.concurrentperformance.ringingmaster.ui.desktop.edit.CopyEvent"/>
+    <bean id="event.paste" class="com.concurrentperformance.ringingmaster.ui.desktop.edit.PasteEvent"/>
 
 </beans>

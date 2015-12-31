@@ -1,6 +1,6 @@
 apply plugin: 'application'
 
-mainClassName = 'com.concurrentperformance.ringingmaster.fxui.desktop.RingingMasterDesktopApp'
+mainClassName = 'com.concurrentperformance.ringingmaster.ui.desktop.RingingMasterDesktopApp'
 
 dependencies {
 

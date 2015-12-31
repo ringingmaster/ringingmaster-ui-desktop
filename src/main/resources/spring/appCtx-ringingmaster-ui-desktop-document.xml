@@ -6,23 +6,23 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd"
        default-autowire="byType">
 
-    <bean id="documentManager" class="com.concurrentperformance.ringingmaster.fxui.desktop.documentmanager.DocumentManager"
+    <bean id="documentManager" class="com.concurrentperformance.ringingmaster.ui.desktop.documentmanager.DocumentManager"
          p:documentWindow-ref="documentWindow"
          init-method="init"/>
 
     <bean id="documentWindow" class="javafx.scene.control.TabPane" autowire="no"/>
 
     <!-- Injected by name -->
-    <bean id="touchDocumentTypeManager" class="com.concurrentperformance.ringingmaster.fxui.desktop.documentmodel.TouchDocumentTypeManager"/>
+    <bean id="touchDocumentTypeManager" class="com.concurrentperformance.ringingmaster.ui.desktop.documentmodel.TouchDocumentTypeManager"/>
 
-    <bean class="com.concurrentperformance.ringingmaster.fxui.desktop.documentmodel.TouchDocument"
+    <bean class="com.concurrentperformance.ringingmaster.ui.desktop.documentmodel.TouchDocument"
           p:proofManager-ref="proofManager"
           scope="prototype"
           autowire="no"/>
 
-    <bean id="event.new" class="com.concurrentperformance.ringingmaster.fxui.desktop.documentmanager.NewDocumentEvent"/>
-    <bean id="event.open" class="com.concurrentperformance.ringingmaster.fxui.desktop.documentmanager.OpenDocumentEvent"/>
-    <bean id="event.save" class="com.concurrentperformance.ringingmaster.fxui.desktop.documentmanager.SaveDocumentEvent"/>
+    <bean id="event.new" class="com.concurrentperformance.ringingmaster.ui.desktop.documentmanager.NewDocumentEvent"/>
+    <bean id="event.open" class="com.concurrentperformance.ringingmaster.ui.desktop.documentmanager.OpenDocumentEvent"/>
+    <bean id="event.save" class="com.concurrentperformance.ringingmaster.ui.desktop.documentmanager.SaveDocumentEvent"/>
 
 
 </beans>

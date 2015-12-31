@@ -26,6 +26,6 @@
 
     <bean id="statusBar.label" class="javafx.scene.control.Label" p:text="TEST"/>
     <bean id="statusBar.expansion" class="javafx.scene.layout.Pane" />
-    <bean id="statusBar.proofState" class="com.concurrentperformance.ringingmaster.fxui.desktop.statusbar.ProofState" />
+    <bean id="statusBar.proofState" class="com.concurrentperformance.ringingmaster.ui.desktop.statusbar.ProofState" />
 
 </beans>

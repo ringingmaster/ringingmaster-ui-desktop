@@ -27,8 +27,8 @@
         </property>
     </bean>
 
-    <bean id="analysisWindow.status" class="com.concurrentperformance.ringingmaster.fxui.desktop.analysis.AnalysisStatusWindow"/>
-    <bean id="analysisWindow.callsmade" class="com.concurrentperformance.ringingmaster.fxui.desktop.analysis.AnalysisCallsMadeWindow"/>
+    <bean id="analysisWindow.status" class="com.concurrentperformance.ringingmaster.ui.desktop.analysis.AnalysisStatusWindow"/>
+    <bean id="analysisWindow.callsmade" class="com.concurrentperformance.ringingmaster.ui.desktop.analysis.AnalysisCallsMadeWindow"/>
 
 
 </beans>

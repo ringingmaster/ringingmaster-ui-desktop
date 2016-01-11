@@ -155,17 +155,21 @@ public class GridDimensionBuilder {
 
 	@VisibleForTesting
 	protected GridCellDimension calculateCell(double vertLinePosition, double horizontalPadding, double[] characterWidths) {
-		double[] characterStarts = new double[characterWidths.length];
+		double[] characterStarts = new double[characterWidths.length + 1];
 		double[] characterMids = new double[characterWidths.length];
 		double[] characterEnds = new double[characterWidths.length];
 
 		double nextStart = vertLinePosition + horizontalPadding;
-		for (int characterIndex=0;characterIndex<characterWidths.length;characterIndex++) {
+		int characterIndex=0;
+		for (;characterIndex<characterWidths.length;characterIndex++) {
 			characterStarts[characterIndex] = nextStart;
 			characterMids[characterIndex] = nextStart + (characterWidths[characterIndex]/2);
 			characterEnds[characterIndex] = nextStart +  characterWidths[characterIndex];
 			nextStart = characterEnds[characterIndex];
 		}
-		return new GridCellDimension(characterStarts, characterMids, characterEnds);
+		// This is to allow the caret to positioned at position n+1 where n is the number of characters.
+		characterStarts[characterIndex] = nextStart;
+
+		return new GridCellDimension(characterWidths.length, characterStarts, characterMids, characterEnds);
 	}
 }

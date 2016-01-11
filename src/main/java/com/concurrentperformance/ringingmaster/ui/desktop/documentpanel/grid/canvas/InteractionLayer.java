@@ -144,7 +144,7 @@ public class InteractionLayer extends Pane implements BlinkTimerListener {
 
 	private void handleMousePressed(MouseEvent e) {
 		//log.info("[{}] mouse pressed", parent.getName());
-		Optional<GridPosition> gridPosition = mouseCoordinatesToGridPosition(e.getX(), e.getY(), Align.GAPS);
+		Optional<GridPosition> gridPosition = mouseCoordinatesToGridPosition(e.getX(), e.getY(), Align.BOUNDARY_MID_CHARACTER);
 		if (gridPosition.isPresent()) {
 			parent.getModel().setCaretPosition(gridPosition.get());
 		}
@@ -156,7 +156,7 @@ public class InteractionLayer extends Pane implements BlinkTimerListener {
 	private void handleMouseReleased(MouseEvent e) {
 		//log.info("Mouse Released" + e);
 		mouseDown = false;
-		Optional<GridPosition> gridPosition = mouseCoordinatesToGridPosition(e.getX(), e.getY(), Align.GAPS);
+		Optional<GridPosition> gridPosition = mouseCoordinatesToGridPosition(e.getX(), e.getY(), Align.BOUNDARY_MID_CHARACTER);
 		if (gridPosition.isPresent()) {
 			parent.getModel().setSelectionEndPosition(gridPosition.get());
 		}
@@ -166,7 +166,7 @@ public class InteractionLayer extends Pane implements BlinkTimerListener {
 	private void handleMouseDragged(MouseEvent e) {
 		//log.info("mouseDragged " + e);
 		if (mouseDown) {
-			Optional<GridPosition> gridPosition = mouseCoordinatesToGridPosition(e.getX(), e.getY(), Align.GAPS);
+			Optional<GridPosition> gridPosition = mouseCoordinatesToGridPosition(e.getX(), e.getY(), Align.BOUNDARY_MID_CHARACTER);
 			if (gridPosition.isPresent()) {
 				parent.getModel().setSelectionEndPosition(gridPosition.get());
 			}
@@ -178,7 +178,7 @@ public class InteractionLayer extends Pane implements BlinkTimerListener {
 		if (tooltip.isShowing()) {
 			return;
 		}
-		Optional<GridPosition> gridPosition = mouseCoordinatesToGridPosition(e.getX(), e.getY(), Align.CHARACTERS);
+		Optional<GridPosition> gridPosition = mouseCoordinatesToGridPosition(e.getX(), e.getY(), Align.BOUNDARY_BETWEEN_CHARACTER);
 		if (!gridPosition.isPresent()) {
 			return;
 		}
@@ -196,8 +196,8 @@ public class InteractionLayer extends Pane implements BlinkTimerListener {
 	}
 
 	private enum Align {
-		CHARACTERS,
-		GAPS
+		BOUNDARY_BETWEEN_CHARACTER,
+		BOUNDARY_MID_CHARACTER
 	}
 
 	public Optional<GridPosition> mouseCoordinatesToGridPosition(final double x, final double y, Align align) {
@@ -252,13 +252,13 @@ public class InteractionLayer extends Pane implements BlinkTimerListener {
 			final GridCellDimension cell = dimensions.getCell(columnIndex, rowIndex);
 			characterIndex = 0;
 
-			if (align == Align.GAPS) {
+			if (align == Align.BOUNDARY_MID_CHARACTER) {
 				while (characterIndex < cell.getCharacterCount() &&
 						x <= cell.getVerticalCharacterMidPosition(characterIndex)) {
 					characterIndex++;
 				}
 			}
-			else if (align == Align.CHARACTERS) {
+			else if (align == Align.BOUNDARY_BETWEEN_CHARACTER) {
 				while (characterIndex < cell.getCharacterCount() &&
 						x <= cell.getVerticalCharacterEndPosition(characterIndex)) {
 					characterIndex++;

@@ -248,19 +248,18 @@ public class InteractionLayer extends Pane implements BlinkTimerListener {
 			}
 
 			// Now calculate the character index.
-			int characterCount = dimensions.getCell(columnIndex, rowIndex).getCharacterCount();
 			final GridCellDimension cell = dimensions.getCell(columnIndex, rowIndex);
 			characterIndex = 0;
 
 			if (align == Align.BOUNDARY_MID_CHARACTER) {
 				while (characterIndex < cell.getCharacterCount() &&
-						x <= cell.getVerticalCharacterMidPosition(characterIndex)) {
+						x >= cell.getVerticalCharacterMidPosition(characterIndex)) {
 					characterIndex++;
 				}
 			}
 			else if (align == Align.BOUNDARY_BETWEEN_CHARACTER) {
 				while (characterIndex < cell.getCharacterCount() &&
-						x <= cell.getVerticalCharacterEndPosition(characterIndex)) {
+						x >= cell.getVerticalCharacterEndPosition(characterIndex)) {
 					characterIndex++;
 				}
 			}

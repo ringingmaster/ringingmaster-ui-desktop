@@ -190,7 +190,7 @@ public class InteractionLayer extends Pane implements BlinkTimerListener {
 				tooltip.setText(tooltipText.get());
 			}
 			else {
-				tooltip.setText("");
+				tooltip.setText(null);
 			}
 		}
 	}

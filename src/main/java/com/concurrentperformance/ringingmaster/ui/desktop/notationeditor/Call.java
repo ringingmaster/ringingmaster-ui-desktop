@@ -13,8 +13,10 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.TextFieldTableCell;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,6 +37,14 @@ public class Call extends SkeletalNotationEditorTabController implements Notatio
 
 	@FXML
 	private TableView<CallModel> callsList;
+
+	@FXML
+	private TableColumn<CallModel, String> callNameColumn;
+	@FXML
+	private TableColumn<CallModel, String> callShorthandColumn;
+	@FXML
+	private TableColumn<CallModel, String> notationColumn;
+
 	@FXML
 	private CheckBox cannedCalls;
 	@FXML
@@ -67,6 +77,10 @@ public class Call extends SkeletalNotationEditorTabController implements Notatio
 		});
 		leadHeadCode.setDisable(true);
 
+		callNameColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+		callShorthandColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+		notationColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+
 	}
 
 	public void useCannedCallsUpdater(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
@@ -80,12 +94,14 @@ public class Call extends SkeletalNotationEditorTabController implements Notatio
 
 		removeCallButton.setDisable(cannedCalls.isSelected() ||
 				callsList.getSelectionModel().selectedItemProperty().get() == null);
-
-		defaultCallButton.setDisable(cannedCalls.isSelected() ||
+		editCallButton.setDisable(cannedCalls.isSelected() ||
 				callsList.getSelectionModel().selectedItemProperty().get() == null);
-		defaultCallButton.setPressedOverride(!cannedCalls.isSelected() &&
-				callsList.getSelectionModel().selectedItemProperty().get() != null &&
-				DEFAULT_CALL_TOKEN.equals(callsList.getSelectionModel().selectedItemProperty().get().getSelected()));
+
+//		defaultCallButton.setDisable(cannedCalls.isSelected() ||
+//				callsList.getSelectionModel().selectedItemProperty().get() == null);
+//		defaultCallButton.setPressedOverride(!cannedCalls.isSelected() &&
+//				callsList.getSelectionModel().selectedItemProperty().get() != null &&
+//				DEFAULT_CALL_TOKEN.equals(callsList.getSelectionModel().selectedItemProperty().get().getSelected()));
 
 	}
 		@Override
@@ -151,13 +167,19 @@ public class Call extends SkeletalNotationEditorTabController implements Notatio
 
 	@FXML
 	private void onEditCall() {
+		//TODO would be great to be able to edit in-place.
 		int selectedIndex = callsList.getSelectionModel().selectedIndexProperty().get();
 		if (selectedIndex == -1) {
 			return;
 		}
 
-		callsList.getItems().remove(selectedIndex);
-		parent.roundTripDialogDataToModelToDialogData();
+		CallModel originalCallModel = callsList.getItems().get(selectedIndex);
+		CallEditorDialog.showDialog(EditMode.EDIT, originalCallModel, getOwner(), callModel -> {
+			parent.roundTripDialogDataToModelToDialogData();
+			return true;
+		});
+
+
 
 	}
 

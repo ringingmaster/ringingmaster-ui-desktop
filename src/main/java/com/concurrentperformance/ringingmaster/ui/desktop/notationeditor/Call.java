@@ -3,10 +3,10 @@ package com.concurrentperformance.ringingmaster.ui.desktop.notationeditor;
 
 import com.concurrentperformance.fxutils.components.PressableButton;
 import com.concurrentperformance.fxutils.dialog.EditMode;
+import com.concurrentperformance.fxutils.table.EditingCell;
 import com.concurrentperformance.ringingmaster.engine.notation.NotationBody;
 import com.concurrentperformance.ringingmaster.engine.notation.NotationCall;
 import com.concurrentperformance.ringingmaster.engine.notation.impl.NotationBuilder;
-import com.concurrentperformance.ringingmaster.engine.notation.impl.NotationBuilderHelper;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -16,7 +16,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.control.cell.TextFieldTableCell;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,7 +35,7 @@ public class Call extends SkeletalNotationEditorTabController implements Notatio
 	public static final String DEFAULT_CALL_TOKEN = "<default>";
 
 	@FXML
-	private TableView<CallModel> callsList;
+	private TableView<CallModel> callsTable;
 
 	@FXML
 	private TableColumn<CallModel, String> callNameColumn;
@@ -51,8 +50,6 @@ public class Call extends SkeletalNotationEditorTabController implements Notatio
 	private Button addCallButton;
 	@FXML
 	private Button removeCallButton;
-	@FXML
-	private Button editCallButton;
 	@FXML
 	private PressableButton defaultCallButton;
 
@@ -71,20 +68,20 @@ public class Call extends SkeletalNotationEditorTabController implements Notatio
 		cannedCalls.selectedProperty().addListener(this::useCannedCallsUpdater);
 		cannedCalls.selectedProperty().addListener(parent::roundTripDialogDataUpdater);
 
-		callsList.setPlaceholder(new Label("No Calls Defined"));
-		callsList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+		callsTable.setPlaceholder(new Label("No Calls Defined"));
+		callsTable.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
 			updateButtonState();
 		});
 		leadHeadCode.setDisable(true);
 
-		callNameColumn.setCellFactory(TextFieldTableCell.forTableColumn());
-		callShorthandColumn.setCellFactory(TextFieldTableCell.forTableColumn());
-		notationColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+		callNameColumn.setCellFactory(p -> new EditingCell());
+		callShorthandColumn.setCellFactory(p -> new EditingCell());
+		notationColumn.setCellFactory(p -> new EditingCell());
 
 	}
 
 	public void useCannedCallsUpdater(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-		callsList.setDisable(newValue);
+		callsTable.setDisable(newValue);
 		addCallButton.setDisable(newValue);
 		updateButtonState();
 	}
@@ -93,23 +90,22 @@ public class Call extends SkeletalNotationEditorTabController implements Notatio
 		addCallButton.setDisable(cannedCalls.isSelected());
 
 		removeCallButton.setDisable(cannedCalls.isSelected() ||
-				callsList.getSelectionModel().selectedItemProperty().get() == null);
-		editCallButton.setDisable(cannedCalls.isSelected() ||
-				callsList.getSelectionModel().selectedItemProperty().get() == null);
+				callsTable.getSelectionModel().selectedItemProperty().get() == null);
 
-//		defaultCallButton.setDisable(cannedCalls.isSelected() ||
-//				callsList.getSelectionModel().selectedItemProperty().get() == null);
-//		defaultCallButton.setPressedOverride(!cannedCalls.isSelected() &&
-//				callsList.getSelectionModel().selectedItemProperty().get() != null &&
-//				DEFAULT_CALL_TOKEN.equals(callsList.getSelectionModel().selectedItemProperty().get().getSelected()));
+		defaultCallButton.setDisable(cannedCalls.isSelected() ||
+				callsTable.getSelectionModel().selectedItemProperty().get() == null);
+		defaultCallButton.setPressedOverride(!cannedCalls.isSelected() &&
+				callsTable.getSelectionModel().selectedItemProperty().get() != null &&
+				DEFAULT_CALL_TOKEN.equals(callsTable.getSelectionModel().selectedItemProperty().get().getSelected()));
 
 	}
-		@Override
+
+	@Override
 	public void buildDialogDataFromNotation(NotationBody notation) {
 		cannedCalls.setSelected(notation.isCannedCalls());
 
-		int selectedIndex = callsList.getSelectionModel().selectedIndexProperty().get();
-		ObservableList<CallModel> items = callsList.getItems();
+		int selectedIndex = callsTable.getSelectionModel().selectedIndexProperty().get();
+		ObservableList<CallModel> items = callsTable.getItems();
 		items.clear();
 		Set<NotationCall> calls = notation.getCalls();
 		NotationCall defaultCall = notation.getDefaultCall();
@@ -121,7 +117,7 @@ public class Call extends SkeletalNotationEditorTabController implements Notatio
 					call.getNotationDisplayString(false),
 					(call == defaultCall)? DEFAULT_CALL_TOKEN :""));
 		}
-		callsList.getSelectionModel().select(selectedIndex);
+		callsTable.getSelectionModel().select(selectedIndex);
 
 		leadHeadCode.setText(notation.getLeadHeadCode());
 	}
@@ -133,7 +129,7 @@ public class Call extends SkeletalNotationEditorTabController implements Notatio
 			notationBuilder.setCannedCalls();
 		}
 		else {
-			for (CallModel call : callsList.getItems()) {
+			for (CallModel call : callsTable.getItems()) {
 				notationBuilder.addCall(call.getCallName(),
 						call.getCallShorthand(),
 						call.getNotation(),
@@ -144,54 +140,39 @@ public class Call extends SkeletalNotationEditorTabController implements Notatio
 
 	@FXML
 	private void onAddCall() {
-		CallEditorDialog.showDialog(EditMode.ADD, null, getOwner(), callModel -> {
-			String validatedNotation = NotationBuilderHelper.validateAsDisplayString(callModel.getNotation(), parent.lastGoodNotation.getNumberOfWorkingBells(), true);
-			callModel.setNotation(validatedNotation);
-			callsList.getItems().add(callModel);
-			parent.roundTripDialogDataToModelToDialogData();
-			return true;
-		});
+		callsTable.getItems().add(0, new CallModel("<CALL>", "<SHORTHAND>", "<NOTATION>", ""));
+
+
+//	TODO remove	CallEditorDialog.showDialog(EditMode.ADD, null, getOwner(), callModel -> {
+//			String validatedNotation = NotationBuilderHelper.validateAsDisplayString(callModel.getNotation(), parent.lastGoodNotation.getNumberOfWorkingBells(), true);
+//			callModel.setNotation(validatedNotation);
+//			callsTable.getItems().add(callModel);
+//			parent.roundTripDialogDataToModelToDialogData();
+//			return true;
+//		});
 	}
 
 	@FXML
 	private void onRemoveCall() {
-		int selectedIndex = callsList.getSelectionModel().selectedIndexProperty().get();
+		int selectedIndex = callsTable.getSelectionModel().selectedIndexProperty().get();
 		if (selectedIndex == -1) {
 			return;
 		}
 
-		callsList.getItems().remove(selectedIndex);
+		callsTable.getItems().remove(selectedIndex);
 		parent.roundTripDialogDataToModelToDialogData();
-
 	}
 
-	@FXML
-	private void onEditCall() {
-		//TODO would be great to be able to edit in-place.
-		int selectedIndex = callsList.getSelectionModel().selectedIndexProperty().get();
-		if (selectedIndex == -1) {
-			return;
-		}
-
-		CallModel originalCallModel = callsList.getItems().get(selectedIndex);
-		CallEditorDialog.showDialog(EditMode.EDIT, originalCallModel, getOwner(), callModel -> {
-			parent.roundTripDialogDataToModelToDialogData();
-			return true;
-		});
-
-
-
-	}
 
 	@FXML
 	private void onDefaultCall() {
-		int selectedIndex = callsList.getSelectionModel().selectedIndexProperty().get();
+		int selectedIndex = callsTable.getSelectionModel().selectedIndexProperty().get();
 		if (selectedIndex == -1) {
 			return;
 		}
 
-		for (int index = 0;index<callsList.getItems().size();index++) {
-			callsList.getItems().get(index).setSelected((index == selectedIndex)?DEFAULT_CALL_TOKEN:"");
+		for (int index = 0; index< callsTable.getItems().size(); index++) {
+			callsTable.getItems().get(index).setSelected((index == selectedIndex)?DEFAULT_CALL_TOKEN:"");
 		}
 		parent.roundTripDialogDataToModelToDialogData();
 	}

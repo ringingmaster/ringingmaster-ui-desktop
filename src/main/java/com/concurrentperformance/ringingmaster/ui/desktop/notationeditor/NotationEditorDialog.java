@@ -48,7 +48,7 @@ public class NotationEditorDialog extends SkeletalDialog<NotationBody> {
 
 	public static void showDialog(EditMode editMode, NotationBody model, Window owner,
 	                              Function<NotationBody, Boolean> onSuccessHandler) {
-		new Launcher<NotationBody>().showDialog(editMode, model, owner, CallEditorDialog.class.getResource(NOTATION_EDITOR_FXML),
+		new Launcher<NotationBody>().showDialog(editMode, model, owner, NotationEditorDialog.class.getResource(NOTATION_EDITOR_FXML),
 				Lists.<String>newArrayList(RingingMasterDesktopApp.STYLESHEET), onSuccessHandler);
 	}
 

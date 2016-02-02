@@ -3,7 +3,7 @@ package com.concurrentperformance.ringingmaster.ui.desktop.notationeditor;
 
 import com.concurrentperformance.fxutils.components.PressableButton;
 import com.concurrentperformance.fxutils.dialog.EditMode;
-import com.concurrentperformance.fxutils.table.EditingCell;
+import com.concurrentperformance.fxutils.table.EnhancedTextFieldTableCell;
 import com.concurrentperformance.ringingmaster.engine.notation.NotationBody;
 import com.concurrentperformance.ringingmaster.engine.notation.NotationCall;
 import com.concurrentperformance.ringingmaster.engine.notation.impl.NotationBuilder;
@@ -74,10 +74,9 @@ public class Call extends SkeletalNotationEditorTabController implements Notatio
 		});
 		leadHeadCode.setDisable(true);
 
-		callNameColumn.setCellFactory(p -> new EditingCell());
-		callShorthandColumn.setCellFactory(p -> new EditingCell());
-		notationColumn.setCellFactory(p -> new EditingCell());
-
+		callNameColumn.setCellFactory(EnhancedTextFieldTableCell.forTableColumn());
+		callShorthandColumn.setCellFactory(EnhancedTextFieldTableCell.forTableColumn());
+		notationColumn.setCellFactory(EnhancedTextFieldTableCell.forTableColumn());
 	}
 
 	public void useCannedCallsUpdater(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
@@ -141,7 +140,6 @@ public class Call extends SkeletalNotationEditorTabController implements Notatio
 	@FXML
 	private void onAddCall() {
 		callsTable.getItems().add(0, new CallModel("<CALL>", "<SHORTHAND>", "<NOTATION>", ""));
-
 
 //	TODO remove	CallEditorDialog.showDialog(EditMode.ADD, null, getOwner(), callModel -> {
 //			String validatedNotation = NotationBuilderHelper.validateAsDisplayString(callModel.getNotation(), parent.lastGoodNotation.getNumberOfWorkingBells(), true);

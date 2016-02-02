@@ -53,7 +53,6 @@ public class NotationEditorDialog extends SkeletalDialog<NotationBody> {
 	}
 
 	protected void initialiseDialog(EditMode editMode, NotationBody notation) {
-
 		try {
 			addEditorTabs();
 			addStatusTabs();

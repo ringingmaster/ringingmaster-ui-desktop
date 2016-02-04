@@ -8,20 +8,26 @@ import com.concurrentperformance.ringingmaster.engine.notation.NotationBody;
 import com.concurrentperformance.ringingmaster.engine.notation.NotationCall;
 import com.concurrentperformance.ringingmaster.engine.notation.impl.NotationBuilder;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.util.Callback;
 import javafx.util.converter.DefaultStringConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.InputStream;
 import java.util.Set;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * TODO Comments
@@ -34,8 +40,6 @@ public class Call extends SkeletalNotationEditorTabController implements Notatio
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-	public static final String DEFAULT_CALL_TOKEN = "<default>";
-
 	@FXML
 	private TableView<CallModel> callsTable;
 
@@ -45,6 +49,8 @@ public class Call extends SkeletalNotationEditorTabController implements Notatio
 	private TableColumn<CallModel, String> callShorthandColumn;
 	@FXML
 	private TableColumn<CallModel, String> notationColumn;
+	@FXML
+	private TableColumn<CallModel, Boolean> defaultColumn;
 
 	@FXML
 	private CheckBox cannedCalls;
@@ -76,9 +82,31 @@ public class Call extends SkeletalNotationEditorTabController implements Notatio
 		});
 		leadHeadCode.setDisable(true);
 
-		callNameColumn.setCellFactory(EnhancedTextFieldTableCell.forTableColumn(new DefaultStringConverter()));
-		callShorthandColumn.setCellFactory(EnhancedTextFieldTableCell.forTableColumn(new DefaultStringConverter()));
-		notationColumn.setCellFactory(EnhancedTextFieldTableCell.forTableColumn(new DefaultStringConverter()));
+		Callback<TableColumn<CallModel, String>, TableCell<CallModel, String>> cellFactory =
+				EnhancedTextFieldTableCell.forTableColumn(
+						(value) -> parent.roundTripDialogDataToModelToDialogData(),
+						new DefaultStringConverter());
+
+		callNameColumn.setCellFactory(cellFactory);
+		callShorthandColumn.setCellFactory(cellFactory);
+		notationColumn.setCellFactory(cellFactory);
+
+		InputStream imageResourceAsStream = SkeletalNotationEditorTabController.class.getResourceAsStream(checkNotNull("/images/flag.png"));
+		Image image = new Image(checkNotNull(imageResourceAsStream));
+
+
+		defaultColumn.setCellFactory(new Callback<TableColumn<CallModel, Boolean>, TableCell<CallModel, Boolean>>() {
+			@Override
+			public TableCell<CallModel, Boolean> call(TableColumn<CallModel, Boolean> param) {
+				return new TableCell<CallModel, Boolean>() {
+					@Override
+					protected void updateItem(Boolean item, boolean empty) {
+//						log.info(item);
+						super.setGraphic((item!=null && item)?new ImageView(image):null);
+					}
+				};
+			}
+		});
 	}
 
 	public void useCannedCallsUpdater(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
@@ -97,7 +125,7 @@ public class Call extends SkeletalNotationEditorTabController implements Notatio
 				callsTable.getSelectionModel().selectedItemProperty().get() == null);
 		defaultCallButton.setPressedOverride(!cannedCalls.isSelected() &&
 				callsTable.getSelectionModel().selectedItemProperty().get() != null &&
-				DEFAULT_CALL_TOKEN.equals(callsTable.getSelectionModel().selectedItemProperty().get().getSelected()));
+				callsTable.getSelectionModel().selectedItemProperty().get().getDefaultCall());
 
 	}
 
@@ -116,7 +144,7 @@ public class Call extends SkeletalNotationEditorTabController implements Notatio
 					call.getName(),
 					call.getNameShorthand(),
 					call.getNotationDisplayString(false),
-					(call == defaultCall)? DEFAULT_CALL_TOKEN :""));
+					(call == defaultCall)));
 		}
 		callsTable.getSelectionModel().select(selectedIndex);
 
@@ -134,22 +162,14 @@ public class Call extends SkeletalNotationEditorTabController implements Notatio
 				notationBuilder.addCall(call.getCallName(),
 						call.getCallShorthand(),
 						call.getNotation(),
-						(DEFAULT_CALL_TOKEN.equals(call.getSelected())));
+						call.getDefaultCall());
 			}
 		}
 	}
 
 	@FXML
 	private void onAddCall() {
-		callsTable.getItems().add(0, new CallModel("<CALL>", "<SHORTHAND>", "<NOTATION>", ""));
-
-//	TODO remove	CallEditorDialog.showDialog(EditMode.ADD, null, getOwner(), callModel -> {
-//			String validatedNotation = NotationBuilderHelper.validateAsDisplayString(callModel.getNotation(), parent.lastGoodNotation.getNumberOfWorkingBells(), true);
-//			callModel.setNotation(validatedNotation);
-//			callsTable.getItems().add(callModel);
-//			parent.roundTripDialogDataToModelToDialogData();
-//			return true;
-//		});
+		callsTable.getItems().add(0, new CallModel("<CALL>", "<SHORTHAND>", "<NOTATION>", Boolean.FALSE));
 	}
 
 	@FXML
@@ -172,7 +192,7 @@ public class Call extends SkeletalNotationEditorTabController implements Notatio
 		}
 
 		for (int index = 0; index< callsTable.getItems().size(); index++) {
-			callsTable.getItems().get(index).setSelected((index == selectedIndex)?DEFAULT_CALL_TOKEN:"");
+			callsTable.getItems().get(index).setDefaultCall((index == selectedIndex));
 		}
 		parent.roundTripDialogDataToModelToDialogData();
 	}

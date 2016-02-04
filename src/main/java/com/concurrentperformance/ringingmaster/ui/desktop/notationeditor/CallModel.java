@@ -1,5 +1,7 @@
 package com.concurrentperformance.ringingmaster.ui.desktop.notationeditor;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -13,11 +15,11 @@ public class CallModel {
 	public CallModel() {
 	}
 
-	public CallModel(String callName,String callShorthand, String notation, String selected) {
+	public CallModel(String callName,String callShorthand, String notation, Boolean defaultCall) {
 		setCallName(callName);
 		setCallShorthand(callShorthand);
 		setNotation(notation);
-		setSelected(selected);
+		setDefaultCall(defaultCall);
 	}
 
 	private StringProperty callName = new SimpleStringProperty(this, "callName");
@@ -35,11 +37,11 @@ public class CallModel {
 	public String getNotation() { return notation.get(); }
 	public StringProperty notationProperty() {return notation;}
 
-	private StringProperty selected = new SimpleStringProperty(this, "selected");
-	public void setSelected(String value) { selected.set(value); }
-	public String getSelected() { return selected.get(); }
-	public StringProperty selectedProperty() {
-		return selected;
+	private BooleanProperty defaultCall = new SimpleBooleanProperty(this, "defaultCall");
+	public void setDefaultCall(Boolean value) { defaultCall.set(value); }
+	public Boolean getDefaultCall() { return defaultCall.get(); }
+	public BooleanProperty defaultCallProperty() {
+		return defaultCall;
 	}
 
 	@Override
@@ -48,7 +50,7 @@ public class CallModel {
 				"callName=" + getCallName() +
 				", callShorthand=" + getCallShorthand() +
 				", notation=" + getNotation() +
-				", selected=" + getSelected() +
+				", defaultCall=" + getDefaultCall() +
 				'}';
 	}
 }

@@ -82,8 +82,8 @@
                <cellValueFactory><PropertyValueFactory property="notation" />
                </cellValueFactory>
             </TableColumn>
-            <TableColumn prefWidth="130.0" text="Default">
-               <cellValueFactory><PropertyValueFactory property="selected" />
+            <TableColumn fx:id="defaultColumn" prefWidth="130.0" text="Default Call">
+               <cellValueFactory><PropertyValueFactory property="defaultCall" />
                </cellValueFactory>
             </TableColumn>
          </columns>

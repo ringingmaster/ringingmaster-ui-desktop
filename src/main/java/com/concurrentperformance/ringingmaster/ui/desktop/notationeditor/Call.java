@@ -8,6 +8,7 @@ import com.concurrentperformance.ringingmaster.engine.notation.NotationBody;
 import com.concurrentperformance.ringingmaster.engine.notation.NotationCall;
 import com.concurrentperformance.ringingmaster.engine.notation.impl.NotationBuilder;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -16,6 +17,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.util.converter.DefaultStringConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -74,9 +76,9 @@ public class Call extends SkeletalNotationEditorTabController implements Notatio
 		});
 		leadHeadCode.setDisable(true);
 
-		callNameColumn.setCellFactory(EnhancedTextFieldTableCell.forTableColumn());
-		callShorthandColumn.setCellFactory(EnhancedTextFieldTableCell.forTableColumn());
-		notationColumn.setCellFactory(EnhancedTextFieldTableCell.forTableColumn());
+		callNameColumn.setCellFactory(EnhancedTextFieldTableCell.forTableColumn(new DefaultStringConverter()));
+		callShorthandColumn.setCellFactory(EnhancedTextFieldTableCell.forTableColumn(new DefaultStringConverter()));
+		notationColumn.setCellFactory(EnhancedTextFieldTableCell.forTableColumn(new DefaultStringConverter()));
 	}
 
 	public void useCannedCallsUpdater(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {

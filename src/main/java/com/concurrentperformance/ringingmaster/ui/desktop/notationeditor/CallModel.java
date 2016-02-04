@@ -42,4 +42,13 @@ public class CallModel {
 		return selected;
 	}
 
+	@Override
+	public String toString() {
+		return "CallModel{" +
+				"callName=" + getCallName() +
+				", callShorthand=" + getCallShorthand() +
+				", notation=" + getNotation() +
+				", selected=" + getSelected() +
+				'}';
+	}
 }

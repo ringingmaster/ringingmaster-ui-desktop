@@ -38,159 +38,158 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 public class Call extends SkeletalNotationEditorTabController implements NotationEditorTabController {
 
-	private final Logger log = LoggerFactory.getLogger(this.getClass());
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-	@FXML
-	private TableView<CallModel> callsTable;
+    @FXML
+    private TableView<CallModel> callsTable;
 
-	@FXML
-	private TableColumn<CallModel, String> callNameColumn;
-	@FXML
-	private TableColumn<CallModel, String> callShorthandColumn;
-	@FXML
-	private TableColumn<CallModel, String> notationColumn;
-	@FXML
-	private TableColumn<CallModel, Boolean> defaultColumn;
+    @FXML
+    private TableColumn<CallModel, String> callNameColumn;
+    @FXML
+    private TableColumn<CallModel, String> callShorthandColumn;
+    @FXML
+    private TableColumn<CallModel, String> notationColumn;
+    @FXML
+    private TableColumn<CallModel, Boolean> defaultColumn;
 
-	@FXML
-	private CheckBox cannedCalls;
-	@FXML
-	private Button addCallButton;
-	@FXML
-	private Button removeCallButton;
-	@FXML
-	private PressableButton defaultCallButton;
+    @FXML
+    private CheckBox cannedCalls;
+    @FXML
+    private Button addCallButton;
+    @FXML
+    private Button removeCallButton;
+    @FXML
+    private PressableButton defaultCallButton;
 
-	@FXML
-	private TextField leadHeadCode;
+    @FXML
+    private TextField leadHeadCode;
 
-	@Override
-	public String getTabName() {
-		return "Calls";
-	}
+    @Override
+    public String getTabName() {
+        return "Calls";
+    }
 
-	@Override
-	public void init(NotationEditorDialog parent, EditMode editMode) {
-		super.init(parent, editMode);
+    @Override
+    public void init(NotationEditorDialog parent, EditMode editMode) {
+        super.init(parent, editMode);
 
-		cannedCalls.selectedProperty().addListener(this::useCannedCallsUpdater);
-		cannedCalls.selectedProperty().addListener(parent::roundTripDialogDataUpdater);
+        cannedCalls.selectedProperty().addListener(this::useCannedCallsUpdater);
+        cannedCalls.selectedProperty().addListener(parent::roundTripDialogDataUpdater);
 
-		callsTable.setPlaceholder(new Label("No Calls Defined"));
-		callsTable.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-			updateButtonState();
-		});
-		leadHeadCode.setDisable(true);
+        callsTable.setPlaceholder(new Label("No Calls Defined"));
+        callsTable.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            updateButtonState();
+        });
+        leadHeadCode.setDisable(true);
 
-		Callback<TableColumn<CallModel, String>, TableCell<CallModel, String>> cellFactory =
-				EnhancedTextFieldTableCell.forTableColumn(
-						(value) -> parent.roundTripDialogDataToModelToDialogData(),
-						new DefaultStringConverter());
+        Callback<TableColumn<CallModel, String>, TableCell<CallModel, String>> editableCellFactory =
+                EnhancedTextFieldTableCell.forTableColumn(
+                        (value) -> parent.roundTripDialogDataToModelToDialogData(),
+                        new DefaultStringConverter());
 
-		callNameColumn.setCellFactory(cellFactory);
-		callShorthandColumn.setCellFactory(cellFactory);
-		notationColumn.setCellFactory(cellFactory);
+        callNameColumn.setCellFactory(editableCellFactory);
+        callShorthandColumn.setCellFactory(editableCellFactory);
+        notationColumn.setCellFactory(editableCellFactory);
 
-		Image flagImage = new Image(checkNotNull(SkeletalNotationEditorTabController.class.getResourceAsStream(checkNotNull("/images/flag.png"))));
+        Image flagImage = new Image(checkNotNull(SkeletalNotationEditorTabController.class.getResourceAsStream(checkNotNull("/images/flag.png"))));
 
-		defaultColumn.setCellFactory(new Callback<TableColumn<CallModel, Boolean>, TableCell<CallModel, Boolean>>() {
-			@Override
-			public TableCell<CallModel, Boolean> call(TableColumn<CallModel, Boolean> param) {
-				return new TableCell<CallModel, Boolean>() {
-					@Override
-					protected void updateItem(Boolean item, boolean empty) {
-						super.setGraphic((item!=null && item)?new StackPane(new ImageView(flagImage)):null);
-					}
-				};
-			}
-		});
-	}
+        defaultColumn.setCellFactory(new Callback<TableColumn<CallModel, Boolean>, TableCell<CallModel, Boolean>>() {
+            @Override
+            public TableCell<CallModel, Boolean> call(TableColumn<CallModel, Boolean> param) {
+                return new TableCell<CallModel, Boolean>() {
+                    @Override
+                    protected void updateItem(Boolean item, boolean empty) {
+                        super.setGraphic((item != null && item) ? new StackPane(new ImageView(flagImage)) : null);
+                    }
+                };
+            }
+        });
+    }
 
-	public void useCannedCallsUpdater(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-		callsTable.setDisable(newValue);
-		addCallButton.setDisable(newValue);
-		updateButtonState();
-	}
+    public void useCannedCallsUpdater(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+        callsTable.setDisable(newValue);
+        addCallButton.setDisable(newValue);
+        updateButtonState();
+    }
 
-	private void updateButtonState() {
-		addCallButton.setDisable(cannedCalls.isSelected());
+    private void updateButtonState() {
+        addCallButton.setDisable(cannedCalls.isSelected());
 
-		removeCallButton.setDisable(cannedCalls.isSelected() ||
-				callsTable.getSelectionModel().selectedItemProperty().get() == null);
+        removeCallButton.setDisable(cannedCalls.isSelected() ||
+                callsTable.getSelectionModel().selectedItemProperty().get() == null);
 
-		defaultCallButton.setDisable(cannedCalls.isSelected() ||
-				callsTable.getSelectionModel().selectedItemProperty().get() == null);
-		defaultCallButton.setPressedOverride(!cannedCalls.isSelected() &&
-				callsTable.getSelectionModel().selectedItemProperty().get() != null &&
-				callsTable.getSelectionModel().selectedItemProperty().get().getDefaultCall());
+        defaultCallButton.setDisable(cannedCalls.isSelected() ||
+                callsTable.getSelectionModel().selectedItemProperty().get() == null);
+        defaultCallButton.setPressedOverride(!cannedCalls.isSelected() &&
+                callsTable.getSelectionModel().selectedItemProperty().get() != null &&
+                callsTable.getSelectionModel().selectedItemProperty().get().getDefaultCall());
 
-	}
+    }
 
-	@Override
-	public void buildDialogDataFromNotation(NotationBody notation) {
-		cannedCalls.setSelected(notation.isCannedCalls());
+    @Override
+    public void buildDialogDataFromNotation(NotationBody notation) {
+        cannedCalls.setSelected(notation.isCannedCalls());
 
-		int selectedIndex = callsTable.getSelectionModel().selectedIndexProperty().get();
-		ObservableList<CallModel> items = callsTable.getItems();
-		items.clear();
-		Set<NotationCall> calls = notation.getCalls();
-		NotationCall defaultCall = notation.getDefaultCall();
+        int selectedIndex = callsTable.getSelectionModel().selectedIndexProperty().get();
+        ObservableList<CallModel> items = callsTable.getItems();
+        items.clear();
+        Set<NotationCall> calls = notation.getCalls();
+        NotationCall defaultCall = notation.getDefaultCall();
 
-		for (NotationCall call : calls) {
-			items.add(new CallModel(
-					call.getName(),
-					call.getNameShorthand(),
-					call.getNotationDisplayString(false),
-					(call == defaultCall)));
-		}
-		callsTable.getSelectionModel().select(selectedIndex);
+        for (NotationCall call : calls) {
+            items.add(new CallModel(
+                    call.getName(),
+                    call.getNameShorthand(),
+                    call.getNotationDisplayString(false),
+                    (call == defaultCall)));
+        }
+        callsTable.getSelectionModel().select(selectedIndex);
 
-		leadHeadCode.setText(notation.getLeadHeadCode());
-	}
+        leadHeadCode.setText(notation.getLeadHeadCode());
+    }
 
-	@Override
-	public void buildNotationFromDialogData(NotationBuilder notationBuilder) {
+    @Override
+    public void buildNotationFromDialogData(NotationBuilder notationBuilder) {
 
-		if (cannedCalls.isSelected()) {
-			notationBuilder.setCannedCalls();
-		}
-		else {
-			for (CallModel call : callsTable.getItems()) {
-				notationBuilder.addCall(call.getCallName(),
-						call.getCallShorthand(),
-						call.getNotation(),
-						call.getDefaultCall());
-			}
-		}
-	}
+        if (cannedCalls.isSelected()) {
+            notationBuilder.setCannedCalls();
+        } else {
+            for (CallModel call : callsTable.getItems()) {
+                notationBuilder.addCall(call.getCallName(),
+                        call.getCallShorthand(),
+                        call.getNotation(),
+                        call.getDefaultCall());
+            }
+        }
+    }
 
-	@FXML
-	private void onAddCall() {
-		callsTable.getItems().add(0, new CallModel("<CALL>", "<SHORTHAND>", "<NOTATION>", Boolean.FALSE));
-	}
+    @FXML
+    private void onAddCall() {
+        callsTable.getItems().add(0, new CallModel("<CALL>", "<SHORTHAND>", "<NOTATION>", Boolean.FALSE));
+    }
 
-	@FXML
-	private void onRemoveCall() {
-		int selectedIndex = callsTable.getSelectionModel().selectedIndexProperty().get();
-		if (selectedIndex == -1) {
-			return;
-		}
+    @FXML
+    private void onRemoveCall() {
+        int selectedIndex = callsTable.getSelectionModel().selectedIndexProperty().get();
+        if (selectedIndex == -1) {
+            return;
+        }
 
-		callsTable.getItems().remove(selectedIndex);
-		parent.roundTripDialogDataToModelToDialogData();
-	}
+        callsTable.getItems().remove(selectedIndex);
+        parent.roundTripDialogDataToModelToDialogData();
+    }
 
 
-	@FXML
-	private void onDefaultCall() {
-		int selectedIndex = callsTable.getSelectionModel().selectedIndexProperty().get();
-		if (selectedIndex == -1) {
-			return;
-		}
+    @FXML
+    private void onDefaultCall() {
+        int selectedIndex = callsTable.getSelectionModel().selectedIndexProperty().get();
+        if (selectedIndex == -1) {
+            return;
+        }
 
-		for (int index = 0; index< callsTable.getItems().size(); index++) {
-			callsTable.getItems().get(index).setDefaultCall((index == selectedIndex));
-		}
-		parent.roundTripDialogDataToModelToDialogData();
-	}
+        for (int index = 0; index < callsTable.getItems().size(); index++) {
+            callsTable.getItems().get(index).setDefaultCall((index == selectedIndex));
+        }
+        parent.roundTripDialogDataToModelToDialogData();
+    }
 }

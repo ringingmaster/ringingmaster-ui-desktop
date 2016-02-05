@@ -44,7 +44,7 @@
          </graphic>
       </Button>
 
-      <Button fx:id="removeCallButton" mnemonicParsing="false" onAction="#onRemoveCall" text="" GridPane.columnIndex="3">
+      <Button fx:id="removeCallButton" disable="true" mnemonicParsing="false" onAction="#onRemoveCall" text="" GridPane.columnIndex="3">
          <graphic>
             <ImageView>
                <image>
@@ -54,7 +54,7 @@
          </graphic>
       </Button>
 
-      <PressableButton fx:id="defaultCallButton" mnemonicParsing="false" onAction="#onDefaultCall" text="" GridPane.columnIndex="5">
+      <PressableButton fx:id="defaultCallButton" disable="true" mnemonicParsing="false" onAction="#onDefaultCall" text="" GridPane.columnIndex="5">
          <graphic>
             <ImageView>
                <image>

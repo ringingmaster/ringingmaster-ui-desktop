@@ -19,12 +19,12 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.StackPane;
 import javafx.util.Callback;
 import javafx.util.converter.DefaultStringConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.InputStream;
 import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -91,9 +91,7 @@ public class Call extends SkeletalNotationEditorTabController implements Notatio
 		callShorthandColumn.setCellFactory(cellFactory);
 		notationColumn.setCellFactory(cellFactory);
 
-		InputStream imageResourceAsStream = SkeletalNotationEditorTabController.class.getResourceAsStream(checkNotNull("/images/flag.png"));
-		Image image = new Image(checkNotNull(imageResourceAsStream));
-
+		Image flagImage = new Image(checkNotNull(SkeletalNotationEditorTabController.class.getResourceAsStream(checkNotNull("/images/flag.png"))));
 
 		defaultColumn.setCellFactory(new Callback<TableColumn<CallModel, Boolean>, TableCell<CallModel, Boolean>>() {
 			@Override
@@ -101,8 +99,7 @@ public class Call extends SkeletalNotationEditorTabController implements Notatio
 				return new TableCell<CallModel, Boolean>() {
 					@Override
 					protected void updateItem(Boolean item, boolean empty) {
-//						log.info(item);
-						super.setGraphic((item!=null && item)?new ImageView(image):null);
+						super.setGraphic((item!=null && item)?new StackPane(new ImageView(flagImage)):null);
 					}
 				};
 			}

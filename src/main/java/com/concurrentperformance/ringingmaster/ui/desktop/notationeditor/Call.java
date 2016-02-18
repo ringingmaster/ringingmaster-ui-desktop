@@ -3,12 +3,17 @@ package com.concurrentperformance.ringingmaster.ui.desktop.notationeditor;
 
 import com.concurrentperformance.fxutils.components.PressableButton;
 import com.concurrentperformance.fxutils.dialog.EditMode;
+import com.concurrentperformance.fxutils.dialog.SceneLauncher;
 import com.concurrentperformance.fxutils.table.EnhancedTextFieldTableCell;
 import com.concurrentperformance.ringingmaster.engine.notation.NotationBody;
 import com.concurrentperformance.ringingmaster.engine.notation.NotationCall;
 import com.concurrentperformance.ringingmaster.engine.notation.impl.NotationBuilder;
+import com.concurrentperformance.ringingmaster.ui.desktop.RingingMasterDesktopApp;
+import com.concurrentperformance.ringingmaster.ui.desktop.leadheadtable.LeadHeadTablePane;
+import com.google.common.collect.Lists;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -191,5 +196,10 @@ public class Call extends SkeletalNotationEditorTabController implements Notatio
             callsTable.getItems().get(index).setDefaultCall((index == selectedIndex));
         }
         parent.roundTripDialogDataToModelToDialogData();
+    }
+
+    public void onShowLeadHeadTable(ActionEvent actionEvent) {
+        new SceneLauncher(new LeadHeadTablePane(), Lists.<String>newArrayList(RingingMasterDesktopApp.STYLESHEET), parent.getStage(), "Lead Head Table");
+
     }
 }

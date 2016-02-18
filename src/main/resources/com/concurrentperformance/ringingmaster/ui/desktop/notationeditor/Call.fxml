@@ -24,8 +24,8 @@
       <ColumnConstraints />
       <ColumnConstraints />
       <ColumnConstraints />
-      <ColumnConstraints />
       <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" />
+      <ColumnConstraints />
    </columnConstraints>
    <rowConstraints>
       <RowConstraints maxHeight="69.0" minHeight="37.0" prefHeight="37.0" />
@@ -54,7 +54,7 @@
          </graphic>
       </Button>
 
-      <PressableButton fx:id="defaultCallButton" disable="true" mnemonicParsing="false" onAction="#onDefaultCall" text="" GridPane.columnIndex="5">
+      <PressableButton fx:id="defaultCallButton" disable="true" mnemonicParsing="false" onAction="#onDefaultCall" text="" GridPane.columnIndex="4">
          <graphic>
             <ImageView>
                <image>
@@ -64,9 +64,20 @@
          </graphic>
       </PressableButton>
 
-      <Separator orientation="VERTICAL" GridPane.columnIndex="6" />
-      <Label text="lh:" GridPane.columnIndex="7" />
-      <TextField fx:id="leadHeadCode" editable="false" GridPane.columnIndex="8" />
+      <Separator orientation="VERTICAL" GridPane.columnIndex="5" />
+      <Label text="lh:" GridPane.columnIndex="6" />
+      <TextField fx:id="leadHeadCode" editable="false" GridPane.columnIndex="7" />
+
+      <Button disable="false" mnemonicParsing="false" onAction="#onShowLeadHeadTable" text="" GridPane.columnIndex="8">
+         <graphic>
+            <ImageView>
+               <image>
+                  <Image url="/images/leadhead.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </Button>
+
 
       <TableView fx:id="callsTable" editable="true" prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="2147483647" GridPane.rowIndex="1">
          <columns>

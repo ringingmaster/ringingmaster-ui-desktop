@@ -16,9 +16,9 @@ dependencies {
     compile 'org.springframework:spring-expression:4.2.2.RELEASE'
 
     // Logging
-    compile 'org.apache.logging.log4j:log4j-core:2.4.1'
-    compile 'org.apache.logging.log4j:log4j-api:2.4.1'
-    compile 'org.apache.logging.log4j:log4j-slf4j-impl:2.4.1'
-    compile 'commons-logging:commons-logging:1.2' //Needed for Spring
-    compile 'org.apache.logging.log4j:log4j-jcl:2.4.1' //Needed for Spring
+    runtime 'org.apache.logging.log4j:log4j-core:2.4.1'
+    runtime 'org.apache.logging.log4j:log4j-api:2.4.1'
+    runtime 'org.apache.logging.log4j:log4j-slf4j-impl:2.4.1'
+    runtime 'commons-logging:commons-logging:1.2' //Needed for Spring
+    runtime 'org.apache.logging.log4j:log4j-jcl:2.4.1' //Needed for Spring
 }

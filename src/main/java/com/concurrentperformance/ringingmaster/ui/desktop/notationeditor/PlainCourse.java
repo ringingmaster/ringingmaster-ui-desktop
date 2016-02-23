@@ -5,6 +5,7 @@ import com.concurrentperformance.fxutils.dialog.EditMode;
 import com.concurrentperformance.ringingmaster.engine.NumberOfBells;
 import com.concurrentperformance.ringingmaster.engine.notation.NotationBody;
 import com.concurrentperformance.ringingmaster.engine.notation.impl.NotationBuilder;
+import com.google.common.collect.Lists;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -15,8 +16,14 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
+import javafx.util.Callback;
+import org.controlsfx.control.textfield.AutoCompletionBinding;
+import org.controlsfx.control.textfield.TextFields;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Collection;
+
 
 /**
  * TODO Comments
@@ -57,6 +64,15 @@ public class PlainCourse extends SkeletalNotationEditorTabController implements 
 	@Override
 	public void init(NotationEditorDialog parent, EditMode editMode) {
 		super.init(parent, editMode);
+
+		TextFields.bindAutoCompletion(name, (Callback<AutoCompletionBinding.ISuggestionRequest, Collection<Object>>)
+				suggestion -> {
+            log.info("Getting suggestions for [{}]", suggestion.getUserText() );
+					if (suggestion.getUserText().contains("S"))
+            			return Lists.newArrayList("STephen");
+					else
+						return Lists.newArrayList("Judith", "William");
+        });
 
 		name.setOnKeyReleased(this::keyPressUpdater);
 

@@ -9,6 +9,9 @@
 
     <import resource="appCtx-ringingmaster-ui-desktop-*.xml"/>
 
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"
+        p:location="ringingmaster-desktop.properties"/>
+
     <bean id="mainWindow" class="com.concurrentperformance.ringingmaster.ui.desktop.MainParentWindow"
           p:menuBar-ref="menuBar"
           p:toolBar-ref="toolBar"

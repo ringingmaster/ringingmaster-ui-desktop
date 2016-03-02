@@ -40,5 +40,4 @@ public class NotationEditorDialogBuilder {
 	public void setGlobalStage(Stage globalStage) {
 		this.globalStage = globalStage;
 	}
-
 }

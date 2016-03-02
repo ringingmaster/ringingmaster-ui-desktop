@@ -37,7 +37,7 @@ public class ProofManager extends ConcurrentListenable<ProofManagerListener> imp
 	private final Executor updateExecutor;
 	private final AtomicLong nextProofId = new AtomicLong(0);
 
-	public ProofManager() {
+	public ProofManager() { // TODO should we set a low thread priority?
 		proofExecutor =  new ThreadPoolExecutor(5, 5,
 						0L, TimeUnit.MILLISECONDS,
 						new LinkedBlockingQueue<>(),

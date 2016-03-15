@@ -5,6 +5,7 @@ import com.concurrentperformance.fxutils.dialog.SkeletalDialog;
 import com.concurrentperformance.ringingmaster.engine.notation.NotationBody;
 import com.concurrentperformance.ringingmaster.engine.notation.impl.NotationBuilder;
 import com.concurrentperformance.ringingmaster.ui.desktop.RingingMasterDesktopApp;
+import com.concurrentperformance.ringingmaster.ui.desktop.notationsearch.NotationLibraryManager;
 import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
 import javafx.beans.value.ObservableValue;
@@ -23,6 +24,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * TODO Comments
  *
@@ -30,128 +33,140 @@ import java.util.function.Function;
  */
 public class NotationEditorDialog extends SkeletalDialog<NotationBody> {
 
-	public static final String NOTATION_EDITOR_FXML = "NotationEditorDialog.fxml";
+    public static final String NOTATION_EDITOR_FXML = "NotationEditorDialog.fxml";
 
-	private final Logger log = LoggerFactory.getLogger(this.getClass());
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-	protected NotationBody lastGoodNotation;
+    private NotationLibraryManager notationLibraryManager;
 
-	private List<NotationEditorTabController> tabControllers = new ArrayList<>();
-	private Status statusController;
+    protected NotationBody lastGoodNotation;
+    private List<NotationEditorTabController> tabControllers = new ArrayList<>();
+    private Status statusController;
 
-	@FXML
-	private TabPane editorTabs;
-	@FXML
-	private TabPane statusTabs;
-	@FXML
-	protected Button okButton;
+    @FXML
+    private TabPane editorTabs;
+    @FXML
+    private TabPane statusTabs;
+    @FXML
+    protected Button okButton;
 
-	public static void showDialog(EditMode editMode, NotationBody model, Window owner,
-	                              Function<NotationBody, Boolean> onSuccessHandler) {
-		new Launcher<NotationBody>().showDialog(editMode, model, owner, NotationEditorDialog.class.getResource(NOTATION_EDITOR_FXML),
-				Lists.<String>newArrayList(RingingMasterDesktopApp.STYLESHEET), onSuccessHandler);
-	}
+    public static void showDialog(EditMode editMode, NotationBody model, Window owner,
+                                  Function<NotationBody, Boolean> onSuccessHandler,
+                                  NotationLibraryManager notationLibraryManager) {
 
-	protected void initialiseDialog(EditMode editMode, NotationBody notation) {
-		try {
-			addEditorTabs();
-			addStatusTabs();
+        NotationEditorDialog notationEditorDialog = new DialogBuilder<NotationBody, NotationEditorDialog>().buildDialog(editMode, model, owner, NotationEditorDialog.class.getResource(NOTATION_EDITOR_FXML),
+                Lists.<String>newArrayList(RingingMasterDesktopApp.STYLESHEET), onSuccessHandler);
+        notationEditorDialog.setNotationLibraryManager(checkNotNull(notationLibraryManager));
+        notationEditorDialog.showAndWait();
+    }
 
-			for (NotationEditorTabController tabController : tabControllers) {
-				tabController.init(this, editMode);
-			}
-		} catch (IOException e) {
-			log.error("Error building dialog structure for [" + notation + "]", e);
-		}
-	}
+    protected void initialiseDialog(EditMode editMode, NotationBody notation) {
+        try {
+            addEditorTabs();
+            addStatusTabs();
 
-	private void addEditorTabs() throws IOException {
-		addEditorTab("PlainCourse.fxml");
-		addEditorTab("Call.fxml");
-		addEditorTab("CallPointRow.fxml");
-		addEditorTab("CallPointMethod.fxml");
-		addEditorTab("CallPointAggregate.fxml");
-		addEditorTab("SplicePoint.fxml");
-		addEditorTab("LeadLinePoint.fxml");
-		addEditorTab("CourseHeadPoint.fxml");
-	}
+            for (NotationEditorTabController tabController : tabControllers) {
+                tabController.init(this, editMode);
+            }
+        } catch (IOException e) {
+            log.error("Error building dialog structure for [" + notation + "]", e);
+        }
+    }
 
-	private void addEditorTab(String fxmlFile) throws IOException {
-		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(fxmlFile));
-		Node content = fxmlLoader.load();
-		NotationEditorTabController controller = fxmlLoader.getController();
-		tabControllers.add(controller);
+    private void addEditorTabs() throws IOException {
+        addEditorTab("PlainCourse.fxml");
+        addEditorTab("Call.fxml");
+        addEditorTab("CallPointRow.fxml");
+        addEditorTab("CallPointMethod.fxml");
+        addEditorTab("CallPointAggregate.fxml");
+        addEditorTab("SplicePoint.fxml");
+        addEditorTab("LeadLinePoint.fxml");
+        addEditorTab("CourseHeadPoint.fxml");
+    }
 
-		Tab tab = new Tab();
-		tab.setText(controller.getTabName());
-		tab.setContent(content);
+    private void addEditorTab(String fxmlFile) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(fxmlFile));
+        Node content = fxmlLoader.load();
+        NotationEditorTabController controller = fxmlLoader.getController();
+        tabControllers.add(controller);
 
-		editorTabs.getTabs().add(tab);
-	}
+        Tab tab = new Tab();
+        tab.setText(controller.getTabName());
+        tab.setContent(content);
 
-	private void addStatusTabs() throws IOException {
-		//Status
-		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Status.fxml"));
-		Node content = fxmlLoader.load();
-		statusController = fxmlLoader.getController();
-		statusController.init(this);
+        editorTabs.getTabs().add(tab);
+    }
 
-		Tab statusTab = new Tab();
-		statusTab.setText("Status");
-		statusTab.setContent(content);
+    private void addStatusTabs() throws IOException {
+        //Status
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Status.fxml"));
+        Node content = fxmlLoader.load();
+        statusController = fxmlLoader.getController();
+        statusController.init(this);
 
-		statusTabs.getTabs().add(statusTab);
+        Tab statusTab = new Tab();
+        statusTab.setText("Status");
+        statusTab.setContent(content);
 
-		//Diagram
-		Tab diagramTab = new Tab();
-		diagramTab.setText("Diagram - TODO");
-		//diagramTab.setContent(TODO);
+        statusTabs.getTabs().add(statusTab);
 
-		statusTabs.getTabs().add(diagramTab);
-	}
+        //Diagram
+        Tab diagramTab = new Tab();
+        diagramTab.setText("Diagram - TODO");
+        //diagramTab.setContent(TODO);
+
+        statusTabs.getTabs().add(diagramTab);
+    }
 
 
-	public void roundTripDialogDataOnFocusLossUpdater(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-		if (Objects.equal(Boolean.FALSE, newValue)) {
-			roundTripDialogDataToModelToDialogData();
-		}
-	}
+    public void roundTripDialogDataOnFocusLossUpdater(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+        if (Objects.equal(Boolean.FALSE, newValue)) {
+            roundTripDialogDataToModelToDialogData();
+        }
+    }
 
-	public void roundTripDialogDataUpdater(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-		roundTripDialogDataToModelToDialogData();
-	}
+    public void roundTripDialogDataUpdater(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+        roundTripDialogDataToModelToDialogData();
+    }
 
-	protected void roundTripDialogDataToModelToDialogData() {
-		NotationBody notation = buildModelFromDialogData();
-		if (notation != null) {
-			populateDialogFromModel(notation);
-		}
-	}
+    protected void roundTripDialogDataToModelToDialogData() {
+        NotationBody notation = buildModelFromDialogData();
+        if (notation != null) {
+            populateDialogFromModel(notation);
+        }
+    }
 
-	protected NotationBody buildModelFromDialogData() {
-		try {
-			NotationBuilder notationBuilder = NotationBuilder.getInstance();
-			for (NotationEditorTabController tabController : tabControllers) {
-				tabController.buildNotationFromDialogData(notationBuilder);
-			}
+    protected NotationBody buildModelFromDialogData() {
+        try {
+            NotationBuilder notationBuilder = NotationBuilder.getInstance();
+            for (NotationEditorTabController tabController : tabControllers) {
+                tabController.buildNotationFromDialogData(notationBuilder);
+            }
 
-			NotationBody notationBody = notationBuilder.build();
-			lastGoodNotation = notationBody;
-			statusController.updateNotationStats(notationBody);
-			return notationBody;
-		}
-		catch (Exception e) {
-			log.info("Problem with checking notation [{}]", e.getMessage());
-			log.debug("", e);
-			statusController.updateNotationStats(e);
-			return null;
-		}
-	}
+            NotationBody notationBody = notationBuilder.build();
+            lastGoodNotation = notationBody;
+            statusController.updateNotationStats(notationBody);
+            return notationBody;
+        } catch (Exception e) {
+            log.info("Problem with checking notation [{}]", e.getMessage());
+            log.debug("", e);
+            statusController.updateNotationStats(e);
+            return null;
+        }
+    }
 
-	protected void populateDialogFromModel(NotationBody notation) {
-		for (NotationEditorTabController tabController : tabControllers) {
-			tabController.buildDialogDataFromNotation(notation);
-		}
-	}
+    protected void populateDialogFromModel(NotationBody notation) {
+        for (NotationEditorTabController tabController : tabControllers) {
+            tabController.buildDialogDataFromNotation(notation);
+        }
+    }
 
+
+    public NotationLibraryManager getNotationLibraryManager() {
+        return checkNotNull(notationLibraryManager);
+    }
+
+    public void setNotationLibraryManager(NotationLibraryManager notationLibraryManager) {
+        this.notationLibraryManager = notationLibraryManager;
+    }
 }

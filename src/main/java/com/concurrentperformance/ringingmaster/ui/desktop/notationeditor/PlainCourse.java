@@ -5,7 +5,9 @@ import com.concurrentperformance.fxutils.dialog.EditMode;
 import com.concurrentperformance.ringingmaster.engine.NumberOfBells;
 import com.concurrentperformance.ringingmaster.engine.notation.NotationBody;
 import com.concurrentperformance.ringingmaster.engine.notation.impl.NotationBuilder;
-import com.google.common.collect.Lists;
+import com.concurrentperformance.ringingmaster.persist.generated.v1.LibraryNotationPersist;
+import com.concurrentperformance.ringingmaster.ui.desktop.notationsearch.NotationLibraryManager;
+import com.google.common.base.Strings;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -16,13 +18,14 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
-import javafx.util.Callback;
-import org.controlsfx.control.textfield.AutoCompletionBinding;
+import org.controlsfx.control.spreadsheet.StringConverterWithFormat;
 import org.controlsfx.control.textfield.TextFields;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 /**
@@ -55,7 +58,6 @@ public class PlainCourse extends SkeletalNotationEditorTabController implements 
 	@FXML
 	private Label notation2Label;
 
-
 	@Override
 	public String getTabName() {
 		return "Plain Course";
@@ -64,15 +66,33 @@ public class PlainCourse extends SkeletalNotationEditorTabController implements 
 	@Override
 	public void init(NotationEditorDialog parent, EditMode editMode) {
 		super.init(parent, editMode);
+		//TODO Need to write the notation into the main dialog.
+		//TODO Also need to get the management of the popu dialog size properly with long names.
+		TextFields.bindAutoCompletion(name,
+                suggestion -> {
+                    NotationLibraryManager notationLibraryManager = parent.getNotationLibraryManager();
+                    if (notationLibraryManager.isLoaded() && !Strings.isNullOrEmpty(suggestion.getUserText())) {
+                        List<LibraryNotationPersist> notationSuggestions = notationLibraryManager.findNotationSuggestions(suggestion.getUserText());
+                        return notationSuggestions.stream()
+                                .filter(notation -> NumberOfBells.valueOf(notation.getNumberOfWorkingBells()).equals(numberOfBells.getSelectionModel().getSelectedItem()))
+                                .map(notation -> notation.getName() + " " + NumberOfBells.valueOf(notation.getNumberOfWorkingBells()).getName())
+		                        .sorted()
+                                .collect(Collectors.toList());
+                    } else {
+                        return Collections.emptyList();
+                    }
+                },
+                new StringConverterWithFormat<String>() {
+                    @Override
+                    public String toString(String object) {
+                        return object;
+                    }
 
-		TextFields.bindAutoCompletion(name, (Callback<AutoCompletionBinding.ISuggestionRequest, Collection<Object>>)
-				suggestion -> {
-            log.info("Getting suggestions for [{}]", suggestion.getUserText() );
-					if (suggestion.getUserText().contains("S"))
-            			return Lists.newArrayList("STephen");
-					else
-						return Lists.newArrayList("Judith", "William");
-        });
+                    @Override
+                    public String fromString(String string) {
+                        return string;
+                    }
+                });
 
 		name.setOnKeyReleased(this::keyPressUpdater);
 

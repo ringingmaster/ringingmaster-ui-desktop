@@ -12,6 +12,7 @@ import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
@@ -66,7 +67,13 @@ public class NotationLibraryManager {
         return loaded.getCount() == 0;
     }
 
-    public List<LibraryNotationPersist> findNotation(String partialName) {
+    public List<LibraryNotationPersist> findNotationSuggestions(String partialName) {
+        try {
+            loaded.await();
+        } catch (InterruptedException e) {
+            log.error("", e);
+            return Collections.emptyList();
+        }
         ArrayList<LibraryNotationPersist> startingWith = suffixTreeMap.getStartingWith(partialName.toLowerCase(), new ArrayList<>());
         return  startingWith;
     }

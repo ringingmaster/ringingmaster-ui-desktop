@@ -5,7 +5,7 @@ import com.concurrentperformance.fxutils.events.SkeletalEventDefinition;
 import com.concurrentperformance.ringingmaster.engine.NumberOfBells;
 import com.concurrentperformance.ringingmaster.engine.touch.container.Touch;
 import com.concurrentperformance.ringingmaster.ui.desktop.documentmodel.TouchDocumentTypeManager;
-import com.concurrentperformance.ringingmaster.ui.desktop.notationeditor.NotationEditorDialogBuilder;
+import com.concurrentperformance.ringingmaster.ui.desktop.notationeditor.NotationEditorDialogFactory;
 import javafx.event.ActionEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +20,7 @@ public class AddNotationEvent extends SkeletalEventDefinition implements EventDe
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 	private TouchDocumentTypeManager touchDocumentTypeManager;
-	private NotationEditorDialogBuilder notationEditorDialogBuilder;
+	private NotationEditorDialogFactory notationEditorDialogFactory;
 
 	public AddNotationEvent() {
 		super("/images/add.png", "Add Method");
@@ -34,7 +34,7 @@ public class AddNotationEvent extends SkeletalEventDefinition implements EventDe
 		}
 		NumberOfBells numberOfBells = touchDocumentTypeManager.getCurrentDocument().get().getNumberOfBells();
 
-		notationEditorDialogBuilder.newNotationShowDialog(numberOfBells, result -> {
+		notationEditorDialogFactory.newNotationShowDialog(numberOfBells, result -> {
 			log.info("AddMethodButton - adding", result.toString());
 			return touchDocumentTypeManager.getCurrentDocument().get().addNotation(result) == Touch.Mutated.MUTATED;
 		});
@@ -45,7 +45,7 @@ public class AddNotationEvent extends SkeletalEventDefinition implements EventDe
 		touchDocumentTypeManager.addListener(document -> disableProperty().set(!document.isPresent()));
 	}
 
-	public void setNotationEditorDialogBuilder(NotationEditorDialogBuilder notationEditorDialogBuilder) {
-		this.notationEditorDialogBuilder = notationEditorDialogBuilder;
+	public void setNotationEditorDialogFactory(NotationEditorDialogFactory notationEditorDialogFactory) {
+		this.notationEditorDialogFactory = notationEditorDialogFactory;
 	}
 }

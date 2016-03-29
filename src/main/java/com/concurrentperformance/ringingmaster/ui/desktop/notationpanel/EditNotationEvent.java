@@ -5,7 +5,7 @@ import com.concurrentperformance.fxutils.events.SkeletalEventDefinition;
 import com.concurrentperformance.ringingmaster.engine.notation.NotationBody;
 import com.concurrentperformance.ringingmaster.engine.touch.container.Touch;
 import com.concurrentperformance.ringingmaster.ui.desktop.documentmodel.TouchDocumentTypeManager;
-import com.concurrentperformance.ringingmaster.ui.desktop.notationeditor.NotationEditorDialogBuilder;
+import com.concurrentperformance.ringingmaster.ui.desktop.notationeditor.NotationEditorDialogFactory;
 import javafx.event.ActionEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,7 +22,7 @@ public class EditNotationEvent extends SkeletalEventDefinition implements EventD
 
 	private TouchDocumentTypeManager touchDocumentTypeManager;
 	private PropertyNotationPanel propertyNotationPanel;
-	private NotationEditorDialogBuilder notationEditorDialogBuilder;
+	private NotationEditorDialogFactory notationEditorDialogFactory;
 
 
 	public EditNotationEvent() {
@@ -40,7 +40,7 @@ public class EditNotationEvent extends SkeletalEventDefinition implements EventD
 		int index = propertyNotationPanel.getSelectionModel().getSelectedIndex();
 		NotationBody notation =  propertyNotationPanel.getNotation(index);
 		if (notation != null) {
-			notationEditorDialogBuilder.editNotationShowDialog(notation, result -> {
+			notationEditorDialogFactory.editNotationShowDialog(notation, result -> {
 				log.info("EditNotationButton - adding", result.toString());
 				return touchDocumentTypeManager.getCurrentDocument().get().exchangeNotationAfterEdit(notation, result) == Touch.Mutated.MUTATED;
 				//TODO common this code from double click -
@@ -67,7 +67,7 @@ public class EditNotationEvent extends SkeletalEventDefinition implements EventD
 		this.touchDocumentTypeManager = touchDocumentTypeManager;
 	}
 
-	public void setNotationEditorDialogBuilder(NotationEditorDialogBuilder notationEditorDialogBuilder) {
-		this.notationEditorDialogBuilder = notationEditorDialogBuilder;
+	public void setNotationEditorDialogFactory(NotationEditorDialogFactory notationEditorDialogFactory) {
+		this.notationEditorDialogFactory = notationEditorDialogFactory;
 	}
 }

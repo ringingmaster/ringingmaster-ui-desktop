@@ -16,7 +16,7 @@ import java.util.function.Function;
  *
  * @author Lake
  */
-public class NotationEditorDialogBuilder {
+public class NotationEditorDialogFactory {
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 

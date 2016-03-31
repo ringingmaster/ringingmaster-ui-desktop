@@ -155,4 +155,10 @@ public class PlainCourse extends SkeletalNotationEditorTabController implements 
 		}
 		notationBuilder.setSpliceIdentifier(spliceIndntifier.getText());
 	}
+
+	@FXML
+	private void onNotationSearchButton() {
+		log.info("***********");
+	}
+
 }

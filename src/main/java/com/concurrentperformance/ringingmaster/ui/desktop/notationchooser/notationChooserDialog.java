@@ -47,10 +47,6 @@ public class NotationChooserDialog extends SkeletalDialog<NotationChooserResults
         return null;
     }
 
-    public NotationLibraryManager getNotationLibraryManager() {
-        return checkNotNull(notationLibraryManager);
-    }
-
     public void setNotationLibraryManager(NotationLibraryManager notationLibraryManager) {
         this.notationLibraryManager = notationLibraryManager;
     }

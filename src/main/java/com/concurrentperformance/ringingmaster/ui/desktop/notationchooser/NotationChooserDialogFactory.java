@@ -20,7 +20,7 @@ public class NotationChooserDialogFactory {
 	private NotationLibraryManager notationLibraryManager;
 
 	public void openNotationChooserDialog(Function<NotationChooserResults, Boolean> onSuccessHandler) {
-		NotationChooserDialoga.showDialog(new NotationChooserResults(), globalStage, onSuccessHandler, notationLibraryManager);
+		NotationChooserDialog.showDialog(new NotationChooserResults(), globalStage, onSuccessHandler, notationLibraryManager);
 	}
 
 	public void setGlobalStage(Stage globalStage) {

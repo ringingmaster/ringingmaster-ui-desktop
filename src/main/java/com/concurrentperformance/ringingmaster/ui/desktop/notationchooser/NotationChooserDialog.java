@@ -18,7 +18,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  *
  * @author Lake
  */
-public class NotationChooserDialoga extends SkeletalDialog<NotationChooserResults> {
+public class NotationChooserDialog extends SkeletalDialog<NotationChooserResults> {
 
     public static final String NOTATION_CHOOSER_FXML = "NotationEditorDialog.fxml";
 
@@ -30,7 +30,7 @@ public class NotationChooserDialoga extends SkeletalDialog<NotationChooserResult
                                   Function<NotationChooserResults, Boolean> onSuccessHandler,
                                   NotationLibraryManager notationLibraryManager) {
 
-        NotationChooserDialoga notationChooserDialog = new DialogBuilder<NotationChooserResults, NotationChooserDialoga>().buildDialog(EditMode.ADD, model, owner, NotationChooserDialoga.class.getResource(NOTATION_CHOOSER_FXML),
+        NotationChooserDialog notationChooserDialog = new DialogBuilder<NotationChooserResults, NotationChooserDialog>().buildDialog(EditMode.ADD, model, owner, NotationChooserDialog.class.getResource(NOTATION_CHOOSER_FXML),
                 Lists.<String>newArrayList(RingingMasterDesktopApp.STYLESHEET), onSuccessHandler);
         notationChooserDialog.setNotationLibraryManager(checkNotNull(notationLibraryManager));
         notationChooserDialog.showAndWait();

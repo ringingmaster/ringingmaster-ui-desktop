@@ -7,6 +7,6 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
 
-    <bean id="notationEditorDialogBuilder" class="com.concurrentperformance.ringingmaster.ui.desktop.notationeditor.NotationEditorDialogFactory"/>
+    <bean id="notationEditorDialogFactory" class="com.concurrentperformance.ringingmaster.ui.desktop.notationeditor.NotationEditorDialogFactory"/>
 
 </beans>

@@ -56,8 +56,13 @@ public class DocumentManager extends ConcurrentListenable<DocumentManagerListene
 		for (int tabIndex=0;tabIndex<docCount;tabIndex++) {
 			Path path = Paths.get(userPrefs.get("doc." + tabIndex, ""));
 			log.info("Loading document [{}]", path);
-			final Document document = documentTypeManager.openDocument(path);
-			buildTabForDocument(document);
+			try {
+				final Document document = documentTypeManager.openDocument(path);
+				buildTabForDocument(document);
+			}
+			catch (RuntimeException e) {
+				log.error("Failed to open document [" + path + "]", e);
+			}
 		}
 
 	}

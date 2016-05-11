@@ -5,11 +5,11 @@ dependencies {
     compile project(':fxutil')
 
     // Spring
-    compile 'org.springframework:spring-context:4.2.4.RELEASE'
-    compile 'org.springframework:spring-beans:4.2.4.RELEASE'
-    compile 'org.springframework:spring-core:4.2.4.RELEASE'
-    compile 'org.springframework:spring-aop:4.2.4.RELEASE'
-    compile 'org.springframework:spring-expression:4.2.4.RELEASE'
+    compile 'org.springframework:spring-context:4.2.6.RELEASE'
+    compile 'org.springframework:spring-beans:4.2.6.RELEASE'
+    compile 'org.springframework:spring-core:4.2.6.RELEASE'
+    compile 'org.springframework:spring-aop:4.2.6.RELEASE'
+    compile 'org.springframework:spring-expression:4.2.6.RELEASE'
 
     // Other
     compile 'org.controlsfx:controlsfx:8.40.10'

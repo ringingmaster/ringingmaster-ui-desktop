@@ -61,7 +61,7 @@ public class DocumentManager extends ConcurrentListenable<DocumentManagerListene
 				buildTabForDocument(document);
 			}
 			catch (RuntimeException e) {
-				log.error("Failed to open document [" + path + "]", e);
+				log.error("Failed to open document [" + path + "] during startup", e);
 			}
 		}
 

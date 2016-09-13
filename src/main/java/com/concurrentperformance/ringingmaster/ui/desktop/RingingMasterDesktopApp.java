@@ -59,6 +59,8 @@ public class RingingMasterDesktopApp extends Application {
 		double width = userPrefs.getDouble("globalStage.width", 900);
 		double height = userPrefs.getDouble("globalStage.height", 650);
 
+		log.info("Main window bounds before modification, [{},{},{},{}]", x, y, width, height);
+
 		// Make sure the screen has some width and height
 		width = Math.max(100,width);
 		height = Math.max(100,height);
@@ -75,6 +77,8 @@ public class RingingMasterDesktopApp extends Application {
 		y = Math.max(0, y);
 		x = Math.min(primaryScreenBounds.getMaxX()-10, x);
 		y = Math.min(primaryScreenBounds.getMaxY()-10, y);
+
+		log.info("Main window bounds after modification, [{},{},{},{}]", x, y, width, height);
 
 		Scene scene = new Scene(parent, width,height);
 		scene.getStylesheets().add(STYLESHEET);

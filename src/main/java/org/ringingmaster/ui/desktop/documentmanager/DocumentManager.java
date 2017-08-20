@@ -1,8 +1,8 @@
 package org.ringingmaster.ui.desktop.documentmanager;
 
-import org.ringingmaster.fxutils.lifecycle.ShutdownService;
-import org.ringingmaster.fxutils.lifecycle.ShutdownServiceListener;
-import org.ringingmaster.fxutils.lifecycle.StartupService;
+import org.ringingmaster.util.javafx.lifecycle.ShutdownService;
+import org.ringingmaster.util.javafx.lifecycle.ShutdownServiceListener;
+import org.ringingmaster.util.javafx.lifecycle.StartupService;
 import org.ringingmaster.util.listener.ConcurrentListenable;
 import org.ringingmaster.util.listener.Listenable;
 import javafx.collections.ObservableList;

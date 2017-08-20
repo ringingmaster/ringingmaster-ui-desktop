@@ -9,13 +9,13 @@
 
 
     <!-- Property Windows -->
-    <bean id="propertyWindow" class="org.ringingmaster.fxutils.tab.InjectableTabPane">
+    <bean id="propertyWindow" class="org.ringingmaster.util.javafx.tab.InjectableTabPane">
         <property name="tabDefinitions">
             <list>
-                <bean class="org.ringingmaster.fxutils.tab.TabDefinition"
+                <bean class="org.ringingmaster.util.javafx.tab.TabDefinition"
                         c:name="Setup"
                         c:node-ref="propertyWindow.setup"/>
-                <bean class="org.ringingmaster.fxutils.tab.TabDefinition"
+                <bean class="org.ringingmaster.util.javafx.tab.TabDefinition"
                       c:name="Methods"
                       c:node-ref="propertyWindow.notation"/>
             </list>
@@ -25,23 +25,23 @@
     <bean id="propertyWindow.setup" class="org.ringingmaster.ui.desktop.setuppanel.PropertySetupWindow"
             init-method="init"/>
 
-    <bean id="propertyWindow.notation" class="org.ringingmaster.fxutils.box.InjectableVBox">
+    <bean id="propertyWindow.notation" class="org.ringingmaster.util.javafx.box.InjectableVBox">
         <property name="boxLayoutDefinitions">
             <util:list>
-                <bean class="org.ringingmaster.fxutils.box.BoxLayoutDefinition" c:node-ref="propertyWindow.toolBar" c:priority="NEVER"/>
-                <bean class="org.ringingmaster.fxutils.box.BoxLayoutDefinition" c:node-ref="propertyWindow.notation.panel" c:priority="ALWAYS"/>
+                <bean class="org.ringingmaster.util.javafx.box.BoxLayoutDefinition" c:node-ref="propertyWindow.toolBar" c:priority="NEVER"/>
+                <bean class="org.ringingmaster.util.javafx.box.BoxLayoutDefinition" c:node-ref="propertyWindow.notation.panel" c:priority="ALWAYS"/>
             </util:list>
         </property>
     </bean>
 
-    <bean id="propertyWindow.toolBar" class="org.ringingmaster.fxutils.toolbar.InjectableToolBar">
+    <bean id="propertyWindow.toolBar" class="org.ringingmaster.util.javafx.toolbar.InjectableToolBar">
         <property name="definitions">
             <util:list>
-                <bean class="org.ringingmaster.fxutils.toolbar.ToolbarDefinitionEvent" c:eventDefinition-ref="event.addNotation"/>
-                <bean class="org.ringingmaster.fxutils.toolbar.ToolbarDefinitionEvent" c:eventDefinition-ref="event.deleteNotation"/>
-                <bean class="org.ringingmaster.fxutils.toolbar.ToolbarDefinitionEvent" c:eventDefinition-ref="event.editNotation"/>
-                <bean class="org.ringingmaster.fxutils.toolbar.ToolbarDefinitionSeparator" c:orientation="VERTICAL"/>
-                <bean class="org.ringingmaster.fxutils.toolbar.ToolbarDefinitionEvent" c:eventDefinition-ref="event.setActiveNotation"/>
+                <bean class="org.ringingmaster.util.javafx.toolbar.ToolbarDefinitionEvent" c:eventDefinition-ref="event.addNotation"/>
+                <bean class="org.ringingmaster.util.javafx.toolbar.ToolbarDefinitionEvent" c:eventDefinition-ref="event.deleteNotation"/>
+                <bean class="org.ringingmaster.util.javafx.toolbar.ToolbarDefinitionEvent" c:eventDefinition-ref="event.editNotation"/>
+                <bean class="org.ringingmaster.util.javafx.toolbar.ToolbarDefinitionSeparator" c:orientation="VERTICAL"/>
+                <bean class="org.ringingmaster.util.javafx.toolbar.ToolbarDefinitionEvent" c:eventDefinition-ref="event.setActiveNotation"/>
             </util:list>
         </property>
     </bean>

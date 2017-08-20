@@ -7,14 +7,14 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
 
 
-    <bean id="menuBar" class="org.ringingmaster.fxutils.menu.InjectableMenuBar">
+    <bean id="menuBar" class="org.ringingmaster.util.javafx.menu.InjectableMenuBar">
         <property name="menuBarElements">
             <list>
-                <bean class="org.ringingmaster.fxutils.menu.MenuDefinitionBranch"
+                <bean class="org.ringingmaster.util.javafx.menu.MenuDefinitionBranch"
                       c:menuDefinitions-ref="menu.file" c:name="File"/>
-                <bean class="org.ringingmaster.fxutils.menu.MenuDefinitionBranch"
+                <bean class="org.ringingmaster.util.javafx.menu.MenuDefinitionBranch"
                       c:menuDefinitions-ref="menu.edit" c:name="Edit"/>
-                <bean class="org.ringingmaster.fxutils.menu.MenuDefinitionBranch"
+                <bean class="org.ringingmaster.util.javafx.menu.MenuDefinitionBranch"
                       c:menuDefinitions-ref="menu.touch" c:name="Touch"/>
             </list>
         </property>
@@ -22,21 +22,21 @@
 
 
     <util:list id="menu.file" >
-        <bean class="org.ringingmaster.fxutils.menu.MenuDefinitionLeafEvent" c:event-ref="event.new"/>
-        <bean class="org.ringingmaster.fxutils.menu.MenuDefinitionLeafEvent" c:event-ref="event.open"/>
-        <bean class="org.ringingmaster.fxutils.menu.MenuDefinitionLeafEvent" c:event-ref="event.save"/>
+        <bean class="org.ringingmaster.util.javafx.menu.MenuDefinitionLeafEvent" c:event-ref="event.new"/>
+        <bean class="org.ringingmaster.util.javafx.menu.MenuDefinitionLeafEvent" c:event-ref="event.open"/>
+        <bean class="org.ringingmaster.util.javafx.menu.MenuDefinitionLeafEvent" c:event-ref="event.save"/>
     </util:list>
 
     <util:list id="menu.edit" >
-        <bean class="org.ringingmaster.fxutils.menu.MenuDefinitionLeafEvent" c:event-ref="event.undo"/>
-        <bean class="org.ringingmaster.fxutils.menu.MenuDefinitionLeafEvent" c:event-ref="event.redo"/>
-        <bean class="org.ringingmaster.fxutils.menu.MenuDefinitionLeafSeparator"/>
-        <bean class="org.ringingmaster.fxutils.menu.MenuDefinitionLeafEvent" c:event-ref="event.cut"/>
-        <bean class="org.ringingmaster.fxutils.menu.MenuDefinitionLeafEvent" c:event-ref="event.copy"/>
-        <bean class="org.ringingmaster.fxutils.menu.MenuDefinitionLeafEvent" c:event-ref="event.paste"/>
+        <bean class="org.ringingmaster.util.javafx.menu.MenuDefinitionLeafEvent" c:event-ref="event.undo"/>
+        <bean class="org.ringingmaster.util.javafx.menu.MenuDefinitionLeafEvent" c:event-ref="event.redo"/>
+        <bean class="org.ringingmaster.util.javafx.menu.MenuDefinitionLeafSeparator"/>
+        <bean class="org.ringingmaster.util.javafx.menu.MenuDefinitionLeafEvent" c:event-ref="event.cut"/>
+        <bean class="org.ringingmaster.util.javafx.menu.MenuDefinitionLeafEvent" c:event-ref="event.copy"/>
+        <bean class="org.ringingmaster.util.javafx.menu.MenuDefinitionLeafEvent" c:event-ref="event.paste"/>
     </util:list>
 
     <util:list id="menu.touch" >
-        <bean class="org.ringingmaster.fxutils.menu.MenuDefinitionLeafEvent" c:event-ref="event.addNotation"/>
+        <bean class="org.ringingmaster.util.javafx.menu.MenuDefinitionLeafEvent" c:event-ref="event.addNotation"/>
     </util:list>
 </beans>

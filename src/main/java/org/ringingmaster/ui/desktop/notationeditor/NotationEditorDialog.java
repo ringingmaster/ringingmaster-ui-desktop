@@ -1,7 +1,7 @@
 package org.ringingmaster.ui.desktop.notationeditor;
 
-import org.ringingmaster.fxutils.dialog.EditMode;
-import org.ringingmaster.fxutils.dialog.SkeletalDialog;
+import org.ringingmaster.util.javafx.dialog.EditMode;
+import org.ringingmaster.util.javafx.dialog.SkeletalDialog;
 import org.ringingmaster.engine.notation.NotationBody;
 import org.ringingmaster.engine.notation.impl.NotationBuilder;
 import org.ringingmaster.ui.desktop.RingingMasterDesktopApp;

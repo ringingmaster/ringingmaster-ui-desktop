@@ -1,6 +1,6 @@
 package org.ringingmaster.ui.desktop.notationeditor;
 
-import org.ringingmaster.fxutils.dialog.EditMode;
+import org.ringingmaster.util.javafx.dialog.EditMode;
 import javafx.stage.Window;
 
 import static com.google.common.base.Preconditions.checkNotNull;

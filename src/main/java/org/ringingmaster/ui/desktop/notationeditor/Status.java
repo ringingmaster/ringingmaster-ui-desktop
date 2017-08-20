@@ -1,7 +1,7 @@
 package org.ringingmaster.ui.desktop.notationeditor;
 
-import org.ringingmaster.fxutils.namevaluepair.NameValuePairModel;
-import org.ringingmaster.fxutils.namevaluepair.NameValuePairTable;
+import org.ringingmaster.util.javafx.namevaluepair.NameValuePairModel;
+import org.ringingmaster.util.javafx.namevaluepair.NameValuePairTable;
 import org.ringingmaster.engine.helper.PlainCourseHelper;
 import org.ringingmaster.engine.method.Method;
 import org.ringingmaster.engine.notation.NotationBody;

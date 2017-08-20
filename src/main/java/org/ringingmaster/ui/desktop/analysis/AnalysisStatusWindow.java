@@ -1,7 +1,7 @@
 package org.ringingmaster.ui.desktop.analysis;
 
-import org.ringingmaster.fxutils.namevaluepair.NameValuePairModel;
-import org.ringingmaster.fxutils.namevaluepair.NameValuePairTable;
+import org.ringingmaster.util.javafx.namevaluepair.NameValuePairModel;
+import org.ringingmaster.util.javafx.namevaluepair.NameValuePairTable;
 import org.ringingmaster.engine.touch.proof.Proof;
 import org.ringingmaster.ui.desktop.proof.ProofManager;
 import org.ringingmaster.ui.desktop.util.ColorManager;

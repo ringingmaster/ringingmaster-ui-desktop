@@ -1,10 +1,10 @@
 package org.ringingmaster.ui.desktop.setuppanel;
 
-import org.ringingmaster.fxutils.propertyeditor.CallbackStyle;
-import org.ringingmaster.fxutils.propertyeditor.IntegerPropertyValue;
-import org.ringingmaster.fxutils.propertyeditor.PropertyEditor;
-import org.ringingmaster.fxutils.propertyeditor.SelectionPropertyValue;
-import org.ringingmaster.fxutils.propertyeditor.TextPropertyValue;
+import org.ringingmaster.util.javafx.propertyeditor.CallbackStyle;
+import org.ringingmaster.util.javafx.propertyeditor.IntegerPropertyValue;
+import org.ringingmaster.util.javafx.propertyeditor.PropertyEditor;
+import org.ringingmaster.util.javafx.propertyeditor.SelectionPropertyValue;
+import org.ringingmaster.util.javafx.propertyeditor.TextPropertyValue;
 import org.ringingmaster.engine.NumberOfBells;
 import org.ringingmaster.engine.method.Bell;
 import org.ringingmaster.engine.method.Stroke;

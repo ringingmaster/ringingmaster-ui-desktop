@@ -1,6 +1,6 @@
 package org.ringingmaster.ui.desktop.documentpanel;
 
-import org.ringingmaster.fxutils.color.ColorUtil;
+import org.ringingmaster.util.javafx.color.ColorUtil;
 import org.ringingmaster.ui.desktop.documentmodel.TouchDocument;
 import org.ringingmaster.ui.common.TouchStyle;
 import javafx.geometry.Insets;

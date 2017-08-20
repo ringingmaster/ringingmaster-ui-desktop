@@ -1,7 +1,7 @@
 package org.ringingmaster.ui.desktop.notationpanel;
 
-import org.ringingmaster.fxutils.namevaluepair.NameValuePairModel;
-import org.ringingmaster.fxutils.namevaluepair.NameValuePairTable;
+import org.ringingmaster.util.javafx.namevaluepair.NameValuePairModel;
+import org.ringingmaster.util.javafx.namevaluepair.NameValuePairTable;
 import org.ringingmaster.engine.notation.NotationBody;
 import org.ringingmaster.ui.desktop.documentmodel.TouchDocument;
 import org.ringingmaster.ui.desktop.documentmodel.TouchDocumentTypeManager;

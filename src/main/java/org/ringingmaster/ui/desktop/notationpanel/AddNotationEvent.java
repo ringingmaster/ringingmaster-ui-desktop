@@ -1,7 +1,7 @@
 package org.ringingmaster.ui.desktop.notationpanel;
 
-import org.ringingmaster.fxutils.events.EventDefinition;
-import org.ringingmaster.fxutils.events.SkeletalEventDefinition;
+import org.ringingmaster.util.javafx.events.EventDefinition;
+import org.ringingmaster.util.javafx.events.SkeletalEventDefinition;
 import org.ringingmaster.engine.NumberOfBells;
 import org.ringingmaster.engine.touch.container.Touch;
 import org.ringingmaster.ui.desktop.documentmodel.TouchDocumentTypeManager;

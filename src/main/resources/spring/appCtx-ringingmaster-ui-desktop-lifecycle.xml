@@ -7,8 +7,8 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
 
 
-       <bean class="org.ringingmaster.fxutils.lifecycle.ShutdownService"/>
-       <bean class="org.ringingmaster.fxutils.lifecycle.StartupService"/>
+       <bean class="org.ringingmaster.util.javafx.lifecycle.ShutdownService"/>
+       <bean class="org.ringingmaster.util.javafx.lifecycle.StartupService"/>
 
 
 </beans>

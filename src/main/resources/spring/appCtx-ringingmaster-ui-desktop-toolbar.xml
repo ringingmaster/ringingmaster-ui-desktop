@@ -7,21 +7,21 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
 
 
-    <bean id="toolBar" class="org.ringingmaster.fxutils.toolbar.InjectableToolBar">
+    <bean id="toolBar" class="org.ringingmaster.util.javafx.toolbar.InjectableToolBar">
         <property name="definitions">
             <util:list>
-                <bean class="org.ringingmaster.fxutils.toolbar.ToolbarDefinitionEvent" c:eventDefinition-ref="event.new"/>
-                <bean class="org.ringingmaster.fxutils.toolbar.ToolbarDefinitionEvent" c:eventDefinition-ref="event.open"/>
-                <bean class="org.ringingmaster.fxutils.toolbar.ToolbarDefinitionEvent" c:eventDefinition-ref="event.save"/>
-                <bean class="org.ringingmaster.fxutils.toolbar.ToolbarDefinitionSeparator" c:orientation="VERTICAL"/>
-                <bean class="org.ringingmaster.fxutils.toolbar.ToolbarDefinitionEvent" c:eventDefinition-ref="event.undo"/>
-                <bean class="org.ringingmaster.fxutils.toolbar.ToolbarDefinitionEvent" c:eventDefinition-ref="event.redo"/>
-                <bean class="org.ringingmaster.fxutils.toolbar.ToolbarDefinitionSeparator" c:orientation="VERTICAL"/>
-                <bean class="org.ringingmaster.fxutils.toolbar.ToolbarDefinitionEvent" c:eventDefinition-ref="event.cut"/>
-                <bean class="org.ringingmaster.fxutils.toolbar.ToolbarDefinitionEvent" c:eventDefinition-ref="event.copy"/>
-                <bean class="org.ringingmaster.fxutils.toolbar.ToolbarDefinitionEvent" c:eventDefinition-ref="event.paste"/>
-                <bean class="org.ringingmaster.fxutils.toolbar.ToolbarDefinitionSeparator" c:orientation="VERTICAL"/>
-                <bean class="org.ringingmaster.fxutils.toolbar.ToolbarDefinitionEvent" c:eventDefinition-ref="event.addNotation"/>
+                <bean class="org.ringingmaster.util.javafx.toolbar.ToolbarDefinitionEvent" c:eventDefinition-ref="event.new"/>
+                <bean class="org.ringingmaster.util.javafx.toolbar.ToolbarDefinitionEvent" c:eventDefinition-ref="event.open"/>
+                <bean class="org.ringingmaster.util.javafx.toolbar.ToolbarDefinitionEvent" c:eventDefinition-ref="event.save"/>
+                <bean class="org.ringingmaster.util.javafx.toolbar.ToolbarDefinitionSeparator" c:orientation="VERTICAL"/>
+                <bean class="org.ringingmaster.util.javafx.toolbar.ToolbarDefinitionEvent" c:eventDefinition-ref="event.undo"/>
+                <bean class="org.ringingmaster.util.javafx.toolbar.ToolbarDefinitionEvent" c:eventDefinition-ref="event.redo"/>
+                <bean class="org.ringingmaster.util.javafx.toolbar.ToolbarDefinitionSeparator" c:orientation="VERTICAL"/>
+                <bean class="org.ringingmaster.util.javafx.toolbar.ToolbarDefinitionEvent" c:eventDefinition-ref="event.cut"/>
+                <bean class="org.ringingmaster.util.javafx.toolbar.ToolbarDefinitionEvent" c:eventDefinition-ref="event.copy"/>
+                <bean class="org.ringingmaster.util.javafx.toolbar.ToolbarDefinitionEvent" c:eventDefinition-ref="event.paste"/>
+                <bean class="org.ringingmaster.util.javafx.toolbar.ToolbarDefinitionSeparator" c:orientation="VERTICAL"/>
+                <bean class="org.ringingmaster.util.javafx.toolbar.ToolbarDefinitionEvent" c:eventDefinition-ref="event.addNotation"/>
             </util:list>
         </property>
     </bean>

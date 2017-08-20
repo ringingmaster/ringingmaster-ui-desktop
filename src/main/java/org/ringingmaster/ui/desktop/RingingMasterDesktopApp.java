@@ -1,6 +1,6 @@
 package org.ringingmaster.ui.desktop;
 
-import org.ringingmaster.fxutils.lifecycle.StartupService;
+import org.ringingmaster.util.javafx.lifecycle.StartupService;
 import org.ringingmaster.util.thread.ThreadUncaughtExceptionHelper;
 import javafx.application.Application;
 import javafx.geometry.Rectangle2D;

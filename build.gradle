@@ -1,8 +1,22 @@
+apply plugin: 'java'
+
+group 'com.concurrentperformance.ringingmaster'
+version '1.0.0'
+
+compileJava {
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+}
+
+repositories {
+    mavenCentral()
+}
+
 dependencies {
 
-    compile project(':ringingmaster-engine')
-    compile project(':ringingmaster-ui-common')
-    compile project(':fxutil')
+    compile 'com.concurrentperformance.ringingmaster:ringingmaster-engine:1.0.0'
+    compile 'com.concurrentperformance.ringingmaster:ringingmaster-ui-common:1.0.0'
+    compile 'com.concurrentperformance.ringingmaster:ringingmaster-util-javafx:1.0.0'
 
     // Spring
     compile 'org.springframework:spring-context:4.2.6.RELEASE'
@@ -14,6 +28,14 @@ dependencies {
     runtime 'org.apache.logging.log4j:log4j-core:2.5'
     runtime 'org.apache.logging.log4j:log4j-slf4j-impl:2.5'
     runtime 'org.apache.logging.log4j:log4j-jcl:2.5' //Needed for Spring
+
+    // TEST: General
+    testCompile 'junit:junit:4.12'
+    testCompile 'org.mockito:mockito-all:1.10.19'
+
+    // TEST: Logging
+    testRuntime 'org.apache.logging.log4j:log4j-core:2.5'
+    testRuntime 'org.apache.logging.log4j:log4j-slf4j-impl:2.5'
 }
 
 

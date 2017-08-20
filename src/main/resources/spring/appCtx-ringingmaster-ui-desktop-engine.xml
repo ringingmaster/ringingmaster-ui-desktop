@@ -7,6 +7,6 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
 
-    <bean id="proofManager" class="com.concurrentperformance.ringingmaster.ui.desktop.proof.ProofManager"/>
+    <bean id="proofManager" class="org.ringingmaster.ui.desktop.proof.ProofManager"/>
 
 </beans>

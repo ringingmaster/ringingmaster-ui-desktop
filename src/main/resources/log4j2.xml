@@ -10,9 +10,9 @@
 
 		<Logger name="org.springframework" level="warn"/>
 
-		<logger name="com.concurrentperformance.ringingmaster.engine.touch" level="info"/>
-		<logger name="com.concurrentperformance.ringingmaster.engine" level="warn"/>
-		<logger name="com.concurrentperformance.ringingmaster" level="info"/>
+		<logger name="org.ringingmaster.engine.touch" level="info"/>
+		<logger name="org.ringingmaster.engine" level="warn"/>
+		<logger name="org.ringingmaster" level="info"/>
 
 		<Root level="info">
 			<AppenderRef ref="CONSOLE"/>

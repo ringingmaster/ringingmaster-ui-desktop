@@ -7,28 +7,28 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
 
     <!-- Analysis Windows -->
-    <bean id="analysisWindow.left" class="com.concurrentperformance.fxutils.tab.InjectableTabPane">
+    <bean id="analysisWindow.left" class="org.ringingmaster.fxutils.tab.InjectableTabPane">
         <property name="tabDefinitions">
             <list>
-                <bean class="com.concurrentperformance.fxutils.tab.TabDefinition"
+                <bean class="org.ringingmaster.fxutils.tab.TabDefinition"
                       c:name="Status"
                       c:node-ref="analysisWindow.status"/>
             </list>
         </property>
     </bean>
 
-    <bean id="analysisWindow.right" class="com.concurrentperformance.fxutils.tab.InjectableTabPane">
+    <bean id="analysisWindow.right" class="org.ringingmaster.fxutils.tab.InjectableTabPane">
         <property name="tabDefinitions">
             <list>
-                <bean class="com.concurrentperformance.fxutils.tab.TabDefinition"
+                <bean class="org.ringingmaster.fxutils.tab.TabDefinition"
                       c:name="Calls Made"
                       c:node-ref="analysisWindow.callsmade"/>
             </list>
         </property>
     </bean>
 
-    <bean id="analysisWindow.status" class="com.concurrentperformance.ringingmaster.ui.desktop.analysis.AnalysisStatusWindow"/>
-    <bean id="analysisWindow.callsmade" class="com.concurrentperformance.ringingmaster.ui.desktop.analysis.AnalysisCallsMadeWindow"/>
+    <bean id="analysisWindow.status" class="org.ringingmaster.ui.desktop.analysis.AnalysisStatusWindow"/>
+    <bean id="analysisWindow.callsmade" class="org.ringingmaster.ui.desktop.analysis.AnalysisCallsMadeWindow"/>
 
 
 </beans>

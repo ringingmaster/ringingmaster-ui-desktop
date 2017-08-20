@@ -7,7 +7,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
 
-    <bean id="notationLibraryManager" class="com.concurrentperformance.ringingmaster.ui.desktop.notationsearch.NotationLibraryManager"
+    <bean id="notationLibraryManager" class="org.ringingmaster.ui.desktop.notationsearch.NotationLibraryManager"
           init-method="init"
         p:libraryLocation="${ringingmaster.librarylocation}"/>
 

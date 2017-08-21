@@ -1,6 +1,6 @@
 package org.ringingmaster.ui.desktop.documentpanel.grid.model;
 
-import com.google.common.collect.Iterators;
+import com.google.common.collect.ImmutableSet;
 
 import java.util.Iterator;
 
@@ -22,6 +22,6 @@ public class EmptyGridCharacterGroup implements GridCharacterGroup {
 
 	@Override
 	public Iterator<GridCharacterModel> iterator() {
-		return Iterators.emptyIterator();
+		return ImmutableSet.<GridCharacterModel>of().iterator();
 	}
 }

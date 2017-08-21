@@ -14,28 +14,29 @@ repositories {
 
 dependencies {
 
+    // Internal
     compile 'org.ringingmaster:ringingmaster-engine:1.0.0'
     compile 'org.ringingmaster:ringingmaster-ui-common:1.0.0'
     compile 'org.ringingmaster:ringingmaster-util-javafx:1.0.0'
 
     // Spring
-    compile 'org.springframework:spring-context:4.2.6.RELEASE'
+    compile 'org.springframework:spring-context:4.3.10.RELEASE'
 
     // Other
     compile 'org.controlsfx:controlsfx:8.40.10'
 
     // Logging
-    runtime 'org.apache.logging.log4j:log4j-core:2.5'
-    runtime 'org.apache.logging.log4j:log4j-slf4j-impl:2.5'
-    runtime 'org.apache.logging.log4j:log4j-jcl:2.5' //Needed for Spring
+    runtime 'org.apache.logging.log4j:log4j-core:2.8.2'
+    runtime 'org.apache.logging.log4j:log4j-slf4j-impl:2.8.2'
+    runtime 'org.apache.logging.log4j:log4j-jcl:2.8.2' //Needed for Spring
 
     // TEST: General
     testCompile 'junit:junit:4.12'
-    testCompile 'org.mockito:mockito-all:1.10.19'
+    testCompile 'org.mockito:mockito-core:2.8.47'
 
     // TEST: Logging
-    testRuntime 'org.apache.logging.log4j:log4j-core:2.5'
-    testRuntime 'org.apache.logging.log4j:log4j-slf4j-impl:2.5'
+    testRuntime 'org.apache.logging.log4j:log4j-core:2.8.2'
+    testRuntime 'org.apache.logging.log4j:log4j-slf4j-impl:2.8.2'
 }
 
 

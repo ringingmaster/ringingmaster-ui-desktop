@@ -9,7 +9,7 @@ import org.ringingmaster.engine.notation.Notation;
 import org.ringingmaster.engine.notation.NotationBody;
 import org.ringingmaster.engine.notation.impl.NotationBuilder;
 import org.ringingmaster.engine.notation.impl.NotationBuilderHelper;
-import org.ringingmaster.engine.touch.container.Grid;
+import org.ringingmaster.engine.grid.Grid;
 import org.ringingmaster.engine.touch.container.Touch;
 import org.ringingmaster.engine.touch.container.Touch.Mutated;
 import org.ringingmaster.engine.touch.container.TouchCell;

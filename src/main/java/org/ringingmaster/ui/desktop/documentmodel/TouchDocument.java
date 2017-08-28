@@ -197,7 +197,7 @@ public class TouchDocument extends ScrollPane implements Listenable<TouchDocumen
 
 			if (!touch.isSpliced() &&
 					touch.getNonSplicedActiveNotation() != null &&
-					touch.getNonSplicedActiveNotation().getNumberOfWorkingBells().getBellCount() > numberOfBells.getBellCount()) {
+					touch.getNonSplicedActiveNotation().getNumberOfWorkingBells().toInt() > numberOfBells.toInt()) {
 				final List<NotationBody> filteredNotations = NotationBuilderHelper.filterNotationsUptoNumberOfBells(touch.getAllNotations(), numberOfBells);
 				message.append(pointNumber++).append(") Active method '")
 						.append(touch.getNonSplicedActiveNotation().getNameIncludingNumberOfBells())

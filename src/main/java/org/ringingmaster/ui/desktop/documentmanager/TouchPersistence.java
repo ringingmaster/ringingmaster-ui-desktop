@@ -68,7 +68,7 @@ public class TouchPersistence {
 	TouchPersist buildTouchPersist(Touch touch) {
 		TouchPersist touchPersist = new TouchPersist();
 
-		touchPersist.setNumberOfBells(touch.getNumberOfBells().getBellCount());
+		touchPersist.setNumberOfBells(touch.getNumberOfBells().toInt());
 
 		touchPersist.setTitle(touch.getTitle());
 
@@ -145,7 +145,7 @@ public class TouchPersistence {
 
 	private NotationKeyPersist getNotationKeyPersist(NotationBody nonSplicedActiveNotation) {
 		NotationKeyPersist notationKeyPersist = new ObjectFactory().createNotationKeyPersist();
-		notationKeyPersist.setNumberOfWorkingBells(nonSplicedActiveNotation.getNumberOfWorkingBells().getBellCount());
+		notationKeyPersist.setNumberOfWorkingBells(nonSplicedActiveNotation.getNumberOfWorkingBells().toInt());
 		notationKeyPersist.setName(nonSplicedActiveNotation.getName());
 		return notationKeyPersist;
 	}
@@ -159,7 +159,7 @@ public class TouchPersistence {
 
 	private TouchNotationPersist buildTouchNotationPersist(NotationBody notation) {
 		TouchNotationPersist notationPersist = new TouchNotationPersist();
-		notationPersist.setNumberOfWorkingBells(notation.getNumberOfWorkingBells().getBellCount());
+		notationPersist.setNumberOfWorkingBells(notation.getNumberOfWorkingBells().toInt());
 		notationPersist.setName(notation.getName());
 		notationPersist.setFoldedPalindrome(notation.isFoldedPalindrome());
 		notationPersist.setNotation(notation.getRawNotationDisplayString(0, true));
@@ -216,7 +216,7 @@ public class TouchPersistence {
 			List<NotationBody> allNotations = touch.getAllNotations();
 			for (NotationBody notation : allNotations) {
 				if (notation.getName().equals(nonSplicedActiveNotation.getName()) &&
-					(notation.getNumberOfWorkingBells().getBellCount() == nonSplicedActiveNotation.getNumberOfWorkingBells())) {
+					(notation.getNumberOfWorkingBells().toInt() == nonSplicedActiveNotation.getNumberOfWorkingBells())) {
 					touch.setNonSplicedActiveNotation(notation);
 					break;
 				}

@@ -33,7 +33,7 @@ public class LeadHeadTablePane extends ScrollPane {
             {
                 setHgap(5);
                 setVgap(3);
-                int maxColumns = BELLS_22.getBellCount() - BELLS_5.getBellCount();
+                int maxColumns = BELLS_22.toInt() - BELLS_5.toInt();
 
                 List<LeadHeadCalculator.LeadHeadCodes> orderedLeadHeadCodes = LeadHeadCalculator.getOrderedLeadHeadCodes();
                 for (int orderedLeadHeadCodesIndex=0;orderedLeadHeadCodesIndex<orderedLeadHeadCodes.size();orderedLeadHeadCodesIndex++) {

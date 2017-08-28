@@ -112,7 +112,7 @@ public class PropertyNotationPanel extends NameValuePairTable implements Listena
 		for (NotationBody notation : allNotations) {
 			String name = getDisplayName(notation);
 
-			if (notation.getNumberOfWorkingBells().getBellCount() > touchDocument.get().getNumberOfBells().getBellCount()) {
+			if (notation.getNumberOfWorkingBells().toInt() > touchDocument.get().getNumberOfBells().toInt()) {
 				updateDisplayProperty(name, "Too many bells", true);
 			}
 			else if (spliced) {

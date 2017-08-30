@@ -38,6 +38,6 @@
     <terminationMaxRows>2345</terminationMaxRows>
     <terminationMaxLeads>999</terminationMaxLeads>
     <terminationMaxParts>123</terminationMaxParts>
-    <terminationMaxCircularTouch>12</terminationMaxCircularTouch>
+    <terminationMaxCircularity>12</terminationMaxCircularity>
     <terminationChange>132546</terminationChange>
 </ns2:touch>

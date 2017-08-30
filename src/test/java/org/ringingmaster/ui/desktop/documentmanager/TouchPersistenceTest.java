@@ -6,7 +6,7 @@ import org.ringingmaster.engine.method.impl.MethodBuilder;
 import org.ringingmaster.engine.notation.NotationBody;
 import org.ringingmaster.engine.notation.impl.NotationBuilder;
 import org.ringingmaster.engine.touch.container.Touch;
-import org.ringingmaster.engine.touch.container.TouchCheckingType;
+import org.ringingmaster.engine.touch.newcontainer.checkingtype.CheckingType;
 import org.ringingmaster.engine.touch.container.impl.TouchBuilder;
 import org.ringingmaster.persist.generated.v1.TouchPersist;
 import org.junit.Test;
@@ -39,7 +39,7 @@ public class TouchPersistenceTest {
 		touch.setTitle("My Touch");
 		touch.setAuthor("by Stephen");
 
-		touch.setTouchCheckingType(TouchCheckingType.LEAD_BASED);
+		touch.setTouchCheckingType(CheckingType.LEAD_BASED);
 		touch.addNotation(buildPlainBobMinor());
 		touch.addNotation(buildLittleBobMinor());
 		touch.addNotation(buildPlainBobMinimus());

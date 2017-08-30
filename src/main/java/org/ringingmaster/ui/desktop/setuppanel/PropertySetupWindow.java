@@ -9,7 +9,7 @@ import org.ringingmaster.engine.NumberOfBells;
 import org.ringingmaster.engine.method.Bell;
 import org.ringingmaster.engine.method.Stroke;
 import org.ringingmaster.engine.notation.NotationBody;
-import org.ringingmaster.engine.touch.container.TouchCheckingType;
+import org.ringingmaster.engine.touch.newcontainer.checkingtype.CheckingType;
 import org.ringingmaster.ui.desktop.documentmodel.TouchDocument;
 import org.ringingmaster.ui.desktop.documentmodel.TouchDocumentTypeManager;
 import com.google.common.collect.Lists;
@@ -120,8 +120,8 @@ public class PropertySetupWindow extends PropertyEditor {
 		add( new SelectionPropertyValue(CHECKING_TYPE_PROPERTY_NAME));
 		((SelectionPropertyValue)findPropertyByName(CHECKING_TYPE_PROPERTY_NAME)).setListener((observable, oldValue, newValue) -> {
 			if (newValue.intValue() != -1) {
-				final TouchCheckingType touchCheckingType = TouchCheckingType.values()[newValue.intValue()];
-				updateTouchDocumentIfPresent(touchDocument -> touchDocument.setTouchCheckingType(touchCheckingType));
+				final CheckingType checkingType = CheckingType.values()[newValue.intValue()];
+				updateTouchDocumentIfPresent(touchDocument -> touchDocument.setTouchCheckingType(checkingType));
 			}
 		});
 
@@ -160,8 +160,8 @@ public class PropertySetupWindow extends PropertyEditor {
 		((SelectionPropertyValue)findPropertyByName(ACTIVE_METHOD_PROPERTY_NAME)).setSelectedIndex(selectedNotationIndex);
 
 		final List<String> touchTypes = new ArrayList<>();
-		for (TouchCheckingType touchCheckingType : TouchCheckingType.values()) {
-			touchTypes.add(touchCheckingType.getName());
+		for (CheckingType checkingType : CheckingType.values()) {
+			touchTypes.add(checkingType.getName());
 		}
 		((SelectionPropertyValue)findPropertyByName(CHECKING_TYPE_PROPERTY_NAME)).setItems(touchTypes);
 		final int touchTypeIndex = touchDocument.isPresent()? touchDocument.get().getTouchCheckingType().ordinal():-1;
@@ -170,7 +170,7 @@ public class PropertySetupWindow extends PropertyEditor {
 		final String plainLeadToken = touchDocument.isPresent()? touchDocument.get().getPlainLeadToken():"";
 		((TextPropertyValue)findPropertyByName(PLAIN_LEAD_TOKEN_PROPERTY_NAME)).setValue(plainLeadToken);
 		findPropertyByName(PLAIN_LEAD_TOKEN_PROPERTY_NAME).setDisable(touchDocument.isPresent() &&
-																		touchDocument.get().getTouchCheckingType() == TouchCheckingType.COURSE_BASED);
+																		touchDocument.get().getTouchCheckingType() == CheckingType.COURSE_BASED);
 	}
 
 	public List<String> getValidNotations(Optional<TouchDocument> touchDocument) {

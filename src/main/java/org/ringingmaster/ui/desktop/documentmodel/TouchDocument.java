@@ -13,7 +13,7 @@ import org.ringingmaster.engine.grid.Grid;
 import org.ringingmaster.engine.touch.container.Touch;
 import org.ringingmaster.engine.touch.container.Touch.Mutated;
 import org.ringingmaster.engine.touch.container.TouchCell;
-import org.ringingmaster.engine.touch.container.TouchCheckingType;
+import org.ringingmaster.engine.touch.newcontainer.checkingtype.CheckingType;
 import org.ringingmaster.engine.touch.container.TouchDefinition;
 import org.ringingmaster.engine.touch.container.impl.ImmutableTouch;
 import org.ringingmaster.ui.desktop.documentmanager.DefaultDocument;
@@ -367,18 +367,18 @@ public class TouchDocument extends ScrollPane implements Listenable<TouchDocumen
 		setUpdatePoint(() -> (spliced?"Set spliced":"Set non spliced"), mutated);
 	}
 
-	public TouchCheckingType getTouchCheckingType() {
-		return touch.getTouchCheckingType();
+	public CheckingType getTouchCheckingType() {
+		return touch.getCheckingType();
 	}
 
-	public void setTouchCheckingType(TouchCheckingType touchCheckingType) {
-		checkNotNull(touchCheckingType);
+	public void setTouchCheckingType(CheckingType checkingType) {
+		checkNotNull(checkingType);
 
 		Mutated mutated = UNCHANGED;
-		if (touchCheckingType != touch.getTouchCheckingType()) {
-			mutated = touch.setTouchCheckingType(touchCheckingType);
+		if (checkingType != touch.getCheckingType()) {
+			mutated = touch.setTouchCheckingType(checkingType);
 		}
-		setUpdatePoint(() -> String.format("Set Checking Type: %s", touchCheckingType.getName()), mutated);
+		setUpdatePoint(() -> String.format("Set Checking Type: %s", checkingType.getName()), mutated);
 	}
 
 	public String getPlainLeadToken() {

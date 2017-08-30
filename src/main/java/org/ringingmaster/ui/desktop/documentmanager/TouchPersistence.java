@@ -10,7 +10,7 @@ import org.ringingmaster.engine.notation.impl.NotationBuilder;
 import org.ringingmaster.engine.grid.Grid;
 import org.ringingmaster.engine.touch.container.Touch;
 import org.ringingmaster.engine.touch.container.TouchCell;
-import org.ringingmaster.engine.touch.container.TouchCheckingType;
+import org.ringingmaster.engine.touch.newcontainer.checkingtype.CheckingType;
 import org.ringingmaster.engine.touch.container.TouchDefinition;
 import org.ringingmaster.engine.touch.container.impl.TouchBuilder;
 import org.ringingmaster.persist.DocumentPersist;
@@ -74,7 +74,7 @@ public class TouchPersistence {
 
 		touchPersist.setAuthor(touch.getAuthor());
 
-		touchPersist.setTouchChecking(TouchCheckingPersist.fromValue(touch.getTouchCheckingType().toString()));
+		touchPersist.setTouchChecking(TouchCheckingPersist.fromValue(touch.getCheckingType().toString()));
 
 		touchPersist.setCallFrom(touch.getCallFromBell().getZeroBasedBell() + 1);
 
@@ -201,7 +201,7 @@ public class TouchPersistence {
 
 		touch.setAuthor(touchPersist.getAuthor());
 
-		touch.setTouchCheckingType(TouchCheckingType.valueOf(touchPersist.getTouchChecking().toString()));
+		touch.setTouchCheckingType(CheckingType.valueOf(touchPersist.getTouchChecking().toString()));
 
 		touch.setCallFromBell(Bell.valueOf(touchPersist.getCallFrom() - 1));
 

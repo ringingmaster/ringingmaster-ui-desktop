@@ -163,6 +163,7 @@ public class TouchDocument extends ScrollPane implements Listenable<TouchDocumen
 
 	public void setNumberOfBells(NumberOfBells numberOfBells) {
 		checkNotNull(numberOfBells);
+//TODO Drive this checking from the ObservableTouch - check can return an immutable touch
 
 		Mutated mutated = UNCHANGED;
 		if (touch.getNumberOfBells() != numberOfBells) {

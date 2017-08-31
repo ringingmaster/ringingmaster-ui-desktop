@@ -134,7 +134,7 @@ public class TouchPersistence {
 			touchPersist.setTerminationMaxParts(touch.getTerminationMaxParts().get());
 		}
 		if (touch.getTerminationMaxCircularTouch().isPresent()) {
-			touchPersist.setTerminationMaxCircularTouch(touch.getTerminationMaxCircularTouch().get());
+			touchPersist.setTerminationMaxCircularity(touch.getTerminationMaxCircularTouch().get());
 		}
 		if (touch.getTerminationChange().isPresent()) {
 			touchPersist.setTerminationChange(touch.getTerminationChange().get().getDisplayString(false));
@@ -251,8 +251,8 @@ public class TouchPersistence {
 		if (touchPersist.getTerminationMaxParts() != null) {
 			touch.setTerminationMaxParts(touchPersist.getTerminationMaxParts());
 		}
-		if (touchPersist.getTerminationMaxCircularTouch() != null) {
-			touch.setTerminationMaxCircularTouch(touchPersist.getTerminationMaxCircularTouch());
+		if (touchPersist.getTerminationMaxCircularity() != null) {
+			touch.setTerminationMaxCircularTouch(touchPersist.getTerminationMaxCircularity());
 		}
 		if (touchPersist.getTerminationChange() != null) {
 			touch.setTerminationChange(MethodBuilder.parse(touch.getNumberOfBells(), touchPersist.getTerminationChange()));

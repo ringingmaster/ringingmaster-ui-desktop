@@ -3,7 +3,7 @@ package org.ringingmaster.ui.desktop.documentmodel.maingrid;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import org.ringingmaster.engine.touch.container.TouchCell;
-import org.ringingmaster.engine.touch.parser.ParseType;
+import org.ringingmaster.engine.parser.ParseType;
 import org.ringingmaster.ui.common.TouchStyle;
 import org.ringingmaster.ui.desktop.documentmodel.TouchDocument;
 import org.ringingmaster.ui.desktop.documentpanel.grid.model.*;

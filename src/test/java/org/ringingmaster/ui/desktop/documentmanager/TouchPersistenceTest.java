@@ -6,6 +6,7 @@ import org.ringingmaster.engine.method.impl.MethodBuilder;
 import org.ringingmaster.engine.notation.NotationBody;
 import org.ringingmaster.engine.notation.impl.NotationBuilder;
 import org.ringingmaster.engine.touch.container.Touch;
+import org.ringingmaster.engine.touch.newcontainer.ObservableTouch;
 import org.ringingmaster.engine.touch.newcontainer.checkingtype.CheckingType;
 import org.ringingmaster.engine.touch.container.impl.TouchBuilder;
 import org.ringingmaster.persist.generated.v1.TouchPersist;
@@ -23,18 +24,18 @@ public class TouchPersistenceTest {
 	@Test
 	public void canRebuildTouch() {
 		TouchPersistence touchPersistence = new TouchPersistence();
-		Touch originalTouch = createDummyTouch();
+		ObservableTouch originalTouch = createDummyTouch();
 
 		TouchPersist touchPersist = touchPersistence.buildTouchPersist(originalTouch);
-		Touch recreatedTouch = touchPersistence.buildTouch(touchPersist);
+		ObservableTouch recreatedTouch = touchPersistence.buildTouch(touchPersist);
 
 		assertEquals(originalTouch.toString(), recreatedTouch.toString());
 	}
 
 
-	private static Touch createDummyTouch() {
+	private static ObservableTouch createDummyTouch() {
 
-		Touch touch = TouchBuilder.getInstance(NumberOfBells.BELLS_6, 2, 2);
+		ObservableTouch touch = TouchBuilder.newTouch(NumberOfBells.BELLS_6);
 
 		touch.setTitle("My Touch");
 		touch.setAuthor("by Stephen");
@@ -52,15 +53,15 @@ public class TouchPersistenceTest {
 		touch.addDefinition("3*", "-s-");
 		touch.addDefinition("tr", "sps");
 
-		touch.setStartChange(MethodBuilder.parse(touch.getNumberOfBells(),"654321"));
+		touch.setStartChange(MethodBuilder.parse(touch.get().getNumberOfBells(),"654321"));
 		touch.setStartAtRow(10);
 		touch.setStartNotation(NotationBuilder.getInstance()
-				.setNumberOfWorkingBells(touch.getNumberOfBells())
+				.setNumberOfWorkingBells(touch.get().getNumberOfBells())
 				.setUnfoldedNotationShorthand("x12x34")
 				.build());
 		touch.setStartStroke(Stroke.HANDSTROKE);
 
-		touch.setTerminationChange(MethodBuilder.parse(touch.getNumberOfBells(), "132546"));
+		touch.setTerminationChange(MethodBuilder.parse(touch.get().getNumberOfBells(), "132546"));
 		touch.setTerminationMaxRows(2345);
 		touch.setTerminationMaxParts(123);
 		touch.setTerminationMaxLeads(999);

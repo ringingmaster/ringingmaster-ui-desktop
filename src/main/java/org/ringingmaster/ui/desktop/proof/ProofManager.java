@@ -3,7 +3,7 @@ package org.ringingmaster.ui.desktop.proof;
 import org.ringingmaster.engine.touch.compiler.Compiler;
 import org.ringingmaster.engine.touch.compiler.impl.CompilerFactory;
 import org.ringingmaster.engine.touch.compiler.impl.TerminateEarlyException;
-import org.ringingmaster.engine.touch.container.Touch;
+import org.ringingmaster.engine.touch.newcontainer.Touch;
 import org.ringingmaster.engine.touch.parser.Parser;
 import org.ringingmaster.engine.touch.parser.impl.DefaultParser;
 import org.ringingmaster.engine.touch.proof.Proof;

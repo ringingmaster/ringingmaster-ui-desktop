@@ -1,12 +1,13 @@
 package org.ringingmaster.ui.desktop.documentmodel;
 
+import com.google.common.collect.Lists;
+import javafx.stage.FileChooser;
 import org.ringingmaster.engine.NumberOfBells;
-import org.ringingmaster.engine.method.impl.MethodBuilder;
 import org.ringingmaster.engine.notation.NotationBody;
 import org.ringingmaster.engine.notation.impl.NotationBuilder;
-import org.ringingmaster.engine.touch.container.Touch;
-import org.ringingmaster.engine.touch.newcontainer.checkingtype.CheckingType;
 import org.ringingmaster.engine.touch.container.impl.TouchBuilder;
+import org.ringingmaster.engine.touch.newcontainer.ObservableTouch;
+import org.ringingmaster.engine.touch.newcontainer.checkingtype.CheckingType;
 import org.ringingmaster.ui.desktop.documentmanager.Document;
 import org.ringingmaster.ui.desktop.documentmanager.DocumentManager;
 import org.ringingmaster.ui.desktop.documentmanager.DocumentTypeManager;
@@ -15,8 +16,6 @@ import org.ringingmaster.ui.desktop.proof.ProofManager;
 import org.ringingmaster.util.beanfactory.BeanFactory;
 import org.ringingmaster.util.listener.ConcurrentListenable;
 import org.ringingmaster.util.listener.Listenable;
-import com.google.common.collect.Lists;
-import javafx.stage.FileChooser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,7 +43,7 @@ public class TouchDocumentTypeManager extends ConcurrentListenable<TouchDocument
 
 	@Override
 	public Document createNewDocument() {
-		Touch touch = createEmptyTouch();
+		ObservableTouch touch = createEmptyTouch();
 		final TouchDocument touchDocument = buildTouchDocumentForTouch(touch);
 		touchDocument.setDocumentName("Untitled "+ DOCUMENT_TYPE_NAME + " " + ++docNumber);
 		touchDocument.setDirty(true);
@@ -53,7 +52,7 @@ public class TouchDocumentTypeManager extends ConcurrentListenable<TouchDocument
 
 	@Override
 	public Document openDocument(Path path) {
-		Touch touch = touchPersistence.load(path);
+		ObservableTouch touch = touchPersistence.load(path);
 		TouchDocument touchDocument = buildTouchDocumentForTouch(touch);
 		touchDocument.setPath(path);
 		return touchDocument;
@@ -61,11 +60,11 @@ public class TouchDocumentTypeManager extends ConcurrentListenable<TouchDocument
 
 	@Override
 	public void saveDocument(Document document) {
-		TouchDocument touchDocument = (TouchDocument)document;
-		Path path = document.getPath();
-		Touch touch = touchDocument.getTouch();
-		touchPersistence.save(path, touch);
-		document.setDirty(false);
+//TODO		TouchDocument touchDocument = (TouchDocument)document;
+//		Path path = document.getPath();
+//		Touch touch = touchDocument.getTouch();
+//		touchPersistence.save(path, touch);
+//		document.setDirty(false);
 	}
 
 	public Collection<FileChooser.ExtensionFilter> getFileChooserExtensionFilters() {
@@ -78,7 +77,7 @@ public class TouchDocumentTypeManager extends ConcurrentListenable<TouchDocument
 	}
 
 
-	private TouchDocument buildTouchDocumentForTouch(Touch touch) {
+	private TouchDocument buildTouchDocumentForTouch(ObservableTouch touch) {
 		final TouchDocument touchDocument = beanFactory.build(TouchDocument.class);
 		touchDocument.init(touch);
 		// this is needed to listen to document updates that are not changed with proof's.
@@ -125,27 +124,12 @@ public class TouchDocumentTypeManager extends ConcurrentListenable<TouchDocument
 		this.proofManager = proofManager;
 	}
 
-	//TODO Make this return a new touch.
-	private Touch createEmptyTouch() {
-		Touch touch = TouchBuilder.getInstance(NumberOfBells.BELLS_6, 2, 2);
+	private ObservableTouch createEmptyTouch() {
+		ObservableTouch touch = TouchBuilder.newTouch(NumberOfBells.BELLS_6);
 
 		touch.setTitle("My Touch");
 		touch.setAuthor("by Stephen");
-
 		touch.setTouchCheckingType(CheckingType.LEAD_BASED);
-		touch.addNotation(buildPlainBobMinor());
-		touch.addNotation(buildLittleBobMinor());
-		touch.addNotation(buildPlainBobMinimus());
-		touch.addNotation(buildPlainBobMajor());
-
-		touch.addCharacters(0,0,"-s");
-		touch.addCharacters(1,0,"p 3*");
-		touch.addCharacters(0,1,"s-");
-
-		touch.addDefinition("3*", "-s-");
-		touch.addDefinition("tr", "sps");
-
-		touch.setTerminationChange(MethodBuilder.buildRoundsRow(touch.getNumberOfBells()));
 
 		return touch;
 	}

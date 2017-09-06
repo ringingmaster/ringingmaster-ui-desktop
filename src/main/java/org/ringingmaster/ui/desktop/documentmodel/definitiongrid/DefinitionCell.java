@@ -1,25 +1,16 @@
 package org.ringingmaster.ui.desktop.documentmodel.definitiongrid;
 
-import org.ringingmaster.engine.touch.container.Touch;
-import org.ringingmaster.engine.touch.container.TouchCell;
-import org.ringingmaster.engine.touch.parser.ParseType;
-import org.ringingmaster.ui.desktop.documentmodel.TouchDocument;
-import org.ringingmaster.ui.desktop.documentpanel.grid.model.AdditionalStyleType;
-import org.ringingmaster.ui.desktop.documentpanel.grid.model.GridCellModel;
-import org.ringingmaster.ui.desktop.documentpanel.grid.model.GridCharacterModel;
-import org.ringingmaster.ui.desktop.documentpanel.grid.model.GridModelListener;
-import org.ringingmaster.ui.desktop.documentpanel.grid.model.SkeletalGridCellModel;
-import org.ringingmaster.ui.common.TouchStyle;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import org.ringingmaster.engine.touch.container.TouchCell;
+import org.ringingmaster.engine.touch.parser.ParseType;
+import org.ringingmaster.ui.common.TouchStyle;
+import org.ringingmaster.ui.desktop.documentmodel.TouchDocument;
+import org.ringingmaster.ui.desktop.documentpanel.grid.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Collections;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -47,9 +38,9 @@ public class DefinitionCell extends SkeletalGridCellModel implements GridCellMod
 	}
 
 	@Override
-	public void insertCharacter(int index, char character) {
-		cell.insert(character, index);
-		touchDocument.setUpdatePoint(() -> "Typing", Touch.Mutated.MUTATED);
+	public void insertCharacter(int index, String character) {
+//TODO		cell.insert(character, index);
+//TODO		touchDocument.setUpdatePoint(() -> "Typing", Touch.Mutated.MUTATED);
 		fireCellStructureChanged();
 	}
 
@@ -57,7 +48,7 @@ public class DefinitionCell extends SkeletalGridCellModel implements GridCellMod
 	public void removeCharacter(int index) {
 		cell.remove(index);
 		touchDocument.collapseEmptyRowsAndColumns();
-		touchDocument.setUpdatePoint(() -> "Delete", Touch.Mutated.MUTATED);
+//TODO		touchDocument.setUpdatePoint(() -> "Delete", Touch.Mutated.MUTATED);
 		fireCellStructureChanged();
 	}
 

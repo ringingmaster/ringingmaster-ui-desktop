@@ -1,12 +1,11 @@
 package org.ringingmaster.ui.desktop.notationpanel;
 
-import org.ringingmaster.util.javafx.events.EventDefinition;
-import org.ringingmaster.util.javafx.events.SkeletalEventDefinition;
+import javafx.event.ActionEvent;
 import org.ringingmaster.engine.notation.NotationBody;
-import org.ringingmaster.engine.touch.container.Touch;
 import org.ringingmaster.ui.desktop.documentmodel.TouchDocumentTypeManager;
 import org.ringingmaster.ui.desktop.notationeditor.NotationEditorDialogFactory;
-import javafx.event.ActionEvent;
+import org.ringingmaster.util.javafx.events.EventDefinition;
+import org.ringingmaster.util.javafx.events.SkeletalEventDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,11 +39,11 @@ public class EditNotationEvent extends SkeletalEventDefinition implements EventD
 		int index = propertyNotationPanel.getSelectionModel().getSelectedIndex();
 		NotationBody notation =  propertyNotationPanel.getNotation(index);
 		if (notation != null) {
-			notationEditorDialogFactory.editNotationShowDialog(notation, result -> {
-				log.info("EditNotationButton - adding", result.toString());
-				return touchDocumentTypeManager.getCurrentDocument().get().exchangeNotationAfterEdit(notation, result) == Touch.Mutated.MUTATED;
-				//TODO common this code from double click -
-			});
+//TODO			notationEditorDialogFactory.editNotationShowDialog(notation, result -> {
+//				log.info("EditNotationButton - adding", result.toString());
+//				return touchDocumentTypeManager.getCurrentDocument().get().exchangeNotationAfterEdit(notation, result) == Touch.Mutated.MUTATED;
+//				//TODO common this code from double click -
+//			});
 		}
 	}
 

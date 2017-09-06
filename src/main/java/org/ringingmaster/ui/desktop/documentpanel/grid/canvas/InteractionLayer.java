@@ -86,7 +86,7 @@ public class InteractionLayer extends Pane implements BlinkTimerListener {
 		char character = characterAsString.charAt(0);
 		if (character >= 32 && character < 127 ) {
 			GridPosition caretPosition = parent.getModel().getCaretPosition();
-			parent.getModel().getCellModel(caretPosition.getColumn(), caretPosition.getRow()).insertCharacter(caretPosition.getCharacterIndex(), character);
+			parent.getModel().getCellModel(caretPosition.getColumn(), caretPosition.getRow()).insertCharacter(caretPosition.getCharacterIndex(), characterAsString);
 			caretPositionMover.moveRight();
 			//log.info("keyTyped:" + e);
 		}

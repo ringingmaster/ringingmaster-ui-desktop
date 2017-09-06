@@ -123,7 +123,7 @@ public class PropertyNotationPanel extends NameValuePairTable implements Listena
 					updateDisplayProperty(name, TouchDocument.SPLICED_TOKEN + " " + notation.getSpliceIdentifier(), false);
 				}
 			}
-			else if (notation == touchDocument.get().getSingleMethodActiveNotation()) {
+			else if (notation == touchDocument.get().getNonSplicedActiveNotation()) {
 				updateDisplayProperty(name, "<Active>", false);
 			}
 			else {

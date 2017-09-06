@@ -131,7 +131,7 @@ public class StubGridEditorModel implements GridModel {
 		}
 
 		@Override
-		public void insertCharacter(int index, char character) {
+		public void insertCharacter(int index, String character) {
 		}
 
 		@Override

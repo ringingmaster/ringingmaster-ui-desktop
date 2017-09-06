@@ -38,7 +38,7 @@ public class SetActiveNotationEvent  extends SkeletalEventDefinition implements 
 			}
 			else {
 				// Not Spliced
-				if (touchDocumentTypeManager.getCurrentDocument().get().getSingleMethodActiveNotation() == selectedNotation) {
+				if (touchDocumentTypeManager.getCurrentDocument().get().getNonSplicedActiveNotation() == selectedNotation) {
 					touchDocumentTypeManager.getCurrentDocument().get().setSpliced(true);
 				}
 				else {
@@ -59,12 +59,12 @@ public class SetActiveNotationEvent  extends SkeletalEventDefinition implements 
 
 				pressedProperty().set(selectedNotation.isPresent() &&
 						currentDocument.isPresent() &&
-						currentDocument.get().getSingleMethodActiveNotation() == selectedNotation.get());
+						currentDocument.get().getNonSplicedActiveNotation() == selectedNotation.get());
 
 				if (selectedNotation.isPresent() &&
 					currentDocument.isPresent()){
 					if (!currentDocument.get().isSpliced() &&
-							currentDocument.get().getSingleMethodActiveNotation() == selectedNotation.get()) {
+							currentDocument.get().getNonSplicedActiveNotation() == selectedNotation.get()) {
 						tooltipTextProperty().setValue("Set Spliced");
 					} else {
 						tooltipTextProperty().setValue(TOOLTIP_BAST_TEXT + " '" + selectedNotation.get().getNameIncludingNumberOfBells() + "'");

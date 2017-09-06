@@ -1,6 +1,5 @@
 package org.ringingmaster.ui.desktop.documentmodel.maingrid;
 
-import org.ringingmaster.engine.touch.container.Touch;
 import org.ringingmaster.ui.desktop.documentmodel.TouchDocument;
 import org.ringingmaster.ui.desktop.documentpanel.grid.model.GridCellModel;
 import org.ringingmaster.ui.desktop.documentpanel.grid.model.GridCharacterModel;
@@ -42,7 +41,7 @@ public class ExpansionCell extends SkeletalGridCellModel implements GridCellMode
 	}
 
 	@Override
-	public void insertCharacter(int index, char character) {
+	public void insertCharacter(int index, String character) {
 		if (expandColumn) {
 			touchDocument.incrementColumnCount();
 		}
@@ -52,7 +51,7 @@ public class ExpansionCell extends SkeletalGridCellModel implements GridCellMode
 
 		// We do not use the cell version here as we do not have a cell until the increment above.
 		touchDocument.insertCharacter(column, row, index, character);
-		touchDocument.setUpdatePoint(() -> "Typing", Touch.Mutated.MUTATED);
+	//TODO	touchDocument.setUpdatePoint(() -> "Typing", Touch.Mutated.MUTATED);
 
 		fireCellStructureChanged();
 	}

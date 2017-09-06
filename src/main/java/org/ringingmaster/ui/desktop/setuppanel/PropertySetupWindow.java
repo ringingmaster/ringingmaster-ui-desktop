@@ -199,7 +199,7 @@ public class PropertySetupWindow extends PropertyEditor {
 		if (touchDocument.get().isSpliced()) {
 			return 0;
 		}
-		final NotationBody activeNotation = touchDocument.get().getSingleMethodActiveNotation();
+		final NotationBody activeNotation = touchDocument.get().getNonSplicedActiveNotation();
 		final List<NotationBody> sortedNotationsBeingDisplayed = touchDocument.get().getSortedValidNotations();
 		for (int index = 0;index<sortedNotationsBeingDisplayed.size();index++) {
 			final NotationBody notation = sortedNotationsBeingDisplayed.get(index);

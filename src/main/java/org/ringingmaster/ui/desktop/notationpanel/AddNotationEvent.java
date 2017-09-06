@@ -1,12 +1,11 @@
 package org.ringingmaster.ui.desktop.notationpanel;
 
-import org.ringingmaster.util.javafx.events.EventDefinition;
-import org.ringingmaster.util.javafx.events.SkeletalEventDefinition;
+import javafx.event.ActionEvent;
 import org.ringingmaster.engine.NumberOfBells;
-import org.ringingmaster.engine.touch.container.Touch;
 import org.ringingmaster.ui.desktop.documentmodel.TouchDocumentTypeManager;
 import org.ringingmaster.ui.desktop.notationeditor.NotationEditorDialogFactory;
-import javafx.event.ActionEvent;
+import org.ringingmaster.util.javafx.events.EventDefinition;
+import org.ringingmaster.util.javafx.events.SkeletalEventDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,10 +33,10 @@ public class AddNotationEvent extends SkeletalEventDefinition implements EventDe
 		}
 		NumberOfBells numberOfBells = touchDocumentTypeManager.getCurrentDocument().get().getNumberOfBells();
 
-		notationEditorDialogFactory.newNotationShowDialog(numberOfBells, result -> {
-			log.info("AddMethodButton - adding", result.toString());
-			return touchDocumentTypeManager.getCurrentDocument().get().addNotation(result) == Touch.Mutated.MUTATED;
-		});
+//TODO		notationEditorDialogFactory.newNotationShowDialog(numberOfBells, result -> {
+//			log.info("AddMethodButton - adding", result.toString());
+//			return touchDocumentTypeManager.getCurrentDocument().get().addNotation(result) == Touch.Mutated.MUTATED;
+//		});
 	}
 
 	public void setTouchDocumentTypeManager(TouchDocumentTypeManager touchDocumentTypeManager) {

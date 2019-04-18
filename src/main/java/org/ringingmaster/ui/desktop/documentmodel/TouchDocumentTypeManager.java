@@ -10,7 +10,7 @@ import org.ringingmaster.engine.touch.container.impl.TouchBuilder;
 import org.ringingmaster.ui.desktop.documentmanager.Document;
 import org.ringingmaster.ui.desktop.documentmanager.DocumentManager;
 import org.ringingmaster.ui.desktop.documentmanager.DocumentTypeManager;
-import org.ringingmaster.ui.desktop.documentmanager.TouchPersistence;
+import org.ringingmaster.ui.desktop.documentmanager.CompositionPersistence;
 import org.ringingmaster.ui.desktop.proof.ProofManager;
 import org.ringingmaster.util.beanfactory.BeanFactory;
 import org.ringingmaster.util.listener.ConcurrentListenable;
@@ -37,7 +37,7 @@ public class TouchDocumentTypeManager extends ConcurrentListenable<TouchDocument
 	private BeanFactory beanFactory;
 	private ProofManager proofManager;
 	private DocumentManager documentManager;
-	private TouchPersistence touchPersistence = new TouchPersistence();
+	private CompositionPersistence CompositionPersistence = new CompositionPersistence();
 	private Optional<TouchDocument> currentDocument = Optional.empty();
 
 	private int docNumber = 0;
@@ -53,7 +53,7 @@ public class TouchDocumentTypeManager extends ConcurrentListenable<TouchDocument
 
 	@Override
 	public Document openDocument(Path path) {
-		Touch touch = touchPersistence.load(path);
+		Touch touch = CompositionPersistence.load(path);
 		TouchDocument touchDocument = buildTouchDocumentForTouch(touch);
 		touchDocument.setPath(path);
 		return touchDocument;
@@ -64,7 +64,7 @@ public class TouchDocumentTypeManager extends ConcurrentListenable<TouchDocument
 		TouchDocument touchDocument = (TouchDocument)document;
 		Path path = document.getPath();
 		Touch touch = touchDocument.getTouch();
-		touchPersistence.save(path, touch);
+		CompositionPersistence.save(path, touch);
 		document.setDirty(false);
 	}
 

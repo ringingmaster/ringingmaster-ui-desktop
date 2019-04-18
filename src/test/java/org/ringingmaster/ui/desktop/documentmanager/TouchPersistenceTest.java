@@ -8,7 +8,7 @@ import org.ringingmaster.engine.notation.impl.NotationBuilder;
 import org.ringingmaster.engine.touch.container.Touch;
 import org.ringingmaster.engine.touch.newcontainer.checkingtype.CheckingType;
 import org.ringingmaster.engine.touch.container.impl.TouchBuilder;
-import org.ringingmaster.persist.generated.v1.TouchPersist;
+import org.ringingmaster.persist.generated.v1.CompositionPersist;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -18,15 +18,15 @@ import static org.junit.Assert.assertEquals;
  *
  * @author Lake
  */
-public class TouchPersistenceTest {
+public class CompositionPersistenceTest {
 
 	@Test
 	public void canRebuildTouch() {
-		TouchPersistence touchPersistence = new TouchPersistence();
+		CompositionPersistence CompositionPersistence = new CompositionPersistence();
 		Touch originalTouch = createDummyTouch();
 
-		TouchPersist touchPersist = touchPersistence.buildTouchPersist(originalTouch);
-		Touch recreatedTouch = touchPersistence.buildTouch(touchPersist);
+		CompositionPersist CompositionPersist = CompositionPersistence.buildCompositionPersist(originalTouch);
+		Touch recreatedTouch = CompositionPersistence.buildTouch(CompositionPersist);
 
 		assertEquals(originalTouch.toString(), recreatedTouch.toString());
 	}

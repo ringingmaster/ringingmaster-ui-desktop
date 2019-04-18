@@ -23,7 +23,7 @@ import org.ringingmaster.persist.generated.v1.TouchCellPersist;
 import org.ringingmaster.persist.generated.v1.TouchCellsPersist;
 import org.ringingmaster.persist.generated.v1.TouchCheckingPersist;
 import org.ringingmaster.persist.generated.v1.TouchNotationPersist;
-import org.ringingmaster.persist.generated.v1.TouchPersist;
+import org.ringingmaster.persist.generated.v1.CompositionPersist;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Strings;
 import org.slf4j.Logger;
@@ -40,7 +40,7 @@ import java.util.Set;
  *
  * @author Lake
  */
-public class TouchPersistence {
+public class CompositionPersistence {
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
@@ -48,10 +48,10 @@ public class TouchPersistence {
 
 	public void save(Path path, Touch touch) {
 
-		TouchPersist touchPersist = buildTouchPersist(touch);
+		CompositionPersist CompositionPersist = buildCompositionPersist(touch);
 
 		try {
-			documentPersist.writeTouch(touchPersist, path);
+			documentPersist.writeTouch(CompositionPersist, path);
 		} catch (IOException e) {
 			log.error("TODO", e);
 		} catch (JAXBException e) {
@@ -60,43 +60,43 @@ public class TouchPersistence {
 	}
 
 	public Touch load(Path path) {
-		TouchPersist touchPersist = documentPersist.readTouch(path);
-		Touch touch = buildTouch(touchPersist);
+		CompositionPersist CompositionPersist = documentPersist.readTouch(path);
+		Touch touch = buildTouch(CompositionPersist);
 		return touch;
 	}
 
-	TouchPersist buildTouchPersist(Touch touch) {
-		TouchPersist touchPersist = new TouchPersist();
+	CompositionPersist buildCompositionPersist(Touch touch) {
+		CompositionPersist CompositionPersist = new CompositionPersist();
 
-		touchPersist.setNumberOfBells(touch.getNumberOfBells().toInt());
+		CompositionPersist.setNumberOfBells(touch.getNumberOfBells().toInt());
 
-		touchPersist.setTitle(touch.getTitle());
+		CompositionPersist.setTitle(touch.getTitle());
 
-		touchPersist.setAuthor(touch.getAuthor());
+		CompositionPersist.setAuthor(touch.getAuthor());
 
-		touchPersist.setTouchChecking(TouchCheckingPersist.fromValue(touch.getCheckingType().toString()));
+		CompositionPersist.setTouchChecking(TouchCheckingPersist.fromValue(touch.getCheckingType().toString()));
 
-		touchPersist.setCallFrom(touch.getCallFromBell().getZeroBasedBell() + 1);
+		CompositionPersist.setCallFrom(touch.getCallFromBell().getZeroBasedBell() + 1);
 
 		if (touch.getNonSplicedActiveNotation() != null) {
 			NotationBody nonSplicedActiveNotation = touch.getNonSplicedActiveNotation();
 			NotationKeyPersist notationKeyPersist = getNotationKeyPersist(nonSplicedActiveNotation);
-			touchPersist.setNonSplicedActiveNotation(notationKeyPersist);
+			CompositionPersist.setNonSplicedActiveNotation(notationKeyPersist);
 		}
 
-		touchPersist.setSpliced(touch.isSpliced());
+		CompositionPersist.setSpliced(touch.isSpliced());
 
-		touchPersist.setPlainLeadToken(touch.getPlainLeadToken());
+		CompositionPersist.setPlainLeadToken(touch.getPlainLeadToken());
 
 		Set<TouchDefinition> definitions = touch.getDefinitions();
 		for (TouchDefinition definition : definitions) {
 			DefinitionPersist definitionPersist = buildDefinitionPersist(definition);
-			touchPersist.getDefinition().add(definitionPersist);
+			CompositionPersist.getDefinition().add(definitionPersist);
 		}
 
 		for (NotationBody notation : touch.getAllNotations()) {
 			TouchNotationPersist notationType = buildTouchNotationPersist(notation);
-			touchPersist.getNotation().add(notationType);
+			CompositionPersist.getNotation().add(notationType);
 		}
 
 		Grid<TouchCell> touchCells = touch.allCellsView();
@@ -116,31 +116,31 @@ public class TouchPersistence {
 			}
 		}
 
-		touchPersist.setCells(touchCellsPersist);
+		CompositionPersist.setCells(touchCellsPersist);
 
 
-		touchPersist.setStartChange(touch.getStartChange().getDisplayString(false));
-		touchPersist.setStartRow(touch.getStartAtRow());
-		touchPersist.setStartStroke(StrokePersist.fromValue(touch.getStartStroke().toString()));
+		CompositionPersist.setStartChange(touch.getStartChange().getDisplayString(false));
+		CompositionPersist.setStartRow(touch.getStartAtRow());
+		CompositionPersist.setStartStroke(StrokePersist.fromValue(touch.getStartStroke().toString()));
 		if (touch.getStartNotation().isPresent()) {
-			touchPersist.setStartNotation((touch.getStartNotation().get().getRawNotationDisplayString(0, true)));
+			CompositionPersist.setStartNotation((touch.getStartNotation().get().getRawNotationDisplayString(0, true)));
 		}
 
-		touchPersist.setTerminationMaxRows(touch.getTerminationMaxRows());
+		CompositionPersist.setTerminationMaxRows(touch.getTerminationMaxRows());
 		if (touch.getTerminationMaxLeads().isPresent()) {
-			touchPersist.setTerminationMaxLeads(touch.getTerminationMaxLeads().get());
+			CompositionPersist.setTerminationMaxLeads(touch.getTerminationMaxLeads().get());
 		}
 		if (touch.getTerminationMaxParts().isPresent()) {
-			touchPersist.setTerminationMaxParts(touch.getTerminationMaxParts().get());
+			CompositionPersist.setTerminationMaxParts(touch.getTerminationMaxParts().get());
 		}
 		if (touch.getTerminationMaxCircularTouch().isPresent()) {
-			touchPersist.setTerminationMaxCircularity(touch.getTerminationMaxCircularTouch().get());
+			CompositionPersist.setTerminationMaxCircularity(touch.getTerminationMaxCircularTouch().get());
 		}
 		if (touch.getTerminationChange().isPresent()) {
-			touchPersist.setTerminationChange(touch.getTerminationChange().get().getDisplayString(false));
+			CompositionPersist.setTerminationChange(touch.getTerminationChange().get().getDisplayString(false));
 		}
 
-		return touchPersist;
+		return CompositionPersist;
 	}
 
 	private NotationKeyPersist getNotationKeyPersist(NotationBody nonSplicedActiveNotation) {
@@ -191,28 +191,28 @@ public class TouchPersistence {
 	}
 
 	@VisibleForTesting
-	protected Touch buildTouch(TouchPersist touchPersist) {
-		int rowCount = touchPersist.getCells().getRows();
-		int columnCount = touchPersist.getCells().getColumns();
-		NumberOfBells numberOfBells = NumberOfBells.valueOf(touchPersist.getNumberOfBells());
+	protected Touch buildTouch(CompositionPersist CompositionPersist) {
+		int rowCount = CompositionPersist.getCells().getRows();
+		int columnCount = CompositionPersist.getCells().getColumns();
+		NumberOfBells numberOfBells = NumberOfBells.valueOf(CompositionPersist.getNumberOfBells());
 		Touch touch = TouchBuilder.getInstance(numberOfBells, columnCount, rowCount);
 
-		touch.setTitle(touchPersist.getTitle());
+		touch.setTitle(CompositionPersist.getTitle());
 
-		touch.setAuthor(touchPersist.getAuthor());
+		touch.setAuthor(CompositionPersist.getAuthor());
 
-		touch.setTouchCheckingType(CheckingType.valueOf(touchPersist.getTouchChecking().toString()));
+		touch.setTouchCheckingType(CheckingType.valueOf(CompositionPersist.getTouchChecking().toString()));
 
-		touch.setCallFromBell(Bell.valueOf(touchPersist.getCallFrom() - 1));
+		touch.setCallFromBell(Bell.valueOf(CompositionPersist.getCallFrom() - 1));
 
-		for (TouchNotationPersist touchPersistNotation : touchPersist.getNotation()) {
-			NotationBody notation = buildNotation(touchPersistNotation);
+		for (TouchNotationPersist CompositionPersistNotation : CompositionPersist.getNotation()) {
+			NotationBody notation = buildNotation(CompositionPersistNotation);
 			touch.addNotation(notation);
 		}
 
-		if (touchPersist.getNonSplicedActiveNotation() != null) {
+		if (CompositionPersist.getNonSplicedActiveNotation() != null) {
 
-			NotationKeyPersist nonSplicedActiveNotation = touchPersist.getNonSplicedActiveNotation();
+			NotationKeyPersist nonSplicedActiveNotation = CompositionPersist.getNonSplicedActiveNotation();
 			List<NotationBody> allNotations = touch.getAllNotations();
 			for (NotationBody notation : allNotations) {
 				if (notation.getName().equals(nonSplicedActiveNotation.getName()) &&
@@ -223,64 +223,64 @@ public class TouchPersistence {
 			}
 		}
 
-		touch.setPlainLeadToken(touchPersist.getPlainLeadToken());
+		touch.setPlainLeadToken(CompositionPersist.getPlainLeadToken());
 
-		for (DefinitionPersist definitionPersist : touchPersist.getDefinition()) {
+		for (DefinitionPersist definitionPersist : CompositionPersist.getDefinition()) {
 			touch.addDefinition(definitionPersist.getShorthand(), definitionPersist.getCharacters());
 		}
 
-		for (TouchCellPersist touchCellPersist : touchPersist.getCells().getCell()) {
+		for (TouchCellPersist touchCellPersist : CompositionPersist.getCells().getCell()) {
 			int row = touchCellPersist.getRow();
 			int column = touchCellPersist.getColumn();
 			String characters = touchCellPersist.getCharacters();
 			touch.addCharacters(column, row, characters);
 		}
 
-		touch.setStartChange(MethodBuilder.parse(touch.getNumberOfBells(), touchPersist.getStartChange()));
-		touch.setStartAtRow(touchPersist.getStartRow());
-		touch.setStartStroke(Stroke.valueOf(touchPersist.getStartStroke().name()));
+		touch.setStartChange(MethodBuilder.parse(touch.getNumberOfBells(), CompositionPersist.getStartChange()));
+		touch.setStartAtRow(CompositionPersist.getStartRow());
+		touch.setStartStroke(Stroke.valueOf(CompositionPersist.getStartStroke().name()));
 		touch.setStartNotation(NotationBuilder.getInstance()
 				.setNumberOfWorkingBells(touch.getNumberOfBells())
-				.setUnfoldedNotationShorthand(Strings.nullToEmpty(touchPersist.getStartNotation()))
+				.setUnfoldedNotationShorthand(Strings.nullToEmpty(CompositionPersist.getStartNotation()))
 				.build());
 
-		touch.setTerminationMaxRows(touchPersist.getTerminationMaxRows());
-		if(touchPersist.getTerminationMaxLeads() != null) {
-			touch.setTerminationMaxLeads(touchPersist.getTerminationMaxLeads());
+		touch.setTerminationMaxRows(CompositionPersist.getTerminationMaxRows());
+		if(CompositionPersist.getTerminationMaxLeads() != null) {
+			touch.setTerminationMaxLeads(CompositionPersist.getTerminationMaxLeads());
 		}
-		if (touchPersist.getTerminationMaxParts() != null) {
-			touch.setTerminationMaxParts(touchPersist.getTerminationMaxParts());
+		if (CompositionPersist.getTerminationMaxParts() != null) {
+			touch.setTerminationMaxParts(CompositionPersist.getTerminationMaxParts());
 		}
-		if (touchPersist.getTerminationMaxCircularity() != null) {
-			touch.setTerminationMaxCircularTouch(touchPersist.getTerminationMaxCircularity());
+		if (CompositionPersist.getTerminationMaxCircularity() != null) {
+			touch.setTerminationMaxCircularTouch(CompositionPersist.getTerminationMaxCircularity());
 		}
-		if (touchPersist.getTerminationChange() != null) {
-			touch.setTerminationChange(MethodBuilder.parse(touch.getNumberOfBells(), touchPersist.getTerminationChange()));
+		if (CompositionPersist.getTerminationChange() != null) {
+			touch.setTerminationChange(MethodBuilder.parse(touch.getNumberOfBells(), CompositionPersist.getTerminationChange()));
 		}
 
 		return touch;
 	}
 
-	private NotationBody buildNotation(TouchNotationPersist touchPersistNotation) {
+	private NotationBody buildNotation(TouchNotationPersist CompositionPersistNotation) {
 		NotationBuilder notationBuilder = NotationBuilder.getInstance()
-				.setNumberOfWorkingBells(NumberOfBells.valueOf(touchPersistNotation.getNumberOfWorkingBells()))
-				.setName(touchPersistNotation.getName());
-		if (touchPersistNotation.isFoldedPalindrome()) {
-			notationBuilder.setFoldedPalindromeNotationShorthand(touchPersistNotation.getNotation(), touchPersistNotation.getNotation2());
+				.setNumberOfWorkingBells(NumberOfBells.valueOf(CompositionPersistNotation.getNumberOfWorkingBells()))
+				.setName(CompositionPersistNotation.getName());
+		if (CompositionPersistNotation.isFoldedPalindrome()) {
+			notationBuilder.setFoldedPalindromeNotationShorthand(CompositionPersistNotation.getNotation(), CompositionPersistNotation.getNotation2());
 		}
 		else {
-			notationBuilder.setUnfoldedNotationShorthand(touchPersistNotation.getNotation());
+			notationBuilder.setUnfoldedNotationShorthand(CompositionPersistNotation.getNotation());
 		}
 
-		if (touchPersistNotation.isUseCannedCalls() != null && touchPersistNotation.isUseCannedCalls()) {
+		if (CompositionPersistNotation.isUseCannedCalls() != null && CompositionPersistNotation.isUseCannedCalls()) {
 			notationBuilder.setCannedCalls();
 		}
 		else {
-			for (CallPersist callPersist : touchPersistNotation.getCall()) {
+			for (CallPersist callPersist : CompositionPersistNotation.getCall()) {
 				notationBuilder.addCall(callPersist.getName(), callPersist.getShorthand(), callPersist.getNotation(), callPersist.isDefault());
 			}
 		}
-		notationBuilder.setSpliceIdentifier(touchPersistNotation.getSplicedIdentifier());
+		notationBuilder.setSpliceIdentifier(CompositionPersistNotation.getSplicedIdentifier());
 
 		return notationBuilder.build();
 	}

@@ -1,16 +1,29 @@
-apply plugin: 'java'
+plugins {
+    id 'java'
+    id 'application'
+    id 'org.openjfx.javafxplugin' version '0.0.7'
+}
 
 group 'org.ringingmaster'
 version '1.0.0'
 
 compileJava {
-    sourceCompatibility = 1.8
-    targetCompatibility = 1.8
+    sourceCompatibility = 11
+    targetCompatibility = 11
 }
 
 repositories {
     mavenCentral()
 }
+
+javafx {
+    version = "11.0.2"
+    modules = [ 'javafx.controls', 'javafx.fxml', 'javafx.graphics' ]
+}
+
+//mainClassName = 'org.ringingmaster.ui.desktop.HelloFX'
+mainClassName = 'org.ringingmaster.ui.desktop.RingingMasterDesktopApp'
+
 
 dependencies {
 

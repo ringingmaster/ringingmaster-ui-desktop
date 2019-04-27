@@ -10,7 +10,6 @@
 
 		<Logger name="org.springframework" level="warn"/>
 
-		<logger name="org.ringingmaster.engine.touch" level="info"/>
 		<logger name="org.ringingmaster.engine" level="warn"/>
 		<logger name="org.ringingmaster" level="info"/>
 

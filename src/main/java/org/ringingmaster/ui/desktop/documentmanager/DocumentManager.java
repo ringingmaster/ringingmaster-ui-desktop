@@ -75,7 +75,7 @@ public class DocumentManager extends ConcurrentListenable<DocumentManagerListene
 				return ShutdownServiceListener.ShutdownOptions.PREVENT_SHUTDOWN;
 			}
 		}
-		log.info("All touch documents saved");
+		log.info("All composition documents saved");
 
 		// Now save document list
 		Preferences userPrefs = Preferences.userNodeForPackage(getClass());

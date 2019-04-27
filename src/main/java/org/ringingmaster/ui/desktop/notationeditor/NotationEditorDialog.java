@@ -1,11 +1,5 @@
 package org.ringingmaster.ui.desktop.notationeditor;
 
-import org.ringingmaster.util.javafx.dialog.EditMode;
-import org.ringingmaster.util.javafx.dialog.SkeletalDialog;
-import org.ringingmaster.engine.notation.NotationBody;
-import org.ringingmaster.engine.notation.impl.NotationBuilder;
-import org.ringingmaster.ui.desktop.RingingMasterDesktopApp;
-import org.ringingmaster.ui.desktop.notationsearch.NotationLibraryManager;
 import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
 import javafx.beans.value.ObservableValue;
@@ -16,6 +10,12 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.stage.Window;
+import org.ringingmaster.engine.notation.Notation;
+import org.ringingmaster.engine.notation.NotationBuilder;
+import org.ringingmaster.ui.desktop.RingingMasterDesktopApp;
+import org.ringingmaster.ui.desktop.notationsearch.NotationLibraryManager;
+import org.ringingmaster.util.javafx.dialog.EditMode;
+import org.ringingmaster.util.javafx.dialog.SkeletalDialog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,7 +31,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  *
  * @author Lake
  */
-public class NotationEditorDialog extends SkeletalDialog<NotationBody> {
+public class NotationEditorDialog extends SkeletalDialog<Notation> {
 
     public static final String NOTATION_EDITOR_FXML = "NotationEditorDialog.fxml";
 
@@ -39,7 +39,7 @@ public class NotationEditorDialog extends SkeletalDialog<NotationBody> {
 
     private NotationLibraryManager notationLibraryManager;
 
-    protected NotationBody lastGoodNotation;
+    protected Notation lastGoodNotation;
     private List<NotationEditorTabController> tabControllers = new ArrayList<>();
     private Status statusController;
 
@@ -50,17 +50,17 @@ public class NotationEditorDialog extends SkeletalDialog<NotationBody> {
     @FXML
     protected Button okButton;
 
-    public static void showDialog(EditMode editMode, NotationBody model, Window owner,
-                                  Function<NotationBody, Boolean> onSuccessHandler,
+    public static void showDialog(EditMode editMode, Notation model, Window owner,
+                                  Function<Notation, Boolean> onSuccessHandler,
                                   NotationLibraryManager notationLibraryManager) {
 
-        NotationEditorDialog notationEditorDialog = new DialogBuilder<NotationBody, NotationEditorDialog>().buildDialog(editMode, model, owner, NotationEditorDialog.class.getResource(NOTATION_EDITOR_FXML),
+        NotationEditorDialog notationEditorDialog = new DialogBuilder<Notation, NotationEditorDialog>().buildDialog(editMode, model, owner, NotationEditorDialog.class.getResource(NOTATION_EDITOR_FXML),
                 Lists.<String>newArrayList(RingingMasterDesktopApp.STYLESHEET), onSuccessHandler);
         notationEditorDialog.setNotationLibraryManager(checkNotNull(notationLibraryManager));
         notationEditorDialog.showAndWait();
     }
 
-    protected void initialiseDialog(EditMode editMode, NotationBody notation) {
+    protected void initialiseDialog(EditMode editMode, Notation notation) {
         try {
             addEditorTabs();
             addStatusTabs();
@@ -130,20 +130,20 @@ public class NotationEditorDialog extends SkeletalDialog<NotationBody> {
     }
 
     protected void roundTripDialogDataToModelToDialogData() {
-        NotationBody notation = buildModelFromDialogData();
+        Notation notation = buildModelFromDialogData();
         if (notation != null) {
             populateDialogFromModel(notation);
         }
     }
 
-    protected NotationBody buildModelFromDialogData() {
+    protected Notation buildModelFromDialogData() {
         try {
             NotationBuilder notationBuilder = NotationBuilder.getInstance();
             for (NotationEditorTabController tabController : tabControllers) {
                 tabController.buildNotationFromDialogData(notationBuilder);
             }
 
-            NotationBody notationBody = notationBuilder.build();
+            Notation notationBody = notationBuilder.build();
             lastGoodNotation = notationBody;
             statusController.updateNotationStats(notationBody);
             return notationBody;
@@ -155,7 +155,7 @@ public class NotationEditorDialog extends SkeletalDialog<NotationBody> {
         }
     }
 
-    protected void populateDialogFromModel(NotationBody notation) {
+    protected void populateDialogFromModel(Notation notation) {
         for (NotationEditorTabController tabController : tabControllers) {
             tabController.buildDialogDataFromNotation(notation);
         }

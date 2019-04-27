@@ -1,6 +1,7 @@
 package org.ringingmaster.ui.desktop.documentpanel.grid;
 
-import net.jcip.annotations.Immutable;
+
+import javax.annotation.concurrent.Immutable;
 
 /**
  * TODO

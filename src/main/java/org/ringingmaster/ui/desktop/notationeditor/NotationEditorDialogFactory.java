@@ -1,11 +1,11 @@
 package org.ringingmaster.ui.desktop.notationeditor;
 
-import org.ringingmaster.util.javafx.dialog.EditMode;
-import org.ringingmaster.engine.NumberOfBells;
-import org.ringingmaster.engine.notation.NotationBody;
-import org.ringingmaster.engine.notation.impl.NotationBuilder;
-import org.ringingmaster.ui.desktop.notationsearch.NotationLibraryManager;
 import javafx.stage.Stage;
+import org.ringingmaster.engine.NumberOfBells;
+import org.ringingmaster.engine.notation.Notation;
+import org.ringingmaster.engine.notation.NotationBuilder;
+import org.ringingmaster.ui.desktop.notationsearch.NotationLibraryManager;
+import org.ringingmaster.util.javafx.dialog.EditMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,7 +24,7 @@ public class NotationEditorDialogFactory {
 	private NotationLibraryManager notationLibraryManager;
 
 
-	public void newNotationShowDialog(NumberOfBells numberOfWorkingBells, Function<NotationBody, Boolean> onSuccessHandler) {
+	public void newNotationShowDialog(NumberOfBells numberOfWorkingBells, Function<Notation, Boolean> onSuccessHandler) {
 		NotationBuilder builder = NotationBuilder.getInstance();
 		builder.setNumberOfWorkingBells(numberOfWorkingBells);
 		builder.setFoldedPalindromeNotationShorthand("");
@@ -35,7 +35,7 @@ public class NotationEditorDialogFactory {
 		NotationEditorDialog.showDialog(EditMode.ADD, builder.build(), globalStage, onSuccessHandler, notationLibraryManager);
 	}
 
-	public void editNotationShowDialog(NotationBody notation, Function<NotationBody, Boolean> onSuccessHandler) {
+	public void editNotationShowDialog(Notation notation, Function<Notation, Boolean> onSuccessHandler) {
 		NotationEditorDialog.showDialog(EditMode.EDIT, notation, globalStage, onSuccessHandler, notationLibraryManager);
 	}
 

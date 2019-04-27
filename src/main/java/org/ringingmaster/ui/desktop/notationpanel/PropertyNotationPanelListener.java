@@ -1,6 +1,6 @@
 package org.ringingmaster.ui.desktop.notationpanel;
 
-import org.ringingmaster.engine.notation.NotationBody;
+import org.ringingmaster.engine.notation.Notation;
 
 import java.util.Optional;
 
@@ -11,5 +11,5 @@ import java.util.Optional;
  */
 public interface PropertyNotationPanelListener {
 
-	void propertyMethod_setSelectedNotation(Optional<NotationBody> notation);
+	void propertyMethod_setSelectedNotation(Optional<Notation> notation);
 }

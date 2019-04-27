@@ -2,9 +2,9 @@ package org.ringingmaster.ui.desktop.notationpanel;
 
 import org.ringingmaster.util.javafx.events.EventDefinition;
 import org.ringingmaster.util.javafx.events.SkeletalEventDefinition;
-import org.ringingmaster.engine.notation.NotationBody;
-import org.ringingmaster.ui.desktop.documentmodel.TouchDocument;
-import org.ringingmaster.ui.desktop.documentmodel.TouchDocumentTypeManager;
+import org.ringingmaster.engine.notation.Notation;
+import org.ringingmaster.ui.desktop.documentmodel.CompositionDocument;
+import org.ringingmaster.ui.desktop.documentmodel.CompositionDocumentTypeManager;
 import javafx.event.ActionEvent;
 
 import java.util.Optional;
@@ -18,7 +18,7 @@ public class DeleteNotationEvent extends SkeletalEventDefinition implements Even
 
 	public static final String TOOLTIP_BAST_TEXT = "Remove method";
 
-	private TouchDocumentTypeManager touchDocumentTypeManager;
+	private CompositionDocumentTypeManager compositionDocumentTypeManager;
 	private PropertyNotationPanel propertyNotationPanel;
 
 
@@ -30,8 +30,8 @@ public class DeleteNotationEvent extends SkeletalEventDefinition implements Even
 	@Override
 	public void handle(ActionEvent event) {
 		int index = propertyNotationPanel.getSelectionModel().getSelectedIndex();
-		NotationBody notation =  propertyNotationPanel.getNotation(index);
-		Optional<TouchDocument> currentDocument = touchDocumentTypeManager.getCurrentDocument();
+		Notation notation =  propertyNotationPanel.getNotation(index);
+		Optional<CompositionDocument> currentDocument = compositionDocumentTypeManager.getCurrentDocument();
 		if (currentDocument.isPresent()) {
 			currentDocument.get().removeNotation(notation);
 		}
@@ -52,7 +52,7 @@ public class DeleteNotationEvent extends SkeletalEventDefinition implements Even
 		});
 	}
 
-	public void setTouchDocumentTypeManager(TouchDocumentTypeManager touchDocumentTypeManager) {
-		this.touchDocumentTypeManager = touchDocumentTypeManager;
+	public void setCompositionDocumentTypeManager(CompositionDocumentTypeManager compositionDocumentTypeManager) {
+		this.compositionDocumentTypeManager = compositionDocumentTypeManager;
 	}
 }

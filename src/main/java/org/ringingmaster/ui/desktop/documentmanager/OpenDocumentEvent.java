@@ -19,7 +19,7 @@ public class OpenDocumentEvent extends SkeletalEventDefinition implements EventD
 
 	public OpenDocumentEvent() {
 		super("/images/open_file.png", "Open");
-		tooltipTextProperty().setValue("Open Touch");
+		tooltipTextProperty().setValue("Open Composition");
 		disableProperty().set(false);
 	}
 

@@ -1,8 +1,8 @@
 package org.ringingmaster.ui.desktop.notationeditor;
 
+import org.ringingmaster.engine.notation.Notation;
+import org.ringingmaster.engine.notation.NotationBuilder;
 import org.ringingmaster.util.javafx.dialog.EditMode;
-import org.ringingmaster.engine.notation.NotationBody;
-import org.ringingmaster.engine.notation.impl.NotationBuilder;
 
 /**
  * TODO Comments
@@ -13,6 +13,6 @@ public interface NotationEditorTabController {
 
 	String getTabName();
 	void init(NotationEditorDialog parent, EditMode editMode);
-	void buildDialogDataFromNotation(NotationBody notation);
+	void buildDialogDataFromNotation(Notation notation);
 	void buildNotationFromDialogData(NotationBuilder notationBuilder);
 }

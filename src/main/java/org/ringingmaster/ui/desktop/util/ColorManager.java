@@ -9,20 +9,20 @@ import javafx.scene.paint.Color;
  */
 public class ColorManager {
 
-	public static Color getErrorHighlight() {
-		return Color.SALMON;
-	}
+    public static Color getErrorHighlight() {
+        return Color.SALMON;
+    }
 
-	public static Color getWarnHighlight() {
-		return Color.PEACHPUFF ;
-	}
+    public static Color getWarnHighlight() {
+        return Color.PEACHPUFF;
+    }
 
-	public static Color getPassHighlight() {
-		return Color.LIGHTGREEN;
-	}
+    public static Color getPassHighlight() {
+        return Color.LIGHTGREEN;
+    }
 
-	public static Color getClearHighlight() {
-		return Color.TRANSPARENT;
-	}
+    public static Color getClearHighlight() {
+        return Color.TRANSPARENT;
+    }
 }
 

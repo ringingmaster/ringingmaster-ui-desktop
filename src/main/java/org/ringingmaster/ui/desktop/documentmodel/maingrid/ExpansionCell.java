@@ -1,7 +1,6 @@
 package org.ringingmaster.ui.desktop.documentmodel.maingrid;
 
-import org.ringingmaster.engine.touch.container.Touch;
-import org.ringingmaster.ui.desktop.documentmodel.TouchDocument;
+import org.ringingmaster.ui.desktop.documentmodel.CompositionDocument;
 import org.ringingmaster.ui.desktop.documentpanel.grid.model.GridCellModel;
 import org.ringingmaster.ui.desktop.documentpanel.grid.model.GridCharacterModel;
 import org.ringingmaster.ui.desktop.documentpanel.grid.model.GridModelListener;
@@ -18,18 +17,18 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class ExpansionCell extends SkeletalGridCellModel implements GridCellModel {
 
-	private final TouchDocument touchDocument;
+	private final CompositionDocument compositionDocument;
 	private final boolean expandColumn;
 	private final boolean expandRow;
 	private final int column;
 	private final int row;
 
 	public ExpansionCell(List<GridModelListener> listeners,
-	                     TouchDocument touchDocument,
+	                     CompositionDocument compositionDocument,
 	                     boolean expandColumn, boolean expandRow,
 	                     int column, int row) {
 		super(listeners);
-		this.touchDocument = checkNotNull(touchDocument);
+		this.compositionDocument = checkNotNull(compositionDocument);
 		this.expandColumn = expandColumn;
 		this.expandRow = expandRow;
 		this.column = column;
@@ -43,16 +42,17 @@ public class ExpansionCell extends SkeletalGridCellModel implements GridCellMode
 
 	@Override
 	public void insertCharacter(int index, char character) {
-		if (expandColumn) {
-			touchDocument.incrementColumnCount();
-		}
-		if (expandRow) {
-			touchDocument.incrementRowCount();
-		}
+		//TODO Reactive
+//		if (expandColumn) {
+//			compositionDocument.incrementColumnCount();
+//		}
+//		if (expandRow) {
+//			compositionDocument.incrementRowCount();
+//		}
 
 		// We do not use the cell version here as we do not have a cell until the increment above.
-		touchDocument.insertCharacter(column, row, index, character);
-		touchDocument.setUpdatePoint(() -> "Typing", Touch.Mutated.MUTATED);
+		compositionDocument.insertCharacter(column, row, index, character);
+		compositionDocument.setUpdatePoint(() -> "Typing", true);
 
 		fireCellStructureChanged();
 	}

@@ -1,17 +1,18 @@
 package org.ringingmaster.ui.desktop.documentmanager;
 
-import org.ringingmaster.engine.NumberOfBells;
-import org.ringingmaster.engine.method.Stroke;
-import org.ringingmaster.engine.method.impl.MethodBuilder;
-import org.ringingmaster.engine.notation.NotationBody;
-import org.ringingmaster.engine.notation.impl.NotationBuilder;
-import org.ringingmaster.engine.touch.container.Touch;
-import org.ringingmaster.engine.touch.newcontainer.checkingtype.CheckingType;
-import org.ringingmaster.engine.touch.container.impl.TouchBuilder;
-import org.ringingmaster.persist.generated.v1.CompositionPersist;
 import org.junit.Test;
+import org.ringingmaster.engine.NumberOfBells;
+import org.ringingmaster.engine.composition.Composition;
+import org.ringingmaster.engine.composition.ObservableComposition;
+import org.ringingmaster.engine.composition.TableType;
+import org.ringingmaster.engine.method.MethodBuilder;
+import org.ringingmaster.engine.method.Stroke;
+import org.ringingmaster.engine.notation.Notation;
+import org.ringingmaster.engine.notation.NotationBuilder;
+import org.ringingmaster.persist.generated.v1.CompositionPersist;
 
 import static org.junit.Assert.assertEquals;
+import static org.ringingmaster.engine.composition.compositiontype.CompositionType.LEAD_BASED;
 
 /**
  * TODO Comments
@@ -21,55 +22,55 @@ import static org.junit.Assert.assertEquals;
 public class CompositionPersistenceTest {
 
 	@Test
-	public void canRebuildTouch() {
+	public void canRebuildComposition() {
 		CompositionPersistence CompositionPersistence = new CompositionPersistence();
-		Touch originalTouch = createDummyTouch();
+		Composition originalComposition = createDummyComposition();
 
-		CompositionPersist CompositionPersist = CompositionPersistence.buildCompositionPersist(originalTouch);
-		Touch recreatedTouch = CompositionPersistence.buildTouch(CompositionPersist);
+		CompositionPersist CompositionPersist = CompositionPersistence.buildCompositionPersist(originalComposition);
+		Composition recreatedComposition = CompositionPersistence.buildComposition(CompositionPersist).get();
 
-		assertEquals(originalTouch.toString(), recreatedTouch.toString());
+		assertEquals(originalComposition.toString(), recreatedComposition.toString());t
 	}
 
 
-	private static Touch createDummyTouch() {
+	private static Composition createDummyComposition() {
 
-		Touch touch = TouchBuilder.getInstance(NumberOfBells.BELLS_6, 2, 2);
+		ObservableComposition composition = new ObservableComposition();
 
-		touch.setTitle("My Touch");
-		touch.setAuthor("by Stephen");
+		composition.setTitle("My Composition");
+		composition.setAuthor("by Stephen");
 
-		touch.setTouchCheckingType(CheckingType.LEAD_BASED);
-		touch.addNotation(buildPlainBobMinor());
-		touch.addNotation(buildLittleBobMinor());
-		touch.addNotation(buildPlainBobMinimus());
-		touch.addNotation(buildPlainBobMajor());
+		composition.setCompositionType(LEAD_BASED);
+		composition.addNotation(buildPlainBobMinor());
+		composition.addNotation(buildLittleBobMinor());
+		composition.addNotation(buildPlainBobMinimus());
+		composition.addNotation(buildPlainBobMajor());
 
-		touch.addCharacters(0, 0, "-s");
-		touch.addCharacters(0, 1, "s-");
-		touch.addCharacters(1, 0 ,"p 3*");
+		composition.addCharacters(TableType.MAIN_TABLE,0, 0, "-s");
+		composition.addCharacters(TableType.MAIN_TABLE,0, 1, "s-");
+		composition.addCharacters(TableType.MAIN_TABLE,1, 0 ,"p 3*");
 
-		touch.addDefinition("3*", "-s-");
-		touch.addDefinition("tr", "sps");
+		composition.addDefinition("3*", "-s-");
+		composition.addDefinition("tr", "sps");
 
-		touch.setStartChange(MethodBuilder.parse(touch.getNumberOfBells(),"654321"));
-		touch.setStartAtRow(10);
-		touch.setStartNotation(NotationBuilder.getInstance()
-				.setNumberOfWorkingBells(touch.getNumberOfBells())
+		composition.setStartChange(MethodBuilder.parse(composition.get().getNumberOfBells(),"654321"));
+		composition.setStartAtRow(10);
+		composition.setStartNotation(NotationBuilder.getInstance()
+				.setNumberOfWorkingBells(composition.get().getNumberOfBells())
 				.setUnfoldedNotationShorthand("x12x34")
 				.build());
-		touch.setStartStroke(Stroke.HANDSTROKE);
+		composition.setStartStroke(Stroke.HANDSTROKE);
 
-		touch.setTerminationChange(MethodBuilder.parse(touch.getNumberOfBells(), "132546"));
-		touch.setTerminationMaxRows(2345);
-		touch.setTerminationMaxParts(123);
-		touch.setTerminationMaxLeads(999);
-		touch.setTerminationMaxCircularTouch(12);
+		composition.setTerminationChange(MethodBuilder.parse(composition.get().getNumberOfBells(), "132546"));
+		composition.setTerminationMaxRows(2345);
+		composition.setTerminationMaxParts(123);
+		composition.setTerminationMaxLeads(999);
+		composition.setTerminationMaxCircularComposition(12);
 
-		return touch;
+		return composition.get();
 	}
 
-	private static NotationBody buildPlainBobMinor() {
+	private static Notation buildPlainBobMinor() {
 		return NotationBuilder.getInstance()
 				.setNumberOfWorkingBells(NumberOfBells.BELLS_6)
 				.setName("Plain Bob")
@@ -79,7 +80,7 @@ public class CompositionPersistenceTest {
 				.build();
 	}
 
-	private static NotationBody buildLittleBobMinor() {
+	private static Notation buildLittleBobMinor() {
 		return NotationBuilder.getInstance()
 				.setNumberOfWorkingBells(NumberOfBells.BELLS_6)
 				.setName("Little Bob")
@@ -88,7 +89,7 @@ public class CompositionPersistenceTest {
 				.build();
 	}
 
-	private static NotationBody buildPlainBobMinimus() {
+	private static Notation buildPlainBobMinimus() {
 		return NotationBuilder.getInstance()
 				.setNumberOfWorkingBells(NumberOfBells.BELLS_4)
 				.setName("Little Bob")
@@ -98,7 +99,7 @@ public class CompositionPersistenceTest {
 				.build();
 	}
 
-	public static NotationBody buildPlainBobMajor() {
+	public static Notation buildPlainBobMajor() {
 		return NotationBuilder.getInstance()
 				.setNumberOfWorkingBells(NumberOfBells.BELLS_8)
 				.setName("Plain Bob")

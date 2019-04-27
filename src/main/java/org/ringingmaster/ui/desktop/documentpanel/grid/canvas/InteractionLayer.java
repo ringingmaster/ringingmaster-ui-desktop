@@ -1,14 +1,12 @@
 package org.ringingmaster.ui.desktop.documentpanel.grid.canvas;
 
-import org.ringingmaster.ui.desktop.documentpanel.grid.GridPosition;
-import org.ringingmaster.ui.desktop.documentpanel.grid.canvas.tooltip.Tooltip;
-import org.ringingmaster.ui.desktop.documentpanel.grid.model.GridCharacterModel;
 import com.google.common.base.Strings;
 import javafx.application.Platform;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
+import org.ringingmaster.ui.desktop.documentpanel.grid.GridPosition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,7 +32,7 @@ public class InteractionLayer extends Pane implements BlinkTimerListener {
 	private final CaretPositionMover caretPositionMover;
 	boolean mouseDown = false;
 
-	private Tooltip tooltip = new Tooltip("");
+//TODO Reactive 	private Tooltip tooltip = new Tooltip("");
 
 	public InteractionLayer(GridPane parent) {
 		this.parent = parent;
@@ -64,7 +62,7 @@ public class InteractionLayer extends Pane implements BlinkTimerListener {
 
 		setFocusTraversable(true);
 
-		Tooltip.install(this, tooltip);
+		//TODO Reactive Tooltip.install(this, tooltip);
 	}
 
 	@Override
@@ -175,24 +173,25 @@ public class InteractionLayer extends Pane implements BlinkTimerListener {
 	}
 
 	private void handleMouseMoved(MouseEvent e) {
-		if (tooltip.isShowing()) {
-			return;
-		}
-		Optional<GridPosition> gridPosition = mouseCoordinatesToGridPosition(e.getX(), e.getY(), Align.BOUNDARY_BETWEEN_CHARACTER);
-		if (!gridPosition.isPresent()) {
-			return;
-		}
-
-		GridCharacterModel characterModel = parent.getModel().getCharacterModel(gridPosition.get());
-		if (characterModel!= null) {
-			Optional<String> tooltipText = characterModel.getTooltipText();
-			if (tooltipText.isPresent()) {
-				tooltip.setText(tooltipText.get());
-			}
-			else {
-				tooltip.setText(null);
-			}
-		}
+		//TODO Reactive
+//		if (tooltip.isShowing()) {
+//			return;
+//		}
+//		Optional<GridPosition> gridPosition = mouseCoordinatesToGridPosition(e.getX(), e.getY(), Align.BOUNDARY_BETWEEN_CHARACTER);
+//		if (!gridPosition.isPresent()) {
+//			return;
+//		}
+//
+//		GridCharacterModel characterModel = parent.getModel().getCharacterModel(gridPosition.get());
+//		if (characterModel!= null) {
+//			Optional<String> tooltipText = characterModel.getTooltipText();
+//			if (tooltipText.isPresent()) {
+//				tooltip.setText(tooltipText.get());
+//			}
+//			else {
+//				tooltip.setText(null);
+//			}
+//		}
 	}
 
 	private enum Align {

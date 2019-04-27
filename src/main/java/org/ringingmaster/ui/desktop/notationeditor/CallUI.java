@@ -18,15 +18,15 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.util.Callback;
 import javafx.util.converter.DefaultStringConverter;
-import org.ringingmaster.engine.notation.NotationBody;
-import org.ringingmaster.engine.notation.NotationCall;
-import org.ringingmaster.engine.notation.impl.NotationBuilder;
+import org.ringingmaster.engine.notation.Call;
+import org.ringingmaster.engine.notation.Notation;
+import org.ringingmaster.engine.notation.NotationBuilder;
+import org.ringingmaster.ui.desktop.RingingMasterDesktopApp;
+import org.ringingmaster.ui.desktop.leadheadtable.LeadHeadTablePane;
 import org.ringingmaster.util.javafx.components.PressableButton;
 import org.ringingmaster.util.javafx.dialog.EditMode;
 import org.ringingmaster.util.javafx.dialog.SceneLauncher;
 import org.ringingmaster.util.javafx.table.EnhancedTextFieldTableCell;
-import org.ringingmaster.ui.desktop.RingingMasterDesktopApp;
-import org.ringingmaster.ui.desktop.leadheadtable.LeadHeadTablePane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,8 +40,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * @author Lake
  */
 
+//TODO Reactive - had to rename as Call clashes
 
-public class Call extends SkeletalNotationEditorTabController implements NotationEditorTabController {
+public class CallUI extends SkeletalNotationEditorTabController implements NotationEditorTabController {
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
@@ -132,16 +133,16 @@ public class Call extends SkeletalNotationEditorTabController implements Notatio
     }
 
     @Override
-    public void buildDialogDataFromNotation(NotationBody notation) {
+    public void buildDialogDataFromNotation(Notation notation) {
         cannedCalls.setSelected(notation.isCannedCalls());
 
         int selectedIndex = callsTable.getSelectionModel().selectedIndexProperty().get();
         ObservableList<CallModel> items = callsTable.getItems();
         items.clear();
-        Set<NotationCall> calls = notation.getCalls();
-        NotationCall defaultCall = notation.getDefaultCall();
+        Set<Call> calls = notation.getCalls();
+        Call defaultCall = notation.getDefaultCall();
 
-        for (NotationCall call : calls) {
+        for (Call call : calls) {
             items.add(new CallModel(
                     call.getName(),
                     call.getNameShorthand(),

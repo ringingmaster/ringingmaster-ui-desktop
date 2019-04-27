@@ -1,9 +1,9 @@
 package org.ringingmaster.ui.desktop.notationeditor;
 
 
+import org.ringingmaster.engine.notation.Notation;
+import org.ringingmaster.engine.notation.NotationBuilder;
 import org.ringingmaster.util.javafx.dialog.EditMode;
-import org.ringingmaster.engine.notation.NotationBody;
-import org.ringingmaster.engine.notation.impl.NotationBuilder;
 
 /**
  * TODO Comments
@@ -26,7 +26,7 @@ public class CallPointMethod extends SkeletalNotationEditorTabController impleme
 	}
 
 	@Override
-	public void buildDialogDataFromNotation(NotationBody notation) {
+	public void buildDialogDataFromNotation(Notation notation) {
 
 	}
 

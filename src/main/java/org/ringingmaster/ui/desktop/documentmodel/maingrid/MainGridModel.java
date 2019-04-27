@@ -1,16 +1,16 @@
 package org.ringingmaster.ui.desktop.documentmodel.maingrid;
 
-import org.ringingmaster.engine.touch.container.TouchCell;
-import org.ringingmaster.ui.desktop.documentmodel.TouchDocument;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import org.ringingmaster.engine.composition.cell.Cell;
+import org.ringingmaster.ui.common.CompositionStyle;
+import org.ringingmaster.ui.desktop.documentmodel.CompositionDocument;
 import org.ringingmaster.ui.desktop.documentpanel.grid.model.AdditionalStyleType;
 import org.ringingmaster.ui.desktop.documentpanel.grid.model.GridCellModel;
 import org.ringingmaster.ui.desktop.documentpanel.grid.model.GridCharacterGroup;
 import org.ringingmaster.ui.desktop.documentpanel.grid.model.GridCharacterModel;
 import org.ringingmaster.ui.desktop.documentpanel.grid.model.GridModel;
 import org.ringingmaster.ui.desktop.documentpanel.grid.model.SkeletalGridModel;
-import org.ringingmaster.ui.common.TouchStyle;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 
 import java.util.Collections;
 import java.util.Iterator;
@@ -29,24 +29,24 @@ public class MainGridModel extends SkeletalGridModel implements GridModel {
 
 	public static final int EXTRA_ROW_OR_COLUMN_FOR_EXPANSION = 1;
 
-	private final TouchDocument touchDocument;
+	private final CompositionDocument compositionDocument;
 
-	public MainGridModel(TouchDocument touchDocument) {
-		this.touchDocument = checkNotNull(touchDocument);
+	public MainGridModel(CompositionDocument compositionDocument) {
+		this.compositionDocument = checkNotNull(compositionDocument);
 	}
 
 	@Override
 	public int getColumnCount() {
-		return touchDocument.getColumnCount() + EXTRA_ROW_OR_COLUMN_FOR_EXPANSION;
+		return compositionDocument.getColumnCount() + EXTRA_ROW_OR_COLUMN_FOR_EXPANSION;
 	}
 
 	@Override
 	public int getRowCount() {
-		return touchDocument.getRowCount() + EXTRA_ROW_OR_COLUMN_FOR_EXPANSION;
+		return compositionDocument.getRowCount() + EXTRA_ROW_OR_COLUMN_FOR_EXPANSION;
 	}
 	@Override
 	public Color getGridColor() {
-		return touchDocument.getTouchStyle().getColour(TouchStyle.TouchStyleColor.GRID);
+		return compositionDocument.getCompositionStyle().getColour(CompositionStyle.CompositionStyleColor.GRID);
 	}
 
 	@Override
@@ -58,20 +58,20 @@ public class MainGridModel extends SkeletalGridModel implements GridModel {
 		boolean outOfBoundRow = (row >= getRowCount() - EXTRA_ROW_OR_COLUMN_FOR_EXPANSION);
 
 		if (outOfBoundCol || outOfBoundRow) {
-			return new ExpansionCell(getListeners(), touchDocument, outOfBoundCol, outOfBoundRow, column, row);
+			return new ExpansionCell(getListeners(), compositionDocument, outOfBoundCol, outOfBoundRow, column, row);
 		}
 		else {
-			TouchCell cell = touchDocument.allCellsView().getCell(column, row);
-			return new StandardCell(getListeners(), touchDocument, cell);
+			Cell cell = compositionDocument.allCellsView().get(row, column);
+			return new StandardCell(getListeners(), compositionDocument, cell);
 		}
 	}
 
 	@Override
-	public GridCharacterGroup getRowHeader(int row) {//TODO move from here, and drive from touch.
+	public GridCharacterGroup getRowHeader(int row) {//TODO move from here, and drive from composition.
 		return new GridCharacterGroup() {
 			@Override
 			public int getLength() {
-				return (row >= touchDocument.getRowCount())?0:8;
+				return (row >= compositionDocument.getRowCount())?0:8;
 			}
 
 			@Override
@@ -84,7 +84,7 @@ public class MainGridModel extends SkeletalGridModel implements GridModel {
 
 					@Override
 					public Font getFont() {
-						return touchDocument.getTouchStyle().getFont(TouchStyle.TouchStyleFont.MAIN);
+						return compositionDocument.getCompositionStyle().getFont(CompositionStyle.CompositionStyleFont.MAIN);
 					}
 
 					@Override

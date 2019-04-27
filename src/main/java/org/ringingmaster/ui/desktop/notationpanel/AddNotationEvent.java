@@ -1,12 +1,11 @@
 package org.ringingmaster.ui.desktop.notationpanel;
 
+import javafx.event.ActionEvent;
+import org.ringingmaster.engine.NumberOfBells;
+import org.ringingmaster.ui.desktop.documentmodel.CompositionDocumentTypeManager;
+import org.ringingmaster.ui.desktop.notationeditor.NotationEditorDialogFactory;
 import org.ringingmaster.util.javafx.events.EventDefinition;
 import org.ringingmaster.util.javafx.events.SkeletalEventDefinition;
-import org.ringingmaster.engine.NumberOfBells;
-import org.ringingmaster.engine.touch.container.Touch;
-import org.ringingmaster.ui.desktop.documentmodel.TouchDocumentTypeManager;
-import org.ringingmaster.ui.desktop.notationeditor.NotationEditorDialogFactory;
-import javafx.event.ActionEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,7 +18,7 @@ public class AddNotationEvent extends SkeletalEventDefinition implements EventDe
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-	private TouchDocumentTypeManager touchDocumentTypeManager;
+	private CompositionDocumentTypeManager compositionDocumentTypeManager;
 	private NotationEditorDialogFactory notationEditorDialogFactory;
 
 	public AddNotationEvent() {
@@ -29,20 +28,20 @@ public class AddNotationEvent extends SkeletalEventDefinition implements EventDe
 
 	@Override
 	public void handle(ActionEvent event) {
-		if (!touchDocumentTypeManager.getCurrentDocument().isPresent()) {
+		if (!compositionDocumentTypeManager.getCurrentDocument().isPresent()) {
 			return;
 		}
-		NumberOfBells numberOfBells = touchDocumentTypeManager.getCurrentDocument().get().getNumberOfBells();
+		NumberOfBells numberOfBells = compositionDocumentTypeManager.getCurrentDocument().get().getNumberOfBells();
 
-		notationEditorDialogFactory.newNotationShowDialog(numberOfBells, result -> {
-			log.info("AddMethodButton - adding", result.toString());
-			return touchDocumentTypeManager.getCurrentDocument().get().addNotation(result) == Touch.Mutated.MUTATED;
-		});
+//TODO Reactive		notationEditorDialogFactory.newNotationShowDialog(numberOfBells, result -> {
+//			log.info("AddMethodButton - adding", result.toString());
+//			return compositionDocumentTypeManager.getCurrentDocument().get().addNotation(result) == Composition.Mutated.MUTATED;
+//		});
 	}
 
-	public void setTouchDocumentTypeManager(TouchDocumentTypeManager touchDocumentTypeManager) {
-		this.touchDocumentTypeManager = touchDocumentTypeManager;
-		touchDocumentTypeManager.addListener(document -> disableProperty().set(!document.isPresent()));
+	public void setCompositionDocumentTypeManager(CompositionDocumentTypeManager compositionDocumentTypeManager) {
+		this.compositionDocumentTypeManager = compositionDocumentTypeManager;
+		compositionDocumentTypeManager.addListener(document -> disableProperty().set(!document.isPresent()));
 	}
 
 	public void setNotationEditorDialogFactory(NotationEditorDialogFactory notationEditorDialogFactory) {

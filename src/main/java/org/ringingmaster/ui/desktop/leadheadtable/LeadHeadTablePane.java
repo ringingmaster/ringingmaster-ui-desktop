@@ -1,8 +1,6 @@
 package org.ringingmaster.ui.desktop.leadheadtable;
 
 
-import org.ringingmaster.engine.NumberOfBells;
-import org.ringingmaster.engine.notation.impl.LeadHeadCalculator;
 import javafx.geometry.HPos;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -10,12 +8,14 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import org.ringingmaster.engine.NumberOfBells;
+import org.ringingmaster.engine.notation.LeadHeadCalculator;
 
 import java.util.List;
 
 import static org.ringingmaster.engine.NumberOfBells.BELLS_22;
 import static org.ringingmaster.engine.NumberOfBells.BELLS_5;
-import static org.ringingmaster.engine.notation.impl.LeadHeadCalculator.LeadHeadValidity.INVALID_LEADHEAD;
+import static org.ringingmaster.engine.notation.LeadHeadCalculator.LeadHeadValidity.INVALID_LEADHEAD;
 
 /**
  * TODO Comments

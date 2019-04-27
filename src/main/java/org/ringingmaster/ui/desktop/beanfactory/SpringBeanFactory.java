@@ -12,15 +12,15 @@ import org.springframework.context.ApplicationContextAware;
  */
 public class SpringBeanFactory implements BeanFactory, ApplicationContextAware {
 
-	private ApplicationContext applicationContext;
+    private ApplicationContext applicationContext;
 
-	@Override
-	public <T> T build(Class<T> type) {
-		return applicationContext.getBean(type);
-	}
+    @Override
+    public <T> T build(Class<T> type) {
+        return applicationContext.getBean(type);
+    }
 
-	@Override
-	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-		this.applicationContext = applicationContext;
-	}
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        this.applicationContext = applicationContext;
+    }
 }

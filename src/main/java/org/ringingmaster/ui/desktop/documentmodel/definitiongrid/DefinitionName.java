@@ -1,13 +1,13 @@
 package org.ringingmaster.ui.desktop.documentmodel.definitiongrid;
 
-import org.ringingmaster.engine.touch.container.TouchDefinition;
-import org.ringingmaster.ui.desktop.documentmodel.TouchDocument;
+
+import org.ringingmaster.ui.desktop.documentmodel.CompositionDocument;
 import org.ringingmaster.ui.desktop.documentpanel.grid.model.AdditionalStyleType;
 import org.ringingmaster.ui.desktop.documentpanel.grid.model.GridCharacterGroup;
 import org.ringingmaster.ui.desktop.documentpanel.grid.model.GridCharacterModel;
 import org.ringingmaster.ui.desktop.documentpanel.grid.model.GridModelListener;
 import org.ringingmaster.ui.desktop.documentpanel.grid.model.SkeletalGridCellModel;
-import org.ringingmaster.ui.common.TouchStyle;
+import org.ringingmaster.ui.common.CompositionStyle;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
@@ -25,18 +25,20 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 class DefinitionName extends SkeletalGridCellModel implements GridCharacterGroup {
 
-	private final TouchDocument touchDocument;
-	private final TouchDefinition definition;
+	private final CompositionDocument compositionDocument;
+	private final DefinitionCell definition;
 
-	public DefinitionName(List<GridModelListener> listeners, TouchDocument touchDocument, TouchDefinition definition) {
+	public DefinitionName(List<GridModelListener> listeners, CompositionDocument compositionDocument, DefinitionCell definition) {
 		super(listeners);
-		this.touchDocument = checkNotNull(touchDocument);
+		this.compositionDocument = checkNotNull(compositionDocument);
 		this.definition = checkNotNull(definition);
 	}
 
 	@Override
 	public int getLength() {
-		return definition.getShorthand().length() + 3;
+		//TODO Reactive
+	//	return definition.getShorthand().length() + 3;
+		return 1;
 	}
 
 	@Override
@@ -44,18 +46,20 @@ class DefinitionName extends SkeletalGridCellModel implements GridCharacterGroup
 		return new GridCharacterModel() {
 			@Override
 			public char getCharacter() {
-				final String shorthand = definition.getShorthand() + " = ";
-				return shorthand.charAt(index);
+				//TODO Reactive
+//				final String shorthand = definition.getShorthand() + " = ";
+//				return shorthand.charAt(index);
+				return 'l';
 			}
 
 			@Override
 			public Font getFont() {
-				return touchDocument.getTouchStyle().getFont(TouchStyle.TouchStyleFont.DEFINITION);
+				return compositionDocument.getCompositionStyle().getFont(CompositionStyle.CompositionStyleFont.DEFINITION);
 			}
 
 			@Override
 			public Color getColor() {
-					return touchDocument.getTouchStyle().getColour(TouchStyle.TouchStyleColor.DEFINITON);
+					return compositionDocument.getCompositionStyle().getColour(CompositionStyle.CompositionStyleColor.DEFINITION);
 			}
 
 			@Override

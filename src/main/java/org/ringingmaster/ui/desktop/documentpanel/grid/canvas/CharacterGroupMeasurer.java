@@ -46,13 +46,14 @@ public class CharacterGroupMeasurer {
     private double[] measureCellTextWidth(final GridCharacterGroup characterGroup) {
 	    int characterCount = characterGroup.getLength();
 	    double[] characterWidths = new double[characterCount];
-	    for (int index=0;index<characterGroup.getLength();index++) {
-		    GridCharacterModel GridCharacterModel = characterGroup.getGridCharacterModel(index);
-		    final Font font = GridCharacterModel.getFont();
-		    final char cellText = GridCharacterModel.getCharacter();
-		    FontMetrics fm = Toolkit.getToolkit().getFontLoader().getFontMetrics(font);
-		    characterWidths[index] = fm.computeStringWidth(String.valueOf(cellText));
-	    }
+	    //TODO Reactive - removed code after java 8
+//	    for (int index=0;index<characterGroup.getLength();index++) {
+//		    GridCharacterModel GridCharacterModel = characterGroup.getGridCharacterModel(index);
+//		    final Font font = GridCharacterModel.getFont();
+//		    final char cellText = GridCharacterModel.getCharacter();
+//		    FontMetrics fm = Toolkit.getToolkit().getFontLoader().getFontMetrics(font);
+//		    characterWidths[index] = fm.ccomputeStringWidth(String.valueOf(cellText));
+//	    }
         return characterWidths;
     }
 

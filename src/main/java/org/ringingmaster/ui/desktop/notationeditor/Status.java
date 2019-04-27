@@ -1,18 +1,20 @@
 package org.ringingmaster.ui.desktop.notationeditor;
 
-import org.ringingmaster.util.javafx.namevaluepair.NameValuePairModel;
-import org.ringingmaster.util.javafx.namevaluepair.NameValuePairTable;
-import org.ringingmaster.engine.helper.PlainCourseHelper;
-import org.ringingmaster.engine.method.Method;
-import org.ringingmaster.engine.notation.NotationBody;
-import org.ringingmaster.engine.touch.proof.Proof;
-import org.ringingmaster.ui.desktop.util.ColorManager;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
+import org.ringingmaster.engine.analyser.Analyser;
+import org.ringingmaster.engine.analyser.proof.Proof;
+import org.ringingmaster.engine.compiler.compiledcomposition.CompiledComposition;
+import org.ringingmaster.engine.helper.PlainCourseHelper;
+import org.ringingmaster.engine.method.Method;
+import org.ringingmaster.engine.notation.Notation;
+import org.ringingmaster.ui.desktop.util.ColorManager;
+import org.ringingmaster.util.javafx.namevaluepair.NameValuePairModel;
+import org.ringingmaster.util.javafx.namevaluepair.NameValuePairTable;
 
 /**
  * TODO Comments
@@ -24,6 +26,7 @@ public class Status {
 	public static final String ERROR_PROPERTY_NAME = "Error";
 
 	private NotationEditorDialog parent;
+	private Analyser analyser = new Analyser();
 
 	@FXML
 	private NameValuePairTable status;
@@ -32,18 +35,19 @@ public class Status {
 		this.parent = parent;
 	}
 
-	void updateNotationStats(NotationBody notation) {
+	void updateNotationStats(Notation notation) {
 		ObservableList<NameValuePairModel> items = status.getItems();
 
 		// Test build a plain course to see if it is possible.
-		Proof plainCourseProof = PlainCourseHelper.buildPlainCourse(notation, "Checking new notation", true);
-		Method plainCourse = plainCourseProof.getCreatedMethod().get();
+		CompiledComposition compiledComposition = PlainCourseHelper.buildPlainCourse(notation, "Checking new notation");
+		Proof plainCourseProof = analyser.apply(compiledComposition);
+		Method plainCourse = plainCourseProof.getCompiledComposition().getMethod().get();
 
 		items.clear();
 		items.add(new NameValuePairModel("Name", notation.getNameIncludingNumberOfBells()));
 		items.add(new NameValuePairModel("Notation", notation.getNotationDisplayString(true)));
 		items.add(new NameValuePairModel("Notation Type", notation.isFoldedPalindrome()?"symmetric":"asymmetric"));
-		items.add(new NameValuePairModel("Plain Course", plainCourseProof.getAnalysis().get().isTrueTouch()?"true":"false"));
+		items.add(new NameValuePairModel("Plain Course", plainCourseProof.isTrueComposition()?"true":"false"));
 		items.add(new NameValuePairModel("Changes in Plain Lead", Integer.toString(plainCourse.getLead(0).getRowCount())));
 		items.add(new NameValuePairModel("Changes in Plain Course", Integer.toString(plainCourse.getRowCount())));
 		items.add(new NameValuePairModel("Leads in Plain Course", Integer.toString(plainCourse.getLeadCount())));

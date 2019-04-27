@@ -13,9 +13,9 @@
     <bean id="documentWindow" class="javafx.scene.control.TabPane" autowire="no"/>
 
     <!-- Injected by name -->
-    <bean id="touchDocumentTypeManager" class="org.ringingmaster.ui.desktop.documentmodel.TouchDocumentTypeManager"/>
+    <bean id="compositionDocumentTypeManager" class="org.ringingmaster.ui.desktop.documentmodel.CompositionDocumentTypeManager"/>
 
-    <bean class="org.ringingmaster.ui.desktop.documentmodel.TouchDocument"
+    <bean class="org.ringingmaster.ui.desktop.documentmodel.CompositionDocument"
           p:proofManager-ref="proofManager"
           scope="prototype"
           autowire="no"/>

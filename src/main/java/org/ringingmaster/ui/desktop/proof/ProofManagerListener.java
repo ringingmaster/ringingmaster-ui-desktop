@@ -1,6 +1,7 @@
 package org.ringingmaster.ui.desktop.proof;
 
-import org.ringingmaster.engine.touch.proof.Proof;
+
+import org.ringingmaster.engine.analyser.proof.Proof;
 
 import java.util.Optional;
 
@@ -11,5 +12,5 @@ import java.util.Optional;
  */
 public interface ProofManagerListener {
 
-	void proofManagerListener_proofFinished(Optional<Proof> proof);
+    void proofManagerListener_proofFinished(Optional<Proof> proof);
 }

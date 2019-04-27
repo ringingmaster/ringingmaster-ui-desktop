@@ -20,7 +20,7 @@ public class NewDocumentEvent extends SkeletalEventDefinition implements EventDe
 	public NewDocumentEvent() {
 		super("/images/new_file.png", "New");
 		disableProperty().set(false);
-		tooltipTextProperty().setValue("New Touch");
+		tooltipTextProperty().setValue("New Composition");
 	}
 
 	@Override

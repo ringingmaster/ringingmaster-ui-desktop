@@ -15,7 +15,7 @@
                 <bean class="org.ringingmaster.util.javafx.menu.MenuDefinitionBranch"
                       c:menuDefinitions-ref="menu.edit" c:name="Edit"/>
                 <bean class="org.ringingmaster.util.javafx.menu.MenuDefinitionBranch"
-                      c:menuDefinitions-ref="menu.touch" c:name="Touch"/>
+                      c:menuDefinitions-ref="menu.composition" c:name="Composition"/>
             </list>
         </property>
     </bean>
@@ -36,7 +36,7 @@
         <bean class="org.ringingmaster.util.javafx.menu.MenuDefinitionLeafEvent" c:event-ref="event.paste"/>
     </util:list>
 
-    <util:list id="menu.touch" >
+    <util:list id="menu.composition" >
         <bean class="org.ringingmaster.util.javafx.menu.MenuDefinitionLeafEvent" c:event-ref="event.addNotation"/>
     </util:list>
 </beans>

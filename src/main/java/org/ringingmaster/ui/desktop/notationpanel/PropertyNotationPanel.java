@@ -2,9 +2,9 @@ package org.ringingmaster.ui.desktop.notationpanel;
 
 import org.ringingmaster.util.javafx.namevaluepair.NameValuePairModel;
 import org.ringingmaster.util.javafx.namevaluepair.NameValuePairTable;
-import org.ringingmaster.engine.notation.NotationBody;
-import org.ringingmaster.ui.desktop.documentmodel.TouchDocument;
-import org.ringingmaster.ui.desktop.documentmodel.TouchDocumentTypeManager;
+import org.ringingmaster.engine.notation.Notation;
+import org.ringingmaster.ui.desktop.documentmodel.CompositionDocument;
+import org.ringingmaster.ui.desktop.documentmodel.CompositionDocumentTypeManager;
 import org.ringingmaster.util.listener.ConcurrentListenable;
 import org.ringingmaster.util.listener.Listenable;
 import com.google.common.base.Strings;
@@ -28,16 +28,16 @@ public class PropertyNotationPanel extends NameValuePairTable implements Listena
 
 	private ConcurrentListenable<PropertyNotationPanelListener> listenableDelegate = new ConcurrentListenable<>();
 
-	private TouchDocumentTypeManager touchDocumentTypeManager;
+	private CompositionDocumentTypeManager compositionDocumentTypeManager;
 	private EditNotationEvent editNotationEvent;
 
 	public PropertyNotationPanel() {
 		//TODO add an empty table hint i.e. setPlaceholder(new Label("No Calls Defined"));
 	}
 
-	public void setTouchDocumentTypeManager(TouchDocumentTypeManager touchDocumentTypeManager) {
-		this.touchDocumentTypeManager = touchDocumentTypeManager;
-		touchDocumentTypeManager.addListener(this::updateToReflectDocument);
+	public void setCompositionDocumentTypeManager(CompositionDocumentTypeManager compositionDocumentTypeManager) {
+		this.compositionDocumentTypeManager = compositionDocumentTypeManager;
+		compositionDocumentTypeManager.addListener(this::updateToReflectDocument);
 
 		setOnMouseClicked(event -> {
 			if(event.getClickCount() == 2) {
@@ -50,18 +50,18 @@ public class PropertyNotationPanel extends NameValuePairTable implements Listena
 		});
 	}
 
-	private void updateToReflectDocument(Optional<TouchDocument> touchDocument) {
-		if (hasMethodListChanged(touchDocument)) {
-			rebuildMethodList(touchDocument);
+	private void updateToReflectDocument(Optional<CompositionDocument> compositionDocument) {
+		if (hasMethodListChanged(compositionDocument)) {
+			rebuildMethodList(compositionDocument);
 		}
-		updateMethodList(touchDocument);
+		updateMethodList(compositionDocument);
 		fireSelectionChange();
 	}
 
 	private void fireSelectionChange() {
 
 		int selectedIndex = getSelectionModel().getSelectedIndex();
-		Optional<NotationBody> selectedNotation = Optional.ofNullable(getNotation(selectedIndex));
+		Optional<Notation> selectedNotation = Optional.ofNullable(getNotation(selectedIndex));
 
 		for (PropertyNotationPanelListener propertyNotationPanelListener : listenableDelegate.getListeners()) {
 			propertyNotationPanelListener.propertyMethod_setSelectedNotation(selectedNotation);
@@ -69,14 +69,14 @@ public class PropertyNotationPanel extends NameValuePairTable implements Listena
 		}
 	}
 
-	private void rebuildMethodList(Optional<TouchDocument> touchDocument) {
+	private void rebuildMethodList(Optional<CompositionDocument> compositionDocument) {
 		int selectedIndex = getSelectionModel().getSelectedIndex();
 		getItems().clear();
-		if (!touchDocument.isPresent()) {
+		if (!compositionDocument.isPresent()) {
 			return;
 		}
 
-		for (NotationBody notation : touchDocument.get().getSortedAllNotations()) {
+		for (Notation notation : compositionDocument.get().getSortedAllNotations()) {
 			getItems().add(new NameValuePairModel(getDisplayName(notation)));
 		}
 
@@ -90,29 +90,29 @@ public class PropertyNotationPanel extends NameValuePairTable implements Listena
 		}
 	}
 
-	private boolean hasMethodListChanged(Optional<TouchDocument> touchDocument) {
-		if (!touchDocument.isPresent()) {
+	private boolean hasMethodListChanged(Optional<CompositionDocument> compositionDocument) {
+		if (!compositionDocument.isPresent()) {
 			return (getItems().size() != 0);
 		}
-		List<NotationBody> allNotations = touchDocument.get().getSortedAllNotations();
+		List<Notation> allNotations = compositionDocument.get().getSortedAllNotations();
 		Set<String> namesInDocument = allNotations.stream().map(this::getDisplayName).collect(Collectors.toSet());
 		Set<String> namesInUI = getItems().stream().map(nameValuePairModel -> nameValuePairModel.getName().getText()).collect(Collectors.toSet());
 
 		return Sets.symmetricDifference(namesInDocument, namesInUI).size() != 0;
 	}
 
-	private void updateMethodList(Optional<TouchDocument> touchDocument) {
-		if (!touchDocument.isPresent()) {
+	private void updateMethodList(Optional<CompositionDocument> compositionDocument) {
+		if (!compositionDocument.isPresent()) {
 			return;
 		}
 
-		List<NotationBody> allNotations = touchDocument.get().getSortedAllNotations();
-		boolean spliced = touchDocument.get().isSpliced();
+		List<Notation> allNotations = compositionDocument.get().getSortedAllNotations();
+		boolean spliced = compositionDocument.get().isSpliced();
 
-		for (NotationBody notation : allNotations) {
+		for (Notation notation : allNotations) {
 			String name = getDisplayName(notation);
 
-			if (notation.getNumberOfWorkingBells().toInt() > touchDocument.get().getNumberOfBells().toInt()) {
+			if (notation.getNumberOfWorkingBells().toInt() > compositionDocument.get().getNumberOfBells().toInt()) {
 				updateDisplayProperty(name, "Too many bells", true);
 			}
 			else if (spliced) {
@@ -120,10 +120,10 @@ public class PropertyNotationPanel extends NameValuePairTable implements Listena
 					updateDisplayProperty(name, "No splice letter", true);
 
 				} else {
-					updateDisplayProperty(name, TouchDocument.SPLICED_TOKEN + " " + notation.getSpliceIdentifier(), false);
+					updateDisplayProperty(name, CompositionDocument.SPLICED_TOKEN + " " + notation.getSpliceIdentifier(), false);
 				}
 			}
-			else if (notation == touchDocument.get().getSingleMethodActiveNotation()) {
+			else if (notation == compositionDocument.get().getSingleMethodActiveNotation()) {
 				updateDisplayProperty(name, "<Active>", false);
 			}
 			else {
@@ -132,17 +132,17 @@ public class PropertyNotationPanel extends NameValuePairTable implements Listena
 		}
 	}
 
-	private String getDisplayName(NotationBody notation) {
+	private String getDisplayName(Notation notation) {
 		return notation.getNameIncludingNumberOfBells();
 	}
 
 
-	public NotationBody getNotation(int index) {
-		if (!touchDocumentTypeManager.getCurrentDocument().isPresent()) {
+	public Notation getNotation(int index) {
+		if (!compositionDocumentTypeManager.getCurrentDocument().isPresent()) {
 			return null;
 		}
 
-		List<NotationBody> sortedAllNotations = touchDocumentTypeManager.getCurrentDocument().get().getSortedAllNotations();
+		List<Notation> sortedAllNotations = compositionDocumentTypeManager.getCurrentDocument().get().getSortedAllNotations();
 		if (index >= 0 && index < sortedAllNotations.size()) {
 			return sortedAllNotations.get(index);
 		}

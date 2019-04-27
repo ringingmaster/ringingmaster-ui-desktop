@@ -19,7 +19,7 @@ public class SaveDocumentEvent extends SkeletalEventDefinition implements EventD
 
 	public SaveDocumentEvent() {
 		super("/images/save.png", "Save");
-		tooltipTextProperty().setValue("Save Touch");
+		tooltipTextProperty().setValue("Save Composition");
 	}
 
 	@Override

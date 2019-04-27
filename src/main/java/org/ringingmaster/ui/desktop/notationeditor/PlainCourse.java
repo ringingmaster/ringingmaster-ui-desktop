@@ -3,8 +3,8 @@ package org.ringingmaster.ui.desktop.notationeditor;
 
 import org.ringingmaster.util.javafx.dialog.EditMode;
 import org.ringingmaster.engine.NumberOfBells;
-import org.ringingmaster.engine.notation.NotationBody;
-import org.ringingmaster.engine.notation.impl.NotationBuilder;
+import org.ringingmaster.engine.notation.Notation;
+import org.ringingmaster.engine.notation.NotationBuilder;
 import org.ringingmaster.persist.generated.v1.LibraryNotationPersist;
 import org.ringingmaster.ui.desktop.notationsearch.NotationLibraryManager;
 import com.google.common.base.Strings;
@@ -118,7 +118,7 @@ public class PlainCourse extends SkeletalNotationEditorTabController implements 
 	}
 
 	@Override
-	public void buildDialogDataFromNotation(NotationBody notation) {
+	public void buildDialogDataFromNotation(Notation notation) {
 		name.setText(notation.getName());
 		spliceIndntifier.setText(notation.getSpliceIdentifier());
 		notation1.setText(notation.getRawNotationDisplayString(0, true));

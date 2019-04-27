@@ -1,6 +1,7 @@
 package org.ringingmaster.ui.desktop.documentpanel.grid.canvas;
 
-import net.jcip.annotations.Immutable;
+
+import com.google.errorprone.annotations.Immutable;
 
 import java.util.Arrays;
 

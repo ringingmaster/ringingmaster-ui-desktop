@@ -2,9 +2,9 @@ package org.ringingmaster.ui.desktop.notationpanel;
 
 import org.ringingmaster.util.javafx.events.EventDefinition;
 import org.ringingmaster.util.javafx.events.SkeletalEventDefinition;
-import org.ringingmaster.engine.notation.NotationBody;
-import org.ringingmaster.ui.desktop.documentmodel.TouchDocument;
-import org.ringingmaster.ui.desktop.documentmodel.TouchDocumentTypeManager;
+import org.ringingmaster.engine.notation.Notation;
+import org.ringingmaster.ui.desktop.documentmodel.CompositionDocument;
+import org.ringingmaster.ui.desktop.documentmodel.CompositionDocumentTypeManager;
 import javafx.event.ActionEvent;
 
 import java.util.Optional;
@@ -18,7 +18,7 @@ public class SetActiveNotationEvent  extends SkeletalEventDefinition implements 
 
 	public static final String TOOLTIP_BAST_TEXT = "Set active method";
 
-	private TouchDocumentTypeManager touchDocumentTypeManager;
+	private CompositionDocumentTypeManager compositionDocumentTypeManager;
 	private PropertyNotationPanel propertyNotationPanel;
 
 	public SetActiveNotationEvent() {
@@ -29,20 +29,20 @@ public class SetActiveNotationEvent  extends SkeletalEventDefinition implements 
 	@Override
 	public void handle(ActionEvent event) {
 		int index = propertyNotationPanel.getSelectionModel().getSelectedIndex();
-		NotationBody selectedNotation = propertyNotationPanel.getNotation(index);
+		Notation selectedNotation = propertyNotationPanel.getNotation(index);
 
 		if (selectedNotation != null) {
-			if (touchDocumentTypeManager.getCurrentDocument().get().isSpliced()) {
-				touchDocumentTypeManager.getCurrentDocument().get().setSpliced(false);
-				touchDocumentTypeManager.getCurrentDocument().get().setSingleMethodActiveNotation(selectedNotation);
+			if (compositionDocumentTypeManager.getCurrentDocument().get().isSpliced()) {
+				compositionDocumentTypeManager.getCurrentDocument().get().setSpliced(false);
+				compositionDocumentTypeManager.getCurrentDocument().get().setSingleMethodActiveNotation(selectedNotation);
 			}
 			else {
 				// Not Spliced
-				if (touchDocumentTypeManager.getCurrentDocument().get().getSingleMethodActiveNotation() == selectedNotation) {
-					touchDocumentTypeManager.getCurrentDocument().get().setSpliced(true);
+				if (compositionDocumentTypeManager.getCurrentDocument().get().getSingleMethodActiveNotation() == selectedNotation) {
+					compositionDocumentTypeManager.getCurrentDocument().get().setSpliced(true);
 				}
 				else {
-					touchDocumentTypeManager.getCurrentDocument().get().setSingleMethodActiveNotation(selectedNotation);
+					compositionDocumentTypeManager.getCurrentDocument().get().setSingleMethodActiveNotation(selectedNotation);
 				}
 			}
 		}
@@ -52,7 +52,7 @@ public class SetActiveNotationEvent  extends SkeletalEventDefinition implements 
 		this.propertyNotationPanel = propertyNotationPanel;
 
 		propertyNotationPanel.addListener(selectedNotation -> {
-				Optional<TouchDocument> currentDocument = touchDocumentTypeManager.getCurrentDocument();
+				Optional<CompositionDocument> currentDocument = compositionDocumentTypeManager.getCurrentDocument();
 				disableProperty().set(!selectedNotation.isPresent() ||
 						!currentDocument.isPresent() ||
 						!currentDocument.get().getSortedValidNotations().contains(selectedNotation.get()));
@@ -77,7 +77,7 @@ public class SetActiveNotationEvent  extends SkeletalEventDefinition implements 
 
 	}
 
-	public void setTouchDocumentTypeManager(TouchDocumentTypeManager touchDocumentTypeManager) {
-		this.touchDocumentTypeManager = touchDocumentTypeManager;
+	public void setCompositionDocumentTypeManager(CompositionDocumentTypeManager compositionDocumentTypeManager) {
+		this.compositionDocumentTypeManager = compositionDocumentTypeManager;
 	}
 }

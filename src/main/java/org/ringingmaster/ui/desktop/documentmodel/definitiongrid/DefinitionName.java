@@ -1,15 +1,15 @@
 package org.ringingmaster.ui.desktop.documentmodel.definitiongrid;
 
 
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import org.ringingmaster.ui.common.CompositionStyle;
 import org.ringingmaster.ui.desktop.documentmodel.CompositionDocument;
 import org.ringingmaster.ui.desktop.documentpanel.grid.model.AdditionalStyleType;
 import org.ringingmaster.ui.desktop.documentpanel.grid.model.GridCharacterGroup;
 import org.ringingmaster.ui.desktop.documentpanel.grid.model.GridCharacterModel;
 import org.ringingmaster.ui.desktop.documentpanel.grid.model.GridModelListener;
 import org.ringingmaster.ui.desktop.documentpanel.grid.model.SkeletalGridCellModel;
-import org.ringingmaster.ui.common.CompositionStyle;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 
 import java.util.Collections;
 import java.util.List;
@@ -25,52 +25,52 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 class DefinitionName extends SkeletalGridCellModel implements GridCharacterGroup {
 
-	private final CompositionDocument compositionDocument;
-	private final DefinitionCell definition;
+    private final CompositionDocument compositionDocument;
+    private final DefinitionCell definition;
 
-	public DefinitionName(List<GridModelListener> listeners, CompositionDocument compositionDocument, DefinitionCell definition) {
-		super(listeners);
-		this.compositionDocument = checkNotNull(compositionDocument);
-		this.definition = checkNotNull(definition);
-	}
+    public DefinitionName(List<GridModelListener> listeners, CompositionDocument compositionDocument, DefinitionCell definition) {
+        super(listeners);
+        this.compositionDocument = checkNotNull(compositionDocument);
+        this.definition = checkNotNull(definition);
+    }
 
-	@Override
-	public int getLength() {
-		//TODO Reactive
-	//	return definition.getShorthand().length() + 3;
-		return 1;
-	}
+    @Override
+    public int getLength() {
+        //TODO Reactive
+        //	return definition.getShorthand().length() + 3;
+        return 1;
+    }
 
-	@Override
-	public GridCharacterModel getGridCharacterModel(final int index) {
-		return new GridCharacterModel() {
-			@Override
-			public char getCharacter() {
-				//TODO Reactive
+    @Override
+    public GridCharacterModel getGridCharacterModel(final int index) {
+        return new GridCharacterModel() {
+            @Override
+            public char getCharacter() {
+                //TODO Reactive
 //				final String shorthand = definition.getShorthand() + " = ";
 //				return shorthand.charAt(index);
-				return 'l';
-			}
+                return 'l';
+            }
 
-			@Override
-			public Font getFont() {
-				return compositionDocument.getCompositionStyle().getFont(CompositionStyle.CompositionStyleFont.DEFINITION);
-			}
+            @Override
+            public Font getFont() {
+                return compositionDocument.getCompositionStyle().getFont(CompositionStyle.CompositionStyleFont.DEFINITION);
+            }
 
-			@Override
-			public Color getColor() {
-					return compositionDocument.getCompositionStyle().getColour(CompositionStyle.CompositionStyleColor.DEFINITION);
-			}
+            @Override
+            public Color getColor() {
+                return compositionDocument.getCompositionStyle().getColour(CompositionStyle.CompositionStyleColor.DEFINITION);
+            }
 
-			@Override
-			public Set<AdditionalStyleType> getAdditionalStyle() {
-				return Collections.emptySet();
-			}
+            @Override
+            public Set<AdditionalStyleType> getAdditionalStyle() {
+                return Collections.emptySet();
+            }
 
-			@Override
-			public Optional<String> getTooltipText() {
-				return Optional.empty();
-			}
-		};
-	}
+            @Override
+            public Optional<String> getTooltipText() {
+                return Optional.empty();
+            }
+        };
+    }
 }

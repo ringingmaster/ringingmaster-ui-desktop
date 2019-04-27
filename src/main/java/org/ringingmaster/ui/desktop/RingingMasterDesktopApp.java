@@ -90,7 +90,6 @@ public class RingingMasterDesktopApp extends Application {
         stage.setTitle("Ringingmaster Desktop");
 
         applicationContext.getBean(StartupService.class).runStartup();
-        ;
 
         stage.show();
 

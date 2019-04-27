@@ -6,5 +6,5 @@ package org.ringingmaster.ui.desktop.documentpanel.grid.model;
  * @author Lake
  */
 public enum AdditionalStyleType {
-	WIGGLY_UNDERLINE
+    WIGGLY_UNDERLINE
 }

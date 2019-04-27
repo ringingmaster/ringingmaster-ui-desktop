@@ -12,45 +12,79 @@ import javafx.beans.property.StringProperty;
  */
 public class CallModel {
 
-	public CallModel() {
-	}
+    public CallModel() {
+    }
 
-	public CallModel(String callName,String callShorthand, String notation, Boolean defaultCall) {
-		setCallName(callName);
-		setCallShorthand(callShorthand);
-		setNotation(notation);
-		setDefaultCall(defaultCall);
-	}
+    public CallModel(String callName, String callShorthand, String notation, Boolean defaultCall) {
+        setCallName(callName);
+        setCallShorthand(callShorthand);
+        setNotation(notation);
+        setDefaultCall(defaultCall);
+    }
 
-	private StringProperty callName = new SimpleStringProperty(this, "callName");
-	public void setCallName(String value) { callName.set(value); }
-	public String getCallName() { return callName.get(); }
-	public StringProperty callNameProperty() {return callName;}
+    private StringProperty callName = new SimpleStringProperty(this, "callName");
 
-	private StringProperty callShorthand = new SimpleStringProperty(this, "callShorthand");
-	public void setCallShorthand(String value) { callShorthand.set(value); }
-	public String getCallShorthand() { return callShorthand.get(); }
-	public StringProperty callShorthandProperty() {return callShorthand;}
+    public void setCallName(String value) {
+        callName.set(value);
+    }
 
-	private StringProperty notation = new SimpleStringProperty(this, "notation");
-	public void setNotation(String value) { notation.set(value); }
-	public String getNotation() { return notation.get(); }
-	public StringProperty notationProperty() {return notation;}
+    public String getCallName() {
+        return callName.get();
+    }
 
-	private BooleanProperty defaultCall = new SimpleBooleanProperty(this, "defaultCall");
-	public void setDefaultCall(Boolean value) { defaultCall.set(value); }
-	public Boolean getDefaultCall() { return defaultCall.get(); }
-	public BooleanProperty defaultCallProperty() {
-		return defaultCall;
-	}
+    public StringProperty callNameProperty() {
+        return callName;
+    }
 
-	@Override
-	public String toString() {
-		return "CallModel{" +
-				"callName=" + getCallName() +
-				", callShorthand=" + getCallShorthand() +
-				", notation=" + getNotation() +
-				", defaultCall=" + getDefaultCall() +
-				'}';
-	}
+    private StringProperty callShorthand = new SimpleStringProperty(this, "callShorthand");
+
+    public void setCallShorthand(String value) {
+        callShorthand.set(value);
+    }
+
+    public String getCallShorthand() {
+        return callShorthand.get();
+    }
+
+    public StringProperty callShorthandProperty() {
+        return callShorthand;
+    }
+
+    private StringProperty notation = new SimpleStringProperty(this, "notation");
+
+    public void setNotation(String value) {
+        notation.set(value);
+    }
+
+    public String getNotation() {
+        return notation.get();
+    }
+
+    public StringProperty notationProperty() {
+        return notation;
+    }
+
+    private BooleanProperty defaultCall = new SimpleBooleanProperty(this, "defaultCall");
+
+    public void setDefaultCall(Boolean value) {
+        defaultCall.set(value);
+    }
+
+    public Boolean getDefaultCall() {
+        return defaultCall.get();
+    }
+
+    public BooleanProperty defaultCallProperty() {
+        return defaultCall;
+    }
+
+    @Override
+    public String toString() {
+        return "CallModel{" +
+                "callName=" + getCallName() +
+                ", callShorthand=" + getCallShorthand() +
+                ", notation=" + getNotation() +
+                ", defaultCall=" + getDefaultCall() +
+                '}';
+    }
 }

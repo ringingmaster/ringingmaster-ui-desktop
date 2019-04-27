@@ -722,7 +722,7 @@ public class CompositionDocument extends ScrollPane implements Listenable<Compos
     }
 
     public void setUpdatePoint(Supplier<String> updatePointName, boolean mutated) {
-        if (mutated ) {
+        if (mutated) {
             log.info("UPDATE: [{}]", updatePointName.get());
             parseAndProve();
             setDirty(true);

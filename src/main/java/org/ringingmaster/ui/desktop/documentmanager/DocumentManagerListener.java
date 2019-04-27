@@ -7,5 +7,5 @@ package org.ringingmaster.ui.desktop.documentmanager;
  */
 public interface DocumentManagerListener {
 
-	void documentManager_documentActivated(Document document);
+    void documentManager_documentActivated(Document document);
 }

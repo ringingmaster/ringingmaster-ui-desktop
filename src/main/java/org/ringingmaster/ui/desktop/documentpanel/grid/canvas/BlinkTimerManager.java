@@ -13,35 +13,34 @@ import java.util.TimerTask;
  */
 public class BlinkTimerManager extends ConcurrentListenable<BlinkTimerListener> implements Listenable<BlinkTimerListener> {
 
-	private static final int BLINK_RATE_MS = 500;
+    private static final int BLINK_RATE_MS = 500;
 
-	private final Timer timer = new Timer("Caret", true);
-	private volatile boolean blinkOn = false;
+    private final Timer timer = new Timer("Caret", true);
+    private volatile boolean blinkOn = false;
 
 
-	private final static BlinkTimerManager INSTANCE = new BlinkTimerManager();
+    private final static BlinkTimerManager INSTANCE = new BlinkTimerManager();
 
-	private BlinkTimerManager() {
-		startTimer();
-	}
+    private BlinkTimerManager() {
+        startTimer();
+    }
 
-	public static BlinkTimerManager getInstance() {
-		return INSTANCE;
-	}
+    public static BlinkTimerManager getInstance() {
+        return INSTANCE;
+    }
 
-	private void startTimer() {
-		timer.schedule(new TimerTask() {
-			@Override
-			public void run() {
-				blinkOn = !blinkOn;
-				for (BlinkTimerListener listener : getListeners()) {
-					listener.blinkTimerManager_triggerBlink(blinkOn);
-				}
+    private void startTimer() {
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                blinkOn = !blinkOn;
+                for (BlinkTimerListener listener : getListeners()) {
+                    listener.blinkTimerManager_triggerBlink(blinkOn);
+                }
 
-			}
-		}, BLINK_RATE_MS, BLINK_RATE_MS);
-	}
-
+            }
+        }, BLINK_RATE_MS, BLINK_RATE_MS);
+    }
 
 
 }

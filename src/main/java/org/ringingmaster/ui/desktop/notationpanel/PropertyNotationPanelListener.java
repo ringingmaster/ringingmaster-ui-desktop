@@ -11,5 +11,5 @@ import java.util.Optional;
  */
 public interface PropertyNotationPanelListener {
 
-	void propertyMethod_setSelectedNotation(Optional<Notation> notation);
+    void propertyMethod_setSelectedNotation(Optional<Notation> notation);
 }

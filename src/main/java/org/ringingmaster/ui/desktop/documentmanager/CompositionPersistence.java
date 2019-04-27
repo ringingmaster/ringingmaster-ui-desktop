@@ -28,31 +28,31 @@ import java.util.Set;
  */
 public class CompositionPersistence {
 
-	private final Logger log = LoggerFactory.getLogger(this.getClass());
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-	private DocumentPersist documentPersist = new DocumentPersist();
+    private DocumentPersist documentPersist = new DocumentPersist();
 
-	public void save(Path path, Composition composition) {
+    public void save(Path path, Composition composition) {
 
-		CompositionPersist CompositionPersist = buildCompositionPersist(composition);
+        CompositionPersist CompositionPersist = buildCompositionPersist(composition);
 
-		try {
-			documentPersist.writeComposition(CompositionPersist, path);
-		} catch (IOException e) {
-			log.error("TODO", e);
-		} catch (JAXBException e) {
-			log.error("TODO", e);
-		}
-	}
+        try {
+            documentPersist.writeComposition(CompositionPersist, path);
+        } catch (IOException e) {
+            log.error("TODO", e);
+        } catch (JAXBException e) {
+            log.error("TODO", e);
+        }
+    }
 
-	public ObservableComposition load(Path path) {
-		CompositionPersist CompositionPersist = documentPersist.readComposition(path);
-		ObservableComposition composition = buildComposition(CompositionPersist);
-		return composition;
-	}
+    public ObservableComposition load(Path path) {
+        CompositionPersist CompositionPersist = documentPersist.readComposition(path);
+        ObservableComposition composition = buildComposition(CompositionPersist);
+        return composition;
+    }
 
-	CompositionPersist buildCompositionPersist(Composition composition) {
-		//TODO Reactive
+    CompositionPersist buildCompositionPersist(Composition composition) {
+        //TODO Reactive
 //		CompositionPersist CompositionPersist = new CompositionPersist();
 //
 //		CompositionPersist.setNumberOfBells(composition.getNumberOfBells().toInt());
@@ -128,17 +128,17 @@ public class CompositionPersistence {
 //		}
 //
 //		return CompositionPersist;
-		return null;
-	}
+        return null;
+    }
 
-	private NotationKeyPersist getNotationKeyPersist(Notation nonSplicedActiveNotation) {
-		NotationKeyPersist notationKeyPersist = new ObjectFactory().createNotationKeyPersist();
-		notationKeyPersist.setNumberOfWorkingBells(nonSplicedActiveNotation.getNumberOfWorkingBells().toInt());
-		notationKeyPersist.setName(nonSplicedActiveNotation.getName());
-		return notationKeyPersist;
-	}
+    private NotationKeyPersist getNotationKeyPersist(Notation nonSplicedActiveNotation) {
+        NotationKeyPersist notationKeyPersist = new ObjectFactory().createNotationKeyPersist();
+        notationKeyPersist.setNumberOfWorkingBells(nonSplicedActiveNotation.getNumberOfWorkingBells().toInt());
+        notationKeyPersist.setName(nonSplicedActiveNotation.getName());
+        return notationKeyPersist;
+    }
 
-	//TODO Reactive
+    //TODO Reactive
 //	 private DefinitionPersist buildDefinitionPersist(Definition definition) {
 //		DefinitionPersist definitionPersist = new DefinitionPersist();
 //		definitionPersist.setCharacters(definition.getCharacters());
@@ -146,41 +146,40 @@ public class CompositionPersistence {
 //		return definitionPersist;
 //	}
 
-	private CompositionNotationPersist buildCompositionNotationPersist(Notation notation) {
-		CompositionNotationPersist notationPersist = new CompositionNotationPersist();
-		notationPersist.setNumberOfWorkingBells(notation.getNumberOfWorkingBells().toInt());
-		notationPersist.setName(notation.getName());
-		notationPersist.setFoldedPalindrome(notation.isFoldedPalindrome());
-		notationPersist.setNotation(notation.getRawNotationDisplayString(0, true));
-		notationPersist.setNotation2(notation.getRawNotationDisplayString(1, true));
+    private CompositionNotationPersist buildCompositionNotationPersist(Notation notation) {
+        CompositionNotationPersist notationPersist = new CompositionNotationPersist();
+        notationPersist.setNumberOfWorkingBells(notation.getNumberOfWorkingBells().toInt());
+        notationPersist.setName(notation.getName());
+        notationPersist.setFoldedPalindrome(notation.isFoldedPalindrome());
+        notationPersist.setNotation(notation.getRawNotationDisplayString(0, true));
+        notationPersist.setNotation2(notation.getRawNotationDisplayString(1, true));
 
-		if (notation.isCannedCalls()) {
-			notationPersist.setUseCannedCalls(true);
-		}
-		else {
-			Set<Call> calls = notation.getCalls();
-			for (Call call : calls) {
-				CallPersist callPersist = convertCall(call, (call == notation.getDefaultCall()));
-				notationPersist.getCall().add(callPersist);
-			}
-		}
-		notationPersist.setSplicedIdentifier(notation.getSpliceIdentifier());
+        if (notation.isCannedCalls()) {
+            notationPersist.setUseCannedCalls(true);
+        } else {
+            Set<Call> calls = notation.getCalls();
+            for (Call call : calls) {
+                CallPersist callPersist = convertCall(call, (call == notation.getDefaultCall()));
+                notationPersist.getCall().add(callPersist);
+            }
+        }
+        notationPersist.setSplicedIdentifier(notation.getSpliceIdentifier());
 
-		return notationPersist;
-	}
+        return notationPersist;
+    }
 
-	private CallPersist convertCall(Call call, boolean defaultCall) {
-		CallPersist callPersist = new CallPersist();
-		callPersist.setName(call.getName());
-		callPersist.setShorthand(call.getNameShorthand());
-		callPersist.setNotation(call.getNotationDisplayString(true));
-		callPersist.setDefault(defaultCall);
+    private CallPersist convertCall(Call call, boolean defaultCall) {
+        CallPersist callPersist = new CallPersist();
+        callPersist.setName(call.getName());
+        callPersist.setShorthand(call.getNameShorthand());
+        callPersist.setNotation(call.getNotationDisplayString(true));
+        callPersist.setDefault(defaultCall);
 
-		return callPersist;
-	}
+        return callPersist;
+    }
 
-	@VisibleForTesting
-	protected ObservableComposition buildComposition(CompositionPersist CompositionPersist) {
+    @VisibleForTesting
+    protected ObservableComposition buildComposition(CompositionPersist CompositionPersist) {
 //TODO Reactive
 // 		int rowCount = CompositionPersist.getCells().getRows();
 //		int columnCount = CompositionPersist.getCells().getColumns();
@@ -249,30 +248,28 @@ public class CompositionPersistence {
 //		}
 //
 //		return composition;
-		return null;
-	}
+        return null;
+    }
 
-	private Notation buildNotation(CompositionNotationPersist CompositionPersistNotation) {
-		NotationBuilder notationBuilder = NotationBuilder.getInstance()
-				.setNumberOfWorkingBells(NumberOfBells.valueOf(CompositionPersistNotation.getNumberOfWorkingBells()))
-				.setName(CompositionPersistNotation.getName());
-		if (CompositionPersistNotation.isFoldedPalindrome()) {
-			notationBuilder.setFoldedPalindromeNotationShorthand(CompositionPersistNotation.getNotation(), CompositionPersistNotation.getNotation2());
-		}
-		else {
-			notationBuilder.setUnfoldedNotationShorthand(CompositionPersistNotation.getNotation());
-		}
+    private Notation buildNotation(CompositionNotationPersist CompositionPersistNotation) {
+        NotationBuilder notationBuilder = NotationBuilder.getInstance()
+                .setNumberOfWorkingBells(NumberOfBells.valueOf(CompositionPersistNotation.getNumberOfWorkingBells()))
+                .setName(CompositionPersistNotation.getName());
+        if (CompositionPersistNotation.isFoldedPalindrome()) {
+            notationBuilder.setFoldedPalindromeNotationShorthand(CompositionPersistNotation.getNotation(), CompositionPersistNotation.getNotation2());
+        } else {
+            notationBuilder.setUnfoldedNotationShorthand(CompositionPersistNotation.getNotation());
+        }
 
-		if (CompositionPersistNotation.isUseCannedCalls() != null && CompositionPersistNotation.isUseCannedCalls()) {
-			notationBuilder.setCannedCalls();
-		}
-		else {
-			for (CallPersist callPersist : CompositionPersistNotation.getCall()) {
-				notationBuilder.addCall(callPersist.getName(), callPersist.getShorthand(), callPersist.getNotation(), callPersist.isDefault());
-			}
-		}
-		notationBuilder.setSpliceIdentifier(CompositionPersistNotation.getSplicedIdentifier());
+        if (CompositionPersistNotation.isUseCannedCalls() != null && CompositionPersistNotation.isUseCannedCalls()) {
+            notationBuilder.setCannedCalls();
+        } else {
+            for (CallPersist callPersist : CompositionPersistNotation.getCall()) {
+                notationBuilder.addCall(callPersist.getName(), callPersist.getShorthand(), callPersist.getNotation(), callPersist.isDefault());
+            }
+        }
+        notationBuilder.setSpliceIdentifier(CompositionPersistNotation.getSplicedIdentifier());
 
-		return notationBuilder.build();
-	}
+        return notationBuilder.build();
+    }
 }

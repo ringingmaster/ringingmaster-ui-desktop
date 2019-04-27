@@ -5,6 +5,45 @@ package org.ringingmaster.ui.desktop.documentpanel.grid.canvas.tooltip;
  * IMPORTANT: This is a copy of the tooltip from javafx.scene.control.Tooltip. It was checked in
  * as originally written so that any changes can be tracked - with a view to updating if the original
  * changes from java version to version.
+ * <p>
+ * Tooltips are common UI elements which are typically used for showing
+ * additional information about a Node in the scenegraph when the Node is
+ * hovered over by the mouse. Any Node can show a tooltip. In most cases a
+ * Tooltip is created and its {@link #textProperty() text} property is modified
+ * to show plain text to the user. However, a Tooltip is able to show within it
+ * an arbitrary scenegraph of nodes - this is done by creating the scenegraph
+ * and setting it inside the Tooltip {@link #graphicProperty() graphic}
+ * property.
+ *
+ * <p>You use the following approach to set a Tooltip on any node:
+ *
+ * <pre>
+ * Rectangle rect = new Rectangle(0, 0, 100, 100);
+ * Tooltip t = new Tooltip("A Square");
+ * Tooltip.install(rect, t);
+ * </pre>
+ * <p>
+ * This tooltip will then participate with the typical tooltip semantics (i.e.
+ * appearing on hover, etc). Note that the Tooltip does not have to be
+ * uninstalled: it will be garbage collected when it is not referenced by any
+ * Node. It is possible to manually uninstall the tooltip, however.
+ *
+ * <p>A single tooltip can be installed on multiple target nodes or multiple
+ * controls.
+ *
+ * <p>Because most Tooltips are shown on UI controls, there is special API
+ * for all controls to make installing a Tooltip less verbose. The example below
+ * shows how to create a tooltip for a Button control:
+ *
+ * <pre>
+ * import javafx.scene.control.Tooltip;
+ * import javafx.scene.control.Button;
+ *
+ * Button button = new Button("Hover Over Me");
+ * button.setTooltip(new Tooltip("Tooltip for Button"));
+ * </pre>
+ *
+ * @since JavaFX 2.0
  */
 
 //TODO JavaFX has changes this class and this things it uses.

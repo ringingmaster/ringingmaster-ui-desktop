@@ -1,10 +1,10 @@
 package org.ringingmaster.ui.desktop.documentpanel.grid.canvas;
 
-import org.ringingmaster.ui.desktop.documentpanel.grid.model.GridCharacterGroup;
-import org.ringingmaster.ui.desktop.documentpanel.grid.model.GridCharacterModel;
 import com.sun.javafx.tk.FontMetrics;
 import com.sun.javafx.tk.Toolkit;
 import javafx.scene.text.Font;
+import org.ringingmaster.ui.desktop.documentpanel.grid.model.GridCharacterGroup;
+import org.ringingmaster.ui.desktop.documentpanel.grid.model.GridCharacterModel;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -16,14 +16,14 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class CharacterGroupMeasurer {
 
-	public static final float MINIMUM_HEIGHT = 6;
+    public static final float MINIMUM_HEIGHT = 6;
 
-	CharacterGroupMeasurement measureCell(final GridCharacterGroup characterGroup) {
-		checkNotNull(characterGroup);
+    CharacterGroupMeasurement measureCell(final GridCharacterGroup characterGroup) {
+        checkNotNull(characterGroup);
         double height = measureCellHeight(characterGroup);
-		double bottomGap = measureBottomGap(characterGroup);
-		double[] characterWidths = measureCellTextWidth(characterGroup);
-	    int widthPadding = measureCellHorizontalPadding(characterGroup);
+        double bottomGap = measureBottomGap(characterGroup);
+        double[] characterWidths = measureCellTextWidth(characterGroup);
+        int widthPadding = measureCellHorizontalPadding(characterGroup);
 
         CharacterGroupMeasurement dimension = new CharacterGroupMeasurement(height, bottomGap, characterWidths, widthPadding);
         return dimension;
@@ -31,22 +31,22 @@ public class CharacterGroupMeasurer {
 
 
     private float measureCellHeight(final GridCharacterGroup characterGroup) {
-	    float maxHeight = MINIMUM_HEIGHT;
-	    for (GridCharacterModel gridCharacterModel : characterGroup) {
-		    final Font font = gridCharacterModel.getFont();
-		    final FontMetrics fm = Toolkit.getToolkit().getFontLoader().getFontMetrics(font);
-		    final float height = fm.getDescent() + fm.getAscent();
-		    if (height > maxHeight) {
-			    maxHeight = height;
-		    }
-	    }
+        float maxHeight = MINIMUM_HEIGHT;
+        for (GridCharacterModel gridCharacterModel : characterGroup) {
+            final Font font = gridCharacterModel.getFont();
+            final FontMetrics fm = Toolkit.getToolkit().getFontLoader().getFontMetrics(font);
+            final float height = fm.getDescent() + fm.getAscent();
+            if (height > maxHeight) {
+                maxHeight = height;
+            }
+        }
         return maxHeight;
     }
 
     private double[] measureCellTextWidth(final GridCharacterGroup characterGroup) {
-	    int characterCount = characterGroup.getLength();
-	    double[] characterWidths = new double[characterCount];
-	    //TODO Reactive - removed code after java 8
+        int characterCount = characterGroup.getLength();
+        double[] characterWidths = new double[characterCount];
+        //TODO Reactive - removed code after java 8
 //	    for (int index=0;index<characterGroup.getLength();index++) {
 //		    GridCharacterModel GridCharacterModel = characterGroup.getGridCharacterModel(index);
 //		    final Font font = GridCharacterModel.getFont();
@@ -57,20 +57,20 @@ public class CharacterGroupMeasurer {
         return characterWidths;
     }
 
-	private int measureCellHorizontalPadding(final GridCharacterGroup characterGroup) {
-		return 3; //TODO get from a percentage of the largest character - although it should be consistent in a column.????
-	}
+    private int measureCellHorizontalPadding(final GridCharacterGroup characterGroup) {
+        return 3; //TODO get from a percentage of the largest character - although it should be consistent in a column.????
+    }
 
     private float measureBottomGap(final GridCharacterGroup characterGroup) {
-	    float bottomGap = 0;
-	    for (GridCharacterModel GridCharacterModel : characterGroup) {
-		    final Font font = GridCharacterModel.getFont();
-		    FontMetrics fm = Toolkit.getToolkit().getFontLoader().getFontMetrics(font);
-		    final float descent = fm.getMaxDescent();
-		    if (bottomGap < descent) {
-			    bottomGap = descent;
-		    }
-	    }
-	    return bottomGap;
+        float bottomGap = 0;
+        for (GridCharacterModel GridCharacterModel : characterGroup) {
+            final Font font = GridCharacterModel.getFont();
+            FontMetrics fm = Toolkit.getToolkit().getFontLoader().getFontMetrics(font);
+            final float descent = fm.getMaxDescent();
+            if (bottomGap < descent) {
+                bottomGap = descent;
+            }
+        }
+        return bottomGap;
     }
 }

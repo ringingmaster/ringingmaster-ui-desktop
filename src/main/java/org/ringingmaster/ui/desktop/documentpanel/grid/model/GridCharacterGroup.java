@@ -5,9 +5,9 @@ package org.ringingmaster.ui.desktop.documentpanel.grid.model;
  *
  * @author Lake
  */
-public interface GridCharacterGroup extends Iterable<GridCharacterModel>  {
+public interface GridCharacterGroup extends Iterable<GridCharacterModel> {
 
-	int getLength();
+    int getLength();
 
-	GridCharacterModel getGridCharacterModel(int index);
+    GridCharacterModel getGridCharacterModel(int index);
 }

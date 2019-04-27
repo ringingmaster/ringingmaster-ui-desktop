@@ -11,8 +11,11 @@ import org.ringingmaster.util.javafx.dialog.EditMode;
  */
 public interface NotationEditorTabController {
 
-	String getTabName();
-	void init(NotationEditorDialog parent, EditMode editMode);
-	void buildDialogDataFromNotation(Notation notation);
-	void buildNotationFromDialogData(NotationBuilder notationBuilder);
+    String getTabName();
+
+    void init(NotationEditorDialog parent, EditMode editMode);
+
+    void buildDialogDataFromNotation(Notation notation);
+
+    void buildNotationFromDialogData(NotationBuilder notationBuilder);
 }

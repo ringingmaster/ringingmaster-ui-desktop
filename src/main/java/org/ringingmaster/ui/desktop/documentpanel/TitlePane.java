@@ -1,8 +1,5 @@
 package org.ringingmaster.ui.desktop.documentpanel;
 
-import org.ringingmaster.util.javafx.color.ColorUtil;
-import org.ringingmaster.ui.desktop.documentmodel.CompositionDocument;
-import org.ringingmaster.ui.common.CompositionStyle;
 import javafx.geometry.Insets;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Background;
@@ -13,6 +10,9 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import org.ringingmaster.ui.common.CompositionStyle;
+import org.ringingmaster.ui.desktop.documentmodel.CompositionDocument;
+import org.ringingmaster.util.javafx.color.ColorUtil;
 
 /**
  * TODO comments ???

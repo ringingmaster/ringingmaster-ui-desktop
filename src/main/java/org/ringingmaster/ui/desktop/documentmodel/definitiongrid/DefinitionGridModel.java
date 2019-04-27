@@ -5,7 +5,7 @@ package org.ringingmaster.ui.desktop.documentmodel.definitiongrid;
  *
  * @author Lake
  */
-public class DefinitionGridModel /*extends SkeletalGridModel implements GridModel */{
+public class DefinitionGridModel /*extends SkeletalGridModel implements GridModel */ {
 //TODO Reactive
 //	private final GridCharacterGroup gridCharacterGroup;
 //	private final GridCellModel gridCharacterModel;

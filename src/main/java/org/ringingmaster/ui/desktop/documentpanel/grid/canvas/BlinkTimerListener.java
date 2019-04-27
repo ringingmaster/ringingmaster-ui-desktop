@@ -6,5 +6,5 @@ package org.ringingmaster.ui.desktop.documentpanel.grid.canvas;
  * @author Lake
  */
 public interface BlinkTimerListener {
-	void blinkTimerManager_triggerBlink(boolean blinkOn);
+    void blinkTimerManager_triggerBlink(boolean blinkOn);
 }

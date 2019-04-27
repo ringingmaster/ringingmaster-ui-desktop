@@ -14,24 +14,24 @@ import org.ringingmaster.util.javafx.dialog.EditMode;
 
 public class CallPointMethod extends SkeletalNotationEditorTabController implements NotationEditorTabController {
 
-	@Override
-	public String getTabName() {
-		return "Method Call Points";
-	}
+    @Override
+    public String getTabName() {
+        return "Method Call Points";
+    }
 
-	@Override
-	public void init(NotationEditorDialog parent, EditMode editMode) {
-		super.init(parent, editMode);
+    @Override
+    public void init(NotationEditorDialog parent, EditMode editMode) {
+        super.init(parent, editMode);
 
-	}
+    }
 
-	@Override
-	public void buildDialogDataFromNotation(Notation notation) {
+    @Override
+    public void buildDialogDataFromNotation(Notation notation) {
 
-	}
+    }
 
-	@Override
-	public void buildNotationFromDialogData(NotationBuilder notationBuilder) {
+    @Override
+    public void buildNotationFromDialogData(NotationBuilder notationBuilder) {
 
-	}
+    }
 }

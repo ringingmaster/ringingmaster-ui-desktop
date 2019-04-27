@@ -1,8 +1,8 @@
 package org.ringingmaster.ui.desktop.documentmanager;
 
+import javafx.event.ActionEvent;
 import org.ringingmaster.util.javafx.events.EventDefinition;
 import org.ringingmaster.util.javafx.events.SkeletalEventDefinition;
-import javafx.event.ActionEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,22 +13,22 @@ import org.slf4j.LoggerFactory;
  */
 public class NewDocumentEvent extends SkeletalEventDefinition implements EventDefinition {
 
-	private final Logger log = LoggerFactory.getLogger(this.getClass());
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-	private DocumentManager documentManager;
+    private DocumentManager documentManager;
 
-	public NewDocumentEvent() {
-		super("/images/new_file.png", "New");
-		disableProperty().set(false);
-		tooltipTextProperty().setValue("New Composition");
-	}
+    public NewDocumentEvent() {
+        super("/images/new_file.png", "New");
+        disableProperty().set(false);
+        tooltipTextProperty().setValue("New Composition");
+    }
 
-	@Override
-	public void handle(ActionEvent event) {
-		documentManager.newDocument();
-	}
+    @Override
+    public void handle(ActionEvent event) {
+        documentManager.newDocument();
+    }
 
-	public void setDocumentManager(DocumentManager documentManager) {
-		this.documentManager = documentManager;
-	}
+    public void setDocumentManager(DocumentManager documentManager) {
+        this.documentManager = documentManager;
+    }
 }

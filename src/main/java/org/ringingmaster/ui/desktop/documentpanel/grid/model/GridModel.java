@@ -1,8 +1,8 @@
 package org.ringingmaster.ui.desktop.documentpanel.grid.model;
 
 
-import org.ringingmaster.ui.desktop.documentpanel.grid.GridPosition;
 import javafx.scene.paint.Color;
+import org.ringingmaster.ui.desktop.documentpanel.grid.GridPosition;
 
 /**
  * TODO comments ???
@@ -11,43 +11,48 @@ import javafx.scene.paint.Color;
  */
 public interface GridModel {
 
-	/**
-	 * Get the number of columns (not lines)
-	 *
-	 * @return int number of columns.
-	 */
-	int getColumnCount();
+    /**
+     * Get the number of columns (not lines)
+     *
+     * @return int number of columns.
+     */
+    int getColumnCount();
 
-	/**
-	 * Get the number of rows (not lines)
-	 *
-	 * @return int number of rows.
-	 */
-	int getRowCount();
+    /**
+     * Get the number of rows (not lines)
+     *
+     * @return int number of rows.
+     */
+    int getRowCount();
 
-	boolean isZeroSized();
+    boolean isZeroSized();
 
-	/**
-	 * Get the color of the lines that form the grid.
-	 *
-	 * @return Color
-	 */
-	Color getGridColor();
+    /**
+     * Get the color of the lines that form the grid.
+     *
+     * @return Color
+     */
+    Color getGridColor();
 
-	GridCellModel getCellModel(int column, int row);
-	GridCharacterModel getCharacterModel(GridPosition gridPosition);
+    GridCellModel getCellModel(int column, int row);
 
-	GridCharacterGroup getRowHeader(int row);
+    GridCharacterModel getCharacterModel(GridPosition gridPosition);
 
-	GridPosition getCaretPosition();
-	void setCaretPosition(GridPosition newPosition);
+    GridCharacterGroup getRowHeader(int row);
 
-	GridPosition getSelectionStartPosition();
-	void setSelectionEndPosition(GridPosition gridPosition);
-	boolean isSelection();
+    GridPosition getCaretPosition();
+
+    void setCaretPosition(GridPosition newPosition);
+
+    GridPosition getSelectionStartPosition();
+
+    void setSelectionEndPosition(GridPosition gridPosition);
+
+    boolean isSelection();
 
 
-	void registerListener(GridModelListener listener);
-	void deRegisterListener(GridModelListener listener);
+    void registerListener(GridModelListener listener);
+
+    void deRegisterListener(GridModelListener listener);
 
 }

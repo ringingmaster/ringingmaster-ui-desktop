@@ -200,7 +200,7 @@ public class CallUI extends SkeletalNotationEditorTabController implements Notat
     }
 
     public void onShowLeadHeadTable(ActionEvent actionEvent) {
-        new SceneLauncher(new LeadHeadTablePane(), Lists.<String>newArrayList(RingingMasterDesktopApp.STYLESHEET), parent.getStage(), "Lead Head Table");
+        new SceneLauncher(new LeadHeadTablePane(), Lists.newArrayList(RingingMasterDesktopApp.STYLESHEET), parent.getStage(), "Lead Head Table");
 
     }
 }

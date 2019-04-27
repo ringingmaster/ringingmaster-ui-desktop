@@ -75,7 +75,7 @@ public class NotationLibraryManager {
             return Collections.emptyList();
         }
         ArrayList<LibraryNotationPersist> startingWith = suffixTreeMap.getStartingWith(partialName.toLowerCase(), new ArrayList<>());
-        return  startingWith;
+        return startingWith;
     }
 
     public void setLibraryLocation(String libraryLocation) {

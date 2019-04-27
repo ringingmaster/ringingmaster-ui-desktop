@@ -36,12 +36,12 @@ public class LeadHeadTablePane extends ScrollPane {
                 int maxColumns = BELLS_22.toInt() - BELLS_5.toInt();
 
                 List<LeadHeadCalculator.LeadHeadCodes> orderedLeadHeadCodes = LeadHeadCalculator.getOrderedLeadHeadCodes();
-                for (int orderedLeadHeadCodesIndex=0;orderedLeadHeadCodesIndex<orderedLeadHeadCodes.size();orderedLeadHeadCodesIndex++) {
+                for (int orderedLeadHeadCodesIndex = 0; orderedLeadHeadCodesIndex < orderedLeadHeadCodes.size(); orderedLeadHeadCodesIndex++) {
                     int rowIndex = orderedLeadHeadCodesIndex + 1;
                     String nearLeadHeadCode = orderedLeadHeadCodes.get(orderedLeadHeadCodesIndex).getNear();
                     Label nearCode = new Label(nearLeadHeadCode);
                     nearCode.setFont(boldFont);
-                    nearCode.setTextFill(isEven(rowIndex)?Color.color(.4,.4,.4):Color.BLACK);
+                    nearCode.setTextFill(isEven(rowIndex) ? Color.color(.4, .4, .4) : Color.BLACK);
                     getChildren().addAll(nearCode);
                     GridPane.setRowIndex(nearCode, rowIndex);
                     GridPane.setColumnIndex(nearCode, 0);
@@ -50,14 +50,14 @@ public class LeadHeadTablePane extends ScrollPane {
                     String extremeLeadHeadCode = orderedLeadHeadCodes.get(orderedLeadHeadCodesIndex).getExtreme();
                     Label extremeCode = new Label(extremeLeadHeadCode);
                     extremeCode.setFont(boldFont);
-                    nearCode.setTextFill(isEven(rowIndex)?Color.color(.4,.4,.4):Color.BLACK);
+                    nearCode.setTextFill(isEven(rowIndex) ? Color.color(.4, .4, .4) : Color.BLACK);
                     getChildren().addAll(extremeCode);
                     GridPane.setRowIndex(extremeCode, rowIndex);
                     GridPane.setColumnIndex(extremeCode, maxColumns + 2);
                     GridPane.setHalignment(extremeCode, HPos.CENTER);
                 }
 
-                for (int columnIndex = 1; columnIndex <= maxColumns+1; columnIndex++) {
+                for (int columnIndex = 1; columnIndex <= maxColumns + 1; columnIndex++) {
                     NumberOfBells numberOfBells = NumberOfBells.valueOf(columnIndex + 4);
 
                     Label header = new Label(numberOfBells.getName());
@@ -82,7 +82,7 @@ public class LeadHeadTablePane extends ScrollPane {
                     leadHead = LeadHeadCalculator.lookupRowFromCode(leadHeadCode.getNear(), numberOfBells);
                 }
                 Label label = new Label(leadHead);
-                label.setTextFill(isEven(rowIndex)?Color.color(.4,.4,.4):Color.BLACK);
+                label.setTextFill(isEven(rowIndex) ? Color.color(.4, .4, .4) : Color.BLACK);
                 getChildren().addAll(label);
                 GridPane.setRowIndex(label, rowIndex);
                 GridPane.setColumnIndex(label, columnIndex);

@@ -24,7 +24,7 @@ import java.util.Collection;
 import java.util.Optional;
 
 import static org.ringingmaster.engine.composition.TableType.MAIN_TABLE;
-import static org.ringingmaster.engine.composition.compositiontype.CompositionType.*;
+import static org.ringingmaster.engine.composition.compositiontype.CompositionType.LEAD_BASED;
 
 /**
  * TODO Comments
@@ -141,9 +141,9 @@ public class CompositionDocumentTypeManager extends ConcurrentListenable<Composi
         composition.addNotation(buildPlainBobMinimus());
         composition.addNotation(buildPlainBobMajor());
 
-        composition.addCharacters(MAIN_TABLE,0, 0, "-s");
-        composition.addCharacters(MAIN_TABLE,1, 0, "p 3*");
-        composition.addCharacters(MAIN_TABLE,0, 1, "s-");
+        composition.addCharacters(MAIN_TABLE, 0, 0, "-s");
+        composition.addCharacters(MAIN_TABLE, 1, 0, "p 3*");
+        composition.addCharacters(MAIN_TABLE, 0, 1, "s-");
 
         composition.addDefinition("3*", "-s-");
         composition.addDefinition("tr", "sps");

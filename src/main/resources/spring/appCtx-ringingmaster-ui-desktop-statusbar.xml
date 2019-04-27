@@ -9,23 +9,25 @@
 
     <!-- Statusbar -->
     <bean id="statusBar" class="org.ringingmaster.util.javafx.box.InjectableHBox"
-            p:minHeight="20.0">
+          p:minHeight="20.0">
         <property name="padding">
             <bean class="javafx.geometry.Insets" c:_0="3.0"/>
         </property>
         <property name="boxLayoutDefinitions">
             <util:list>
-                <bean class="org.ringingmaster.util.javafx.box.BoxLayoutDefinition" c:node-ref="statusBar.label" c:priority="NEVER"/>
-                <bean class="org.ringingmaster.util.javafx.box.BoxLayoutDefinition" c:node-ref="statusBar.expansion" c:priority="ALWAYS"/>
-                <bean class="org.ringingmaster.util.javafx.box.BoxLayoutDefinition" c:node-ref="statusBar.proofState" c:priority="NEVER"/>
+                <bean class="org.ringingmaster.util.javafx.box.BoxLayoutDefinition" c:node-ref="statusBar.label"
+                      c:priority="NEVER"/>
+                <bean class="org.ringingmaster.util.javafx.box.BoxLayoutDefinition" c:node-ref="statusBar.expansion"
+                      c:priority="ALWAYS"/>
+                <bean class="org.ringingmaster.util.javafx.box.BoxLayoutDefinition" c:node-ref="statusBar.proofState"
+                      c:priority="NEVER"/>
             </util:list>
         </property>
     </bean>
 
 
-
     <bean id="statusBar.label" class="javafx.scene.control.Label" p:text="TEST"/>
-    <bean id="statusBar.expansion" class="javafx.scene.layout.Pane" />
-    <bean id="statusBar.proofState" class="org.ringingmaster.ui.desktop.statusbar.ProofState" />
+    <bean id="statusBar.expansion" class="javafx.scene.layout.Pane"/>
+    <bean id="statusBar.proofState" class="org.ringingmaster.ui.desktop.statusbar.ProofState"/>
 
 </beans>

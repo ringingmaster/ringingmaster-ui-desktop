@@ -20,40 +20,40 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class DefinitionCell extends SkeletalGridCellModel implements GridCellModel {
 
-	private final Logger log = LoggerFactory.getLogger(this.getClass());
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-	private final CompositionDocument compositionDocument;
-	private final Cell cell;
+    private final CompositionDocument compositionDocument;
+    private final Cell cell;
 
-	public DefinitionCell(List<GridModelListener> listeners, CompositionDocument compositionDocument, Cell cell) {
-		super(listeners);
-		this.compositionDocument = checkNotNull(compositionDocument);
-		this.cell = checkNotNull(cell);
-	}
+    public DefinitionCell(List<GridModelListener> listeners, CompositionDocument compositionDocument, Cell cell) {
+        super(listeners);
+        this.compositionDocument = checkNotNull(compositionDocument);
+        this.cell = checkNotNull(cell);
+    }
 
-	@Override
-	public int getLength() {
-		//TODO Reactive return cell.getLength();
-		return 1;
-	}
+    @Override
+    public int getLength() {
+        //TODO Reactive return cell.getLength();
+        return 1;
+    }
 
-	@Override
-	public void insertCharacter(int index, char character) {
-		//TODO Reactive cell.insert(character, index);
-		compositionDocument.setUpdatePoint(() -> "Typing", true);
-		fireCellStructureChanged();
-	}
+    @Override
+    public void insertCharacter(int index, char character) {
+        //TODO Reactive cell.insert(character, index);
+        compositionDocument.setUpdatePoint(() -> "Typing", true);
+        fireCellStructureChanged();
+    }
 
-	@Override
-	public void removeCharacter(int index) {
+    @Override
+    public void removeCharacter(int index) {
 //TODO Reactive 		cell.remove(index);
-		compositionDocument.collapseEmptyRowsAndColumns();
-		compositionDocument.setUpdatePoint(() -> "Delete", true);
-		fireCellStructureChanged();
-	}
+        compositionDocument.collapseEmptyRowsAndColumns();
+        compositionDocument.setUpdatePoint(() -> "Delete", true);
+        fireCellStructureChanged();
+    }
 
-	@Override
-	public GridCharacterModel getGridCharacterModel(final int index) {
+    @Override
+    public GridCharacterModel getGridCharacterModel(final int index) {
 //		return new GridCharacterModel() {
 //			@Override
 //			public char getCharacter() {
@@ -90,7 +90,7 @@ public class DefinitionCell extends SkeletalGridCellModel implements GridCellMod
 //				return Optional.of(tooltipText);
 //			}
 //		};
-		//TODO Reactive
-		return null;
-	}
+        //TODO Reactive
+        return null;
+    }
 }

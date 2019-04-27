@@ -11,11 +11,13 @@ import java.util.Collection;
  * @author Lake
  */
 public interface DocumentTypeManager {
-	Document createNewDocument();
-	Document openDocument(Path path);
-	void saveDocument(Document document);
+    Document createNewDocument();
 
-	Collection<? extends FileChooser.ExtensionFilter> getFileChooserExtensionFilters();
+    Document openDocument(Path path);
 
-	String getDocumentTypeName();
+    void saveDocument(Document document);
+
+    Collection<? extends FileChooser.ExtensionFilter> getFileChooserExtensionFilters();
+
+    String getDocumentTypeName();
 }

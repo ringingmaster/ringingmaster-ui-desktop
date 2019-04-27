@@ -11,17 +11,24 @@ import java.nio.file.Path;
  */
 public interface Document {
 
-	boolean hasFileLocation();
-	boolean isDirty();
-	void setDirty(boolean dirty);
+    boolean hasFileLocation();
 
-	Path getPath();
-	void setPath(Path path);
+    boolean isDirty();
 
-	void setDocumentName(String documentName);
-	String getNameForApplicationTitle();
+    void setDirty(boolean dirty);
 
-	String getNameForTab();
+    Path getPath();
 
-	default Node getNode() {return null;};
+    void setPath(Path path);
+
+    void setDocumentName(String documentName);
+
+    String getNameForApplicationTitle();
+
+    String getNameForTab();
+
+    default Node getNode() {
+        return null;
+    }
+
 }

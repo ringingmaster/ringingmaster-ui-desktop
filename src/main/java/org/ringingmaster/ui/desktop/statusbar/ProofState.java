@@ -29,8 +29,7 @@ public class ProofState extends ImageView {
             } else {
                 if (proof.get().getCompiledComposition().getTerminationReason() == INVALID_COMPOSITION) {
                     updateImage(proofWait);
-                }
-                else {
+                } else {
                     if (proof.get().isTrueComposition()) {
                         updateImage(proofTick);
                     } else {

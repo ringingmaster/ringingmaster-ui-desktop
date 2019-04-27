@@ -4,6 +4,12 @@ package org.ringingmaster.ui.desktop.documentpanel.grid.canvas.tooltip;
  * IMPORTANT: This is a copy of the tooltip from javafx.scene.control.Tooltip. It was checked in
  * as originally written so that any changes can be tracked - with a view to updating if the original
  * changes from java version to version.
+ * <p>
+ * CSS based skin for Tooltip. It deals mostly with show hide logic for
+ * Popup based controls, and specifically in this case for tooltip. It also
+ * implements some of the Skin interface methods.
+ * <p>
+ * TooltipContent class is the actual skin implementation of the tooltip.
  */
 
 /**

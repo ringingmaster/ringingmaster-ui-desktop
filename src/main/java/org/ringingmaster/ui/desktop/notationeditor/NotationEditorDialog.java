@@ -55,7 +55,7 @@ public class NotationEditorDialog extends SkeletalDialog<Notation> {
                                   NotationLibraryManager notationLibraryManager) {
 
         NotationEditorDialog notationEditorDialog = new DialogBuilder<Notation, NotationEditorDialog>().buildDialog(editMode, model, owner, NotationEditorDialog.class.getResource(NOTATION_EDITOR_FXML),
-                Lists.<String>newArrayList(RingingMasterDesktopApp.STYLESHEET), onSuccessHandler);
+                Lists.newArrayList(RingingMasterDesktopApp.STYLESHEET), onSuccessHandler);
         notationEditorDialog.setNotationLibraryManager(checkNotNull(notationLibraryManager));
         notationEditorDialog.showAndWait();
     }

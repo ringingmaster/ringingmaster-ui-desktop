@@ -3,14 +3,13 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        default-autowire="no"
        xmlns:p="http://www.springframework.org/schema/p"
-       xmlns:c="http://www.springframework.org/schema/c"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
 
     <import resource="appCtx-ringingmaster-ui-desktop-*.xml"/>
 
     <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"
-        p:location="ringingmaster-desktop.properties"/>
+          p:location="ringingmaster-desktop.properties"/>
 
     <bean id="mainWindow" class="org.ringingmaster.ui.desktop.MainParentWindow"
           p:menuBar-ref="menuBar"
@@ -19,8 +18,8 @@
           p:documentWindow-ref="documentWindow"
           p:propertyWindow-ref="propertyWindow"
           init-method="layoutWindows"/>
-<!--          p:analysisLeftWindow-ref="analysisWindow.left"-->
-<!--          p:analysisRightWindow-ref="analysisWindow.right"-->
+    <!--          p:analysisLeftWindow-ref="analysisWindow.left"-->
+    <!--          p:analysisRightWindow-ref="analysisWindow.right"-->
 
     <bean class="org.ringingmaster.ui.desktop.beanfactory.SpringBeanFactory"/>
 

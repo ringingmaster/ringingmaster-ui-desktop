@@ -1,5 +1,4 @@
-
-/* 
+/*
     Document   : controlStyle2
 */
 
@@ -11,24 +10,24 @@
     -fx-background: rgb(225, 228, 203);
 }
 */
-.button{
-    -fx-background-color: rgba(255,255,255,0.0);
+.button {
+    -fx-background-color: rgba(255, 255, 255, 0.0);
     -fx-text-fill: rgb(49, 89, 23);
     -fx-border-radius: 1;
     -fx-padding: 4 4 4 4;
 }
 
-.button:pressed{
+.button:pressed {
     -fx-background-color: -fx-focus-color, -fx-outer-border, -fx-inner-border, linear-gradient(
-            derive(-fx-color,-12%) 0%,
-            derive(-fx-color,+12%) 100%);
+            derive(-fx-color, -12%) 0%,
+            derive(-fx-color, +12%) 100%);
     -fx-background-insets: 0 0 0 0, 0, 1, 1;
 }
 
-.button:hover{
+.button:hover {
     -fx-background-color: -fx-focus-color, -fx-outer-border, -fx-inner-border, linear-gradient(
-            derive(-fx-color,+12%) 0%,
-            derive(-fx-color,-12%) 100%);
+            derive(-fx-color, +12%) 0%,
+            derive(-fx-color, -12%) 100%);
     -fx-background-insets: 0 0 0 0, 0, 1, 1;
 }
 
@@ -36,7 +35,7 @@
     -fx-background-insets: 0 0 0 0, 0, 1, 1;
 }
 
-.borders{
+.borders {
     -fx-border-color: rgb(103, 100, 78);
     -fx-border-style: dotted;
     -fx-border-width: 1.5;

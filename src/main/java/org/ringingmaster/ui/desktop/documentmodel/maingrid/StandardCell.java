@@ -18,41 +18,41 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class StandardCell extends SkeletalGridCellModel implements GridCellModel {
 
-	private final CompositionDocument compositionDocument;
-	private final Cell cell;
+    private final CompositionDocument compositionDocument;
+    private final Cell cell;
 
-	public StandardCell(List<GridModelListener> listeners, CompositionDocument compositionDocument, Cell cell) {
-		super(listeners);
-		this.compositionDocument = checkNotNull(compositionDocument);
-		this.cell = checkNotNull(cell);
-	}
+    public StandardCell(List<GridModelListener> listeners, CompositionDocument compositionDocument, Cell cell) {
+        super(listeners);
+        this.compositionDocument = checkNotNull(compositionDocument);
+        this.cell = checkNotNull(cell);
+    }
 
-	@Override
-	public int getLength() {
-		return cell.getElementSize();
-	}
+    @Override
+    public int getLength() {
+        return cell.getElementSize();
+    }
 
-	@Override
-	public void insertCharacter(int index, char character) {
-		//TODO Reactive
+    @Override
+    public void insertCharacter(int index, char character) {
+        //TODO Reactive
 //		cell.insert(character, index);
 //		compositionDocument.setUpdatePoint(() -> "Typing", Composition.Mutated.MUTATED);
 //		fireCellStructureChanged();
-	}
+    }
 
-	@Override
-	public void removeCharacter(int index) {
-		//TODO Reactive
+    @Override
+    public void removeCharacter(int index) {
+        //TODO Reactive
 //		cell.remove(index);
 //		compositionDocument.collapseEmptyRowsAndColumns();
 //		compositionDocument.setUpdatePoint(() -> "Delete", Composition.Mutated.MUTATED);
 //		fireCellStructureChanged();
-	}
+    }
 
-	@Override
-	public GridCharacterModel getGridCharacterModel(final int index) {
-		//TODO Reactive
-		return null;
+    @Override
+    public GridCharacterModel getGridCharacterModel(final int index) {
+        //TODO Reactive
+        return null;
 //		return new GridCharacterModel() {
 //			@Override
 //			public char getCharacter() {
@@ -88,5 +88,5 @@ public class StandardCell extends SkeletalGridCellModel implements GridCellModel
 //				return Optional.of(tooltipText);
 //			}
 //		};
-	}
+    }
 }

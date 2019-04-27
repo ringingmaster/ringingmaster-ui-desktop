@@ -1,11 +1,11 @@
 package org.ringingmaster.ui.desktop.notationchooser;
 
-import org.ringingmaster.util.javafx.dialog.EditMode;
-import org.ringingmaster.util.javafx.dialog.SkeletalDialog;
-import org.ringingmaster.ui.desktop.RingingMasterDesktopApp;
-import org.ringingmaster.ui.desktop.notationsearch.NotationLibraryManager;
 import com.google.common.collect.Lists;
 import javafx.stage.Window;
+import org.ringingmaster.ui.desktop.RingingMasterDesktopApp;
+import org.ringingmaster.ui.desktop.notationsearch.NotationLibraryManager;
+import org.ringingmaster.util.javafx.dialog.EditMode;
+import org.ringingmaster.util.javafx.dialog.SkeletalDialog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,7 +31,7 @@ public class NotationChooserDialog extends SkeletalDialog<NotationChooserResults
                                   NotationLibraryManager notationLibraryManager) {
 
         NotationChooserDialog notationChooserDialog = new DialogBuilder<NotationChooserResults, NotationChooserDialog>().buildDialog(EditMode.ADD, model, owner, NotationChooserDialog.class.getResource(NOTATION_CHOOSER_FXML),
-                Lists.<String>newArrayList(RingingMasterDesktopApp.STYLESHEET), onSuccessHandler);
+                Lists.newArrayList(RingingMasterDesktopApp.STYLESHEET), onSuccessHandler);
         notationChooserDialog.setNotationLibraryManager(checkNotNull(notationLibraryManager));
         notationChooserDialog.showAndWait();
     }

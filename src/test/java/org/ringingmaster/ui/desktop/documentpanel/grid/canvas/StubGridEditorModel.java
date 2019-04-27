@@ -1,5 +1,7 @@
 package org.ringingmaster.ui.desktop.documentpanel.grid.canvas;
 
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import org.ringingmaster.ui.desktop.documentpanel.grid.GridPosition;
 import org.ringingmaster.ui.desktop.documentpanel.grid.model.AdditionalStyleType;
 import org.ringingmaster.ui.desktop.documentpanel.grid.model.GridCellModel;
@@ -7,8 +9,6 @@ import org.ringingmaster.ui.desktop.documentpanel.grid.model.GridCharacterGroup;
 import org.ringingmaster.ui.desktop.documentpanel.grid.model.GridCharacterModel;
 import org.ringingmaster.ui.desktop.documentpanel.grid.model.GridModel;
 import org.ringingmaster.ui.desktop.documentpanel.grid.model.GridModelListener;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -22,178 +22,179 @@ import java.util.Set;
  */
 public class StubGridEditorModel implements GridModel {
 
-	GridPosition caretPosition = new GridPosition(0,0,0);
+    GridPosition caretPosition = new GridPosition(0, 0, 0);
 
-	//model= [row],[col]
-	final String[][] model;
-	final String[] rowHeaders;
+    //model= [row],[col]
+    final String[][] model;
+    final String[] rowHeaders;
 
-	public StubGridEditorModel(String[][] model, GridPosition caretPosition) {
-		this(model, null, caretPosition);
-	}
+    public StubGridEditorModel(String[][] model, GridPosition caretPosition) {
+        this(model, null, caretPosition);
+    }
 
-	public StubGridEditorModel(String[][] model, String[] rowHeaders, GridPosition caretPosition) {
-		if (rowHeaders == null) {
-			rowHeaders = new String[model.length];
-			Arrays.fill(rowHeaders,"");
-		}
-		this.rowHeaders = rowHeaders;
-		this.model = model;
-		this.caretPosition = caretPosition;
-	}
-	@Override
-	public void registerListener(GridModelListener listener) {
+    public StubGridEditorModel(String[][] model, String[] rowHeaders, GridPosition caretPosition) {
+        if (rowHeaders == null) {
+            rowHeaders = new String[model.length];
+            Arrays.fill(rowHeaders, "");
+        }
+        this.rowHeaders = rowHeaders;
+        this.model = model;
+        this.caretPosition = caretPosition;
+    }
 
-	}
+    @Override
+    public void registerListener(GridModelListener listener) {
 
-	@Override
-	public void deRegisterListener(GridModelListener listener) {
+    }
 
-	}
+    @Override
+    public void deRegisterListener(GridModelListener listener) {
 
-	@Override
-	public int getColumnCount() {
-		int colCount = 0;
-		for (String[] row : model) {
-			if (row.length > colCount) {
-				colCount = row.length;
-			}
-		};
-		return colCount;
-	}
+    }
 
-	@Override
-	public int getRowCount() {
-		return model.length;
-	}
+    @Override
+    public int getColumnCount() {
+        int colCount = 0;
+        for (String[] row : model) {
+            if (row.length > colCount) {
+                colCount = row.length;
+            }
+        }
+        return colCount;
+    }
 
-	@Override
-	public Color getGridColor() {
-		return null;
-	}
+    @Override
+    public int getRowCount() {
+        return model.length;
+    }
 
-	@Override
-	public GridCellModel getCellModel(int column, int row) {
-		return new StubGridCellModel(model[row][column]);
-	}
+    @Override
+    public Color getGridColor() {
+        return null;
+    }
 
-	@Override
-	public GridCharacterModel getCharacterModel(GridPosition gridPosition) {
-		return null;
-	}
+    @Override
+    public GridCellModel getCellModel(int column, int row) {
+        return new StubGridCellModel(model[row][column]);
+    }
 
-	@Override
-	public GridCharacterGroup getRowHeader(int row) {
-		return new StubGridCellModel(rowHeaders[row]);
-	}
+    @Override
+    public GridCharacterModel getCharacterModel(GridPosition gridPosition) {
+        return null;
+    }
 
-	@Override
-	public GridPosition getCaretPosition() {
-		return caretPosition;
-	}
+    @Override
+    public GridCharacterGroup getRowHeader(int row) {
+        return new StubGridCellModel(rowHeaders[row]);
+    }
 
-	@Override
-	public GridPosition getSelectionStartPosition() {
-		return null;
-	}
+    @Override
+    public GridPosition getCaretPosition() {
+        return caretPosition;
+    }
 
-	@Override
-	public void setCaretPosition(GridPosition newPosition) {
-		this.caretPosition = newPosition;
-	}
+    @Override
+    public GridPosition getSelectionStartPosition() {
+        return null;
+    }
 
-	@Override
-	public void setSelectionEndPosition(GridPosition gridPosition) {
+    @Override
+    public void setCaretPosition(GridPosition newPosition) {
+        this.caretPosition = newPosition;
+    }
 
-	}
+    @Override
+    public void setSelectionEndPosition(GridPosition gridPosition) {
 
-	@Override
-	public boolean isSelection() {
-		return false;
-	}
+    }
 
-	@Override
-	public boolean isZeroSized() {
-		return (getColumnCount() == 0 || getRowCount() == 0);
-	}
+    @Override
+    public boolean isSelection() {
+        return false;
+    }
 
-	class StubGridCellModel implements GridCellModel {
+    @Override
+    public boolean isZeroSized() {
+        return (getColumnCount() == 0 || getRowCount() == 0);
+    }
 
-		private final String characters;
+    class StubGridCellModel implements GridCellModel {
 
-		StubGridCellModel(String characters) {
-			this.characters = characters;
-		}
+        private final String characters;
 
-		@Override
-		public int getLength() {
-			return characters.length();
-		}
+        StubGridCellModel(String characters) {
+            this.characters = characters;
+        }
 
-		@Override
-		public void insertCharacter(int index, char character) {
-		}
+        @Override
+        public int getLength() {
+            return characters.length();
+        }
 
-		@Override
-		public void removeCharacter(int index) {
-		}
+        @Override
+        public void insertCharacter(int index, char character) {
+        }
 
-		@Override
-		public GridCharacterModel getGridCharacterModel(int index) {
-			return new GridCharacterModel() {
-				@Override
-				public char getCharacter() {
-					return characters.charAt(index);
-				}
+        @Override
+        public void removeCharacter(int index) {
+        }
 
-				@Override
-				public Font getFont() {
-					return new Font ("Arial", 24);
-				}
+        @Override
+        public GridCharacterModel getGridCharacterModel(int index) {
+            return new GridCharacterModel() {
+                @Override
+                public char getCharacter() {
+                    return characters.charAt(index);
+                }
 
-				@Override
-				public Color getColor() {
-					return Color.AQUA;
-				}
+                @Override
+                public Font getFont() {
+                    return new Font("Arial", 24);
+                }
 
-				@Override
-				public Set<AdditionalStyleType> getAdditionalStyle() {
-					return Collections.emptySet();
-				}
+                @Override
+                public Color getColor() {
+                    return Color.AQUA;
+                }
 
-				@Override
-				public Optional<String> getTooltipText() {
-					return Optional.empty();
-				}
-			};
-		}
+                @Override
+                public Set<AdditionalStyleType> getAdditionalStyle() {
+                    return Collections.emptySet();
+                }
 
-		@Override
-		public Iterator<GridCharacterModel> iterator() {
-			return new Iterator<GridCharacterModel>() {
-				int index = 0;
+                @Override
+                public Optional<String> getTooltipText() {
+                    return Optional.empty();
+                }
+            };
+        }
 
-				@Override
-				public boolean hasNext() {
-					return index < getLength();
-				}
+        @Override
+        public Iterator<GridCharacterModel> iterator() {
+            return new Iterator<GridCharacterModel>() {
+                int index = 0;
 
-				@Override
-				public GridCharacterModel next() {
-					return getGridCharacterModel(index++);
-				}
+                @Override
+                public boolean hasNext() {
+                    return index < getLength();
+                }
 
-				@Override
-				public void remove() {
-					throw new UnsupportedOperationException();
-				}
-			};
-		}
+                @Override
+                public GridCharacterModel next() {
+                    return getGridCharacterModel(index++);
+                }
 
-		@Override
-		public String toString() {
-			return "[" + characters + "]";
-		}
-	}
+                @Override
+                public void remove() {
+                    throw new UnsupportedOperationException();
+                }
+            };
+        }
+
+        @Override
+        public String toString() {
+            return "[" + characters + "]";
+        }
+    }
 
 }

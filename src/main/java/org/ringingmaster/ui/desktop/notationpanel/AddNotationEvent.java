@@ -16,35 +16,35 @@ import org.slf4j.LoggerFactory;
  */
 public class AddNotationEvent extends SkeletalEventDefinition implements EventDefinition {
 
-	private final Logger log = LoggerFactory.getLogger(this.getClass());
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-	private CompositionDocumentTypeManager compositionDocumentTypeManager;
-	private NotationEditorDialogFactory notationEditorDialogFactory;
+    private CompositionDocumentTypeManager compositionDocumentTypeManager;
+    private NotationEditorDialogFactory notationEditorDialogFactory;
 
-	public AddNotationEvent() {
-		super("/images/add.png", "Add Method");
-		tooltipTextProperty().setValue("Add a new method");
-	}
+    public AddNotationEvent() {
+        super("/images/add.png", "Add Method");
+        tooltipTextProperty().setValue("Add a new method");
+    }
 
-	@Override
-	public void handle(ActionEvent event) {
-		if (!compositionDocumentTypeManager.getCurrentDocument().isPresent()) {
-			return;
-		}
-		NumberOfBells numberOfBells = compositionDocumentTypeManager.getCurrentDocument().get().getNumberOfBells();
+    @Override
+    public void handle(ActionEvent event) {
+        if (!compositionDocumentTypeManager.getCurrentDocument().isPresent()) {
+            return;
+        }
+        NumberOfBells numberOfBells = compositionDocumentTypeManager.getCurrentDocument().get().getNumberOfBells();
 
 //TODO Reactive		notationEditorDialogFactory.newNotationShowDialog(numberOfBells, result -> {
 //			log.info("AddMethodButton - adding", result.toString());
 //			return compositionDocumentTypeManager.getCurrentDocument().get().addNotation(result) == Composition.Mutated.MUTATED;
 //		});
-	}
+    }
 
-	public void setCompositionDocumentTypeManager(CompositionDocumentTypeManager compositionDocumentTypeManager) {
-		this.compositionDocumentTypeManager = compositionDocumentTypeManager;
-		compositionDocumentTypeManager.addListener(document -> disableProperty().set(!document.isPresent()));
-	}
+    public void setCompositionDocumentTypeManager(CompositionDocumentTypeManager compositionDocumentTypeManager) {
+        this.compositionDocumentTypeManager = compositionDocumentTypeManager;
+        compositionDocumentTypeManager.addListener(document -> disableProperty().set(!document.isPresent()));
+    }
 
-	public void setNotationEditorDialogFactory(NotationEditorDialogFactory notationEditorDialogFactory) {
-		this.notationEditorDialogFactory = notationEditorDialogFactory;
-	}
+    public void setNotationEditorDialogFactory(NotationEditorDialogFactory notationEditorDialogFactory) {
+        this.notationEditorDialogFactory = notationEditorDialogFactory;
+    }
 }

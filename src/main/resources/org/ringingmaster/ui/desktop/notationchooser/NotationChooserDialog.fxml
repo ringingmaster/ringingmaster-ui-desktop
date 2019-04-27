@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import org.ringingmaster.util.javafx.namevaluepair.NameValuePairTable?>
-<NameValuePairTable fx:id="status" maxHeight="400.0" prefHeight="160.0" prefWidth="668.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.ringingmaster.ui.desktop.notationeditor.Status">
+<NameValuePairTable fx:id="status" maxHeight="400.0" prefHeight="160.0" prefWidth="668.0"
+                    xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+                    fx:controller="org.ringingmaster.ui.desktop.notationeditor.Status">
 </NameValuePairTable>

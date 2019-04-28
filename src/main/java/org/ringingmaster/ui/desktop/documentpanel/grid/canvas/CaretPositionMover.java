@@ -34,15 +34,15 @@ public class CaretPositionMover {
             return;
         }
 
-        int col = caretPosition.getColumn();
         int row = caretPosition.getRow();
+        int col = caretPosition.getColumn();
         int character = caretPosition.getCharacterIndex() + 1;
-        GridCellModel cellModel = parent.getModel().getCellModel(col, row);
+        GridCellModel cellModel = parent.getModel().getCellModel(row, col);
         if (character > cellModel.getLength()) {
             // roll to start of next cell
             col++;
             character = 0;
-            if (col >= parent.getModel().getColumnCount()) {
+            if (col >= parent.getModel().getColumnSize()) {
                 // roll to next row
                 row++;
                 col = 0;
@@ -50,8 +50,8 @@ public class CaretPositionMover {
         }
         // if we have blown the row count, then there is nowhere else to go
         // (we are in as far right and down as we can go), ignore the move.
-        if (row < parent.getModel().getRowCount()) {
-            parent.getModel().setCaretPosition(new GridPosition(col, row, character));
+        if (row < parent.getModel().getRowSize()) {
+            parent.getModel().setCaretPosition(new GridPosition(row, col, character));
             stickyCharacterPosition = character;
         }
     }
@@ -70,8 +70,8 @@ public class CaretPositionMover {
             return;
         }
 
-        int col = caretPosition.getColumn();
         int row = caretPosition.getRow();
+        int col = caretPosition.getColumn();
         int character = caretPosition.getCharacterIndex() - 1;
         if (character < 0) {
             // roll to end of previous cell
@@ -79,17 +79,17 @@ public class CaretPositionMover {
             if (col < 0) {
                 // roll to previous row
                 row--;
-                col = parent.getModel().getColumnCount() - 1;
+                col = parent.getModel().getColumnSize() - 1;
             }
             if (row >= 0) {
-                character = parent.getModel().getCellModel(col, row).getLength();
+                character = parent.getModel().getCellModel(row, col).getLength();
             }
         }
 
         // if we have blown the row count, then there is nowhere else to go
         // (we are in as far right and down as we can go), ignore the move.
         if (row >= 0) {
-            parent.getModel().setCaretPosition(new GridPosition(col, row, character));
+            parent.getModel().setCaretPosition(new GridPosition(row, col, character));
             stickyCharacterPosition = character;
         }
 
@@ -101,16 +101,16 @@ public class CaretPositionMover {
         }
 
         GridPosition pos = parent.getModel().getCaretPosition();
-        int col = pos.getColumn();
         int row = pos.getRow() - 1;
+        int col = pos.getColumn();
         int character = pos.getCharacterIndex();
         if (row >= 0) {
-            int cellLength = parent.getModel().getCellModel(col, row).getLength();
+            int cellLength = parent.getModel().getCellModel(row, col).getLength();
             if (stickyCharacterPosition != NOT_SET) {
                 character = stickyCharacterPosition;
             }
             character = Math.min(cellLength, character);
-            parent.getModel().setCaretPosition(new GridPosition(col, row, character));
+            parent.getModel().setCaretPosition(new GridPosition(row, col, character));
         }
     }
 
@@ -123,13 +123,13 @@ public class CaretPositionMover {
         int col = pos.getColumn();
         int row = pos.getRow() + 1;
         int character = pos.getCharacterIndex();
-        if (row < parent.getModel().getRowCount()) {
-            int cellLength = parent.getModel().getCellModel(col, row).getLength();
+        if (row < parent.getModel().getRowSize()) {
+            int cellLength = parent.getModel().getCellModel(row, col).getLength();
             if (stickyCharacterPosition != NOT_SET) {
                 character = stickyCharacterPosition;
             }
             character = Math.min(cellLength, character);
-            parent.getModel().setCaretPosition(new GridPosition(col, row, character));
+            parent.getModel().setCaretPosition(new GridPosition(row, col, character));
         }
     }
 
@@ -139,14 +139,14 @@ public class CaretPositionMover {
         }
 
         GridPosition pos = parent.getModel().getCaretPosition();
-        int col = parent.getModel().getColumnCount() - 1;
+        int col = parent.getModel().getColumnSize() - 1;
         int row = pos.getRow();
         int character = 0;
-        if (parent.getModel().getCellModel(col, row).getLength() == 0 &&
+        if (parent.getModel().getCellModel(row, col).getLength() == 0 &&
                 col - 1 >= 0) {
             col--;
         }
-        parent.getModel().setCaretPosition(new GridPosition(col, row, character));
+        parent.getModel().setCaretPosition(new GridPosition(row, col,  character));
         stickyCharacterPosition = 0;
     }
 
@@ -159,7 +159,7 @@ public class CaretPositionMover {
         int col = 0;
         int row = pos.getRow();
         int character = 0;
-        parent.getModel().setCaretPosition(new GridPosition(col, row, character));
+        parent.getModel().setCaretPosition(new GridPosition(row, col,  character));
         stickyCharacterPosition = 0;
 
     }
@@ -168,13 +168,13 @@ public class CaretPositionMover {
         if (parent.getModel().getCaretPosition().getCharacterIndex() > 0) {
             GridPosition caretPosition = parent.getModel().getCaretPosition();
             moveLeft();
-            parent.getModel().getCellModel(caretPosition.getColumn(), caretPosition.getRow()).removeCharacter(caretPosition.getCharacterIndex() - 1);
+            parent.getModel().getCellModel(caretPosition.getRow(), caretPosition.getColumn()).removeCharacter(caretPosition.getCharacterIndex() - 1);
         }
     }
 
     void deleteForward() {
         GridPosition caretPosition = parent.getModel().getCaretPosition();
-        GridCellModel cellModel = parent.getModel().getCellModel(caretPosition.getColumn(), caretPosition.getRow());
+        GridCellModel cellModel = parent.getModel().getCellModel(caretPosition.getRow(), caretPosition.getColumn());
         if (caretPosition.getCharacterIndex() < cellModel.getLength()) {
             cellModel.removeCharacter(caretPosition.getCharacterIndex());
         }

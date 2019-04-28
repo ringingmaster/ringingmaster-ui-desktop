@@ -18,19 +18,15 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class ExpansionCell extends SkeletalGridCellModel implements GridCellModel {
 
     private final CompositionDocument compositionDocument;
-    private final boolean expandColumn;
-    private final boolean expandRow;
     private final int column;
     private final int row;
 
+
     public ExpansionCell(List<GridModelListener> listeners,
                          CompositionDocument compositionDocument,
-                         boolean expandColumn, boolean expandRow,
-                         int column, int row) {
+                         int row, int column) {
         super(listeners);
         this.compositionDocument = checkNotNull(compositionDocument);
-        this.expandColumn = expandColumn;
-        this.expandRow = expandRow;
         this.column = column;
         this.row = row;
     }
@@ -41,17 +37,9 @@ public class ExpansionCell extends SkeletalGridCellModel implements GridCellMode
     }
 
     @Override
-    public void insertCharacter(int index, char character) {
-        //TODO Reactive
-//		if (expandColumn) {
-//			compositionDocument.incrementColumnCount();
-//		}
-//		if (expandRow) {
-//			compositionDocument.incrementRowCount();
-//		}
+    public void insertCharacter(int index, String character) {
 
-        // We do not use the cell version here as we do not have a cell until the increment above.
-        compositionDocument.insertCharacter(column, row, index, character);
+        compositionDocument.insertCharacter(row, column, index, character);
         compositionDocument.setUpdatePoint(() -> "Typing", true);
 
         fireCellStructureChanged();

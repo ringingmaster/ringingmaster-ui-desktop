@@ -43,8 +43,8 @@ class MainDrawingLayer extends Canvas {
     }
 
     private void drawGrid(final GraphicsContext gc, GridModel model, GridDimension dimensions) {
-        final int horzLineCount = model.getRowCount() + EXTRA_END_LINE_TO_CLOSE_ROW_OR_COL;
-        final int vertLineCount = model.getColumnCount() + EXTRA_END_LINE_TO_CLOSE_ROW_OR_COL;
+        final int horzLineCount = model.getRowSize() + EXTRA_END_LINE_TO_CLOSE_ROW_OR_COL;
+        final int vertLineCount = model.getColumnSize() + EXTRA_END_LINE_TO_CLOSE_ROW_OR_COL;
 
         gc.setFill(model.getGridColor());
         gc.setStroke(model.getGridColor());
@@ -69,14 +69,14 @@ class MainDrawingLayer extends Canvas {
     }
 
     private void drawCellsText(final GraphicsContext gc, GridModel model, GridDimension dimensions) {
-        final int rowCount = model.getRowCount();
-        final int colCount = model.getColumnCount();
+        final int rowCount = model.getRowSize();
+        final int colCount = model.getColumnSize();
 
         for (int row = 0; row < rowCount; row++) {
             final double textBottom = dimensions.getTextBottom(row);
             for (int col = 0; col < colCount; col++) {
-                final GridCharacterGroup gridCharacterGroup = model.getCellModel(col, row);
-                final GridCellDimension tableCellDimension = dimensions.getCell(col, row);
+                final GridCharacterGroup gridCharacterGroup = model.getCellModel(row, col);
+                final GridCellDimension tableCellDimension = dimensions.getCell(row, col);
 
                 drawCellText(gc, gridCharacterGroup, tableCellDimension, textBottom);
                 drawCellUnderline(gc, gridCharacterGroup, tableCellDimension, textBottom);
@@ -149,7 +149,7 @@ class MainDrawingLayer extends Canvas {
     }
 
     private void drawRowHeadersText(GraphicsContext gc, GridModel model, GridDimension dimensions) {
-        final int rowCount = model.getRowCount();
+        final int rowCount = model.getRowSize();
 
         for (int row = 0; row < rowCount; row++) {
             final double textBottom = dimensions.getTextBottom(row);

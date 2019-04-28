@@ -26,7 +26,7 @@ public abstract class SkeletalGridCellModel implements GridCellModel {
 
 
     @Override
-    public void insertCharacter(int index, char character) {
+    public void insertCharacter(int index, String character) {
         //TODO
     }
 

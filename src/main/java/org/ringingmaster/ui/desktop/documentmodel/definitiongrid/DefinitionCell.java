@@ -38,7 +38,7 @@ public class DefinitionCell extends SkeletalGridCellModel implements GridCellMod
     }
 
     @Override
-    public void insertCharacter(int index, char character) {
+    public void insertCharacter(int index, String character) {
         //TODO Reactive cell.insert(character, index);
         compositionDocument.setUpdatePoint(() -> "Typing", true);
         fireCellStructureChanged();
@@ -47,7 +47,7 @@ public class DefinitionCell extends SkeletalGridCellModel implements GridCellMod
     @Override
     public void removeCharacter(int index) {
 //TODO Reactive 		cell.remove(index);
-        compositionDocument.collapseEmptyRowsAndColumns();
+        //compositionDocument.collapseEmptyRowsAndColumns();
         compositionDocument.setUpdatePoint(() -> "Delete", true);
         fireCellStructureChanged();
     }

@@ -11,13 +11,13 @@ import javax.annotation.concurrent.Immutable;
 @Immutable
 public class GridPosition implements Comparable<GridPosition> {
 
-    private final int column;
     private final int row;
+    private final int column;
     private final int characterIndex;
 
-    public GridPosition(int column, int row, int characterIndex) {
-        this.column = column;
+    public GridPosition(int row, int column, int characterIndex) { //TODO Reactive switch row and col
         this.row = row;
+        this.column = column;
         this.characterIndex = characterIndex;
     }
 

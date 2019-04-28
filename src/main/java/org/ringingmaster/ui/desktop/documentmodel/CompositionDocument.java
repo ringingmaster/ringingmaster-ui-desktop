@@ -17,6 +17,7 @@ import org.ringingmaster.engine.NumberOfBells;
 import org.ringingmaster.engine.arraytable.ImmutableArrayTable;
 import org.ringingmaster.engine.composition.Composition;
 import org.ringingmaster.engine.composition.ObservableComposition;
+import org.ringingmaster.engine.composition.TableType;
 import org.ringingmaster.engine.composition.cell.Cell;
 import org.ringingmaster.engine.composition.compositiontype.CompositionType;
 import org.ringingmaster.engine.method.Bell;
@@ -683,16 +684,12 @@ public class CompositionDocument extends ScrollPane implements Listenable<Compos
         return compositionStyle;
     }
 
-    public int getColumnCount() {
-        //TODO Reactive
-        //  return composition.get().getColumnCount();
-        return 1;
+    public int getColumnSize() {
+          return composition.get().allCompositionCells().getColumnSize();
     }
 
-    public int getRowCount() {
-        //TODO Reactive
-//        return composition.get().getRowCount();
-        return 1;
+    public int getRowSize() {
+        return composition.get().allCompositionCells().getRowSize();
     }
 
     public ImmutableArrayTable<Cell> allCellsView() {
@@ -708,12 +705,12 @@ public class CompositionDocument extends ScrollPane implements Listenable<Compos
 //        composition.incrementRowCount();
 //    }
 
-    public void insertCharacter(int column, int row, int index, char character) {
-        //TODO Reactive composition.insertCharacters(column, row, index, character);
+    public void insertCharacter(int row, int column, int index, String character) {
+        composition.insertCharacters(TableType.MAIN_TABLE, row, column, index, character);
     }
 
-    public void collapseEmptyRowsAndColumns() {
-        //TODO Reactive composition.collapseEmptyRowsAndColumns();
+    public void removeCharacter(int row, int column, int index) {
+        composition.removeCharacters(TableType.MAIN_TABLE, row, column, index, 1);
     }
 
     @Override

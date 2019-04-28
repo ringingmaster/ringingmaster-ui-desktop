@@ -7,7 +7,7 @@ package org.ringingmaster.ui.desktop.documentpanel.grid.model;
  */
 public interface GridCellModel extends GridCharacterGroup {
 
-    void insertCharacter(int index, char character);
+    void insertCharacter(int index, String character);
 
     void removeCharacter(int index);
 

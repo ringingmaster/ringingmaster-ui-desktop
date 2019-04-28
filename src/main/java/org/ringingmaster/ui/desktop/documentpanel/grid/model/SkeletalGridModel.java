@@ -97,15 +97,15 @@ public abstract class SkeletalGridModel implements GridModel {
     }
 
     private void checkValidGridPosition(GridPosition position) {
-        checkPositionIndex(position.getColumn(), getColumnCount(), "column");
-        checkPositionIndex(position.getRow(), getRowCount(), "row");
-        GridCellModel cellModel = getCellModel(position.getColumn(), position.getRow());
+        checkPositionIndex(position.getRow(), getRowSize(), "row");
+        checkPositionIndex(position.getColumn(), getColumnSize(), "column");
+        GridCellModel cellModel = getCellModel( position.getRow(), position.getColumn());
         checkPositionIndex(position.getCharacterIndex(), cellModel.getLength() + 1, "cell");
     }
 
     @Override
     public boolean isZeroSized() {
-        return (getColumnCount() == 0 || getRowCount() == 0);
+        return (getColumnSize() == 0 || getRowSize() == 0);
     }
 
     @Override

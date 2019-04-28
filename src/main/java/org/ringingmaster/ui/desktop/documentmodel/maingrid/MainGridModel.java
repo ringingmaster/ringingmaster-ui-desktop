@@ -36,13 +36,13 @@ public class MainGridModel extends SkeletalGridModel implements GridModel {
     }
 
     @Override
-    public int getColumnCount() {
-        return compositionDocument.getColumnCount() + EXTRA_ROW_OR_COLUMN_FOR_EXPANSION;
+    public int getRowSize() {
+        return compositionDocument.getRowSize() + EXTRA_ROW_OR_COLUMN_FOR_EXPANSION;
     }
 
     @Override
-    public int getRowCount() {
-        return compositionDocument.getRowCount() + EXTRA_ROW_OR_COLUMN_FOR_EXPANSION;
+    public int getColumnSize() {
+        return compositionDocument.getColumnSize() + EXTRA_ROW_OR_COLUMN_FOR_EXPANSION;
     }
 
     @Override
@@ -51,18 +51,18 @@ public class MainGridModel extends SkeletalGridModel implements GridModel {
     }
 
     @Override
-    public GridCellModel getCellModel(final int column, final int row) {
-        checkElementIndex(column, getColumnCount());
-        checkElementIndex(row, getRowCount());
+    public GridCellModel getCellModel(final int row, final int column) {
+        checkElementIndex(row, getRowSize());
+        checkElementIndex(column, getColumnSize());
 
-        boolean outOfBoundCol = (column >= getColumnCount() - EXTRA_ROW_OR_COLUMN_FOR_EXPANSION);
-        boolean outOfBoundRow = (row >= getRowCount() - EXTRA_ROW_OR_COLUMN_FOR_EXPANSION);
+        boolean outOfBoundCol = (column >= getColumnSize() - EXTRA_ROW_OR_COLUMN_FOR_EXPANSION);
+        boolean outOfBoundRow = (row >= getRowSize() - EXTRA_ROW_OR_COLUMN_FOR_EXPANSION);
 
         if (outOfBoundCol || outOfBoundRow) {
-            return new ExpansionCell(getListeners(), compositionDocument, outOfBoundCol, outOfBoundRow, column, row);
+            return new ExpansionCell(getListeners(), compositionDocument, row, column);
         } else {
             Cell cell = compositionDocument.allCellsView().get(row, column);
-            return new StandardCell(getListeners(), compositionDocument, cell);
+            return new StandardCell(getListeners(), compositionDocument, row, column, cell); need to listen to parsing process somehow
         }
     }
 
@@ -71,7 +71,7 @@ public class MainGridModel extends SkeletalGridModel implements GridModel {
         return new GridCharacterGroup() {
             @Override
             public int getLength() {
-                return (row >= compositionDocument.getRowCount()) ? 0 : 8;
+                return (row >= compositionDocument.getRowSize()) ? 0 : 8;
             }
 
             @Override

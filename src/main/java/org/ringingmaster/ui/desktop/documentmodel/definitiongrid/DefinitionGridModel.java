@@ -36,7 +36,7 @@ public class DefinitionGridModel /*extends SkeletalGridModel implements GridMode
 //	}
 //
 //	@Override
-//	public GridCellModel getCellModel(int column, int row) {
+//	public GridCellModel getCellModel(int row, int column) {
 //		checkState(column == 0);
 //		checkState(row == 0);
 //		return gridCharacterModel;

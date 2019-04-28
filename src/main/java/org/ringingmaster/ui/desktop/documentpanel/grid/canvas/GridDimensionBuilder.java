@@ -35,8 +35,8 @@ public class GridDimensionBuilder {
     private GridDimension calculateFromModel() {
         CharacterGroupMeasurer measurer = new CharacterGroupMeasurer();
 
-        final int rowCount = model.getRowCount();
-        final int colCount = model.getColumnCount();
+        final int rowCount = model.getRowSize();
+        final int colCount = model.getColumnSize();
         final int colCountInclRowHeader = colCount + GridDimension.ROW_HEADER_OFFSET;
 
         final CharacterGroupMeasurement[][] cellMeasurements = new CharacterGroupMeasurement[colCountInclRowHeader][rowCount];
@@ -51,7 +51,7 @@ public class GridDimensionBuilder {
         // measure all the cells.
         for (int row = 0; row < rowCount; row++) {
             for (int col = 0; col < colCount; col++) {
-                final GridCellModel cellModel = model.getCellModel(col, row);
+                final GridCellModel cellModel = model.getCellModel(row, col);
                 CharacterGroupMeasurement cellDimension = measurer.measureCell(cellModel);
                 cellMeasurements[col + GridDimension.ROW_HEADER_OFFSET][row] = cellDimension;
             }
@@ -69,7 +69,7 @@ public class GridDimensionBuilder {
         GridCellDimension[][] cells = calculateCells(cellMeasurements, vertLinePositions, colCountInclRowHeader, rowCount);
 
         return new GridDimension(false, vertLinePositions, horzLinePositions,
-                tableColumnWidths, tableRowHeights, tableBottomGaps, cells);
+                tableRowHeights, tableColumnWidths, tableBottomGaps, cells);
     }
 
     private double[] calculateColumnWidths(final CharacterGroupMeasurement[][] cellMeasurements, int colCount, int rowCount) {

@@ -53,7 +53,7 @@ public class StubGridEditorModel implements GridModel {
     }
 
     @Override
-    public int getColumnCount() {
+    public int getColumnSize() {
         int colCount = 0;
         for (String[] row : model) {
             if (row.length > colCount) {
@@ -64,7 +64,7 @@ public class StubGridEditorModel implements GridModel {
     }
 
     @Override
-    public int getRowCount() {
+    public int getRowSize() {
         return model.length;
     }
 
@@ -74,7 +74,7 @@ public class StubGridEditorModel implements GridModel {
     }
 
     @Override
-    public GridCellModel getCellModel(int column, int row) {
+    public GridCellModel getCellModel(int row, int column) {
         return new StubGridCellModel(model[row][column]);
     }
 
@@ -115,7 +115,7 @@ public class StubGridEditorModel implements GridModel {
 
     @Override
     public boolean isZeroSized() {
-        return (getColumnCount() == 0 || getRowCount() == 0);
+        return (getColumnSize() == 0 || getRowSize() == 0);
     }
 
     class StubGridCellModel implements GridCellModel {
@@ -132,7 +132,7 @@ public class StubGridEditorModel implements GridModel {
         }
 
         @Override
-        public void insertCharacter(int index, char character) {
+        public void insertCharacter(int index, String character) {
         }
 
         @Override

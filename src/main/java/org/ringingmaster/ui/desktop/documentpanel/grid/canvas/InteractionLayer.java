@@ -1,11 +1,13 @@
 package org.ringingmaster.ui.desktop.documentpanel.grid.canvas;
 
+import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import javafx.application.Platform;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
+import org.apache.commons.lang.CharUtils;
 import org.ringingmaster.ui.desktop.documentpanel.grid.GridPosition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -77,14 +79,15 @@ public class InteractionLayer extends Pane implements BlinkTimerListener {
     }
 
     private void handleKeyTyped(KeyEvent e) {
-        String characterAsString = e.getCharacter();
-        if (Strings.isNullOrEmpty(characterAsString)) {
+        String character = e.getCharacter();
+        if (Strings.isNullOrEmpty(character)) {
             return;
         }
-        char character = characterAsString.charAt(0);
-        if (character >= 32 && character < 127) {
+
+        if (CharUtils.isAsciiPrintable(character.charAt(0))) {
+            Preconditions.checkState(character.length() == 1);
             GridPosition caretPosition = parent.getModel().getCaretPosition();
-            parent.getModel().getCellModel(caretPosition.getColumn(), caretPosition.getRow()).insertCharacter(caretPosition.getCharacterIndex(), character);
+            parent.getModel().getCellModel(caretPosition.getRow(), caretPosition.getColumn()).insertCharacter(caretPosition.getCharacterIndex(), character);
             caretPositionMover.moveRight();
             //log.info("keyTyped:" + e);
         }
@@ -130,7 +133,7 @@ public class InteractionLayer extends Pane implements BlinkTimerListener {
     void draw() {
         GridPosition caretPosition = parent.getModel().getCaretPosition();
 
-        final double left = parent.getDimensions().getCell(caretPosition.getColumn(), caretPosition.getRow()).getVerticalCharacterStartPosition(caretPosition.getCharacterIndex());
+        final double left = parent.getDimensions().getCell(caretPosition.getRow(), caretPosition.getColumn()).getVerticalCharacterStartPosition(caretPosition.getCharacterIndex());
         final double cellTop = parent.getDimensions().getTableHorizontalLinePosition(caretPosition.getRow());
         final double cellHeight = parent.getDimensions().getRowHeight(caretPosition.getRow());
 
@@ -233,7 +236,7 @@ public class InteractionLayer extends Pane implements BlinkTimerListener {
         } else if (x >= dimensions.getTableRight()) {
             // We are to the right of the grid, so set to end of right column.
             columnIndex = dimensions.getColumnCount() - 1;
-            characterIndex = dimensions.getCell(columnIndex, rowIndex).getCharacterCount();
+            characterIndex = dimensions.getCell(rowIndex, columnIndex).getCharacterCount();
         } else {
             // We are inside the grid. Calculate what column.
             for (columnIndex = 0; columnIndex < dimensions.getColumnCount(); columnIndex++) {
@@ -243,7 +246,7 @@ public class InteractionLayer extends Pane implements BlinkTimerListener {
             }
 
             // Now calculate the character index.
-            final GridCellDimension cell = dimensions.getCell(columnIndex, rowIndex);
+            final GridCellDimension cell = dimensions.getCell(rowIndex, columnIndex);
             characterIndex = 0;
 
             if (align == Align.BOUNDARY_MID_CHARACTER) {
@@ -259,6 +262,6 @@ public class InteractionLayer extends Pane implements BlinkTimerListener {
             }
         }
 
-        return Optional.of(new GridPosition(columnIndex, rowIndex, characterIndex));
+        return Optional.of(new GridPosition( rowIndex, columnIndex, characterIndex));
     }
 }

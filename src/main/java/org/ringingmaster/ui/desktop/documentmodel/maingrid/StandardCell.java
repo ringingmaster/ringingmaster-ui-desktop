@@ -1,13 +1,21 @@
 package org.ringingmaster.ui.desktop.documentmodel.maingrid;
 
-import org.ringingmaster.engine.composition.cell.Cell;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import org.ringingmaster.engine.parser.assignparsetype.ParseType;
+import org.ringingmaster.engine.parser.cell.ParsedCell;
+import org.ringingmaster.ui.common.CompositionStyle;
 import org.ringingmaster.ui.desktop.documentmodel.CompositionDocument;
+import org.ringingmaster.ui.desktop.documentpanel.grid.model.AdditionalStyleType;
 import org.ringingmaster.ui.desktop.documentpanel.grid.model.GridCellModel;
 import org.ringingmaster.ui.desktop.documentpanel.grid.model.GridCharacterModel;
 import org.ringingmaster.ui.desktop.documentpanel.grid.model.GridModelListener;
 import org.ringingmaster.ui.desktop.documentpanel.grid.model.SkeletalGridCellModel;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -19,11 +27,16 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class StandardCell extends SkeletalGridCellModel implements GridCellModel {
 
     private final CompositionDocument compositionDocument;
-    private final Cell cell;
+    private final int column;
+    private final int row;
+    private final ParsedCell cell;
 
-    public StandardCell(List<GridModelListener> listeners, CompositionDocument compositionDocument, Cell cell) {
+    public StandardCell(List<GridModelListener> listeners, CompositionDocument compositionDocument,
+                        int row, int column, ParsedCell cell) {
         super(listeners);
         this.compositionDocument = checkNotNull(compositionDocument);
+        this.column = column;
+        this.row = row;
         this.cell = checkNotNull(cell);
     }
 
@@ -33,60 +46,61 @@ public class StandardCell extends SkeletalGridCellModel implements GridCellModel
     }
 
     @Override
-    public void insertCharacter(int index, char character) {
-        //TODO Reactive
-//		cell.insert(character, index);
-//		compositionDocument.setUpdatePoint(() -> "Typing", Composition.Mutated.MUTATED);
-//		fireCellStructureChanged();
+    public void insertCharacter(int index, String character) {
+        compositionDocument.insertCharacter(row,column, index, character);
+		compositionDocument.setUpdatePoint(() -> "Typing", true);
+
+		fireCellStructureChanged();
     }
 
     @Override
     public void removeCharacter(int index) {
         //TODO Reactive
-//		cell.remove(index);
-//		compositionDocument.collapseEmptyRowsAndColumns();
-//		compositionDocument.setUpdatePoint(() -> "Delete", Composition.Mutated.MUTATED);
-//		fireCellStructureChanged();
+        compositionDocument.removeCharacter(row,column,index);
+		compositionDocument.setUpdatePoint(() -> "Delete", true);
+		fireCellStructureChanged();
     }
 
     @Override
     public GridCharacterModel getGridCharacterModel(final int index) {
-        //TODO Reactive
-        return null;
-//		return new GridCharacterModel() {
-//			@Override
-//			public char getCharacter() {
-//				return cell.getElement(index).getCharacter();
-//			}
+        return new GridCharacterModel() {
+            @Override
+            public char getCharacter() {
+                return cell.getElement(index).getCharacter().charAt(0);
+            }
+
+            @Override
+            public Font getFont() {
+                return compositionDocument.getCompositionStyle().getFont(CompositionStyle.CompositionStyleFont.MAIN);
+            }
+
+            @Override
+            public Color getColor() {
+                ParseType parseType = cell.getSectionAtElementIndex(index).get().getParseType();
+                return compositionDocument.getCompositionStyle().getColourFromParseType(parseType);
+            }
+
+            @Override
+            public Set<AdditionalStyleType> getAdditionalStyle() {
+                //TODO Reactive
+//                ParseType parseType = cell.getElement(index).getParseType();
+//                if (parseType == ParseType.UNPARSED) {
+//                    return EnumSet.of(AdditionalStyleType.WIGGLY_UNDERLINE);
+//                }
+                return Collections.emptySet();
+            }
+
+            @Override
+            public Optional<String> getTooltipText() {
+//                if (index >= cell.getLength()) {
+//                    return Optional.empty();
+//                }
 //
-//			@Override
-//			public Font getFont() {
-//				return compositionDocument.getCompositionStyle().getFont(CompositionStyle.CompositionStyleFont.MAIN);
-//			}
-//
-//			@Override
-//			public Color getColor() {
-//				ParseType parseType = cell.getElement(index).getParseType();
-//				return compositionDocument.getCompositionStyle().getColourFromParseType(parseType);
-//			}
-//			@Override
-//			public Set<AdditionalStyleType> getAdditionalStyle() {
-//				ParseType parseType = cell.getElement(index).getParseType();
-//				if (parseType == ParseType.UNPARSED) {
-//					return EnumSet.of(AdditionalStyleType.WIGGLY_UNDERLINE);
-//				}
-//				return Collections.emptySet();
-//			}
-//
-//			@Override
-//			public Optional<String> getTooltipText() {
-//				if (index >= cell.getLength()) {
-//					return Optional.empty();
-//				}
-//
-//				String tooltipText = cell.getElement(index).getParseType().name();
-//				return Optional.of(tooltipText);
-//			}
-//		};
+//                String tooltipText = cell.getElement(index).getParseType().name();
+//                return Optional.of(tooltipText);
+                //TODO Reactive
+                return Optional.empty();
+            }
+        };
     }
 }

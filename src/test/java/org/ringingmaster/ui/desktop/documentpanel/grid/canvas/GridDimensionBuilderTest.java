@@ -29,8 +29,8 @@ public class GridDimensionBuilderTest {
 
         GridDimension d = new GridDimensionBuilder().setModel(model).build();
 
-        assertEquals(model.getRowCount(), d.getRowCount());
-        assertEquals(model.getColumnCount(), d.getColumnCount());
+        assertEquals(model.getRowSize(), d.getRowCount());
+        assertEquals(model.getColumnSize(), d.getColumnCount());
 
         assertEquals(d.getTableLeft(), d.getTableVerticalLinePosition(0), 0.0);
         assertEquals(d.getTableTop(), d.getTableHorizontalLinePosition(0), 0.0);

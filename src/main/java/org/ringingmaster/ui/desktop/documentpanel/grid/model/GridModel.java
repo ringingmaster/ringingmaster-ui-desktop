@@ -12,18 +12,19 @@ import org.ringingmaster.ui.desktop.documentpanel.grid.GridPosition;
 public interface GridModel {
 
     /**
-     * Get the number of columns (not lines)
-     *
-     * @return int number of columns.
-     */
-    int getColumnCount();
-
-    /**
      * Get the number of rows (not lines)
      *
      * @return int number of rows.
      */
-    int getRowCount();
+    int getRowSize();
+
+    /**
+     * Get the number of columns (not lines)
+     *
+     * @return int number of columns.
+     */
+    int getColumnSize();
+
 
     boolean isZeroSized();
 
@@ -34,7 +35,7 @@ public interface GridModel {
      */
     Color getGridColor();
 
-    GridCellModel getCellModel(int column, int row);
+    GridCellModel getCellModel(int row, int column);
 
     GridCharacterModel getCharacterModel(GridPosition gridPosition);
 

@@ -17,8 +17,8 @@ public class GridDimension {
     private final double[] vertLinePositions;
     private final double[] horzLinePositions;
 
-    private final double[] columnWidths;
     private final double[] rowHeights;
+    private final double[] columnWidths;
     private final double[] bottomGaps;
 
     private final GridCellDimension[][] cellDimensions;
@@ -26,14 +26,14 @@ public class GridDimension {
 
     GridDimension(boolean zeroSized,
                   double[] vertLinePositions, double[] horzLinePositions,
-                  double[] columnWidths, double[] rowHeights,
+                  double[] rowHeights, double[] columnWidths,
                   double[] bottomGaps,
                   GridCellDimension[][] cellDimensions) {
         this.zeroSized = zeroSized;
         this.vertLinePositions = vertLinePositions;
         this.horzLinePositions = horzLinePositions;
-        this.columnWidths = columnWidths;
         this.rowHeights = rowHeights;
+        this.columnWidths = columnWidths;
         this.bottomGaps = bottomGaps;
         this.cellDimensions = cellDimensions;
     }
@@ -70,7 +70,7 @@ public class GridDimension {
     }
 
 
-    public GridCellDimension getCell(int colIndex, int rowIndex) {
+    public GridCellDimension getCell(int rowIndex, int colIndex) {
         int offsetColIndex = ROW_HEADER_OFFSET + colIndex;
         checkElementIndex(offsetColIndex, cellDimensions.length);
         final GridCellDimension[] column = cellDimensions[offsetColIndex];

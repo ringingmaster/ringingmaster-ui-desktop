@@ -1,7 +1,5 @@
 package org.ringingmaster.ui.desktop.documentpanel.grid.canvas;
 
-import com.sun.javafx.tk.FontMetrics;
-import com.sun.javafx.tk.Toolkit;
 import javafx.scene.text.Font;
 import org.ringingmaster.ui.desktop.documentpanel.grid.model.GridCharacterGroup;
 import org.ringingmaster.ui.desktop.documentpanel.grid.model.GridCharacterModel;
@@ -34,7 +32,9 @@ public class CharacterGroupMeasurer {
         float maxHeight = MINIMUM_HEIGHT;
         for (GridCharacterModel gridCharacterModel : characterGroup) {
             final Font font = gridCharacterModel.getFont();
-            final FontMetrics fm = Toolkit.getToolkit().getFontLoader().getFontMetrics(font);
+            FontMetrics fm = new FontMetrics(font);
+
+
             final float height = fm.getDescent() + fm.getAscent();
             if (height > maxHeight) {
                 maxHeight = height;
@@ -46,14 +46,13 @@ public class CharacterGroupMeasurer {
     private double[] measureCellTextWidth(final GridCharacterGroup characterGroup) {
         int characterCount = characterGroup.getLength();
         double[] characterWidths = new double[characterCount];
-        //TODO Reactive - removed code after java 8
-//	    for (int index=0;index<characterGroup.getLength();index++) {
-//		    GridCharacterModel GridCharacterModel = characterGroup.getGridCharacterModel(index);
-//		    final Font font = GridCharacterModel.getFont();
-//		    final char cellText = GridCharacterModel.getCharacter();
-//		    FontMetrics fm = Toolkit.getToolkit().getFontLoader().getFontMetrics(font);
-//		    characterWidths[index] = fm.ccomputeStringWidth(String.valueOf(cellText));
-//	    }
+	    for (int index=0;index<characterGroup.getLength();index++) {
+		    GridCharacterModel GridCharacterModel = characterGroup.getGridCharacterModel(index);
+		    final Font font = GridCharacterModel.getFont();
+		    final char cellText = GridCharacterModel.getCharacter();
+            FontMetrics fm = new FontMetrics(font);
+		    characterWidths[index] = fm.computeStringWidth(String.valueOf(cellText));
+	    }
         return characterWidths;
     }
 
@@ -65,8 +64,13 @@ public class CharacterGroupMeasurer {
         float bottomGap = 0;
         for (GridCharacterModel GridCharacterModel : characterGroup) {
             final Font font = GridCharacterModel.getFont();
-            FontMetrics fm = Toolkit.getToolkit().getFontLoader().getFontMetrics(font);
-            final float descent = fm.getMaxDescent();
+//  TODO remove if suitable replacement - Note MaxDescent vs Descent
+//   FontMetrics fm = Toolkit.getToolkit().getFontLoader().getFontMetrics(font);
+//            final float descent = fm.getMaxDescent();
+
+            FontMetrics fm = new FontMetrics(font);
+            final float descent = fm.getDescent();
+
             if (bottomGap < descent) {
                 bottomGap = descent;
             }

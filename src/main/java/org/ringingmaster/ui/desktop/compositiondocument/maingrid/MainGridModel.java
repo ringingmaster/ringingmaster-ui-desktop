@@ -1,16 +1,16 @@
-package org.ringingmaster.ui.desktop.documentmodel.maingrid;
+package org.ringingmaster.ui.desktop.compositiondocument.maingrid;
 
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import org.ringingmaster.engine.composition.cell.Cell;
 import org.ringingmaster.ui.common.CompositionStyle;
-import org.ringingmaster.ui.desktop.documentmodel.CompositionDocument;
-import org.ringingmaster.ui.desktop.documentpanel.grid.model.AdditionalStyleType;
-import org.ringingmaster.ui.desktop.documentpanel.grid.model.GridCellModel;
-import org.ringingmaster.ui.desktop.documentpanel.grid.model.GridCharacterGroup;
-import org.ringingmaster.ui.desktop.documentpanel.grid.model.GridCharacterModel;
-import org.ringingmaster.ui.desktop.documentpanel.grid.model.GridModel;
-import org.ringingmaster.ui.desktop.documentpanel.grid.model.SkeletalGridModel;
+import org.ringingmaster.ui.desktop.compositiondocument.CompositionDocument;
+import org.ringingmaster.util.javafx.grid.model.AdditionalStyleType;
+import org.ringingmaster.util.javafx.grid.model.GridCellModel;
+import org.ringingmaster.util.javafx.grid.model.GridCharacterGroup;
+import org.ringingmaster.util.javafx.grid.model.GridCharacterModel;
+import org.ringingmaster.util.javafx.grid.model.GridModel;
+import org.ringingmaster.util.javafx.grid.model.SkeletalGridModel;
 
 import java.util.Collections;
 import java.util.Iterator;

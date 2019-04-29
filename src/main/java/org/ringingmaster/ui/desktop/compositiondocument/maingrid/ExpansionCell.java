@@ -1,10 +1,10 @@
-package org.ringingmaster.ui.desktop.documentmodel.maingrid;
+package org.ringingmaster.ui.desktop.compositiondocument.maingrid;
 
-import org.ringingmaster.ui.desktop.documentmodel.CompositionDocument;
-import org.ringingmaster.ui.desktop.documentpanel.grid.model.GridCellModel;
-import org.ringingmaster.ui.desktop.documentpanel.grid.model.GridCharacterModel;
-import org.ringingmaster.ui.desktop.documentpanel.grid.model.GridModelListener;
-import org.ringingmaster.ui.desktop.documentpanel.grid.model.SkeletalGridCellModel;
+import org.ringingmaster.ui.desktop.compositiondocument.CompositionDocument;
+import org.ringingmaster.util.javafx.grid.model.GridCellModel;
+import org.ringingmaster.util.javafx.grid.model.GridCharacterModel;
+import org.ringingmaster.util.javafx.grid.model.GridModelListener;
+import org.ringingmaster.util.javafx.grid.model.SkeletalGridCellModel;
 
 import java.util.List;
 

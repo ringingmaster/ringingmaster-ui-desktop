@@ -13,9 +13,9 @@
 
     <!-- Injected by name -->
     <bean id="compositionDocumentTypeManager"
-          class="org.ringingmaster.ui.desktop.documentmodel.CompositionDocumentTypeManager"/>
+          class="org.ringingmaster.ui.desktop.compositiondocument.CompositionDocumentTypeManager"/>
 
-    <bean class="org.ringingmaster.ui.desktop.documentmodel.CompositionDocument"
+    <bean class="org.ringingmaster.ui.desktop.compositiondocument.CompositionDocument"
           p:proofManager-ref="proofManager"
           scope="prototype"
           autowire="no"/>

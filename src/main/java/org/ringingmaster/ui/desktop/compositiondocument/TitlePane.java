@@ -1,4 +1,4 @@
-package org.ringingmaster.ui.desktop.documentpanel;
+package org.ringingmaster.ui.desktop.compositiondocument;
 
 import javafx.geometry.Insets;
 import javafx.scene.control.TextField;

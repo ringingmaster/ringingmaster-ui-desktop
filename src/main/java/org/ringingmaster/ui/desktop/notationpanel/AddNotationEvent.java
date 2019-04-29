@@ -2,7 +2,7 @@ package org.ringingmaster.ui.desktop.notationpanel;
 
 import javafx.event.ActionEvent;
 import org.ringingmaster.engine.NumberOfBells;
-import org.ringingmaster.ui.desktop.documentmodel.CompositionDocumentTypeManager;
+import org.ringingmaster.ui.desktop.compositiondocument.CompositionDocumentTypeManager;
 import org.ringingmaster.ui.desktop.notationeditor.NotationEditorDialogFactory;
 import org.ringingmaster.util.javafx.events.EventDefinition;
 import org.ringingmaster.util.javafx.events.SkeletalEventDefinition;

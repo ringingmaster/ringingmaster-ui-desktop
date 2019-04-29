@@ -2,8 +2,8 @@ package org.ringingmaster.ui.desktop.notationpanel;
 
 import javafx.event.ActionEvent;
 import org.ringingmaster.engine.notation.Notation;
-import org.ringingmaster.ui.desktop.documentmodel.CompositionDocument;
-import org.ringingmaster.ui.desktop.documentmodel.CompositionDocumentTypeManager;
+import org.ringingmaster.ui.desktop.compositiondocument.CompositionDocument;
+import org.ringingmaster.ui.desktop.compositiondocument.CompositionDocumentTypeManager;
 import org.ringingmaster.util.javafx.events.EventDefinition;
 import org.ringingmaster.util.javafx.events.SkeletalEventDefinition;
 

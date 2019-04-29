@@ -1,4 +1,4 @@
-package org.ringingmaster.ui.desktop.documentmodel;
+package org.ringingmaster.ui.desktop.compositiondocument;
 
 import java.util.Optional;
 

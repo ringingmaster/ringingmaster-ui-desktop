@@ -1,4 +1,4 @@
-package org.ringingmaster.ui.desktop.documentmodel;
+package org.ringingmaster.ui.desktop.compositiondocument;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
@@ -31,11 +31,9 @@ import org.ringingmaster.engine.parser.parse.Parse;
 import org.ringingmaster.ui.common.CompositionStyle;
 import org.ringingmaster.ui.desktop.documentmanager.DefaultDocument;
 import org.ringingmaster.ui.desktop.documentmanager.Document;
-import org.ringingmaster.ui.desktop.documentmodel.maingrid.MainGridModel;
-import org.ringingmaster.ui.desktop.documentpanel.DefinitionPane;
-import org.ringingmaster.ui.desktop.documentpanel.TitlePane;
-import org.ringingmaster.ui.desktop.documentpanel.grid.canvas.GridPane;
-import org.ringingmaster.ui.desktop.documentpanel.grid.model.GridModel;
+import org.ringingmaster.ui.desktop.compositiondocument.maingrid.MainGridModel;
+import org.ringingmaster.util.javafx.grid.canvas.GridPane;
+import org.ringingmaster.util.javafx.grid.model.GridModel;
 import org.ringingmaster.ui.desktop.proof.ProofManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

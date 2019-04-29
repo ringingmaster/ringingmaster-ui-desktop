@@ -1,4 +1,4 @@
-package org.ringingmaster.ui.desktop.documentmodel;
+package org.ringingmaster.ui.desktop.compositiondocument;
 
 import com.google.common.collect.Lists;
 import io.reactivex.Observable;

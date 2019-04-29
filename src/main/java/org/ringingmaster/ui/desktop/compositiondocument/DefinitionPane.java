@@ -1,9 +1,9 @@
-package org.ringingmaster.ui.desktop.documentpanel;
+package org.ringingmaster.ui.desktop.compositiondocument;
 
 import javafx.scene.Node;
 import javafx.scene.layout.VBox;
-import org.ringingmaster.ui.desktop.documentpanel.grid.canvas.GridPane;
-import org.ringingmaster.ui.desktop.documentpanel.grid.model.GridModel;
+import org.ringingmaster.util.javafx.grid.canvas.GridPane;
+import org.ringingmaster.util.javafx.grid.model.GridModel;
 
 import java.util.List;
 

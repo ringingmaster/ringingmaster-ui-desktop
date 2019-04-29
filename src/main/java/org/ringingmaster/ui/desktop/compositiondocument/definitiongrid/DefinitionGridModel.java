@@ -1,4 +1,4 @@
-package org.ringingmaster.ui.desktop.documentmodel.definitiongrid;
+package org.ringingmaster.ui.desktop.compositiondocument.definitiongrid;
 
 /**
  * TODO comments ???

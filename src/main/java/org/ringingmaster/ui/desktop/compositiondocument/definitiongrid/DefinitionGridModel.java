@@ -28,8 +28,8 @@ public class DefinitionGridModel extends SkeletalGridModel implements GridModel 
     public DefinitionGridModel(CompositionDocument compositionDocument, Cell definition) {
         this.compositionDocument = checkNotNull(compositionDocument);
         checkNotNull(definition);
-        cellModel = new DefinitionShorthandCell(getListeners(), compositionDocument, definition);
-        gridCharacterModel = new DefinitionDefinitionCell(getListeners(), compositionDocument, definition);
+        cellModel = new DefinitionShorthandCell(compositionDocument, definition);
+        gridCharacterModel = new DefinitionDefinitionCell( compositionDocument, definition);
     }
 
     @Override

@@ -4,12 +4,9 @@ import org.ringingmaster.engine.composition.cell.Cell;
 import org.ringingmaster.ui.desktop.compositiondocument.CompositionDocument;
 import org.ringingmaster.util.javafx.grid.model.CellModel;
 import org.ringingmaster.util.javafx.grid.model.CharacterModel;
-import org.ringingmaster.util.javafx.grid.model.GridModelListener;
 import org.ringingmaster.util.javafx.grid.model.SkeletalCellModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -25,8 +22,7 @@ public class DefinitionDefinitionCell extends SkeletalCellModel implements CellM
     private final CompositionDocument compositionDocument;
     private final Cell cell;
 
-    public DefinitionDefinitionCell(List<GridModelListener> listeners, CompositionDocument compositionDocument, Cell cell) {
-        super(listeners);
+    public DefinitionDefinitionCell(CompositionDocument compositionDocument, Cell cell) {
         this.compositionDocument = checkNotNull(compositionDocument);
         this.cell = checkNotNull(cell);
     }
@@ -41,15 +37,12 @@ public class DefinitionDefinitionCell extends SkeletalCellModel implements CellM
     public void insertCharacter(int index, String character) {
         //TODO Reactive cell.insert(character, index);
         compositionDocument.setUpdatePoint(() -> "Typing", true);
-        fireCellStructureChanged();
     }
 
     @Override
     public void removeCharacter(int index) {
 //TODO Reactive 		cell.remove(index);
-        //compositionDocument.collapseEmptyRowsAndColumns();
         compositionDocument.setUpdatePoint(() -> "Delete", true);
-        fireCellStructureChanged();
     }
 
     @Override
@@ -57,7 +50,7 @@ public class DefinitionDefinitionCell extends SkeletalCellModel implements CellM
 //		return new CharacterModel() {
 //			@Override
 //			public char getCharacter() {
-//				//TODO Reactive return cell.getElement(index).getCharacter();
+//				//TODO Reactive return cell.get(index).getCharacter();
 //				return 'p';
 //			}
 //
@@ -68,12 +61,12 @@ public class DefinitionDefinitionCell extends SkeletalCellModel implements CellM
 //
 //			@Override
 //			public Color getColor() {
-//				ParseType parseType = cell.getElement(index)..getParseType();
+//				ParseType parseType = cell.get(index)..getParseType();
 //				return compositionDocument.getCompositionStyle().getColourFromParseType(parseType);
 //			}
 //			@Override
 //			public Set<AdditionalStyleType> getAdditionalStyle() {
-//				ParseType parseType = cell.getElement(index).getParseType();
+//				ParseType parseType = cell.get(index).getParseType();
 //				if (parseType == ParseType.UNPARSED) {
 //					return EnumSet.of(AdditionalStyleType.WIGGLY_UNDERLINE);
 //				}
@@ -86,7 +79,7 @@ public class DefinitionDefinitionCell extends SkeletalCellModel implements CellM
 //					return Optional.empty();
 //				}
 //
-//				String tooltipText = cell.getElement(index).getParseType().name();
+//				String tooltipText = cell.get(index).getParseType().name();
 //				return Optional.of(tooltipText);
 //			}
 //		};

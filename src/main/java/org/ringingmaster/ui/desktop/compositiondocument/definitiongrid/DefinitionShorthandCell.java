@@ -8,11 +8,9 @@ import org.ringingmaster.ui.common.CompositionStyle;
 import org.ringingmaster.ui.desktop.compositiondocument.CompositionDocument;
 import org.ringingmaster.util.javafx.grid.model.AdditionalStyleType;
 import org.ringingmaster.util.javafx.grid.model.CharacterModel;
-import org.ringingmaster.util.javafx.grid.model.GridModelListener;
 import org.ringingmaster.util.javafx.grid.model.SkeletalCellModel;
 
 import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -28,8 +26,7 @@ class DefinitionShorthandCell extends SkeletalCellModel implements Iterable<Char
     private final CompositionDocument compositionDocument;
     private final Cell definition;
 
-    public DefinitionShorthandCell(List<GridModelListener> listeners, CompositionDocument compositionDocument, Cell definition) {
-        super(listeners);
+    public DefinitionShorthandCell(CompositionDocument compositionDocument, Cell definition) {
         this.compositionDocument = checkNotNull(compositionDocument);
         this.definition = checkNotNull(definition);
     }

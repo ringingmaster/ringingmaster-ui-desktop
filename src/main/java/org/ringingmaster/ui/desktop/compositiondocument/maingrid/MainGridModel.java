@@ -28,9 +28,11 @@ public class MainGridModel extends SkeletalGridModel implements GridModel {
 
     public MainGridModel(CompositionDocument compositionDocument) {
         this.compositionDocument = checkNotNull(compositionDocument);
-        compositionDocument.observableParse().subscribe(parse -> MainGridModel.this.parse = parse);
-        // Column 1 because we have a row header.
-        this.setCaretPosition(new GridPosition(0,1,0));
+        compositionDocument.observableParse().subscribe(parse -> {
+            MainGridModel.this.parse = parse;
+            fireCellContentsChanged();
+        });
+        this.setCaretPosition(new GridPosition(0,1,0));// Column 1 because we have a row header.
     }
 
     @Override
@@ -61,15 +63,19 @@ public class MainGridModel extends SkeletalGridModel implements GridModel {
         boolean outOfBoundCol = (column >= getColumnSize() - EXTRA_ROW_OR_COLUMN_FOR_EXPANSION);
         boolean outOfBoundRow = (row >= getRowSize() - EXTRA_ROW_OR_COLUMN_FOR_EXPANSION);
 
+        int compositionColumn = column - EXTRA_COLUMN_FOR_COURSEHEADS ;
+
         if (column == 0) {
-            return new CourseEndCellModel(getListeners(), compositionDocument, row);
+            return new CourseEndCellModel( compositionDocument.getComposition(), compositionDocument.getCompositionStyle(), row);
         }
         else if (outOfBoundCol || outOfBoundRow) {
-            return new ExpansionCellModel(getListeners(), compositionDocument, row, column);
+            return new ExpansionCellModel(compositionDocument.getObservableComposition(), row, compositionColumn);
         } else {
-            int compositionColumn = column - EXTRA_COLUMN_FOR_COURSEHEADS ;
-            ParsedCell cell = parse.mainBodyCells().get(row, compositionColumn);
-            return new StandardCellModel(getListeners(), compositionDocument, row, compositionColumn, cell);
+            ParsedCell parsedCell = parse.mainBodyCells().get(row, compositionColumn);
+            return new StandardCellModel(
+                    compositionDocument.getObservableComposition(),
+                    compositionDocument.getCompositionStyle(),
+                    row, compositionColumn, parsedCell);
         }
     }
 

@@ -2,18 +2,18 @@ package org.ringingmaster.ui.desktop.compositiondocument.maingrid;
 
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import org.ringingmaster.engine.composition.Composition;
 import org.ringingmaster.ui.common.CompositionStyle;
-import org.ringingmaster.ui.desktop.compositiondocument.CompositionDocument;
 import org.ringingmaster.util.javafx.grid.model.AdditionalStyleType;
 import org.ringingmaster.util.javafx.grid.model.CellModel;
 import org.ringingmaster.util.javafx.grid.model.CharacterModel;
-import org.ringingmaster.util.javafx.grid.model.GridModelListener;
 import org.ringingmaster.util.javafx.grid.model.SkeletalCellModel;
 
 import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * TODO comments???
@@ -22,21 +22,21 @@ import java.util.Set;
  */
 public class CourseEndCellModel extends SkeletalCellModel implements CellModel {
 
-    private final CompositionDocument compositionDocument;
+    private final CompositionStyle compositionStyle;
+    private final Composition composition;
 
     private final int row;
 
-    public CourseEndCellModel(List<GridModelListener> listeners,
-                              CompositionDocument compositionDocument,
+    public CourseEndCellModel(Composition composition, CompositionStyle compositionStyle,
                               int row) {
-        super(listeners);
-        this.compositionDocument = compositionDocument;
+        this.compositionStyle = compositionStyle;
+        this.composition = checkNotNull(composition);
         this.row = row;
     }
 
     @Override
     public int getLength() {
-        return (row >= compositionDocument.getRowSize()) ? 0 : 8;
+        return (row >= composition.allCompositionCells().getRowSize()) ? 0 : 8;
     }
 
     @Override
@@ -49,7 +49,7 @@ public class CourseEndCellModel extends SkeletalCellModel implements CellModel {
 
             @Override
             public Font getFont() {
-                return compositionDocument.getCompositionStyle().getFont(CompositionStyle.CompositionStyleFont.MAIN);
+                return compositionStyle.getFont(CompositionStyle.CompositionStyleFont.MAIN);
             }
 
             @Override

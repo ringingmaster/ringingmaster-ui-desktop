@@ -2,24 +2,22 @@ package org.ringingmaster.ui.desktop.compositiondocument.maingrid;
 
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import org.ringingmaster.engine.composition.ObservableComposition;
 import org.ringingmaster.engine.composition.TableType;
 import org.ringingmaster.engine.parser.assignparsetype.ParseType;
 import org.ringingmaster.engine.parser.cell.ParsedCell;
 import org.ringingmaster.engine.parser.cell.grouping.Group;
 import org.ringingmaster.engine.parser.cell.grouping.Section;
 import org.ringingmaster.ui.common.CompositionStyle;
-import org.ringingmaster.ui.desktop.compositiondocument.CompositionDocument;
 import org.ringingmaster.util.javafx.grid.model.AdditionalStyleType;
 import org.ringingmaster.util.javafx.grid.model.CellModel;
 import org.ringingmaster.util.javafx.grid.model.CharacterModel;
-import org.ringingmaster.util.javafx.grid.model.GridModelListener;
 import org.ringingmaster.util.javafx.grid.model.SkeletalCellModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
 import java.util.EnumSet;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -34,35 +32,35 @@ public class StandardCellModel extends SkeletalCellModel implements CellModel {
 
     private final Logger log = LoggerFactory.getLogger(StandardCellModel.class);
 
-    private final CompositionDocument compositionDocument;
+    private final CompositionStyle compositionStyle;
+    private final ObservableComposition observableComposition;
     private final int column;
     private final int row;
-    private final ParsedCell cell;
+    private final ParsedCell parsedCell;
 
-    public StandardCellModel(List<GridModelListener> listeners, CompositionDocument compositionDocument,
-                             int row, int column, ParsedCell cell) {
-        super(listeners);
-        this.compositionDocument = checkNotNull(compositionDocument);
+    public StandardCellModel(ObservableComposition observableComposition,
+                             CompositionStyle compositionStyle,
+                             int row, int column, ParsedCell parsedCell) {
+        this.observableComposition = checkNotNull(observableComposition);
+        this.compositionStyle = checkNotNull(compositionStyle);
         this.column = column;
         this.row = row;
-        this.cell = checkNotNull(cell);
+        this.parsedCell = checkNotNull(parsedCell);
     }
 
     @Override
     public int getLength() {
-        return cell.getElementSize();
+        return parsedCell.size();
     }
 
     @Override
     public void insertCharacter(int index, String character) {
-        compositionDocument.getObservableComposition().insertCharacters(TableType.MAIN_TABLE, row, column, index, character);
-        fireCellStructureChanged();
+        observableComposition.insertCharacters(TableType.MAIN_TABLE, row, column, index, character);
     }
 
     @Override
     public void removeCharacter(int index) {
-        compositionDocument.getObservableComposition().removeCharacters(TableType.MAIN_TABLE, row,column,index, 1);
-        fireCellStructureChanged();
+        observableComposition.removeCharacters(TableType.MAIN_TABLE, row,column,index, 1);
     }
 
     @Override
@@ -70,35 +68,35 @@ public class StandardCellModel extends SkeletalCellModel implements CellModel {
         return new CharacterModel() {
             @Override
             public char getCharacter() {
-                return cell.getElement(index).getCharacter().charAt(0);
+                return parsedCell.get(index);
             }
 
             @Override
             public Font getFont() {
-                return compositionDocument.getCompositionStyle().getFont(CompositionStyle.CompositionStyleFont.MAIN);
+                return compositionStyle.getFont(CompositionStyle.CompositionStyleFont.MAIN);
             }
 
             @Override
             public Color getColor() {
-                Optional<Section> sectionAtElementIndex = cell.getSectionAtElementIndex(index);
+                Optional<Section> sectionAtElementIndex = parsedCell.getSectionAtElementIndex(index);
                 if (sectionAtElementIndex.isEmpty()) {
                     //This happens when we have an unparsed character
                     return Color.BLACK;
                 }
                 ParseType parseType = sectionAtElementIndex.get().getParseType();
-                return compositionDocument.getCompositionStyle().getColourFromParseType(parseType);
+                return compositionStyle.getColourFromParseType(parseType);
             }
 
             @Override
             public Set<AdditionalStyleType> getAdditionalStyle() {
-                Optional<Group> groupAtElementIndex = cell.getGroupAtElementIndex(index);
+                Optional<Group> groupAtElementIndex = parsedCell.getGroupAtElementIndex(index);
                 if (groupAtElementIndex.isPresent()) {
                     if (!groupAtElementIndex.get().isValid()) {
                         return EnumSet.of(AdditionalStyleType.WIGGLY_UNDERLINE);
                     }
                 }
                 else {
-                    if (cell.getElement(index).getCharacter().charAt(0) != ' ') {
+                    if (parsedCell.get(index) != ' ') {
                         return EnumSet.of(AdditionalStyleType.WIGGLY_UNDERLINE);
                     }
                 }
@@ -112,7 +110,7 @@ public class StandardCellModel extends SkeletalCellModel implements CellModel {
 //                    return Optional.empty();
 //                }
 //
-//                String tooltipText = cell.getElement(index).getParseType().name();
+//                String tooltipText = cell.get(index).getParseType().name();
 //                return Optional.of(tooltipText);
                 //TODO Reactive
                 return Optional.empty();

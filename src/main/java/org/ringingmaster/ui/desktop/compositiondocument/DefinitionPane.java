@@ -44,7 +44,7 @@ public class DefinitionPane extends VBox {
 
     public void contentsChanged() {
         for (Node node : getChildren()) {
-            ((GridPane) node).gridModelListener_contentsChanged();
+            ((GridPane) node).gridModelListener_cellContentsChanged();
         }
     }
 }

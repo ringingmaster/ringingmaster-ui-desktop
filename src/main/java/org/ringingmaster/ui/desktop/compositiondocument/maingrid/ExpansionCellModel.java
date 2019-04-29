@@ -1,12 +1,10 @@
 package org.ringingmaster.ui.desktop.compositiondocument.maingrid;
 
-import org.ringingmaster.ui.desktop.compositiondocument.CompositionDocument;
+import org.ringingmaster.engine.composition.ObservableComposition;
+import org.ringingmaster.engine.composition.TableType;
 import org.ringingmaster.util.javafx.grid.model.CellModel;
 import org.ringingmaster.util.javafx.grid.model.CharacterModel;
-import org.ringingmaster.util.javafx.grid.model.GridModelListener;
 import org.ringingmaster.util.javafx.grid.model.SkeletalCellModel;
-
-import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -17,16 +15,14 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class ExpansionCellModel extends SkeletalCellModel implements CellModel {
 
-    private final CompositionDocument compositionDocument;
+    private final ObservableComposition observableComposition;
     private final int column;
     private final int row;
 
 
-    public ExpansionCellModel(List<GridModelListener> listeners,
-                              CompositionDocument compositionDocument,
+    public ExpansionCellModel(ObservableComposition observableComposition,
                               int row, int column) {
-        super(listeners);
-        this.compositionDocument = checkNotNull(compositionDocument);
+        this.observableComposition = checkNotNull(observableComposition);
         this.column = column;
         this.row = row;
     }
@@ -38,11 +34,7 @@ public class ExpansionCellModel extends SkeletalCellModel implements CellModel {
 
     @Override
     public void insertCharacter(int index, String character) {
-
-        //TODO compositionDocument.insertCharacter(row, column, index, character);
-        compositionDocument.setUpdatePoint(() -> "Typing", true);
-
-        fireCellStructureChanged();
+        observableComposition.insertCharacters(TableType.MAIN_TABLE, row, column, index, character);
     }
 
     @Override

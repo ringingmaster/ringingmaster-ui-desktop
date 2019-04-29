@@ -67,7 +67,7 @@ public class CompositionDocument extends ScrollPane implements Document {
 
     //Raw Data
     private ObservableComposition composition;
-    private final CompositionStyle compositionStyle = new CompositionStyle();
+    private final CompositionStyle compositionStyle = new CompositionStyle(); //TODO Eventually be Observable
     private Document documentDelegate = new DefaultDocument();
 
     private MainGridModel mainGridModel;
@@ -160,7 +160,7 @@ public class CompositionDocument extends ScrollPane implements Document {
 
     //TODO remove
     private void updateUiComponents() {
-        gridPane.gridModelListener_contentsChanged();
+        gridPane.gridModelListener_cellContentsChanged();
         definitionPane.contentsChanged();
     }
 

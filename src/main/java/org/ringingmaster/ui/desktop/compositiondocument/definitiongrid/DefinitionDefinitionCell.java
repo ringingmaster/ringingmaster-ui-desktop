@@ -2,10 +2,10 @@ package org.ringingmaster.ui.desktop.compositiondocument.definitiongrid;
 
 import org.ringingmaster.engine.composition.cell.Cell;
 import org.ringingmaster.ui.desktop.compositiondocument.CompositionDocument;
-import org.ringingmaster.util.javafx.grid.model.GridCellModel;
-import org.ringingmaster.util.javafx.grid.model.GridCharacterModel;
+import org.ringingmaster.util.javafx.grid.model.CellModel;
+import org.ringingmaster.util.javafx.grid.model.CharacterModel;
 import org.ringingmaster.util.javafx.grid.model.GridModelListener;
-import org.ringingmaster.util.javafx.grid.model.SkeletalGridCellModel;
+import org.ringingmaster.util.javafx.grid.model.SkeletalCellModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,14 +18,14 @@ import static com.google.common.base.Preconditions.checkNotNull;
  *
  * @author Lake
  */
-public class DefinitionCell extends SkeletalGridCellModel implements GridCellModel {
+public class DefinitionDefinitionCell extends SkeletalCellModel implements CellModel {
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     private final CompositionDocument compositionDocument;
     private final Cell cell;
 
-    public DefinitionCell(List<GridModelListener> listeners, CompositionDocument compositionDocument, Cell cell) {
+    public DefinitionDefinitionCell(List<GridModelListener> listeners, CompositionDocument compositionDocument, Cell cell) {
         super(listeners);
         this.compositionDocument = checkNotNull(compositionDocument);
         this.cell = checkNotNull(cell);
@@ -53,8 +53,8 @@ public class DefinitionCell extends SkeletalGridCellModel implements GridCellMod
     }
 
     @Override
-    public GridCharacterModel getGridCharacterModel(final int index) {
-//		return new GridCharacterModel() {
+    public CharacterModel getCharacterModel(final int index) {
+//		return new CharacterModel() {
 //			@Override
 //			public char getCharacter() {
 //				//TODO Reactive return cell.getElement(index).getCharacter();

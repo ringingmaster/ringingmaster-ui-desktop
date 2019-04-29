@@ -1,21 +1,12 @@
 package org.ringingmaster.ui.desktop.compositiondocument.maingrid;
 
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import org.ringingmaster.engine.composition.cell.Cell;
 import org.ringingmaster.ui.common.CompositionStyle;
 import org.ringingmaster.ui.desktop.compositiondocument.CompositionDocument;
-import org.ringingmaster.util.javafx.grid.model.AdditionalStyleType;
-import org.ringingmaster.util.javafx.grid.model.GridCellModel;
-import org.ringingmaster.util.javafx.grid.model.GridCharacterGroup;
-import org.ringingmaster.util.javafx.grid.model.GridCharacterModel;
+import org.ringingmaster.util.javafx.grid.model.CellModel;
 import org.ringingmaster.util.javafx.grid.model.GridModel;
 import org.ringingmaster.util.javafx.grid.model.SkeletalGridModel;
-
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.Optional;
-import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkElementIndex;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -51,7 +42,7 @@ public class MainGridModel extends SkeletalGridModel implements GridModel {
     }
 
     @Override
-    public GridCellModel getCellModel(final int row, final int column) {
+    public CellModel getCellModel(final int row, final int column) {
         checkElementIndex(row, getRowSize());
         checkElementIndex(column, getColumnSize());
 
@@ -59,73 +50,15 @@ public class MainGridModel extends SkeletalGridModel implements GridModel {
         boolean outOfBoundRow = (row >= getRowSize() - EXTRA_ROW_OR_COLUMN_FOR_EXPANSION);
 
         if (outOfBoundCol || outOfBoundRow) {
-            return new ExpansionCell(getListeners(), compositionDocument, row, column);
+            return new ExpansionCellModel(getListeners(), compositionDocument, row, column);
         } else {
             Cell cell = compositionDocument.allCellsView().get(row, column);
-            return new StandardCell(getListeners(), compositionDocument, row, column, cell);
+            return new StandardCellModel(getListeners(), compositionDocument, row, column, cell);
         }
     }
 
     @Override
-    public GridCharacterGroup getRowHeader(int row) {//TODO move from here, and drive from composition.
-        return new GridCharacterGroup() {
-            @Override
-            public int getLength() {
-                return (row >= compositionDocument.getRowSize()) ? 0 : 8;
-            }
-
-            @Override
-            public GridCharacterModel getGridCharacterModel(int index) {
-                return new GridCharacterModel() {
-                    @Override
-                    public char getCharacter() {
-                        return Integer.toString(index + 1).charAt(0);
-                    }
-
-                    @Override
-                    public Font getFont() {
-                        return compositionDocument.getCompositionStyle().getFont(CompositionStyle.CompositionStyleFont.MAIN);
-                    }
-
-                    @Override
-                    public Color getColor() {
-                        return (index % 2 == 0) ? Color.LIGHTGRAY : Color.BLUE;
-                    }
-
-                    @Override
-                    public Set<AdditionalStyleType> getAdditionalStyle() {
-                        return Collections.emptySet();
-                    }
-
-                    @Override
-                    public Optional<String> getTooltipText() {
-                        return Optional.empty();
-                    }
-
-                };
-            }
-
-            @Override
-            public Iterator<GridCharacterModel> iterator() {
-                return new Iterator<>() {
-                    int index = 0;
-
-                    @Override
-                    public boolean hasNext() {
-                        return index < getLength();
-                    }
-
-                    @Override
-                    public GridCharacterModel next() {
-                        return getGridCharacterModel(index++);
-                    }
-
-                    @Override
-                    public void remove() {
-                        throw new UnsupportedOperationException();
-                    }
-                };
-            }
-        };
+    public CellModel getRowHeader(int row) {//TODO move from here, and drive from composition.
+        return new CourseEndCellModel(getListeners(), compositionDocument, row);
     }
 }

@@ -17,7 +17,6 @@ import org.ringingmaster.engine.NumberOfBells;
 import org.ringingmaster.engine.arraytable.ImmutableArrayTable;
 import org.ringingmaster.engine.composition.Composition;
 import org.ringingmaster.engine.composition.ObservableComposition;
-import org.ringingmaster.engine.composition.TableType;
 import org.ringingmaster.engine.composition.cell.Cell;
 import org.ringingmaster.engine.composition.compositiontype.CompositionType;
 import org.ringingmaster.engine.method.Bell;
@@ -29,12 +28,12 @@ import org.ringingmaster.engine.notation.NotationBuilder;
 import org.ringingmaster.engine.parser.Parser;
 import org.ringingmaster.engine.parser.parse.Parse;
 import org.ringingmaster.ui.common.CompositionStyle;
+import org.ringingmaster.ui.desktop.compositiondocument.maingrid.MainGridModel;
 import org.ringingmaster.ui.desktop.documentmanager.DefaultDocument;
 import org.ringingmaster.ui.desktop.documentmanager.Document;
-import org.ringingmaster.ui.desktop.compositiondocument.maingrid.MainGridModel;
+import org.ringingmaster.ui.desktop.proof.ProofManager;
 import org.ringingmaster.util.javafx.grid.canvas.GridPane;
 import org.ringingmaster.util.javafx.grid.model.GridModel;
-import org.ringingmaster.ui.desktop.proof.ProofManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -673,14 +672,6 @@ public class CompositionDocument extends ScrollPane implements Document {
 
     public ImmutableArrayTable<Cell> allCellsView() {
         return composition.get().allCompositionCells();
-    }
-
-    public void insertCharacter(int row, int column, int index, String character) {
-        composition.insertCharacters(TableType.MAIN_TABLE, row, column, index, character);
-    }
-
-    public void removeCharacter(int row, int column, int index) {
-        composition.removeCharacters(TableType.MAIN_TABLE, row, column, index, 1);
     }
 
     public void setProofManager(ProofManager proofManager) {

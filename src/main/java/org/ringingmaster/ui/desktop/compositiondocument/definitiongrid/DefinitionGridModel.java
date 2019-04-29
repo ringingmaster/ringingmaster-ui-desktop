@@ -1,51 +1,63 @@
 package org.ringingmaster.ui.desktop.compositiondocument.definitiongrid;
 
+
+import javafx.scene.paint.Color;
+import org.ringingmaster.engine.composition.cell.Cell;
+import org.ringingmaster.ui.common.CompositionStyle;
+import org.ringingmaster.ui.desktop.compositiondocument.CompositionDocument;
+import org.ringingmaster.util.javafx.grid.model.CellModel;
+import org.ringingmaster.util.javafx.grid.model.GridModel;
+import org.ringingmaster.util.javafx.grid.model.SkeletalGridModel;
+
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.checkState;
+
 /**
  * TODO comments ???
  *
  * @author Lake
  */
-public class DefinitionGridModel /*extends SkeletalGridModel implements GridModel */ {
-//TODO Reactive
-//	private final GridCharacterGroup gridCharacterGroup;
-//	private final GridCellModel gridCharacterModel;
-//
-//
-//	private final CompositionDocument compositionDocument;
-//
-//	public DefinitionGridModel(CompositionDocument compositionDocument, CompositionDefinition definition) {
-//		this.compositionDocument = checkNotNull(compositionDocument);
-//		checkNotNull(definition);
-//		gridCharacterGroup = new DefinitionName(getListeners(),compositionDocument, definition);
-//		gridCharacterModel = new DefinitionCell(getListeners(), compositionDocument, definition);
-//	}
-//
-//	@Override
-//	public int getColumnCount() {
-//		return 1;
-//	}
-//
-//	@Override
-//	public int getRowCount() {
-//		return 1;
-//	}
-//
-//	@Override
-//	public Color getGridColor() {
-//		return compositionDocument.getCompositionStyle().getColour(CompositionStyle.CompositionStyleColor.GRID);
-//	}
-//
-//	@Override
-//	public GridCellModel getCellModel(int row, int column) {
-//		checkState(column == 0);
-//		checkState(row == 0);
-//		return gridCharacterModel;
-//	}
-//
-//	@Override
-//	public GridCharacterGroup getRowHeader(int row) {
-//		checkState(row == 0);
-//		return gridCharacterGroup;
-//	}
+public class DefinitionGridModel extends SkeletalGridModel implements GridModel {
+
+    private final CellModel cellModel;
+    private final CellModel gridCharacterModel;
+
+
+    private final CompositionDocument compositionDocument;
+
+    public DefinitionGridModel(CompositionDocument compositionDocument, Cell definition) {
+        this.compositionDocument = checkNotNull(compositionDocument);
+        checkNotNull(definition);
+        cellModel = new DefinitionShorthandCell(getListeners(), compositionDocument, definition);
+        gridCharacterModel = new DefinitionDefinitionCell(getListeners(), compositionDocument, definition);
+    }
+
+    @Override
+    public int getRowSize() {
+        return 1;
+    }
+
+    @Override
+    public int getColumnSize() {
+        return 1;
+    }
+
+    @Override
+    public Color getGridColor() {
+        return compositionDocument.getCompositionStyle().getColour(CompositionStyle.CompositionStyleColor.GRID);
+    }
+
+    @Override
+    public CellModel getCellModel(int row, int column) {
+        checkState(column == 0);
+        checkState(row == 0);
+        return gridCharacterModel;
+    }
+
+    @Override
+    public CellModel getRowHeader(int row) {
+        checkState(row == 0);
+        return cellModel;
+    }
 
 }

@@ -6,10 +6,12 @@ import org.ringingmaster.engine.composition.cell.Cell;
 import org.ringingmaster.ui.common.CompositionStyle;
 import org.ringingmaster.ui.desktop.compositiondocument.CompositionDocument;
 import org.ringingmaster.util.javafx.grid.model.AdditionalStyleType;
-import org.ringingmaster.util.javafx.grid.model.GridCellModel;
-import org.ringingmaster.util.javafx.grid.model.GridCharacterModel;
+import org.ringingmaster.util.javafx.grid.model.CellModel;
+import org.ringingmaster.util.javafx.grid.model.CharacterModel;
 import org.ringingmaster.util.javafx.grid.model.GridModelListener;
-import org.ringingmaster.util.javafx.grid.model.SkeletalGridCellModel;
+import org.ringingmaster.util.javafx.grid.model.SkeletalCellModel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
 import java.util.List;
@@ -23,15 +25,17 @@ import static com.google.common.base.Preconditions.checkNotNull;
  *
  * @author Lake
  */
-public class StandardCell extends SkeletalGridCellModel implements GridCellModel {
+public class StandardCellModel extends SkeletalCellModel implements CellModel {
+
+    private final Logger log = LoggerFactory.getLogger(StandardCellModel.class);
 
     private final CompositionDocument compositionDocument;
     private final int column;
     private final int row;
     private final Cell cell;
 
-    public StandardCell(List<GridModelListener> listeners, CompositionDocument compositionDocument,
-                        int row, int column, Cell cell) {
+    public StandardCellModel(List<GridModelListener> listeners, CompositionDocument compositionDocument,
+                             int row, int column, Cell cell) {
         super(listeners);
         this.compositionDocument = checkNotNull(compositionDocument);
         this.column = column;
@@ -46,7 +50,7 @@ public class StandardCell extends SkeletalGridCellModel implements GridCellModel
 
     @Override
     public void insertCharacter(int index, String character) {
-        compositionDocument.insertCharacter(row,column, index, character);
+     //TODO    compositionDocument.insertCharacter(row,column, index, character);
 		compositionDocument.setUpdatePoint(() -> "Typing", true);
 
 		fireCellStructureChanged();
@@ -55,14 +59,14 @@ public class StandardCell extends SkeletalGridCellModel implements GridCellModel
     @Override
     public void removeCharacter(int index) {
         //TODO Reactive
-        compositionDocument.removeCharacter(row,column,index);
+      //  compositionDocument.removeCharacter(row,column,index);
 		compositionDocument.setUpdatePoint(() -> "Delete", true);
 		fireCellStructureChanged();
     }
 
     @Override
-    public GridCharacterModel getGridCharacterModel(final int index) {
-        return new GridCharacterModel() {
+    public CharacterModel getCharacterModel(final int index) {
+        return new CharacterModel() {
             @Override
             public char getCharacter() {
                 return cell.getElement(index).getCharacter().charAt(0);

@@ -3,13 +3,13 @@ package org.ringingmaster.ui.desktop.compositiondocument.definitiongrid;
 
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import org.ringingmaster.engine.composition.cell.Cell;
 import org.ringingmaster.ui.common.CompositionStyle;
 import org.ringingmaster.ui.desktop.compositiondocument.CompositionDocument;
 import org.ringingmaster.util.javafx.grid.model.AdditionalStyleType;
-import org.ringingmaster.util.javafx.grid.model.GridCharacterGroup;
-import org.ringingmaster.util.javafx.grid.model.GridCharacterModel;
+import org.ringingmaster.util.javafx.grid.model.CharacterModel;
 import org.ringingmaster.util.javafx.grid.model.GridModelListener;
-import org.ringingmaster.util.javafx.grid.model.SkeletalGridCellModel;
+import org.ringingmaster.util.javafx.grid.model.SkeletalCellModel;
 
 import java.util.Collections;
 import java.util.List;
@@ -23,12 +23,12 @@ import static com.google.common.base.Preconditions.checkNotNull;
  *
  * @author Lake
  */
-class DefinitionName extends SkeletalGridCellModel implements GridCharacterGroup {
+class DefinitionShorthandCell extends SkeletalCellModel implements Iterable<CharacterModel> {
 
     private final CompositionDocument compositionDocument;
-    private final DefinitionCell definition;
+    private final Cell definition;
 
-    public DefinitionName(List<GridModelListener> listeners, CompositionDocument compositionDocument, DefinitionCell definition) {
+    public DefinitionShorthandCell(List<GridModelListener> listeners, CompositionDocument compositionDocument, Cell definition) {
         super(listeners);
         this.compositionDocument = checkNotNull(compositionDocument);
         this.definition = checkNotNull(definition);
@@ -42,8 +42,8 @@ class DefinitionName extends SkeletalGridCellModel implements GridCharacterGroup
     }
 
     @Override
-    public GridCharacterModel getGridCharacterModel(final int index) {
-        return new GridCharacterModel() {
+    public CharacterModel getCharacterModel(final int index) {
+        return new CharacterModel() {
             @Override
             public char getCharacter() {
                 //TODO Reactive

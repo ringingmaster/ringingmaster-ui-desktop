@@ -1,6 +1,7 @@
 package org.ringingmaster.ui.desktop.documentmodel;
 
 import com.google.common.collect.Lists;
+import io.reactivex.Observable;
 import javafx.stage.FileChooser;
 import org.ringingmaster.engine.NumberOfBells;
 import org.ringingmaster.engine.composition.Composition;
@@ -14,8 +15,6 @@ import org.ringingmaster.ui.desktop.documentmanager.DocumentManager;
 import org.ringingmaster.ui.desktop.documentmanager.DocumentTypeManager;
 import org.ringingmaster.ui.desktop.proof.ProofManager;
 import org.ringingmaster.util.beanfactory.BeanFactory;
-import org.ringingmaster.util.listener.ConcurrentListenable;
-import org.ringingmaster.util.listener.Listenable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,7 +30,7 @@ import static org.ringingmaster.engine.composition.compositiontype.CompositionTy
  *
  * @author Lake
  */
-public class CompositionDocumentTypeManager extends ConcurrentListenable<CompositionDocumentTypeListener> implements DocumentTypeManager, Listenable<CompositionDocumentTypeListener> {
+public class CompositionDocumentTypeManager implements DocumentTypeManager {
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
@@ -43,6 +42,22 @@ public class CompositionDocumentTypeManager extends ConcurrentListenable<Composi
     private Optional<CompositionDocument> currentDocument = Optional.empty();
 
     private int docNumber = 0;
+
+    public Observable<Optional<CompositionDocument>> observableActiveCompositionDocument() {
+        return documentManager.observableActiveDocument()
+                .map(activeDocument -> activeDocument.map(document -> (document instanceof CompositionDocument)?(CompositionDocument) document: null))
+                .distinctUntilChanged();
+    }
+
+    public Observable<Optional<Composition>> observableComposition() {
+        return observableActiveCompositionDocument().switchMap(compositionDocument -> {
+            if (compositionDocument.isPresent()) {
+                return compositionDocument.get().observableComposition().map(Optional::of);
+            } else {
+                return Observable.empty();
+            }
+        });
+    }
 
     @Override
     public Document createNewDocument() {
@@ -88,18 +103,11 @@ public class CompositionDocumentTypeManager extends ConcurrentListenable<Composi
         // this is needed to listen to document updates that are not changed with proof's.
         // example -> alter the start change to something that will fail, and this will
         // allow it to be put back to its original value.
-        compositionDocument.addListener(compositionDoc -> fireUpdateDocument());
+        //TODO Reactive compositionDocument.addListener(compositionDoc -> fireUpdateDocument());
         compositionDocument.setDirty(false);
         return compositionDocument;
     }
 
-    private void fireUpdateDocument() {
-        documentManager.updateTitles();
-
-        for (CompositionDocumentTypeListener compositionDocumentTypeListener : getListeners()) {
-            compositionDocumentTypeListener.compositionDocumentType_updateDocument(currentDocument);
-        }
-    }
 
     public Optional<CompositionDocument> getCurrentDocument() {
         return currentDocument;
@@ -107,16 +115,14 @@ public class CompositionDocumentTypeManager extends ConcurrentListenable<Composi
 
     public void setDocumentManager(DocumentManager documentManager) {
         this.documentManager = documentManager;
-        documentManager.addListener(document -> {
-            if (document instanceof CompositionDocument) {
-                CompositionDocument compositionDocument = (CompositionDocument) document;
-                currentDocument = Optional.of(compositionDocument);
-                compositionDocument.parseAndProve();
-            } else {
-                currentDocument = Optional.empty();
-                proofManager.parseAndProve(null);
-            }
-            fireUpdateDocument();
+
+        //TODO Temp notifications
+        observableActiveCompositionDocument().subscribe(compositionDocument -> {
+
+            currentDocument = compositionDocument;
+            //currentDocument.parseAndProve();
+
+            documentManager.updateTitles();
         });
     }
 

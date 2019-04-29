@@ -62,7 +62,7 @@ public class MainGridModel extends SkeletalGridModel implements GridModel {
             return new ExpansionCell(getListeners(), compositionDocument, row, column);
         } else {
             Cell cell = compositionDocument.allCellsView().get(row, column);
-            return new StandardCell(getListeners(), compositionDocument, row, column, cell); need to listen to parsing process somehow
+            return new StandardCell(getListeners(), compositionDocument, row, column, cell);
         }
     }
 
@@ -107,7 +107,7 @@ public class MainGridModel extends SkeletalGridModel implements GridModel {
 
             @Override
             public Iterator<GridCharacterModel> iterator() {
-                return new Iterator<GridCharacterModel>() {
+                return new Iterator<>() {
                     int index = 0;
 
                     @Override

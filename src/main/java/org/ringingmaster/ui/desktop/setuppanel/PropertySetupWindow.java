@@ -1,8 +1,9 @@
 package org.ringingmaster.ui.desktop.setuppanel;
 
-import com.google.common.collect.Lists;
+import com.google.common.collect.Streams;
 import javafx.application.Platform;
 import org.ringingmaster.engine.NumberOfBells;
+import org.ringingmaster.engine.composition.Composition;
 import org.ringingmaster.engine.composition.compositiontype.CompositionType;
 import org.ringingmaster.engine.method.Bell;
 import org.ringingmaster.engine.method.Stroke;
@@ -18,11 +19,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.ringingmaster.engine.composition.compositiontype.CompositionType.COURSE_BASED;
+import static org.ringingmaster.util.javafx.propertyeditor.SelectionPropertyValue.UNDEFINED_INDEX;
 
 /**
  * TODO comments ???
@@ -66,12 +71,11 @@ public class PropertySetupWindow extends PropertyEditor {
         buildStartSection();
         buildTerminationSection();
 
-
-        compositionDocumentTypeManager.addListener(compositionDocument -> {
-            updateSetupSection(compositionDocument);
-            updateAdvancedSetupSection(compositionDocument);
-            updateStartSection(compositionDocument);
-            updateTerminationSection(compositionDocument);
+        compositionDocumentTypeManager.observableComposition().subscribe(composition -> {
+            updateSetupSection(composition);
+            updateAdvancedSetupSection(composition);
+            updateStartSection(composition);
+            updateTerminationSection(composition);
         });
     }
 
@@ -132,20 +136,20 @@ public class PropertySetupWindow extends PropertyEditor {
                 updateCompositionDocumentIfPresent(compositionDocument -> compositionDocument.setPlainLeadToken(newValue)), CallbackStyle.EVERY_KEYSTROKE);
     }
 
-    private void updateSetupSection(Optional<CompositionDocument> compositionDocument) {
+    private void updateSetupSection(Optional<Composition> composition) {
 
-        final String title = compositionDocument.isPresent() ? compositionDocument.get().getTitle() : "";
+        final String title = composition.isPresent() ? composition.get().getTitle() : "";
         ((TextPropertyValue) findPropertyByName(TITLE_PROPERTY_NAME)).setValue(title);
 
-        final String author = compositionDocument.isPresent() ? compositionDocument.get().getAuthor() : "";
+        final String author = composition.isPresent() ? composition.get().getAuthor() : "";
         ((TextPropertyValue) findPropertyByName(AUTHOR_PROPERTY_NAME)).setValue(author);
 
-        final int numberOfBellsIndex = compositionDocument.isPresent() ? compositionDocument.get().getNumberOfBells().ordinal() : -1;
+        final int numberOfBellsIndex = composition.map(composition1 -> composition1.getNumberOfBells().ordinal()).orElse(UNDEFINED_INDEX);
         ((SelectionPropertyValue) findPropertyByName(NUMBER_OF_BELLS_PROPERTY_NAME)).setSelectedIndex(numberOfBellsIndex);
 
         final List<String> callFromItems = new ArrayList<>();
-        if (compositionDocument.isPresent()) {
-            NumberOfBells numberOfBells = compositionDocument.get().getNumberOfBells();
+        if (composition.isPresent()) {
+            NumberOfBells numberOfBells = composition.get().getNumberOfBells();
             for (Bell bell : Bell.values()) {
                 if (bell.getZeroBasedBell() <= numberOfBells.getTenor().getZeroBasedBell()) {
                     callFromItems.add(bell.getDisplayString());
@@ -153,11 +157,12 @@ public class PropertySetupWindow extends PropertyEditor {
             }
             ((SelectionPropertyValue) findPropertyByName(CALL_FROM_PROPERTY_NAME)).setItems(callFromItems);
         }
-        final int callFromIndex = compositionDocument.isPresent() ? compositionDocument.get().getCallFrom().ordinal() : -1;
+
+        final int callFromIndex = composition.map(value -> value.getCallFromBell().ordinal()).orElse(UNDEFINED_INDEX);
         ((SelectionPropertyValue) findPropertyByName(CALL_FROM_PROPERTY_NAME)).setSelectedIndex(callFromIndex);
 
-        final List<String> validNotationItems = getValidNotations(compositionDocument);
-        int selectedNotationIndex = getActiveValidNotationIndex(compositionDocument);
+        final List<String> validNotationItems = getValidNotations(composition);
+        int selectedNotationIndex = getActiveValidNotationIndex(composition);
         ((SelectionPropertyValue) findPropertyByName(ACTIVE_METHOD_PROPERTY_NAME)).setItems(validNotationItems);
         ((SelectionPropertyValue) findPropertyByName(ACTIVE_METHOD_PROPERTY_NAME)).setSelectedIndex(selectedNotationIndex);
 
@@ -166,57 +171,45 @@ public class PropertySetupWindow extends PropertyEditor {
             compositionTypes.add(compositionType.getName());
         }
         ((SelectionPropertyValue) findPropertyByName(CHECKING_TYPE_PROPERTY_NAME)).setItems(compositionTypes);
-        final int compositionTypeIndex = compositionDocument.isPresent() ? compositionDocument.get().getCompositionCompositionType().ordinal() : -1;
+        final int compositionTypeIndex = composition.map(value -> value.getCompositionType().ordinal()).orElse(UNDEFINED_INDEX);
         ((SelectionPropertyValue) findPropertyByName(CHECKING_TYPE_PROPERTY_NAME)).setSelectedIndex(compositionTypeIndex);
 
-        final String plainLeadToken = compositionDocument.isPresent() ? compositionDocument.get().getPlainLeadToken() : "";
+        final String plainLeadToken = composition.isPresent() ? composition.get().getPlainLeadToken() : "";
         ((TextPropertyValue) findPropertyByName(PLAIN_LEAD_TOKEN_PROPERTY_NAME)).setValue(plainLeadToken);
-        findPropertyByName(PLAIN_LEAD_TOKEN_PROPERTY_NAME).setDisable(compositionDocument.isPresent() &&
-                compositionDocument.get().getCompositionCompositionType() == COURSE_BASED);
+        findPropertyByName(PLAIN_LEAD_TOKEN_PROPERTY_NAME).setDisable(composition.isPresent() &&
+                composition.get().getCompositionType() == COURSE_BASED);
     }
 
-    public List<String> getValidNotations(Optional<CompositionDocument> compositionDocument) {
-        List<String> result = Lists.newArrayList();
-
-        if (compositionDocument.isPresent()) {
-            final List<Notation> orderedNotations = compositionDocument.get().getSortedValidNotations();
-
-            result.add(CompositionDocument.SPLICED_TOKEN);
-
-            for (int index = 0; index < orderedNotations.size(); index++) {
-                final Notation notation = orderedNotations.get(index);
-                result.add(notation.getNameIncludingNumberOfBells());
-            }
-        }
-
-        return result;
+    private List<String> getValidNotations(Optional<Composition> composition) {
+        return composition.map(composition1 ->
+                    Streams.concat(Stream.of(CompositionDocument.SPLICED_TOKEN),
+                                    composition1.getValidNotations().stream()
+                                    .sorted(Notation.BY_NUMBER_THEN_NAME).map(Notation::getNameIncludingNumberOfBells))
+                            .collect(Collectors.toList()))
+                .orElse(Collections.emptyList());
     }
 
-    private int getActiveValidNotationIndex(Optional<CompositionDocument> compositionDocument) {
+    private int getActiveValidNotationIndex(Optional<Composition> composition) {
 
-        if (!compositionDocument.isPresent()) {
-            return -1;
+        if (!composition.isPresent()) {
+            return UNDEFINED_INDEX;
         }
 
-        if (compositionDocument.get().isSpliced()) {
+        if (composition.get().isSpliced()) {
             return 0;
         }
-        final Notation activeNotation = compositionDocument.get().getSingleMethodActiveNotation();
-        final List<Notation> sortedNotationsBeingDisplayed = compositionDocument.get().getSortedValidNotations();
-        for (int index = 0; index < sortedNotationsBeingDisplayed.size(); index++) {
-            final Notation notation = sortedNotationsBeingDisplayed.get(index);
-            if (notation == activeNotation) {
-                return index + 1; // the 1 is the offset for the spliced row
-            }
-        }
-        return -1;
+
+        final List<String> validNotationNames = getValidNotations(composition);
+        final String activeNotationName = composition.get().getNonSplicedActiveNotation()
+                .map(Notation::getNameIncludingNumberOfBells).orElse("");
+        return validNotationNames.indexOf(activeNotationName);
     }
 
     private void buildAdvancedSetupSection() {
         // TODO
     }
 
-    private void updateAdvancedSetupSection(Optional<CompositionDocument> compositionDocument) {
+    private void updateAdvancedSetupSection(Optional<Composition> composition) {
         //TODO
 
     }
@@ -246,11 +239,12 @@ public class PropertySetupWindow extends PropertyEditor {
 
     }
 
-    private void updateStartSection(Optional<CompositionDocument> compositionDocument) {
-        final String startChange = compositionDocument.isPresent() ? compositionDocument.get().getStartChange() : "";
+    private void updateStartSection(Optional<Composition> compositionDocument) {
+        final String startChange = compositionDocument.map(Composition::getStartChange)
+                .map(row -> row.getDisplayString(true)).orElse("");
         ((TextPropertyValue) findPropertyByName(START_WITH_CHANGE_PROPERTY_NAME)).setValue(startChange);
 
-        int startAtRow = compositionDocument.isPresent() ? compositionDocument.get().getStartAtRow() : 0;
+        int startAtRow = compositionDocument.map(Composition::getStartAtRow).orElse(0);
         ((IntegerPropertyValue) findPropertyByName(START_AT_ROW_PROPERTY_NAME)).setValue(startAtRow);
 
         final List<String> startAtStrokeItems = new ArrayList<>();
@@ -258,10 +252,12 @@ public class PropertySetupWindow extends PropertyEditor {
             startAtStrokeItems.add(stroke.getDisplayString());
         }
         ((SelectionPropertyValue) findPropertyByName(START_STROKE_PROPERTY_NAME)).setItems(startAtStrokeItems);
-        final int startStroke = compositionDocument.isPresent() ? compositionDocument.get().getStartStroke().ordinal() : -1;
+        final int startStroke = compositionDocument.map(composition -> composition.getStartStroke().ordinal()).orElse(UNDEFINED_INDEX);
         ((SelectionPropertyValue) findPropertyByName(START_STROKE_PROPERTY_NAME)).setSelectedIndex(startStroke);
 
-        final String startNotation = compositionDocument.isPresent() ? compositionDocument.get().getStartNotation() : "";
+
+        final String startNotation = compositionDocument.flatMap(Composition::getStartNotation)
+                .map(notation -> notation.getNotationDisplayString(false)).orElse("");
         ((TextPropertyValue) findPropertyByName(START_NOTATION_PROPERTY_NAME)).setValue(startNotation);
     }
 
@@ -289,31 +285,30 @@ public class PropertySetupWindow extends PropertyEditor {
         showGroupByName(TERMINATION_GROUP_NAME, false); // TODO save state in app
     }
 
-    private void updateTerminationSection(Optional<CompositionDocument> compositionDocument) {
-        final String terminationChange = compositionDocument.isPresent() ? compositionDocument.get().getTerminationChange() : "";
+    private void updateTerminationSection(Optional<Composition> compositionDocument) {
+        final String terminationChange = compositionDocument.flatMap(Composition::getTerminationChange)
+                .map(row -> row.getDisplayString(true)).orElse("");
         ((TextPropertyValue) findPropertyByName(TERMINATION_WITH_CHANGE_PROPERTY_NAME)).setValue(terminationChange);
 
-        int terminationRowLimit = compositionDocument.isPresent() ? compositionDocument.get().getTerminationMaxRows() : 0;
+        int terminationRowLimit = compositionDocument.map(Composition::getTerminationMaxRows).orElse(0);
         ((IntegerPropertyValue) findPropertyByName(TERMINATION_ROW_LIMIT_PROPERTY_NAME)).setValue(terminationRowLimit);
 
-        Integer terminationLeadLimit = compositionDocument.isPresent() ? compositionDocument.get().getTerminationMaxLeads() : null;
+        Integer terminationLeadLimit = compositionDocument.flatMap(Composition::getTerminationMaxLeads).orElse(null);
         ((IntegerPropertyValue) findPropertyByName(TERMINATION_LEAD_LIMIT_PROPERTY_NAME)).setValue(terminationLeadLimit);
 
-        Integer terminationPartLimit = compositionDocument.isPresent() ? compositionDocument.get().getTerminationMaxParts() : null;
+        Integer terminationPartLimit = compositionDocument.flatMap(Composition::getTerminationMaxParts).orElse(null);
         ((IntegerPropertyValue) findPropertyByName(TERMINATION_PART_LIMIT_PROPERTY_NAME)).setValue(terminationPartLimit);
 
-        Integer terminationCircularCompositionLimit = compositionDocument.isPresent() ? compositionDocument.get().getTerminationCircularComposition() : null;
+        Integer terminationCircularCompositionLimit = compositionDocument.isPresent() ? compositionDocument.get().getTerminationMaxCircularity() : null;
         ((IntegerPropertyValue) findPropertyByName(TERMINATION_CIRCULAR_COMPOSITION_LIMIT_PROPERTY_NAME)).setValue(terminationCircularCompositionLimit);
 
     }
 
     void updateCompositionDocumentIfPresent(Consumer<CompositionDocument> consumer) {
         Optional<CompositionDocument> currentDocument = compositionDocumentTypeManager.getCurrentDocument();
-        if (currentDocument.isPresent()) {
-            // The runLater is to prevent the UI from continuously applying the same wrong update when loosing focus
-            // and switching focus to an error window.
-            Platform.runLater(() -> consumer.accept(currentDocument.get()));
-        }
+        // The runLater is to prevent the UI from continuously applying the same wrong update when loosing focus
+        // and switching focus to an error window.
+        currentDocument.ifPresent(compositionDocument -> Platform.runLater(() -> consumer.accept(compositionDocument)));
     }
 
     public void setCompositionDocumentTypeManager(CompositionDocumentTypeManager compositionDocumentTypeManager) {

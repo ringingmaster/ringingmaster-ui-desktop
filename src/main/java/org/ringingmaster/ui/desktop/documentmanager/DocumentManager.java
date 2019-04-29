@@ -1,5 +1,7 @@
 package org.ringingmaster.ui.desktop.documentmanager;
 
+import io.reactivex.Observable;
+import io.reactivex.subjects.BehaviorSubject;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -10,8 +12,6 @@ import javafx.stage.Stage;
 import org.ringingmaster.util.javafx.lifecycle.ShutdownService;
 import org.ringingmaster.util.javafx.lifecycle.ShutdownServiceListener;
 import org.ringingmaster.util.javafx.lifecycle.StartupService;
-import org.ringingmaster.util.listener.ConcurrentListenable;
-import org.ringingmaster.util.listener.Listenable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,7 +29,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  *
  * @author Lake
  */
-public class DocumentManager extends ConcurrentListenable<DocumentManagerListener> implements Listenable<DocumentManagerListener> {
+public class DocumentManager  {
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
@@ -39,15 +39,22 @@ public class DocumentManager extends ConcurrentListenable<DocumentManagerListene
     private StartupService startupService;
     private DocumentTypeManager documentTypeManager; //TODO eventually this will be a Set of different document types. It can then control a menulist of document types when creating a new document
 
+    private final BehaviorSubject<Optional<Document>> activeDocumentStream = BehaviorSubject.createDefault(Optional.empty());
+
+
     public void init() {
         documentWindow.setTabClosingPolicy(TabPane.TabClosingPolicy.ALL_TABS);
-        documentWindow.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+        documentWindow.getSelectionModel().selectedItemProperty().addListener((observable, oldTab, newTab) -> {
             updateTitles();
-            fireUpdateDocument();
+            activeDocumentStream.onNext(Optional.of(getDocument(newTab)));
         });
 
         startupService.addListener(this::startup);
         shutdownService.addListener(this::shutdown);
+    }
+
+    public Observable<Optional<Document>> observableActiveDocument() {
+        return activeDocumentStream;
     }
 
     public void startup() {
@@ -219,28 +226,11 @@ public class DocumentManager extends ConcurrentListenable<DocumentManagerListene
     }
 
 
-    private void fireUpdateDocument() {
-        Document currentDocument = getCurrentDocument();
-
-        for (DocumentManagerListener listener : getListeners()) {
-            listener.documentManager_documentActivated(currentDocument);
-        }
-    }
-
-    public Document getCurrentDocument() {
-        Tab selectedItem = getCurrentTab();
-        if (selectedItem == null) {
-            return null;
-        }
-        return getDocument(selectedItem);
-    }
-
     private Tab getCurrentTab() {
         return documentWindow.getSelectionModel().getSelectedItem();
     }
 
     private Document getDocument(Tab tab) {
-
         return checkNotNull((Document) tab.getContent());
     }
 

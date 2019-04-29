@@ -37,7 +37,7 @@ public class PropertyNotationPanel extends NameValuePairTable implements Listena
 
     public void setCompositionDocumentTypeManager(CompositionDocumentTypeManager compositionDocumentTypeManager) {
         this.compositionDocumentTypeManager = compositionDocumentTypeManager;
-        compositionDocumentTypeManager.addListener(this::updateToReflectDocument);
+        compositionDocumentTypeManager.observableActiveCompositionDocument().subscribe(this::updateToReflectDocument);
 
         setOnMouseClicked(event -> {
             if (event.getClickCount() == 2) {

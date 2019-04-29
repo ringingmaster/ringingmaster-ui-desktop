@@ -41,7 +41,8 @@ public class AddNotationEvent extends SkeletalEventDefinition implements EventDe
 
     public void setCompositionDocumentTypeManager(CompositionDocumentTypeManager compositionDocumentTypeManager) {
         this.compositionDocumentTypeManager = compositionDocumentTypeManager;
-        compositionDocumentTypeManager.addListener(document -> disableProperty().set(!document.isPresent()));
+        compositionDocumentTypeManager.observableActiveCompositionDocument()
+                .subscribe(document -> disableProperty().set(!document.isPresent()));
     }
 
     public void setNotationEditorDialogFactory(NotationEditorDialogFactory notationEditorDialogFactory) {

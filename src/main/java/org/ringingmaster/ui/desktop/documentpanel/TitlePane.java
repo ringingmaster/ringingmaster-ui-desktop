@@ -10,8 +10,8 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import org.ringingmaster.engine.composition.ObservableComposition;
 import org.ringingmaster.ui.common.CompositionStyle;
-import org.ringingmaster.ui.desktop.documentmodel.CompositionDocument;
 import org.ringingmaster.util.javafx.color.ColorUtil;
 
 /**
@@ -27,22 +27,15 @@ public class TitlePane extends VBox {
     private final TextField authorText = new TextField();
 
 
-    public TitlePane(CompositionDocument compositionDocument) {
+    public TitlePane() {
         getStylesheets().add(STYLESHEET);
 
         titleText.setFont(new Font(20));
         //TODO 	titleText.setFontSmoothingType(FontSmoothingType.LCD);
         getChildren().add(titleText);
-        titleText.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue == false) compositionDocument.setTitle(titleText.getText());
-        });
-
 
         authorText.setFont(new Font(14));
         //TODO authorText.setFontSmoothingType(FontSmoothingType.LCD);
-        authorText.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue == false) compositionDocument.setAuthor(authorText.getText());
-        });
 
         Text space = new Text();
         HBox authorOffset = new HBox(space, authorText);
@@ -56,11 +49,23 @@ public class TitlePane extends VBox {
         setFocusTraversable(false);
     }
 
-    public void setText(String title, String author) {
-        titleText.textProperty().set(title);
-        authorText.textProperty().set(author);
+    public void init(ObservableComposition observableComposition) {
+        observableComposition.observable().subscribe(composition -> {
+            titleText.textProperty().set(composition.getTitle());
+            authorText.textProperty().set(composition.getAuthor());
+        });
+
+        titleText.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue) observableComposition.setTitle(titleText.getText());
+        });
+
+        authorText.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue == false) observableComposition.setAuthor(authorText.getText());
+        });
+
     }
 
+    // TODO make style reactive
     public void setCompositionStyle(CompositionStyle compositionStyle) {
         Color titleColor = compositionStyle.getColour(CompositionStyle.CompositionStyleColor.TITLE);
         titleText.setStyle("-fx-text-inner-color: " + ColorUtil.toWeb(titleColor) + ";");

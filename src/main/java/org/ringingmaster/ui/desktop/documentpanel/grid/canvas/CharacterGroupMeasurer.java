@@ -3,6 +3,7 @@ package org.ringingmaster.ui.desktop.documentpanel.grid.canvas;
 import javafx.scene.text.Font;
 import org.ringingmaster.ui.desktop.documentpanel.grid.model.GridCharacterGroup;
 import org.ringingmaster.ui.desktop.documentpanel.grid.model.GridCharacterModel;
+import org.ringingmaster.util.javafx.font.FontMetrics;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 

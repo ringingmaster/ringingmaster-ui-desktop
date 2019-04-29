@@ -2,8 +2,7 @@ package org.ringingmaster.ui.desktop.documentmodel.maingrid;
 
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import org.ringingmaster.engine.parser.assignparsetype.ParseType;
-import org.ringingmaster.engine.parser.cell.ParsedCell;
+import org.ringingmaster.engine.composition.cell.Cell;
 import org.ringingmaster.ui.common.CompositionStyle;
 import org.ringingmaster.ui.desktop.documentmodel.CompositionDocument;
 import org.ringingmaster.ui.desktop.documentpanel.grid.model.AdditionalStyleType;
@@ -29,10 +28,10 @@ public class StandardCell extends SkeletalGridCellModel implements GridCellModel
     private final CompositionDocument compositionDocument;
     private final int column;
     private final int row;
-    private final ParsedCell cell;
+    private final Cell cell;
 
     public StandardCell(List<GridModelListener> listeners, CompositionDocument compositionDocument,
-                        int row, int column, ParsedCell cell) {
+                        int row, int column, Cell cell) {
         super(listeners);
         this.compositionDocument = checkNotNull(compositionDocument);
         this.column = column;
@@ -76,8 +75,9 @@ public class StandardCell extends SkeletalGridCellModel implements GridCellModel
 
             @Override
             public Color getColor() {
-                ParseType parseType = cell.getSectionAtElementIndex(index).get().getParseType();
-                return compositionDocument.getCompositionStyle().getColourFromParseType(parseType);
+//                ParseType parseType = cell.getSectionAtElementIndex(index).get().getParseType();
+                //return compositionDocument.getCompositionStyle().getColourFromParseType(parseType);
+                return Color.AQUA;
             }
 
             @Override

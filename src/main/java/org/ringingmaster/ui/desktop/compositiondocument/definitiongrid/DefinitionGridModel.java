@@ -54,10 +54,4 @@ public class DefinitionGridModel extends SkeletalGridModel implements GridModel 
         return gridCharacterModel;
     }
 
-    @Override
-    public CellModel getRowHeader(int row) {
-        checkState(row == 0);
-        return cellModel;
-    }
-
 }

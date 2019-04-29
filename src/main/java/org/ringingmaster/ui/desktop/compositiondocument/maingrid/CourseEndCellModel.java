@@ -11,7 +11,6 @@ import org.ringingmaster.util.javafx.grid.model.GridModelListener;
 import org.ringingmaster.util.javafx.grid.model.SkeletalCellModel;
 
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -73,35 +72,12 @@ public class CourseEndCellModel extends SkeletalCellModel implements CellModel {
 
     @Override
     public void insertCharacter(int index, String character) {
-        throw new IllegalStateException("Attempt to call insertCharacter on empty CourseEndCellModel");
-
+        throw new IllegalStateException("Attempt to call insertCharacter on read only CourseEndCellModel");
     }
 
     @Override
     public void removeCharacter(int index) {
-        throw new IllegalStateException("Attempt to call removeCharacter on empty CourseEndCellModel");
-
+        throw new IllegalStateException("Attempt to call removeCharacter on read only CourseEndCellModel");
     }
 
-    @Override
-    public Iterator<CharacterModel> iterator() {
-        return new Iterator<>() {
-            int index = 0;
-
-            @Override
-            public boolean hasNext() {
-                return index < getLength();
-            }
-
-            @Override
-            public CharacterModel next() {
-                return getCharacterModel(index++);
-            }
-
-            @Override
-            public void remove() {
-                throw new UnsupportedOperationException();
-            }
-        };
-    }
 }

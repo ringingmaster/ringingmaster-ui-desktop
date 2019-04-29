@@ -147,7 +147,11 @@ public class CompositionDocument extends ScrollPane implements Document {
     }
 
     public void parseAndProve() {
-        proofManager.parseAndProve(composition.get());
+        //proofManager.parseAndProve(composition.get());
+    }
+
+    public ObservableComposition getObservableComposition() {
+        return composition;
     }
 
     public Composition getComposition() {

@@ -2,7 +2,11 @@ package org.ringingmaster.ui.desktop.compositiondocument.maingrid;
 
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import org.ringingmaster.engine.composition.cell.Cell;
+import org.ringingmaster.engine.composition.TableType;
+import org.ringingmaster.engine.parser.assignparsetype.ParseType;
+import org.ringingmaster.engine.parser.cell.ParsedCell;
+import org.ringingmaster.engine.parser.cell.grouping.Group;
+import org.ringingmaster.engine.parser.cell.grouping.Section;
 import org.ringingmaster.ui.common.CompositionStyle;
 import org.ringingmaster.ui.desktop.compositiondocument.CompositionDocument;
 import org.ringingmaster.util.javafx.grid.model.AdditionalStyleType;
@@ -14,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -32,10 +37,10 @@ public class StandardCellModel extends SkeletalCellModel implements CellModel {
     private final CompositionDocument compositionDocument;
     private final int column;
     private final int row;
-    private final Cell cell;
+    private final ParsedCell cell;
 
     public StandardCellModel(List<GridModelListener> listeners, CompositionDocument compositionDocument,
-                             int row, int column, Cell cell) {
+                             int row, int column, ParsedCell cell) {
         super(listeners);
         this.compositionDocument = checkNotNull(compositionDocument);
         this.column = column;
@@ -50,18 +55,14 @@ public class StandardCellModel extends SkeletalCellModel implements CellModel {
 
     @Override
     public void insertCharacter(int index, String character) {
-     //TODO    compositionDocument.insertCharacter(row,column, index, character);
-		compositionDocument.setUpdatePoint(() -> "Typing", true);
-
-		fireCellStructureChanged();
+        compositionDocument.getObservableComposition().insertCharacters(TableType.MAIN_TABLE, row, column, index, character);
+        fireCellStructureChanged();
     }
 
     @Override
     public void removeCharacter(int index) {
-        //TODO Reactive
-      //  compositionDocument.removeCharacter(row,column,index);
-		compositionDocument.setUpdatePoint(() -> "Delete", true);
-		fireCellStructureChanged();
+        compositionDocument.getObservableComposition().removeCharacters(TableType.MAIN_TABLE, row,column,index, 1);
+        fireCellStructureChanged();
     }
 
     @Override
@@ -79,23 +80,34 @@ public class StandardCellModel extends SkeletalCellModel implements CellModel {
 
             @Override
             public Color getColor() {
-//                ParseType parseType = cell.getSectionAtElementIndex(index).get().getParseType();
-                //return compositionDocument.getCompositionStyle().getColourFromParseType(parseType);
-                return Color.AQUA;
+                Optional<Section> sectionAtElementIndex = cell.getSectionAtElementIndex(index);
+                if (sectionAtElementIndex.isEmpty()) {
+                    //This happens when we have an unparsed character
+                    return Color.BLACK;
+                }
+                ParseType parseType = sectionAtElementIndex.get().getParseType();
+                return compositionDocument.getCompositionStyle().getColourFromParseType(parseType);
             }
 
             @Override
             public Set<AdditionalStyleType> getAdditionalStyle() {
-                //TODO Reactive
-//                ParseType parseType = cell.getElement(index).getParseType();
-//                if (parseType == ParseType.UNPARSED) {
-//                    return EnumSet.of(AdditionalStyleType.WIGGLY_UNDERLINE);
-//                }
+                Optional<Group> groupAtElementIndex = cell.getGroupAtElementIndex(index);
+                if (groupAtElementIndex.isPresent()) {
+                    if (!groupAtElementIndex.get().isValid()) {
+                        return EnumSet.of(AdditionalStyleType.WIGGLY_UNDERLINE);
+                    }
+                }
+                else {
+                    if (cell.getElement(index).getCharacter().charAt(0) != ' ') {
+                        return EnumSet.of(AdditionalStyleType.WIGGLY_UNDERLINE);
+                    }
+                }
                 return Collections.emptySet();
             }
 
             @Override
             public Optional<String> getTooltipText() {
+                //TODO Reactive
 //                if (index >= cell.getLength()) {
 //                    return Optional.empty();
 //                }

@@ -1,7 +1,8 @@
 package org.ringingmaster.ui.desktop.compositiondocument.maingrid;
 
 import javafx.scene.paint.Color;
-import org.ringingmaster.engine.composition.cell.Cell;
+import org.ringingmaster.engine.parser.cell.ParsedCell;
+import org.ringingmaster.engine.parser.parse.Parse;
 import org.ringingmaster.ui.common.CompositionStyle;
 import org.ringingmaster.ui.desktop.compositiondocument.CompositionDocument;
 import org.ringingmaster.util.javafx.grid.GridPosition;
@@ -23,9 +24,11 @@ public class MainGridModel extends SkeletalGridModel implements GridModel {
     public static final int EXTRA_ROW_OR_COLUMN_FOR_EXPANSION = 1;
 
     private final CompositionDocument compositionDocument;
+    private Parse parse;
 
     public MainGridModel(CompositionDocument compositionDocument) {
         this.compositionDocument = checkNotNull(compositionDocument);
+        compositionDocument.observableParse().subscribe(parse -> MainGridModel.this.parse = parse);
         // Column 1 because we have a row header.
         this.setCaretPosition(new GridPosition(0,1,0));
     }
@@ -65,7 +68,7 @@ public class MainGridModel extends SkeletalGridModel implements GridModel {
             return new ExpansionCellModel(getListeners(), compositionDocument, row, column);
         } else {
             int compositionColumn = column - EXTRA_COLUMN_FOR_COURSEHEADS ;
-            Cell cell = compositionDocument.allCellsView().get(row, compositionColumn);
+            ParsedCell cell = parse.mainBodyCells().get(row, compositionColumn);
             return new StandardCellModel(getListeners(), compositionDocument, row, compositionColumn, cell);
         }
     }

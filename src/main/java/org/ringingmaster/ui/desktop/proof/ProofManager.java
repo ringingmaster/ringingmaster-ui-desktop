@@ -52,11 +52,11 @@ public class ProofManager extends ConcurrentListenable<ProofManagerListener> imp
     }
 
     public void parseAndProve(Composition composition) {
-        fireUpdateProofState(Optional.empty());
+//        fireUpdateProofState(Optional.empty());
 
-        if (composition == null) {
-            return;
-        }
+//        if (composition == null) {
+//            return;
+//        }
 //TODO Reactive
 //        parser.parseAndAnnotate(composition);
 //

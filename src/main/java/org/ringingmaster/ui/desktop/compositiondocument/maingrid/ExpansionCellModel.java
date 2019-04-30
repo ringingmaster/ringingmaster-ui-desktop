@@ -1,6 +1,6 @@
 package org.ringingmaster.ui.desktop.compositiondocument.maingrid;
 
-import org.ringingmaster.engine.composition.ObservableComposition;
+import org.ringingmaster.engine.composition.MutableComposition;
 import org.ringingmaster.engine.composition.TableType;
 import org.ringingmaster.util.javafx.grid.model.CellModel;
 import org.ringingmaster.util.javafx.grid.model.CharacterModel;
@@ -15,14 +15,14 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 class ExpansionCellModel extends SkeletalCellModel implements CellModel {
 
-    private final ObservableComposition observableComposition;
+    private final MutableComposition mutableComposition;
     private final int column;
     private final int row;
 
 
-    ExpansionCellModel(ObservableComposition observableComposition,
-                              int row, int column) {
-        this.observableComposition = checkNotNull(observableComposition);
+    ExpansionCellModel(MutableComposition mutableComposition,
+                       int row, int column) {
+        this.mutableComposition = checkNotNull(mutableComposition);
         this.column = column;
         this.row = row;
     }
@@ -34,7 +34,7 @@ class ExpansionCellModel extends SkeletalCellModel implements CellModel {
 
     @Override
     public void insertCharacter(int index, String character) {
-        observableComposition.insertCharacters(TableType.MAIN_TABLE, row, column, index, character);
+        mutableComposition.insertCharacters(TableType.MAIN_TABLE, row, column, index, character);
     }
 
     @Override

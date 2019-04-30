@@ -15,7 +15,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import org.ringingmaster.engine.NumberOfBells;
 import org.ringingmaster.engine.composition.Composition;
-import org.ringingmaster.engine.composition.ObservableComposition;
+import org.ringingmaster.engine.composition.MutableComposition;
 import org.ringingmaster.engine.composition.compositiontype.CompositionType;
 import org.ringingmaster.engine.method.Bell;
 import org.ringingmaster.engine.method.MethodBuilder;
@@ -44,10 +44,10 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static org.ringingmaster.engine.composition.ObservableComposition.START_AT_ROW_MAX;
-import static org.ringingmaster.engine.composition.ObservableComposition.TERMINATION_MAX_LEADS_MAX;
-import static org.ringingmaster.engine.composition.ObservableComposition.TERMINATION_MAX_PARTS_MAX;
-import static org.ringingmaster.engine.composition.ObservableComposition.TERMINATION_MAX_ROWS_MAX;
+import static org.ringingmaster.engine.composition.MutableComposition.START_AT_ROW_MAX;
+import static org.ringingmaster.engine.composition.MutableComposition.TERMINATION_MAX_LEADS_MAX;
+import static org.ringingmaster.engine.composition.MutableComposition.TERMINATION_MAX_PARTS_MAX;
+import static org.ringingmaster.engine.composition.MutableComposition.TERMINATION_MAX_ROWS_MAX;
 
 /**
  * Provides the interface between the engine {@code Composition} and the various
@@ -64,7 +64,7 @@ public class CompositionDocument extends ScrollPane implements Document {
     public static final String SPLICED_TOKEN = "<Spliced>";
 
     //Raw Data
-    private ObservableComposition composition;
+    private MutableComposition composition;
     private final CompositionStyle compositionStyle = new CompositionStyle(); //TODO Eventually be Observable
     private Document documentDelegate = new DefaultDocument();
 
@@ -84,7 +84,7 @@ public class CompositionDocument extends ScrollPane implements Document {
         titlePane.setCompositionStyle(compositionStyle);
     }
 
-    public void init(ObservableComposition composition) {
+    public void init(MutableComposition composition) {
         layoutNodes();
 
         this.composition = composition;
@@ -133,7 +133,7 @@ public class CompositionDocument extends ScrollPane implements Document {
     }
 
 
-    public ObservableComposition getObservableComposition() {
+    public MutableComposition getMutableComposition() {
         return composition;
     }
 
@@ -163,7 +163,7 @@ public class CompositionDocument extends ScrollPane implements Document {
 
     public void setNumberOfBells(NumberOfBells numberOfBells) {
         checkNotNull(numberOfBells);
-//TODO Drive this checking from the ObservableComposition - check can return an immutable composition
+//TODO Drive this checking from the MutableComposition - check can return an immutable composition
         //TODO Reactive
 
 

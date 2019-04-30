@@ -4,7 +4,7 @@ import com.google.common.collect.Streams;
 import javafx.application.Platform;
 import org.ringingmaster.engine.NumberOfBells;
 import org.ringingmaster.engine.composition.Composition;
-import org.ringingmaster.engine.composition.ObservableComposition;
+import org.ringingmaster.engine.composition.MutableComposition;
 import org.ringingmaster.engine.composition.compositiontype.CompositionType;
 import org.ringingmaster.engine.method.Bell;
 import org.ringingmaster.engine.method.Stroke;
@@ -64,7 +64,7 @@ public class PropertySetupWindow extends PropertyEditor {
 
     private CompositionDocumentTypeManager compositionDocumentTypeManager;
 
-    private Optional<ObservableComposition> currentComposition = Optional.empty();
+    private Optional<MutableComposition> currentComposition = Optional.empty();
 
     public void init() {
 
@@ -73,8 +73,8 @@ public class PropertySetupWindow extends PropertyEditor {
         buildStartSection();
         buildTerminationSection();
 
-        compositionDocumentTypeManager.observableActiveObservableComposition().subscribe(observableComposition -> {
-            currentComposition = observableComposition;
+        compositionDocumentTypeManager.observableActiveMutableComposition().subscribe(mutableComposition -> {
+            currentComposition = mutableComposition;
         });
         compositionDocumentTypeManager.observableComposition().subscribe(composition -> {
             updateSetupSection(composition);
@@ -314,7 +314,7 @@ public class PropertySetupWindow extends PropertyEditor {
 
     }
 
-    void updateCompositionIfPresent(Consumer<ObservableComposition> consumer) {
+    void updateCompositionIfPresent(Consumer<MutableComposition> consumer) {
         // The runLater is to prevent the UI from continuously applying the same wrong update when loosing focus
         // and switching focus to an error window.
         currentComposition.ifPresent(composition -> Platform.runLater(() -> consumer.accept(composition)));

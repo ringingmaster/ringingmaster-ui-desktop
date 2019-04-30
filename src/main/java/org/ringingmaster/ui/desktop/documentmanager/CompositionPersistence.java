@@ -3,7 +3,7 @@ package org.ringingmaster.ui.desktop.documentmanager;
 import com.google.common.annotations.VisibleForTesting;
 import org.ringingmaster.engine.NumberOfBells;
 import org.ringingmaster.engine.composition.Composition;
-import org.ringingmaster.engine.composition.ObservableComposition;
+import org.ringingmaster.engine.composition.MutableComposition;
 import org.ringingmaster.engine.notation.Call;
 import org.ringingmaster.engine.notation.Notation;
 import org.ringingmaster.engine.notation.NotationBuilder;
@@ -45,9 +45,9 @@ public class CompositionPersistence {
         }
     }
 
-    public ObservableComposition load(Path path) {
+    public MutableComposition load(Path path) {
         CompositionPersist CompositionPersist = documentPersist.readComposition(path);
-        ObservableComposition composition = buildComposition(CompositionPersist);
+        MutableComposition composition = buildComposition(CompositionPersist);
         return composition;
     }
 
@@ -179,7 +179,7 @@ public class CompositionPersistence {
     }
 
     @VisibleForTesting
-    protected ObservableComposition buildComposition(CompositionPersist CompositionPersist) {
+    protected MutableComposition buildComposition(CompositionPersist CompositionPersist) {
 //TODO Reactive
 // 		int rowCount = CompositionPersist.getCells().getRows();
 //		int columnCount = CompositionPersist.getCells().getColumns();

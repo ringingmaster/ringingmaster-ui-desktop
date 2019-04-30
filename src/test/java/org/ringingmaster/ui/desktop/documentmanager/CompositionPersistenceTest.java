@@ -3,7 +3,7 @@ package org.ringingmaster.ui.desktop.documentmanager;
 import org.junit.Test;
 import org.ringingmaster.engine.NumberOfBells;
 import org.ringingmaster.engine.composition.Composition;
-import org.ringingmaster.engine.composition.ObservableComposition;
+import org.ringingmaster.engine.composition.MutableComposition;
 import org.ringingmaster.engine.composition.TableType;
 import org.ringingmaster.engine.method.MethodBuilder;
 import org.ringingmaster.engine.method.Stroke;
@@ -35,7 +35,7 @@ public class CompositionPersistenceTest {
 
     private static Composition createDummyComposition() {
 
-        ObservableComposition composition = new ObservableComposition();
+        MutableComposition composition = new MutableComposition();
 
         composition.setTitle("My Composition");
         composition.setAuthor("by Stephen");

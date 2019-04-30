@@ -10,7 +10,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import org.ringingmaster.engine.composition.ObservableComposition;
+import org.ringingmaster.engine.composition.MutableComposition;
 import org.ringingmaster.ui.common.CompositionStyle;
 import org.ringingmaster.util.javafx.color.ColorUtil;
 
@@ -49,18 +49,18 @@ public class TitlePane extends VBox {
         setFocusTraversable(false);
     }
 
-    public void init(ObservableComposition observableComposition) {
-        observableComposition.observable().subscribe(composition -> {
+    public void init(MutableComposition mutableComposition) {
+        mutableComposition.observable().subscribe(composition -> {
             titleText.textProperty().set(composition.getTitle());
             authorText.textProperty().set(composition.getAuthor());
         });
 
         titleText.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue) observableComposition.setTitle(titleText.getText());
+            if (!newValue) mutableComposition.setTitle(titleText.getText());
         });
 
         authorText.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue == false) observableComposition.setAuthor(authorText.getText());
+            if (newValue == false) mutableComposition.setAuthor(authorText.getText());
         });
 
     }

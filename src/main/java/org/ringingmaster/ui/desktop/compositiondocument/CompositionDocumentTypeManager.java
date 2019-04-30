@@ -5,7 +5,7 @@ import io.reactivex.Observable;
 import javafx.stage.FileChooser;
 import org.ringingmaster.engine.NumberOfBells;
 import org.ringingmaster.engine.composition.Composition;
-import org.ringingmaster.engine.composition.ObservableComposition;
+import org.ringingmaster.engine.composition.MutableComposition;
 import org.ringingmaster.engine.method.MethodBuilder;
 import org.ringingmaster.engine.notation.Notation;
 import org.ringingmaster.engine.notation.NotationBuilder;
@@ -49,9 +49,9 @@ public class CompositionDocumentTypeManager implements DocumentTypeManager {
                 .distinctUntilChanged();
     }
 
-    public Observable<Optional<ObservableComposition>> observableActiveObservableComposition() {
+    public Observable<Optional<MutableComposition>> observableActiveMutableComposition() {
         return observableActiveCompositionDocument()
-                .map(opt -> opt.map(CompositionDocument::getObservableComposition));
+                .map(opt -> opt.map(CompositionDocument::getMutableComposition));
     }
 
     public Observable<Optional<Composition>> observableComposition() {
@@ -66,7 +66,7 @@ public class CompositionDocumentTypeManager implements DocumentTypeManager {
 
     @Override
     public Document createNewDocument() {
-        ObservableComposition composition = createEmptyComposition();
+        MutableComposition composition = createEmptyComposition();
         final CompositionDocument compositionDocument = buildCompositionDocumentForComposition(composition);
         compositionDocument.setDocumentName("Untitled " + DOCUMENT_TYPE_NAME + " " + ++docNumber);
         compositionDocument.setDirty(true);
@@ -102,7 +102,7 @@ public class CompositionDocumentTypeManager implements DocumentTypeManager {
     }
 
 
-    private CompositionDocument buildCompositionDocumentForComposition(ObservableComposition composition) {
+    private CompositionDocument buildCompositionDocumentForComposition(MutableComposition composition) {
         final CompositionDocument compositionDocument = beanFactory.build(CompositionDocument.class);
         compositionDocument.init(composition);
         // this is needed to listen to document updates that are not changed with proof's.
@@ -140,8 +140,8 @@ public class CompositionDocumentTypeManager implements DocumentTypeManager {
     }
 
     //TODO Make this return a new composition.
-    private ObservableComposition createEmptyComposition() {
-        ObservableComposition composition = new ObservableComposition();
+    private MutableComposition createEmptyComposition() {
+        MutableComposition composition = new MutableComposition();
 
         composition.setTitle("My Composition");
         composition.setAuthor("by Stephen");

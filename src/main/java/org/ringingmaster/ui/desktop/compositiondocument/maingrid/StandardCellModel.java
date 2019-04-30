@@ -2,7 +2,7 @@ package org.ringingmaster.ui.desktop.compositiondocument.maingrid;
 
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import org.ringingmaster.engine.composition.ObservableComposition;
+import org.ringingmaster.engine.composition.MutableComposition;
 import org.ringingmaster.engine.composition.TableType;
 import org.ringingmaster.engine.parser.assignparsetype.ParseType;
 import org.ringingmaster.engine.parser.cell.ParsedCell;
@@ -33,15 +33,15 @@ class StandardCellModel extends SkeletalCellModel implements CellModel {
     private final Logger log = LoggerFactory.getLogger(StandardCellModel.class);
 
     private final CompositionStyle compositionStyle;
-    private final ObservableComposition observableComposition;
+    private final MutableComposition mutableComposition;
     private final int column;
     private final int row;
     private final ParsedCell parsedCell;
 
-    StandardCellModel(ObservableComposition observableComposition,
-                             CompositionStyle compositionStyle,
-                             int row, int column, ParsedCell parsedCell) {
-        this.observableComposition = checkNotNull(observableComposition);
+    StandardCellModel(MutableComposition mutableComposition,
+                      CompositionStyle compositionStyle,
+                      int row, int column, ParsedCell parsedCell) {
+        this.mutableComposition = checkNotNull(mutableComposition);
         this.compositionStyle = checkNotNull(compositionStyle);
         this.column = column;
         this.row = row;
@@ -55,12 +55,12 @@ class StandardCellModel extends SkeletalCellModel implements CellModel {
 
     @Override
     public void insertCharacter(int index, String character) {
-        observableComposition.insertCharacters(TableType.MAIN_TABLE, row, column, index, character);
+        mutableComposition.insertCharacters(TableType.MAIN_TABLE, row, column, index, character);
     }
 
     @Override
     public void removeCharacter(int index) {
-        observableComposition.removeCharacters(TableType.MAIN_TABLE, row,column,index, 1);
+        mutableComposition.removeCharacters(TableType.MAIN_TABLE, row,column,index, 1);
     }
 
     @Override

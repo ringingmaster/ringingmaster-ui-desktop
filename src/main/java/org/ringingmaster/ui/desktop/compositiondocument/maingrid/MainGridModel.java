@@ -69,11 +69,11 @@ public class MainGridModel extends SkeletalGridModel implements GridModel {
             return new CourseEndCellModel( compositionDocument.getComposition(), compositionDocument.getCompositionStyle(), row);
         }
         else if (outOfBoundCol || outOfBoundRow) {
-            return new ExpansionCellModel(compositionDocument.getObservableComposition(), row, compositionColumn);
+            return new ExpansionCellModel(compositionDocument.getMutableComposition(), row, compositionColumn);
         } else {
             ParsedCell parsedCell = parse.mainBodyCells().get(row, compositionColumn);
             return new StandardCellModel(
-                    compositionDocument.getObservableComposition(),
+                    compositionDocument.getMutableComposition(),
                     compositionDocument.getCompositionStyle(),
                     row, compositionColumn, parsedCell);
         }

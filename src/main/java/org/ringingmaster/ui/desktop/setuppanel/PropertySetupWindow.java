@@ -73,8 +73,8 @@ public class PropertySetupWindow extends PropertyEditor {
         buildStartSection();
         buildTerminationSection();
 
-        compositionDocumentTypeManager.observableActiveObservableComposition().subscribe(composition -> {
-            currentComposition = composition;
+        compositionDocumentTypeManager.observableActiveObservableComposition().subscribe(observableComposition -> {
+            currentComposition = observableComposition;
         });
         compositionDocumentTypeManager.observableComposition().subscribe(composition -> {
             updateSetupSection(composition);
@@ -87,17 +87,17 @@ public class PropertySetupWindow extends PropertyEditor {
     private void buildSetupSection() {
         add(new TextPropertyValue(TITLE_PROPERTY_NAME));
         ((TextPropertyValue) findPropertyByName(TITLE_PROPERTY_NAME)).setListener((observable, oldValue, newValue) ->
-                updateCompositionDocumentIfPresent(compositionDocument -> compositionDocument.setTitle(newValue)), CallbackStyle.EVERY_KEYSTROKE);
+                updateCompositionIfPresent(compositionDocument -> compositionDocument.setTitle(newValue)), CallbackStyle.EVERY_KEYSTROKE);
 
         add(new TextPropertyValue(AUTHOR_PROPERTY_NAME));
         ((TextPropertyValue) findPropertyByName(AUTHOR_PROPERTY_NAME)).setListener((observable, oldValue, newValue) ->
-                updateCompositionDocumentIfPresent(compositionDocument -> compositionDocument.setAuthor(newValue)), CallbackStyle.EVERY_KEYSTROKE);
+                updateCompositionIfPresent(compositionDocument -> compositionDocument.setAuthor(newValue)), CallbackStyle.EVERY_KEYSTROKE);
 
         add(new SelectionPropertyValue(NUMBER_OF_BELLS_PROPERTY_NAME));
         ((SelectionPropertyValue) findPropertyByName(NUMBER_OF_BELLS_PROPERTY_NAME)).setListener((observable, oldValue, newValue) -> {
             if (newValue.intValue() != -1) {
                 final NumberOfBells numberOfBells = NumberOfBells.values()[newValue.intValue()];
-                updateCompositionDocumentIfPresent(compositionDocument -> compositionDocument.setNumberOfBells(numberOfBells));
+                updateCompositionIfPresent(compositionDocument -> compositionDocument.setNumberOfBells(numberOfBells));
             }
         });
         final List<String> numberOfBellItems = new ArrayList<>();
@@ -110,13 +110,13 @@ public class PropertySetupWindow extends PropertyEditor {
         ((SelectionPropertyValue) findPropertyByName(CALL_FROM_PROPERTY_NAME)).setListener((observable, oldValue, newValue) -> {
             if (newValue.intValue() != -1) {
                 final Bell callFrom = Bell.values()[newValue.intValue()];
-                updateCompositionDocumentIfPresent(compositionDocument -> compositionDocument.setCallFromBell(callFrom));
+                updateCompositionIfPresent(compositionDocument -> compositionDocument.setCallFromBell(callFrom));
             }
         });
 
         add(new SelectionPropertyValue(ACTIVE_METHOD_PROPERTY_NAME));
         ((SelectionPropertyValue) findPropertyByName(ACTIVE_METHOD_PROPERTY_NAME)).setListener((observable, oldValue, newValue) ->
-                updateCompositionDocumentIfPresent(compositionDocument -> {
+                updateCompositionIfPresent(compositionDocument -> {
                     int index = newValue.intValue();
                     if (index == 0) {
                         compositionDocument.setSpliced(true);
@@ -132,13 +132,13 @@ public class PropertySetupWindow extends PropertyEditor {
         ((SelectionPropertyValue) findPropertyByName(CHECKING_TYPE_PROPERTY_NAME)).setListener((observable, oldValue, newValue) -> {
             if (newValue.intValue() != -1) {
                 final CompositionType compositionType = CompositionType.values()[newValue.intValue()];
-//TODO Reactive                updateCompositionDocumentIfPresent(compositionDocument -> compositionDocument.setCompositionCompositionType(compositionType));
+//TODO Reactive                updateCompositionIfPresent(compositionDocument -> compositionDocument.setCompositionCompositionType(compositionType));
             }
         });
 
         add(new TextPropertyValue(PLAIN_LEAD_TOKEN_PROPERTY_NAME));
         ((TextPropertyValue) findPropertyByName(PLAIN_LEAD_TOKEN_PROPERTY_NAME)).setListener((observable, oldValue, newValue) ->
-                updateCompositionDocumentIfPresent(compositionDocument -> compositionDocument.setPlainLeadToken(newValue)), CallbackStyle.EVERY_KEYSTROKE);
+                updateCompositionIfPresent(compositionDocument -> compositionDocument.setPlainLeadToken(newValue)), CallbackStyle.EVERY_KEYSTROKE);
     }
 
     private void updateSetupSection(Optional<Composition> composition) {
@@ -227,23 +227,23 @@ public class PropertySetupWindow extends PropertyEditor {
     private void buildStartSection() {
         add(START_GROUP_NAME, new TextPropertyValue(START_WITH_CHANGE_PROPERTY_NAME));
 //TODO Reactive        ((TextPropertyValue) findPropertyByName(START_WITH_CHANGE_PROPERTY_NAME)).setListener((observable, oldValue, newValue) ->
-        //TODO Reactive updateCompositionDocumentIfPresent(compositionDocument -> compositionDocument.setStartChange(newValue)), CallbackStyle.WHEN_FINISHED);
+        //TODO Reactive updateCompositionIfPresent(compositionDocument -> compositionDocument.setStartChange(newValue)), CallbackStyle.WHEN_FINISHED);
 
         add(START_GROUP_NAME, new IntegerPropertyValue(START_AT_ROW_PROPERTY_NAME));
         ((IntegerPropertyValue) findPropertyByName(START_AT_ROW_PROPERTY_NAME)).setListener((observable, oldValue, newValue) ->
-                updateCompositionDocumentIfPresent(compositionDocument -> compositionDocument.setStartAtRow(newValue.intValue())), CallbackStyle.WHEN_FINISHED);
+                updateCompositionIfPresent(compositionDocument -> compositionDocument.setStartAtRow(newValue.intValue())), CallbackStyle.WHEN_FINISHED);
 
         add(START_GROUP_NAME, new SelectionPropertyValue(START_STROKE_PROPERTY_NAME));
         ((SelectionPropertyValue) findPropertyByName(START_STROKE_PROPERTY_NAME)).setListener((observable, oldValue, newValue) -> {
             if (newValue.intValue() != -1) {
                 final Stroke startStroke = Stroke.values()[newValue.intValue()];
-                updateCompositionDocumentIfPresent(compositionDocument -> compositionDocument.setStartStroke(startStroke));
+                updateCompositionIfPresent(compositionDocument -> compositionDocument.setStartStroke(startStroke));
             }
         });
 
         add(START_GROUP_NAME, new TextPropertyValue(START_NOTATION_PROPERTY_NAME));
 //TODO Reactive        ((TextPropertyValue) findPropertyByName(START_NOTATION_PROPERTY_NAME)).setListener((observable, oldValue, newValue) ->
-//TODO Reactive                updateCompositionDocumentIfPresent(compositionDocument -> compositionDocument.setStartNotation(newValue)), CallbackStyle.WHEN_FINISHED);
+//TODO Reactive                updateCompositionIfPresent(compositionDocument -> compositionDocument.setStartNotation(newValue)), CallbackStyle.WHEN_FINISHED);
 
         showGroupByName(START_GROUP_NAME, false); // TODO save state in app
 
@@ -274,23 +274,23 @@ public class PropertySetupWindow extends PropertyEditor {
     private void buildTerminationSection() {
         add(TERMINATION_GROUP_NAME, new TextPropertyValue(TERMINATION_WITH_CHANGE_PROPERTY_NAME));
 //TODO Reactive        ((TextPropertyValue) findPropertyByName(TERMINATION_WITH_CHANGE_PROPERTY_NAME)).setListener((observable, oldValue, newValue) ->
-//TODO Reactive                updateCompositionDocumentIfPresent(compositionDocument -> compositionDocument.setTerminationChange(newValue)), CallbackStyle.WHEN_FINISHED);
+//TODO Reactive                updateCompositionIfPresent(compositionDocument -> compositionDocument.setTerminationChange(newValue)), CallbackStyle.WHEN_FINISHED);
 
         add(TERMINATION_GROUP_NAME, new IntegerPropertyValue(TERMINATION_ROW_LIMIT_PROPERTY_NAME));
         ((IntegerPropertyValue) findPropertyByName(TERMINATION_ROW_LIMIT_PROPERTY_NAME)).setListener((observable, oldValue, newValue) ->
-                updateCompositionDocumentIfPresent(compositionDocument -> compositionDocument.setTerminationMaxRows(newValue == null ? 0 : newValue.intValue())), CallbackStyle.WHEN_FINISHED);
+                updateCompositionIfPresent(compositionDocument -> compositionDocument.setTerminationMaxRows(newValue == null ? 0 : newValue.intValue())), CallbackStyle.WHEN_FINISHED);
 
         add(TERMINATION_GROUP_NAME, new IntegerPropertyValue(TERMINATION_LEAD_LIMIT_PROPERTY_NAME));
         ((IntegerPropertyValue) findPropertyByName(TERMINATION_LEAD_LIMIT_PROPERTY_NAME)).setListener((observable, oldValue, newValue) ->
-                updateCompositionDocumentIfPresent(compositionDocument -> compositionDocument.setTerminationMaxLeads(newValue == null ? null : newValue.intValue())), CallbackStyle.WHEN_FINISHED);
+                updateCompositionIfPresent(compositionDocument -> compositionDocument.setTerminationMaxLeads(newValue == null ? null : newValue.intValue())), CallbackStyle.WHEN_FINISHED);
 
         add(TERMINATION_GROUP_NAME, new IntegerPropertyValue(TERMINATION_PART_LIMIT_PROPERTY_NAME));
         ((IntegerPropertyValue) findPropertyByName(TERMINATION_PART_LIMIT_PROPERTY_NAME)).setListener((observable, oldValue, newValue) ->
-                updateCompositionDocumentIfPresent(compositionDocument -> compositionDocument.setTerminationMaxParts(newValue == null ? null : newValue.intValue())), CallbackStyle.WHEN_FINISHED);
+                updateCompositionIfPresent(compositionDocument -> compositionDocument.setTerminationMaxParts(newValue == null ? null : newValue.intValue())), CallbackStyle.WHEN_FINISHED);
 
         add(TERMINATION_GROUP_NAME, new IntegerPropertyValue(TERMINATION_CIRCULAR_COMPOSITION_LIMIT_PROPERTY_NAME));
         ((IntegerPropertyValue) findPropertyByName(TERMINATION_CIRCULAR_COMPOSITION_LIMIT_PROPERTY_NAME)).setListener((observable, oldValue, newValue) ->
-        updateCompositionDocumentIfPresent(compositionDocument -> compositionDocument.setTerminationMaxCircularComposition(newValue.intValue())), CallbackStyle.WHEN_FINISHED);
+        updateCompositionIfPresent(compositionDocument -> compositionDocument.setTerminationMaxCircularComposition(newValue.intValue())), CallbackStyle.WHEN_FINISHED);
 
         showGroupByName(TERMINATION_GROUP_NAME, false); // TODO save state in app
     }
@@ -309,12 +309,12 @@ public class PropertySetupWindow extends PropertyEditor {
         Integer terminationPartLimit = compositionDocument.flatMap(Composition::getTerminationMaxParts).orElse(null);
         ((IntegerPropertyValue) findPropertyByName(TERMINATION_PART_LIMIT_PROPERTY_NAME)).setValue(terminationPartLimit);
 
-        Integer terminationCircularCompositionLimit = compositionDocument.isPresent() ? compositionDocument.get().getTerminationMaxCircularity() : null;
+        Integer terminationCircularCompositionLimit = compositionDocument.map(Composition::getTerminationMaxCircularity).orElse(null);
         ((IntegerPropertyValue) findPropertyByName(TERMINATION_CIRCULAR_COMPOSITION_LIMIT_PROPERTY_NAME)).setValue(terminationCircularCompositionLimit);
 
     }
 
-    void updateCompositionDocumentIfPresent(Consumer<ObservableComposition> consumer) {
+    void updateCompositionIfPresent(Consumer<ObservableComposition> consumer) {
         // The runLater is to prevent the UI from continuously applying the same wrong update when loosing focus
         // and switching focus to an error window.
         currentComposition.ifPresent(composition -> Platform.runLater(() -> consumer.accept(composition)));

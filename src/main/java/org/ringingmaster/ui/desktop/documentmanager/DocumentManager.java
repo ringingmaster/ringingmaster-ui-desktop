@@ -46,7 +46,7 @@ public class DocumentManager  {
         documentWindow.setTabClosingPolicy(TabPane.TabClosingPolicy.ALL_TABS);
         documentWindow.getSelectionModel().selectedItemProperty().addListener((observable, oldTab, newTab) -> {
             updateTitles();
-            activeDocumentStream.onNext(Optional.of(getDocument(newTab)));
+            activeDocumentStream.onNext(Optional.ofNullable(newTab).map(this::getDocument));
         });
 
         startupService.addListener(this::startup);

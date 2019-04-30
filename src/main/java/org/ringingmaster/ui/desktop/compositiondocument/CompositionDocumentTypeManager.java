@@ -59,7 +59,7 @@ public class CompositionDocumentTypeManager implements DocumentTypeManager {
             if (compositionDocument.isPresent()) {
                 return compositionDocument.get().observableComposition().map(Optional::of);
             } else {
-                return Observable.empty();
+                return Observable.just(Optional.empty());
             }
         });
     }

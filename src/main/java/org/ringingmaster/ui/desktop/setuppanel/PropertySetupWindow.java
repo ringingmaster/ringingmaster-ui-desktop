@@ -4,6 +4,7 @@ import com.google.common.collect.Streams;
 import javafx.application.Platform;
 import org.ringingmaster.engine.NumberOfBells;
 import org.ringingmaster.engine.composition.Composition;
+import org.ringingmaster.engine.composition.ObservableComposition;
 import org.ringingmaster.engine.composition.compositiontype.CompositionType;
 import org.ringingmaster.engine.method.Bell;
 import org.ringingmaster.engine.method.Stroke;
@@ -63,6 +64,7 @@ public class PropertySetupWindow extends PropertyEditor {
 
     private CompositionDocumentTypeManager compositionDocumentTypeManager;
 
+    private Optional<ObservableComposition> currentComposition = Optional.empty();
 
     public void init() {
 
@@ -71,6 +73,9 @@ public class PropertySetupWindow extends PropertyEditor {
         buildStartSection();
         buildTerminationSection();
 
+        compositionDocumentTypeManager.observableActiveObservableComposition().subscribe(composition -> {
+            currentComposition = composition;
+        });
         compositionDocumentTypeManager.observableComposition().subscribe(composition -> {
             updateSetupSection(composition);
             updateAdvancedSetupSection(composition);
@@ -105,7 +110,7 @@ public class PropertySetupWindow extends PropertyEditor {
         ((SelectionPropertyValue) findPropertyByName(CALL_FROM_PROPERTY_NAME)).setListener((observable, oldValue, newValue) -> {
             if (newValue.intValue() != -1) {
                 final Bell callFrom = Bell.values()[newValue.intValue()];
-                updateCompositionDocumentIfPresent(compositionDocument -> compositionDocument.setCallFrom(callFrom));
+                updateCompositionDocumentIfPresent(compositionDocument -> compositionDocument.setCallFromBell(callFrom));
             }
         });
 
@@ -116,10 +121,10 @@ public class PropertySetupWindow extends PropertyEditor {
                     if (index == 0) {
                         compositionDocument.setSpliced(true);
                     } else {
-                        final List<Notation> sortedNotationsBeingDisplayed = compositionDocument.getSortedValidNotations();
+                        final List<Notation> sortedNotationsBeingDisplayed = getSortedNotations(compositionDocument.get());
 
-                        final Notation selectedNotation = sortedNotationsBeingDisplayed.get(index - 1);// the -1 is the offset for the spliced row
-                        compositionDocument.setSingleMethodActiveNotation(selectedNotation);
+                        final Notation selectedNotation = sortedNotationsBeingDisplayed.get(index - 1);// the -1 is the offset for the <spliced> row
+                        compositionDocument.setNonSplicedActiveNotation(selectedNotation);
                     }
                 }));
 
@@ -127,7 +132,7 @@ public class PropertySetupWindow extends PropertyEditor {
         ((SelectionPropertyValue) findPropertyByName(CHECKING_TYPE_PROPERTY_NAME)).setListener((observable, oldValue, newValue) -> {
             if (newValue.intValue() != -1) {
                 final CompositionType compositionType = CompositionType.values()[newValue.intValue()];
-                updateCompositionDocumentIfPresent(compositionDocument -> compositionDocument.setCompositionCompositionType(compositionType));
+//TODO Reactive                updateCompositionDocumentIfPresent(compositionDocument -> compositionDocument.setCompositionCompositionType(compositionType));
             }
         });
 
@@ -161,7 +166,7 @@ public class PropertySetupWindow extends PropertyEditor {
         final int callFromIndex = composition.map(value -> value.getCallFromBell().ordinal()).orElse(UNDEFINED_INDEX);
         ((SelectionPropertyValue) findPropertyByName(CALL_FROM_PROPERTY_NAME)).setSelectedIndex(callFromIndex);
 
-        final List<String> validNotationItems = getValidNotations(composition);
+        final List<String> validNotationItems = getSortedValidNotationNames(composition);
         int selectedNotationIndex = getActiveValidNotationIndex(composition);
         ((SelectionPropertyValue) findPropertyByName(ACTIVE_METHOD_PROPERTY_NAME)).setItems(validNotationItems);
         ((SelectionPropertyValue) findPropertyByName(ACTIVE_METHOD_PROPERTY_NAME)).setSelectedIndex(selectedNotationIndex);
@@ -180,15 +185,20 @@ public class PropertySetupWindow extends PropertyEditor {
                 composition.get().getCompositionType() == COURSE_BASED);
     }
 
-    private List<String> getValidNotations(Optional<Composition> composition) {
+    private List<String> getSortedValidNotationNames(Optional<Composition> composition) {
         return composition.map(composition1 ->
                     Streams.concat(Stream.of(CompositionDocument.SPLICED_TOKEN),
-                                    composition1.getValidNotations().stream()
-                                    .sorted(Notation.BY_NUMBER_THEN_NAME).map(Notation::getNameIncludingNumberOfBells))
+                            getSortedNotations(composition1).stream().map(Notation::getNameIncludingNumberOfBells))
                             .collect(Collectors.toList()))
                 .orElse(Collections.emptyList());
     }
 
+    private List<Notation> getSortedNotations(Composition composition) {
+        return composition.getValidNotations().stream()
+                .sorted(Notation.BY_NUMBER_THEN_NAME)
+                .collect(Collectors.toList());
+    }
+    
     private int getActiveValidNotationIndex(Optional<Composition> composition) {
 
         if (!composition.isPresent()) {
@@ -199,7 +209,7 @@ public class PropertySetupWindow extends PropertyEditor {
             return 0;
         }
 
-        final List<String> validNotationNames = getValidNotations(composition);
+        final List<String> validNotationNames = getSortedValidNotationNames(composition);
         final String activeNotationName = composition.get().getNonSplicedActiveNotation()
                 .map(Notation::getNameIncludingNumberOfBells).orElse("");
         return validNotationNames.indexOf(activeNotationName);
@@ -216,8 +226,8 @@ public class PropertySetupWindow extends PropertyEditor {
 
     private void buildStartSection() {
         add(START_GROUP_NAME, new TextPropertyValue(START_WITH_CHANGE_PROPERTY_NAME));
-        ((TextPropertyValue) findPropertyByName(START_WITH_CHANGE_PROPERTY_NAME)).setListener((observable, oldValue, newValue) ->
-                updateCompositionDocumentIfPresent(compositionDocument -> compositionDocument.setStartChange(newValue)), CallbackStyle.WHEN_FINISHED);
+//TODO Reactive        ((TextPropertyValue) findPropertyByName(START_WITH_CHANGE_PROPERTY_NAME)).setListener((observable, oldValue, newValue) ->
+        //TODO Reactive updateCompositionDocumentIfPresent(compositionDocument -> compositionDocument.setStartChange(newValue)), CallbackStyle.WHEN_FINISHED);
 
         add(START_GROUP_NAME, new IntegerPropertyValue(START_AT_ROW_PROPERTY_NAME));
         ((IntegerPropertyValue) findPropertyByName(START_AT_ROW_PROPERTY_NAME)).setListener((observable, oldValue, newValue) ->
@@ -232,8 +242,8 @@ public class PropertySetupWindow extends PropertyEditor {
         });
 
         add(START_GROUP_NAME, new TextPropertyValue(START_NOTATION_PROPERTY_NAME));
-        ((TextPropertyValue) findPropertyByName(START_NOTATION_PROPERTY_NAME)).setListener((observable, oldValue, newValue) ->
-                updateCompositionDocumentIfPresent(compositionDocument -> compositionDocument.setStartNotation(newValue)), CallbackStyle.WHEN_FINISHED);
+//TODO Reactive        ((TextPropertyValue) findPropertyByName(START_NOTATION_PROPERTY_NAME)).setListener((observable, oldValue, newValue) ->
+//TODO Reactive                updateCompositionDocumentIfPresent(compositionDocument -> compositionDocument.setStartNotation(newValue)), CallbackStyle.WHEN_FINISHED);
 
         showGroupByName(START_GROUP_NAME, false); // TODO save state in app
 
@@ -263,8 +273,8 @@ public class PropertySetupWindow extends PropertyEditor {
 
     private void buildTerminationSection() {
         add(TERMINATION_GROUP_NAME, new TextPropertyValue(TERMINATION_WITH_CHANGE_PROPERTY_NAME));
-        ((TextPropertyValue) findPropertyByName(TERMINATION_WITH_CHANGE_PROPERTY_NAME)).setListener((observable, oldValue, newValue) ->
-                updateCompositionDocumentIfPresent(compositionDocument -> compositionDocument.setTerminationChange(newValue)), CallbackStyle.WHEN_FINISHED);
+//TODO Reactive        ((TextPropertyValue) findPropertyByName(TERMINATION_WITH_CHANGE_PROPERTY_NAME)).setListener((observable, oldValue, newValue) ->
+//TODO Reactive                updateCompositionDocumentIfPresent(compositionDocument -> compositionDocument.setTerminationChange(newValue)), CallbackStyle.WHEN_FINISHED);
 
         add(TERMINATION_GROUP_NAME, new IntegerPropertyValue(TERMINATION_ROW_LIMIT_PROPERTY_NAME));
         ((IntegerPropertyValue) findPropertyByName(TERMINATION_ROW_LIMIT_PROPERTY_NAME)).setListener((observable, oldValue, newValue) ->
@@ -280,7 +290,7 @@ public class PropertySetupWindow extends PropertyEditor {
 
         add(TERMINATION_GROUP_NAME, new IntegerPropertyValue(TERMINATION_CIRCULAR_COMPOSITION_LIMIT_PROPERTY_NAME));
         ((IntegerPropertyValue) findPropertyByName(TERMINATION_CIRCULAR_COMPOSITION_LIMIT_PROPERTY_NAME)).setListener((observable, oldValue, newValue) ->
-                updateCompositionDocumentIfPresent(compositionDocument -> compositionDocument.setTerminationCircularComposition(newValue == null ? null : newValue.intValue())), CallbackStyle.WHEN_FINISHED);
+        updateCompositionDocumentIfPresent(compositionDocument -> compositionDocument.setTerminationMaxCircularComposition(newValue.intValue())), CallbackStyle.WHEN_FINISHED);
 
         showGroupByName(TERMINATION_GROUP_NAME, false); // TODO save state in app
     }
@@ -304,11 +314,10 @@ public class PropertySetupWindow extends PropertyEditor {
 
     }
 
-    void updateCompositionDocumentIfPresent(Consumer<CompositionDocument> consumer) {
-        Optional<CompositionDocument> currentDocument = compositionDocumentTypeManager.getCurrentDocument();
+    void updateCompositionDocumentIfPresent(Consumer<ObservableComposition> consumer) {
         // The runLater is to prevent the UI from continuously applying the same wrong update when loosing focus
         // and switching focus to an error window.
-        currentDocument.ifPresent(compositionDocument -> Platform.runLater(() -> consumer.accept(compositionDocument)));
+        currentComposition.ifPresent(composition -> Platform.runLater(() -> consumer.accept(composition)));
     }
 
     public void setCompositionDocumentTypeManager(CompositionDocumentTypeManager compositionDocumentTypeManager) {

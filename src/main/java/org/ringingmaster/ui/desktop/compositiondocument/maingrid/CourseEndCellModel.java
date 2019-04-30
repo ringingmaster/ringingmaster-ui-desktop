@@ -20,14 +20,14 @@ import static com.google.common.base.Preconditions.checkNotNull;
  *
  * @author Steve Lake
  */
-public class CourseEndCellModel extends SkeletalCellModel implements CellModel {
+class CourseEndCellModel extends SkeletalCellModel implements CellModel {
 
     private final CompositionStyle compositionStyle;
     private final Composition composition;
 
     private final int row;
 
-    public CourseEndCellModel(Composition composition, CompositionStyle compositionStyle,
+    CourseEndCellModel(Composition composition, CompositionStyle compositionStyle,
                               int row) {
         this.compositionStyle = compositionStyle;
         this.composition = checkNotNull(composition);

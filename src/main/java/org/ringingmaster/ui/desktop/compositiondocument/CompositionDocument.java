@@ -14,10 +14,8 @@ import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import org.ringingmaster.engine.NumberOfBells;
-import org.ringingmaster.engine.arraytable.ImmutableArrayTable;
 import org.ringingmaster.engine.composition.Composition;
 import org.ringingmaster.engine.composition.ObservableComposition;
-import org.ringingmaster.engine.composition.cell.Cell;
 import org.ringingmaster.engine.composition.compositiontype.CompositionType;
 import org.ringingmaster.engine.method.Bell;
 import org.ringingmaster.engine.method.MethodBuilder;
@@ -91,17 +89,6 @@ public class CompositionDocument extends ScrollPane implements Document {
 
         this.composition = composition;
 
-// TODO Remove       composition.observable()
-//                .map(parser::apply)
-//                .subscribe(parse -> {
-//                    log.warn("New Parse [{}]", parse.getComposition().getActionName());
-//                    updateUiComponents();
-//                        },
-//                            throwable -> log.error("", throwable));
-
-
-        parseAndProve();
-
         configureDefinitionModels();
 
         mainGridModel = new MainGridModel(this);
@@ -139,16 +126,12 @@ public class CompositionDocument extends ScrollPane implements Document {
     public void setUpdatePoint(Supplier<String> updatePointName, boolean mutated) {
         if (mutated) {
             log.info("UPDATE: [{}]", updatePointName.get());
-            parseAndProve();
             setDirty(true);
         } else {
             log.debug("UPDATE: [{}], [{}]", updatePointName.get(), mutated);
         }
     }
 
-    public void parseAndProve() {
-        //proofManager.parseAndProve(composition.get());
-    }
 
     public ObservableComposition getObservableComposition() {
         return composition;
@@ -464,7 +447,6 @@ public class CompositionDocument extends ScrollPane implements Document {
         if (startAtRow < 0) {
             startAtRow = 0;
         }
-
         boolean mutated = false;
         if (startAtRow != getStartAtRow()) {
             mutated = composition.setStartAtRow(startAtRow);
@@ -672,10 +654,6 @@ public class CompositionDocument extends ScrollPane implements Document {
 
     public int getRowSize() {
         return composition.get().allCompositionCells().getRowSize();
-    }
-
-    public ImmutableArrayTable<Cell> allCellsView() {
-        return composition.get().allCompositionCells();
     }
 
     public void setProofManager(ProofManager proofManager) {

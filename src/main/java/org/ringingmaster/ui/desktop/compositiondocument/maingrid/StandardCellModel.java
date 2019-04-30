@@ -28,7 +28,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  *
  * @author Lake
  */
-public class StandardCellModel extends SkeletalCellModel implements CellModel {
+class StandardCellModel extends SkeletalCellModel implements CellModel {
 
     private final Logger log = LoggerFactory.getLogger(StandardCellModel.class);
 
@@ -38,7 +38,7 @@ public class StandardCellModel extends SkeletalCellModel implements CellModel {
     private final int row;
     private final ParsedCell parsedCell;
 
-    public StandardCellModel(ObservableComposition observableComposition,
+    StandardCellModel(ObservableComposition observableComposition,
                              CompositionStyle compositionStyle,
                              int row, int column, ParsedCell parsedCell) {
         this.observableComposition = checkNotNull(observableComposition);
@@ -81,7 +81,7 @@ public class StandardCellModel extends SkeletalCellModel implements CellModel {
                 Optional<Section> sectionAtElementIndex = parsedCell.getSectionAtElementIndex(index);
                 if (sectionAtElementIndex.isEmpty()) {
                     //This happens when we have an unparsed character
-                    return Color.BLACK;
+                    return compositionStyle.getColour(CompositionStyle.CompositionStyleColor.FALLBACK);
                 }
                 ParseType parseType = sectionAtElementIndex.get().getParseType();
                 return compositionStyle.getColourFromParseType(parseType);

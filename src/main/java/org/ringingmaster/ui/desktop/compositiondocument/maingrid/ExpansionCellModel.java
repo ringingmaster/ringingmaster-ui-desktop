@@ -13,14 +13,14 @@ import static com.google.common.base.Preconditions.checkNotNull;
  *
  * @author Lake
  */
-public class ExpansionCellModel extends SkeletalCellModel implements CellModel {
+class ExpansionCellModel extends SkeletalCellModel implements CellModel {
 
     private final ObservableComposition observableComposition;
     private final int column;
     private final int row;
 
 
-    public ExpansionCellModel(ObservableComposition observableComposition,
+    ExpansionCellModel(ObservableComposition observableComposition,
                               int row, int column) {
         this.observableComposition = checkNotNull(observableComposition);
         this.column = column;

@@ -49,6 +49,11 @@ public class CompositionDocumentTypeManager implements DocumentTypeManager {
                 .distinctUntilChanged();
     }
 
+    public Observable<Optional<ObservableComposition>> observableActiveObservableComposition() {
+        return observableActiveCompositionDocument()
+                .map(opt -> opt.map(CompositionDocument::getObservableComposition));
+    }
+
     public Observable<Optional<Composition>> observableComposition() {
         return observableActiveCompositionDocument().switchMap(compositionDocument -> {
             if (compositionDocument.isPresent()) {
@@ -108,7 +113,7 @@ public class CompositionDocumentTypeManager implements DocumentTypeManager {
         return compositionDocument;
     }
 
-
+    @Deprecated //Use the observables.
     public Optional<CompositionDocument> getCurrentDocument() {
         return currentDocument;
     }

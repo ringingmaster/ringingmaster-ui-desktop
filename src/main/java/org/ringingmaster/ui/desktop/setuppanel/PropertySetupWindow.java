@@ -333,8 +333,8 @@ public class PropertySetupWindow extends PropertyEditor {
 
     private void buildStartNotation() {
         add(START_GROUP_NAME, new TextPropertyValue(START_NOTATION_PROPERTY_NAME));
-//TODO Reactive        ((TextPropertyValue) findPropertyByName(START_NOTATION_PROPERTY_NAME)).setListener((observable, oldValue, newValue) ->
-//TODO Reactive                updateCompositionIfPresent(composition -> composition.setStartNotation(newValue)), CallbackStyle.WHEN_FINISHED);
+        ((TextPropertyValue) findPropertyByName(START_NOTATION_PROPERTY_NAME)).setListener((observable, oldValue, newValue) ->
+                updateCompositionIfPresent(composition -> new SetStartNotationHandler().setStartNotation(composition,newValue)), CallbackStyle.WHEN_FINISHED);
 
         showGroupByName(START_GROUP_NAME, false); // TODO save state in app
     }

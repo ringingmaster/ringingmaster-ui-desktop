@@ -19,7 +19,7 @@ public class SetStartChangeHandler {
         checkNotNull(startChangeText);
 
         // first look for rounds token
-        if (startChangeText.compareToIgnoreCase(Row.ROUNDS_TOKEN) == 0) {
+        if (startChangeText.toLowerCase().contains(Row.ROUNDS_TOKEN.toLowerCase())) {
             final Row rounds = MethodBuilder.buildRoundsRow(composition.get().getNumberOfBells());
             composition.setStartChange(rounds);
         }

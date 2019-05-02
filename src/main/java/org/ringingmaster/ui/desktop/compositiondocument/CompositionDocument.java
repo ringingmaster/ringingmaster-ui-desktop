@@ -1,6 +1,5 @@
 package org.ringingmaster.ui.desktop.compositiondocument;
 
-import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import io.reactivex.Observable;
 import javafx.geometry.Insets;
@@ -19,7 +18,6 @@ import org.ringingmaster.engine.composition.DryRun;
 import org.ringingmaster.engine.composition.MutableComposition;
 import org.ringingmaster.engine.method.Stroke;
 import org.ringingmaster.engine.notation.Notation;
-import org.ringingmaster.engine.notation.NotationBuilder;
 import org.ringingmaster.engine.parser.Parser;
 import org.ringingmaster.engine.parser.parse.Parse;
 import org.ringingmaster.ui.common.CompositionStyle;
@@ -238,89 +236,6 @@ public class CompositionDocument extends ScrollPane implements Document {
             composition.setSpliced(spliced);
         }
         setUpdatePoint(() -> (spliced ? "Set spliced" : "Set non spliced"), mutated);
-    }
-
-    public void setStartStroke(Stroke startStroke) {
-        checkNotNull(startStroke);
-
-        boolean mutated = false;
-        if (startStroke != composition.get().getStartStroke()) {
-            //mutated =
-                    composition.setStartStroke(startStroke);
-        }
-        setUpdatePoint(() -> String.format("Set Start Stroke: %s", startStroke), mutated);
-    }
-
-    public void setStartNotation(String startNotation) {
-        boolean mutated;
-        String action;
-
-        if (Strings.isNullOrEmpty(startNotation)) {
-            //mutated =
-                    composition.removeStartNotation();
-            action = "Remove Start Notation";
-        } else {
-            Notation builtNotation = NotationBuilder.getInstance()
-                    .setNumberOfWorkingBells(composition.get().getNumberOfBells())
-                    .setUnfoldedNotationShorthand(startNotation)
-                    .build();
-
-            if (builtNotation != null && builtNotation.size() > 0) {
-                //mutated =
-                        composition.setStartNotation(builtNotation);
-                action = "Set Start Notation: " + builtNotation.getNotationDisplayString(true);
-            } else {
-                //mutated =
-                        composition.removeStartNotation();
-                action = "Remove Start Notation";
-            }
-        }
-
-        setUpdatePoint(() -> action, false);
-    }
-
-
-
-    public void setTerminationMaxParts(Integer terminationMaxParts) {
-        boolean mutated;
-        String action;
-        if (terminationMaxParts == null ||
-                terminationMaxParts < 1) {
-            action = "Remove Part Limit";
-            //mutated =
-                    composition.removeTerminationMaxParts();
-        } else {
-            if (terminationMaxParts > TERMINATION_MAX_PARTS_MAX) {
-                terminationMaxParts = TERMINATION_MAX_PARTS_MAX;
-            }
-
-            action = String.format("Set Part Limit: %d", terminationMaxParts);
-            //mutated =
-                    composition.setTerminationMaxParts(terminationMaxParts);
-        }
-
-        String actionForLambda = action;
-        setUpdatePoint(() -> actionForLambda, false);
-    }
-
-    public void setTerminationCircularComposition(Integer terminationCircularComposition) {
-        //TODO Reactive
-//        boolean mutated;
-//        String action;
-//        if (terminationCircularComposition == null ||
-//                terminationCircularComposition < 1) {
-//            action = "Remove Circular Composition Limit";
-//            mutated = composition.re.removeTerminationMaxCircularComposition();
-//        } else {
-//            if (terminationCircularComposition > Composition.TERMINATION_CIRCULAR_COMPOSITION_MAX) {
-//                terminationCircularComposition = Composition.TERMINATION_CIRCULAR_COMPOSITION_MAX;
-//            }
-//
-//            action = String.format("Set Circular Composition Limit: %d", terminationCircularComposition);
-//            mutated = composition.setTerminationMaxCircularity(terminationCircularComposition);
-//        }
-//        String actionForLambda = action;
-//        setUpdatePoint(() -> actionForLambda, mutated);
     }
 
     private void configureDefinitionModels() {

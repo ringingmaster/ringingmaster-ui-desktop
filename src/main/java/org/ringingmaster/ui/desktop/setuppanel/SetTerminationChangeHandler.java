@@ -23,7 +23,7 @@ public class SetTerminationChangeHandler {
             composition.removeTerminationChange();
         }
         // then look for rounds token
-        else if (terminationChangeText.compareToIgnoreCase(Row.ROUNDS_TOKEN) == 0) {
+        else if (terminationChangeText.toLowerCase().contains(Row.ROUNDS_TOKEN.toLowerCase())) {
             final Row rounds = MethodBuilder.buildRoundsRow(composition.get().getNumberOfBells());
             composition.setTerminationChange(rounds);
         }

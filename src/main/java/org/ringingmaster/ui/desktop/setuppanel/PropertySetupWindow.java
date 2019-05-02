@@ -27,6 +27,8 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static org.ringingmaster.engine.composition.MutableComposition.TERMINATION_MAX_CIRCULARITY_INITIAL_VALUE;
+import static org.ringingmaster.engine.composition.MutableComposition.TERMINATION_MAX_ROWS_INITIAL_VALUE;
 import static org.ringingmaster.engine.composition.compositiontype.CompositionType.COURSE_BASED;
 import static org.ringingmaster.util.javafx.propertyeditor.SelectionPropertyValue.UNDEFINED_INDEX;
 
@@ -44,7 +46,7 @@ public class PropertySetupWindow extends PropertyEditor {
     public static final String NUMBER_OF_BELLS_PROPERTY_NAME = "Number Of Bells";
     public static final String CALL_FROM_PROPERTY_NAME = "Call From";
     public static final String ACTIVE_METHOD_PROPERTY_NAME = "Active Method";
-    public static final String CHECKING_TYPE_PROPERTY_NAME = "Checking Type";
+    public static final String COMPOSITION_TYPE_PROPERTY_NAME = "Composition Type";
     public static final String PLAIN_LEAD_TOKEN_PROPERTY_NAME = "Plain Lead Token";
 
     public static final String ADVANCED_SETUP_GROUP_NAME = "Advanced Setup";
@@ -56,48 +58,102 @@ public class PropertySetupWindow extends PropertyEditor {
     public static final String START_NOTATION_PROPERTY_NAME = "Start Notation";
 
     public static final String TERMINATION_GROUP_NAME = "Termination";
-    public static final String TERMINATION_WITH_CHANGE_PROPERTY_NAME = "Termination Change";
-    public static final String TERMINATION_ROW_LIMIT_PROPERTY_NAME = "Row Limit";
-    public static final String TERMINATION_LEAD_LIMIT_PROPERTY_NAME = "Lead Limit";
-    public static final String TERMINATION_PART_LIMIT_PROPERTY_NAME = "Part Limit";
-    public static final String TERMINATION_CIRCULAR_COMPOSITION_LIMIT_PROPERTY_NAME = "Circular Composition Limit";
+    public static final String TERMINATION_CHANGE_PROPERTY_NAME = "Termination Change";
+    public static final String TERMINATION_MAX_ROWS_PROPERTY_NAME = "Row Limit";
+    public static final String TERMINATION_MAX_LEADS_PROPERTY_NAME = "Lead Limit";
+    public static final String TERMINATION_MAX_PARTS_PROPERTY_NAME = "Part Limit";
+    public static final String TERMINATION_MAX_CIRCULARITY_PROPERTY_NAME = "Circular Composition Limit";
 
-    private CompositionDocumentTypeManager compositionDocumentTypeManager;
+    private CompositionDocumentTypeManager compositionTypeManager;
 
     private Optional<MutableComposition> currentComposition = Optional.empty();
 
     public void init() {
 
-        buildSetupSection();
-        buildAdvancedSetupSection();
-        buildStartSection();
-        buildTerminationSection();
+        buildTitle();
+        buildAuthor();
+        buildNumberOfBells();
+        buildCallFrom();
+        buildActiveMethod();
+        buildCheckingType();
+        buildPlainLeadToken();
 
-        compositionDocumentTypeManager.observableActiveMutableComposition().subscribe(mutableComposition -> {
+        buildStartChange();
+        buildStartAtRow();
+        buildStartStroke();
+        buildStartNotation();
+        showGroupByName(START_GROUP_NAME, false); // TODO save state in app
+
+        buildTerminationChange();
+        buildTerminationMaxRows();
+        buildTerminstionMaxLeads();
+        buildTerminationMaxParts();
+        buildTerminationMaxCircularity();
+        showGroupByName(TERMINATION_GROUP_NAME, false); // TODO save state in app
+
+
+        compositionTypeManager.observableActiveMutableComposition().subscribe(mutableComposition -> {
             currentComposition = mutableComposition;
         });
-        compositionDocumentTypeManager.observableComposition().subscribe(composition -> {
-            updateSetupSection(composition);
-            updateAdvancedSetupSection(composition);
-            updateStartSection(composition);
-            updateTerminationSection(composition);
+        compositionTypeManager.observableComposition().subscribe(composition -> {
+            updateTitle(composition);
+            updateAuthor(composition);
+            updateNumberOfBells(composition);
+            updateCallFrom(composition);
+            updateActiveMethod(composition);
+            updateCheckingType(composition);
+            updatePlainLeadToken(composition);
+
+            updateStartChange(composition);
+            updateStartAtRow(composition);
+            updateStroke(composition);
+            updateStartNotation(composition);
+
+            updateTerminationChange(composition);
+            updateTerminationMaxRows(composition);
+            updateTerminationMaxLeads(composition);
+            updateTerminationMaxParts(composition);
+            updateTerminationMaxCircularity(composition);
         });
     }
 
-    private void buildSetupSection() {
+    void updateCompositionIfPresent(Consumer<MutableComposition> consumer) {
+        // The runLater is to prevent the UI from continuously applying the same wrong update when loosing focus
+        // and switching focus to an error window.
+        currentComposition.ifPresent(composition -> Platform.runLater(() -> consumer.accept(composition)));
+    }
+
+
+    private void buildTitle() {
         add(new TextPropertyValue(TITLE_PROPERTY_NAME));
         ((TextPropertyValue) findPropertyByName(TITLE_PROPERTY_NAME)).setListener((observable, oldValue, newValue) ->
-                updateCompositionIfPresent(compositionDocument -> compositionDocument.setTitle(newValue)), CallbackStyle.EVERY_KEYSTROKE);
+                updateCompositionIfPresent(composition -> composition.setTitle(newValue)), CallbackStyle.EVERY_KEYSTROKE);
+    }
 
+    private void updateTitle(Optional<Composition> composition) {
+        final String title = composition.map(Composition::getTitle).orElse("");
+        ((TextPropertyValue) findPropertyByName(TITLE_PROPERTY_NAME)).setValue(title);
+    }
+
+
+    private void buildAuthor() {
         add(new TextPropertyValue(AUTHOR_PROPERTY_NAME));
         ((TextPropertyValue) findPropertyByName(AUTHOR_PROPERTY_NAME)).setListener((observable, oldValue, newValue) ->
-                updateCompositionIfPresent(compositionDocument -> compositionDocument.setAuthor(newValue)), CallbackStyle.EVERY_KEYSTROKE);
+                updateCompositionIfPresent(composition -> composition.setAuthor(newValue)), CallbackStyle.EVERY_KEYSTROKE);
+    }
 
+    private void updateAuthor(Optional<Composition> composition) {
+        final String author = composition.map(Composition::getAuthor).orElse("");
+        ((TextPropertyValue) findPropertyByName(AUTHOR_PROPERTY_NAME)).setValue(author);
+    }
+
+
+    private void buildNumberOfBells() {
         add(new SelectionPropertyValue(NUMBER_OF_BELLS_PROPERTY_NAME));
         ((SelectionPropertyValue) findPropertyByName(NUMBER_OF_BELLS_PROPERTY_NAME)).setListener((observable, oldValue, newValue) -> {
-            if (newValue.intValue() != -1) {
+            if (newValue.intValue() != UNDEFINED_INDEX) {
                 final NumberOfBells numberOfBells = NumberOfBells.values()[newValue.intValue()];
-                updateCompositionIfPresent(compositionDocument -> compositionDocument.setNumberOfBells(numberOfBells));
+                updateCompositionIfPresent(composition -> new SetNumberOfBellsHandler().handle(composition, numberOfBells));
             }
         });
         final List<String> numberOfBellItems = new ArrayList<>();
@@ -105,53 +161,25 @@ public class PropertySetupWindow extends PropertyEditor {
             numberOfBellItems.add(bells.getDisplayString());
         }
         ((SelectionPropertyValue) findPropertyByName(NUMBER_OF_BELLS_PROPERTY_NAME)).setItems(numberOfBellItems);
-
-        add(new SelectionPropertyValue(CALL_FROM_PROPERTY_NAME));
-        ((SelectionPropertyValue) findPropertyByName(CALL_FROM_PROPERTY_NAME)).setListener((observable, oldValue, newValue) -> {
-            if (newValue.intValue() != -1) {
-                final Bell callFrom = Bell.values()[newValue.intValue()];
-                updateCompositionIfPresent(compositionDocument -> compositionDocument.setCallFromBell(callFrom));
-            }
-        });
-
-        add(new SelectionPropertyValue(ACTIVE_METHOD_PROPERTY_NAME));
-        ((SelectionPropertyValue) findPropertyByName(ACTIVE_METHOD_PROPERTY_NAME)).setListener((observable, oldValue, newValue) ->
-                updateCompositionIfPresent(compositionDocument -> {
-                    int index = newValue.intValue();
-                    if (index == 0) {
-                        compositionDocument.setSpliced(true);
-                    } else {
-                        final List<Notation> sortedNotationsBeingDisplayed = getSortedNotations(compositionDocument.get());
-
-                        final Notation selectedNotation = sortedNotationsBeingDisplayed.get(index - 1);// the -1 is the offset for the <spliced> row
-                        compositionDocument.setNonSplicedActiveNotation(selectedNotation);
-                    }
-                }));
-
-        add(new SelectionPropertyValue(CHECKING_TYPE_PROPERTY_NAME));
-        ((SelectionPropertyValue) findPropertyByName(CHECKING_TYPE_PROPERTY_NAME)).setListener((observable, oldValue, newValue) -> {
-            if (newValue.intValue() != -1) {
-                final CompositionType compositionType = CompositionType.values()[newValue.intValue()];
-//TODO Reactive                updateCompositionIfPresent(compositionDocument -> compositionDocument.setCompositionCompositionType(compositionType));
-            }
-        });
-
-        add(new TextPropertyValue(PLAIN_LEAD_TOKEN_PROPERTY_NAME));
-        ((TextPropertyValue) findPropertyByName(PLAIN_LEAD_TOKEN_PROPERTY_NAME)).setListener((observable, oldValue, newValue) ->
-                updateCompositionIfPresent(compositionDocument -> compositionDocument.setPlainLeadToken(newValue)), CallbackStyle.EVERY_KEYSTROKE);
     }
 
-    private void updateSetupSection(Optional<Composition> composition) {
-
-        final String title = composition.isPresent() ? composition.get().getTitle() : "";
-        ((TextPropertyValue) findPropertyByName(TITLE_PROPERTY_NAME)).setValue(title);
-
-        final String author = composition.isPresent() ? composition.get().getAuthor() : "";
-        ((TextPropertyValue) findPropertyByName(AUTHOR_PROPERTY_NAME)).setValue(author);
-
+    private void updateNumberOfBells(Optional<Composition> composition) {
         final int numberOfBellsIndex = composition.map(composition1 -> composition1.getNumberOfBells().ordinal()).orElse(UNDEFINED_INDEX);
         ((SelectionPropertyValue) findPropertyByName(NUMBER_OF_BELLS_PROPERTY_NAME)).setSelectedIndex(numberOfBellsIndex);
+    }
 
+
+    private void buildCallFrom() {
+        add(new SelectionPropertyValue(CALL_FROM_PROPERTY_NAME));
+        ((SelectionPropertyValue) findPropertyByName(CALL_FROM_PROPERTY_NAME)).setListener((observable, oldValue, newValue) -> {
+            if (newValue.intValue() != UNDEFINED_INDEX) {
+                final Bell callFrom = Bell.values()[newValue.intValue()];
+                updateCompositionIfPresent(composition -> composition.setCallFromBell(callFrom));
+            }
+        });
+    }
+
+    private void updateCallFrom(Optional<Composition> composition) {
         final List<String> callFromItems = new ArrayList<>();
         if (composition.isPresent()) {
             NumberOfBells numberOfBells = composition.get().getNumberOfBells();
@@ -165,40 +193,32 @@ public class PropertySetupWindow extends PropertyEditor {
 
         final int callFromIndex = composition.map(value -> value.getCallFromBell().ordinal()).orElse(UNDEFINED_INDEX);
         ((SelectionPropertyValue) findPropertyByName(CALL_FROM_PROPERTY_NAME)).setSelectedIndex(callFromIndex);
+    }
 
+
+    private void buildActiveMethod() {
+        add(new SelectionPropertyValue(ACTIVE_METHOD_PROPERTY_NAME));
+        ((SelectionPropertyValue) findPropertyByName(ACTIVE_METHOD_PROPERTY_NAME)).setListener((observable, oldValue, newValue) ->
+                updateCompositionIfPresent(composition -> {
+                    int index = newValue.intValue();
+                    if (index == 0) {
+                        composition.setSpliced(true);
+                    } else {
+                        final List<Notation> sortedNotationsBeingDisplayed = getSortedNotations(composition.get());
+
+                        final Notation selectedNotation = sortedNotationsBeingDisplayed.get(index - 1);// the -1 is the offset for the <spliced> row
+                        composition.setNonSplicedActiveNotation(selectedNotation);
+                    }
+                }));
+    }
+
+    private void updateActiveMethod(Optional<Composition> composition) {
         final List<String> validNotationItems = getSortedValidNotationNames(composition);
         int selectedNotationIndex = getActiveValidNotationIndex(composition);
         ((SelectionPropertyValue) findPropertyByName(ACTIVE_METHOD_PROPERTY_NAME)).setItems(validNotationItems);
         ((SelectionPropertyValue) findPropertyByName(ACTIVE_METHOD_PROPERTY_NAME)).setSelectedIndex(selectedNotationIndex);
-
-        final List<String> compositionTypes = new ArrayList<>();
-        for (CompositionType compositionType : CompositionType.values()) {
-            compositionTypes.add(compositionType.getName());
-        }
-        ((SelectionPropertyValue) findPropertyByName(CHECKING_TYPE_PROPERTY_NAME)).setItems(compositionTypes);
-        final int compositionTypeIndex = composition.map(value -> value.getCompositionType().ordinal()).orElse(UNDEFINED_INDEX);
-        ((SelectionPropertyValue) findPropertyByName(CHECKING_TYPE_PROPERTY_NAME)).setSelectedIndex(compositionTypeIndex);
-
-        final String plainLeadToken = composition.isPresent() ? composition.get().getPlainLeadToken() : "";
-        ((TextPropertyValue) findPropertyByName(PLAIN_LEAD_TOKEN_PROPERTY_NAME)).setValue(plainLeadToken);
-        findPropertyByName(PLAIN_LEAD_TOKEN_PROPERTY_NAME).setDisable(composition.isPresent() &&
-                composition.get().getCompositionType() == COURSE_BASED);
     }
 
-    private List<String> getSortedValidNotationNames(Optional<Composition> composition) {
-        return composition.map(composition1 ->
-                    Streams.concat(Stream.of(CompositionDocument.SPLICED_TOKEN),
-                            getSortedNotations(composition1).stream().map(Notation::getNameIncludingNumberOfBells))
-                            .collect(Collectors.toList()))
-                .orElse(Collections.emptyList());
-    }
-
-    private List<Notation> getSortedNotations(Composition composition) {
-        return composition.getValidNotations().stream()
-                .sorted(Notation.BY_NUMBER_THEN_NAME)
-                .collect(Collectors.toList());
-    }
-    
     private int getActiveValidNotationIndex(Optional<Composition> composition) {
 
         if (!composition.isPresent()) {
@@ -215,112 +235,179 @@ public class PropertySetupWindow extends PropertyEditor {
         return validNotationNames.indexOf(activeNotationName);
     }
 
-    private void buildAdvancedSetupSection() {
-        // TODO
+    private List<String> getSortedValidNotationNames(Optional<Composition> composition) {
+        return composition.map(composition1 ->
+                Streams.concat(Stream.of(CompositionDocument.SPLICED_TOKEN),
+                        getSortedNotations(composition1).stream().map(Notation::getNameIncludingNumberOfBells))
+                        .collect(Collectors.toList()))
+                .orElse(Collections.emptyList());
     }
 
-    private void updateAdvancedSetupSection(Optional<Composition> composition) {
-        //TODO
-
+    private List<Notation> getSortedNotations(Composition composition) {
+        return composition.getValidNotations().stream()
+                .sorted(Notation.BY_NUMBER_THEN_NAME)
+                .collect(Collectors.toList());
     }
 
-    private void buildStartSection() {
-        add(START_GROUP_NAME, new TextPropertyValue(START_WITH_CHANGE_PROPERTY_NAME));
-//TODO Reactive        ((TextPropertyValue) findPropertyByName(START_WITH_CHANGE_PROPERTY_NAME)).setListener((observable, oldValue, newValue) ->
-        //TODO Reactive updateCompositionIfPresent(compositionDocument -> compositionDocument.setStartChange(newValue)), CallbackStyle.WHEN_FINISHED);
 
-        add(START_GROUP_NAME, new IntegerPropertyValue(START_AT_ROW_PROPERTY_NAME));
-        ((IntegerPropertyValue) findPropertyByName(START_AT_ROW_PROPERTY_NAME)).setListener((observable, oldValue, newValue) ->
-                updateCompositionIfPresent(compositionDocument -> compositionDocument.setStartAtRow(newValue.intValue())), CallbackStyle.WHEN_FINISHED);
-
-        add(START_GROUP_NAME, new SelectionPropertyValue(START_STROKE_PROPERTY_NAME));
-        ((SelectionPropertyValue) findPropertyByName(START_STROKE_PROPERTY_NAME)).setListener((observable, oldValue, newValue) -> {
-            if (newValue.intValue() != -1) {
-                final Stroke startStroke = Stroke.values()[newValue.intValue()];
-                updateCompositionIfPresent(compositionDocument -> compositionDocument.setStartStroke(startStroke));
+    private void buildCheckingType() {
+        add(new SelectionPropertyValue(COMPOSITION_TYPE_PROPERTY_NAME));
+        ((SelectionPropertyValue) findPropertyByName(COMPOSITION_TYPE_PROPERTY_NAME)).setListener((observable, oldValue, newValue) -> {
+            if (newValue.intValue() != UNDEFINED_INDEX) {
+                final CompositionType compositionType = CompositionType.values()[newValue.intValue()];
+//TODO Reactive                updateCompositionIfPresent(composition -> composition.setCompositionCompositionType(compositionType));
             }
         });
-
-        add(START_GROUP_NAME, new TextPropertyValue(START_NOTATION_PROPERTY_NAME));
-//TODO Reactive        ((TextPropertyValue) findPropertyByName(START_NOTATION_PROPERTY_NAME)).setListener((observable, oldValue, newValue) ->
-//TODO Reactive                updateCompositionIfPresent(compositionDocument -> compositionDocument.setStartNotation(newValue)), CallbackStyle.WHEN_FINISHED);
-
-        showGroupByName(START_GROUP_NAME, false); // TODO save state in app
-
     }
 
-    private void updateStartSection(Optional<Composition> compositionDocument) {
-        final String startChange = compositionDocument.map(Composition::getStartChange)
+    private void updateCheckingType(Optional<Composition> composition) {
+        final List<String> compositionTypes = new ArrayList<>();
+        for (CompositionType compositionType : CompositionType.values()) {
+            compositionTypes.add(compositionType.getName());
+        }
+        ((SelectionPropertyValue) findPropertyByName(COMPOSITION_TYPE_PROPERTY_NAME)).setItems(compositionTypes);
+        final int compositionTypeIndex = composition.map(value -> value.getCompositionType().ordinal()).orElse(UNDEFINED_INDEX);
+        ((SelectionPropertyValue) findPropertyByName(COMPOSITION_TYPE_PROPERTY_NAME)).setSelectedIndex(compositionTypeIndex);
+    }
+
+
+    private void buildPlainLeadToken() {
+        add(new TextPropertyValue(PLAIN_LEAD_TOKEN_PROPERTY_NAME));
+        ((TextPropertyValue) findPropertyByName(PLAIN_LEAD_TOKEN_PROPERTY_NAME)).setListener((observable, oldValue, newValue) ->
+                updateCompositionIfPresent(composition -> composition.setPlainLeadToken(newValue)), CallbackStyle.EVERY_KEYSTROKE);
+    }
+
+    private void updatePlainLeadToken(Optional<Composition> composition) {
+        final String plainLeadToken = composition.isPresent() ? composition.get().getPlainLeadToken() : "";
+        ((TextPropertyValue) findPropertyByName(PLAIN_LEAD_TOKEN_PROPERTY_NAME)).setValue(plainLeadToken);
+        findPropertyByName(PLAIN_LEAD_TOKEN_PROPERTY_NAME).setDisable(composition.isPresent() &&
+                composition.get().getCompositionType() == COURSE_BASED);
+    }
+
+
+    private void buildStartChange() {
+        add(START_GROUP_NAME, new TextPropertyValue(START_WITH_CHANGE_PROPERTY_NAME));
+        ((TextPropertyValue) findPropertyByName(START_WITH_CHANGE_PROPERTY_NAME)).setListener((observable, oldValue, newValue) ->
+                updateCompositionIfPresent(composition -> new SetStartChangeHandler().setStartChange(composition, newValue)), CallbackStyle.WHEN_FINISHED);
+    }
+
+    private void updateStartChange(Optional<Composition> composition) {
+        final String startChange = composition.map(Composition::getStartChange)
                 .map(row -> row.getDisplayString(true)).orElse("");
         ((TextPropertyValue) findPropertyByName(START_WITH_CHANGE_PROPERTY_NAME)).setValue(startChange);
+    }
 
-        int startAtRow = compositionDocument.map(Composition::getStartAtRow).orElse(0);
+
+    private void buildStartAtRow() {
+        add(START_GROUP_NAME, new IntegerPropertyValue(START_AT_ROW_PROPERTY_NAME));
+        ((IntegerPropertyValue) findPropertyByName(START_AT_ROW_PROPERTY_NAME)).setListener((observable, oldValue, newValue) ->
+                updateCompositionIfPresent(composition -> new SetStartAtRowHandler().setStartRow(composition, newValue)), CallbackStyle.WHEN_FINISHED);
+    }
+
+    private void updateStartAtRow(Optional<Composition> composition) {
+        int startAtRow = composition.map(Composition::getStartAtRow).orElse(0);
         ((IntegerPropertyValue) findPropertyByName(START_AT_ROW_PROPERTY_NAME)).setValue(startAtRow);
+    }
 
+
+    private void buildStartStroke() {
+        add(START_GROUP_NAME, new SelectionPropertyValue(START_STROKE_PROPERTY_NAME));
+        ((SelectionPropertyValue) findPropertyByName(START_STROKE_PROPERTY_NAME)).setListener((observable, oldValue, newValue) -> {
+            if (newValue.intValue() != UNDEFINED_INDEX) {
+                final Stroke startStroke = Stroke.values()[newValue.intValue()];
+                updateCompositionIfPresent(composition -> composition.setStartStroke(startStroke));
+            }
+        });
+    }
+
+    private void updateStroke(Optional<Composition> composition) {
         final List<String> startAtStrokeItems = new ArrayList<>();
         for (Stroke stroke : Stroke.values()) {
             startAtStrokeItems.add(stroke.getDisplayString());
         }
         ((SelectionPropertyValue) findPropertyByName(START_STROKE_PROPERTY_NAME)).setItems(startAtStrokeItems);
-        final int startStroke = compositionDocument.map(composition -> composition.getStartStroke().ordinal()).orElse(UNDEFINED_INDEX);
+        final int startStroke = composition.map(composition1 -> composition1.getStartStroke().ordinal()).orElse(UNDEFINED_INDEX);
         ((SelectionPropertyValue) findPropertyByName(START_STROKE_PROPERTY_NAME)).setSelectedIndex(startStroke);
+    }
 
 
-        final String startNotation = compositionDocument.flatMap(Composition::getStartNotation)
+    private void buildStartNotation() {
+        add(START_GROUP_NAME, new TextPropertyValue(START_NOTATION_PROPERTY_NAME));
+//TODO Reactive        ((TextPropertyValue) findPropertyByName(START_NOTATION_PROPERTY_NAME)).setListener((observable, oldValue, newValue) ->
+//TODO Reactive                updateCompositionIfPresent(composition -> composition.setStartNotation(newValue)), CallbackStyle.WHEN_FINISHED);
+
+        showGroupByName(START_GROUP_NAME, false); // TODO save state in app
+    }
+
+    private void updateStartNotation(Optional<Composition> composition) {
+        final String startNotation = composition.flatMap(Composition::getStartNotation)
                 .map(notation -> notation.getNotationDisplayString(false)).orElse("");
         ((TextPropertyValue) findPropertyByName(START_NOTATION_PROPERTY_NAME)).setValue(startNotation);
     }
 
-    private void buildTerminationSection() {
-        add(TERMINATION_GROUP_NAME, new TextPropertyValue(TERMINATION_WITH_CHANGE_PROPERTY_NAME));
-//TODO Reactive        ((TextPropertyValue) findPropertyByName(TERMINATION_WITH_CHANGE_PROPERTY_NAME)).setListener((observable, oldValue, newValue) ->
-//TODO Reactive                updateCompositionIfPresent(compositionDocument -> compositionDocument.setTerminationChange(newValue)), CallbackStyle.WHEN_FINISHED);
 
-        add(TERMINATION_GROUP_NAME, new IntegerPropertyValue(TERMINATION_ROW_LIMIT_PROPERTY_NAME));
-        ((IntegerPropertyValue) findPropertyByName(TERMINATION_ROW_LIMIT_PROPERTY_NAME)).setListener((observable, oldValue, newValue) ->
-                updateCompositionIfPresent(compositionDocument -> compositionDocument.setTerminationMaxRows(newValue == null ? 0 : newValue.intValue())), CallbackStyle.WHEN_FINISHED);
-
-        add(TERMINATION_GROUP_NAME, new IntegerPropertyValue(TERMINATION_LEAD_LIMIT_PROPERTY_NAME));
-        ((IntegerPropertyValue) findPropertyByName(TERMINATION_LEAD_LIMIT_PROPERTY_NAME)).setListener((observable, oldValue, newValue) ->
-                updateCompositionIfPresent(compositionDocument -> compositionDocument.setTerminationMaxLeads(newValue == null ? null : newValue.intValue())), CallbackStyle.WHEN_FINISHED);
-
-        add(TERMINATION_GROUP_NAME, new IntegerPropertyValue(TERMINATION_PART_LIMIT_PROPERTY_NAME));
-        ((IntegerPropertyValue) findPropertyByName(TERMINATION_PART_LIMIT_PROPERTY_NAME)).setListener((observable, oldValue, newValue) ->
-                updateCompositionIfPresent(compositionDocument -> compositionDocument.setTerminationMaxParts(newValue == null ? null : newValue.intValue())), CallbackStyle.WHEN_FINISHED);
-
-        add(TERMINATION_GROUP_NAME, new IntegerPropertyValue(TERMINATION_CIRCULAR_COMPOSITION_LIMIT_PROPERTY_NAME));
-        ((IntegerPropertyValue) findPropertyByName(TERMINATION_CIRCULAR_COMPOSITION_LIMIT_PROPERTY_NAME)).setListener((observable, oldValue, newValue) ->
-        updateCompositionIfPresent(compositionDocument -> compositionDocument.setTerminationMaxCircularComposition(newValue.intValue())), CallbackStyle.WHEN_FINISHED);
-
-        showGroupByName(TERMINATION_GROUP_NAME, false); // TODO save state in app
+    private void buildTerminationChange() {
+        add(TERMINATION_GROUP_NAME, new TextPropertyValue(TERMINATION_CHANGE_PROPERTY_NAME));
+        ((TextPropertyValue) findPropertyByName(TERMINATION_CHANGE_PROPERTY_NAME)).setListener((observable, oldValue, newValue) ->
+                updateCompositionIfPresent(composition -> new SetTerminationChangeHandler().setTerminationChange(composition, newValue)), CallbackStyle.WHEN_FINISHED);
     }
 
-    private void updateTerminationSection(Optional<Composition> compositionDocument) {
-        final String terminationChange = compositionDocument.flatMap(Composition::getTerminationChange)
+    private void updateTerminationChange(Optional<Composition> composition) {
+        final String terminationChange = composition.flatMap(Composition::getTerminationChange)
                 .map(row -> row.getDisplayString(true)).orElse("");
-        ((TextPropertyValue) findPropertyByName(TERMINATION_WITH_CHANGE_PROPERTY_NAME)).setValue(terminationChange);
-
-        int terminationRowLimit = compositionDocument.map(Composition::getTerminationMaxRows).orElse(0);
-        ((IntegerPropertyValue) findPropertyByName(TERMINATION_ROW_LIMIT_PROPERTY_NAME)).setValue(terminationRowLimit);
-
-        Integer terminationLeadLimit = compositionDocument.flatMap(Composition::getTerminationMaxLeads).orElse(null);
-        ((IntegerPropertyValue) findPropertyByName(TERMINATION_LEAD_LIMIT_PROPERTY_NAME)).setValue(terminationLeadLimit);
-
-        Integer terminationPartLimit = compositionDocument.flatMap(Composition::getTerminationMaxParts).orElse(null);
-        ((IntegerPropertyValue) findPropertyByName(TERMINATION_PART_LIMIT_PROPERTY_NAME)).setValue(terminationPartLimit);
-
-        Integer terminationCircularCompositionLimit = compositionDocument.map(Composition::getTerminationMaxCircularity).orElse(null);
-        ((IntegerPropertyValue) findPropertyByName(TERMINATION_CIRCULAR_COMPOSITION_LIMIT_PROPERTY_NAME)).setValue(terminationCircularCompositionLimit);
-
+        ((TextPropertyValue) findPropertyByName(TERMINATION_CHANGE_PROPERTY_NAME)).setValue(terminationChange);
     }
 
-    void updateCompositionIfPresent(Consumer<MutableComposition> consumer) {
-        // The runLater is to prevent the UI from continuously applying the same wrong update when loosing focus
-        // and switching focus to an error window.
-        currentComposition.ifPresent(composition -> Platform.runLater(() -> consumer.accept(composition)));
+
+    private void buildTerminationMaxRows() {
+        add(TERMINATION_GROUP_NAME, new IntegerPropertyValue(TERMINATION_MAX_ROWS_PROPERTY_NAME));
+        ((IntegerPropertyValue) findPropertyByName(TERMINATION_MAX_ROWS_PROPERTY_NAME)).setListener((observable, oldValue, newValue) ->
+                updateCompositionIfPresent(composition -> new SetTerminationMaxRowsHandler().setTerminationMaxRows(composition, newValue)), CallbackStyle.WHEN_FINISHED);
     }
 
-    public void setCompositionDocumentTypeManager(CompositionDocumentTypeManager compositionDocumentTypeManager) {
-        this.compositionDocumentTypeManager = compositionDocumentTypeManager;
+    private void updateTerminationMaxRows(Optional<Composition> composition) {
+        int terminationMaxRows = composition.map(Composition::getTerminationMaxRows).orElse(TERMINATION_MAX_ROWS_INITIAL_VALUE);
+        ((IntegerPropertyValue) findPropertyByName(TERMINATION_MAX_ROWS_PROPERTY_NAME)).setValue(terminationMaxRows);
+    }
+
+
+    private void buildTerminstionMaxLeads() {
+        add(TERMINATION_GROUP_NAME, new IntegerPropertyValue(TERMINATION_MAX_LEADS_PROPERTY_NAME));
+        ((IntegerPropertyValue) findPropertyByName(TERMINATION_MAX_LEADS_PROPERTY_NAME)).setListener((observable, oldValue, newValue) ->
+                updateCompositionIfPresent(composition -> new SetTerminationMaxLeadsHandler().setTerminationMaxRows(composition, newValue)), CallbackStyle.WHEN_FINISHED);
+    }
+
+    private void updateTerminationMaxLeads(Optional<Composition> composition) {
+        Integer terminationLeadLimit = composition.flatMap(Composition::getTerminationMaxLeads).orElse(null);
+        ((IntegerPropertyValue) findPropertyByName(TERMINATION_MAX_LEADS_PROPERTY_NAME)).setValue(terminationLeadLimit);
+    }
+
+
+    private void buildTerminationMaxParts() {
+        add(TERMINATION_GROUP_NAME, new IntegerPropertyValue(TERMINATION_MAX_PARTS_PROPERTY_NAME));
+        ((IntegerPropertyValue) findPropertyByName(TERMINATION_MAX_PARTS_PROPERTY_NAME)).setListener((observable, oldValue, newValue) ->
+                updateCompositionIfPresent(composition -> new SetTerminationMaxPartsHandler().setTerminationMaxRows(composition, newValue)), CallbackStyle.WHEN_FINISHED);
+    }
+
+    private void updateTerminationMaxParts(Optional<Composition> composition) {
+        Integer terminationPartLimit = composition.flatMap(Composition::getTerminationMaxParts).orElse(null);
+        ((IntegerPropertyValue) findPropertyByName(TERMINATION_MAX_PARTS_PROPERTY_NAME)).setValue(terminationPartLimit);
+    }
+
+
+    private void buildTerminationMaxCircularity() {
+        add(TERMINATION_GROUP_NAME, new IntegerPropertyValue(TERMINATION_MAX_CIRCULARITY_PROPERTY_NAME));
+        ((IntegerPropertyValue) findPropertyByName(TERMINATION_MAX_CIRCULARITY_PROPERTY_NAME)).setListener((observable, oldValue, newValue) ->
+                updateCompositionIfPresent(composition -> new SetTerminationMaxCircularityHandler().setTerminationMaxCircularity(composition, newValue)), CallbackStyle.WHEN_FINISHED);
+    }
+
+    private void updateTerminationMaxCircularity(Optional<Composition> composition) {
+        int terminationMaxCircularity = composition.map(Composition::getTerminationMaxCircularity).orElse(TERMINATION_MAX_CIRCULARITY_INITIAL_VALUE);
+        ((IntegerPropertyValue) findPropertyByName(TERMINATION_MAX_CIRCULARITY_PROPERTY_NAME)).setValue(terminationMaxCircularity);
+    }
+
+
+    public void setCompositionDocumentTypeManager(CompositionDocumentTypeManager compositionTypeManager) {
+        this.compositionTypeManager = compositionTypeManager;
     }
 }

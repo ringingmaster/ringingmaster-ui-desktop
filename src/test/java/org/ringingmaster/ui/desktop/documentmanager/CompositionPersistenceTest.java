@@ -65,7 +65,7 @@ public class CompositionPersistenceTest {
         composition.setTerminationMaxRows(2345);
         composition.setTerminationMaxParts(123);
         composition.setTerminationMaxLeads(999);
-        composition.setTerminationMaxCircularComposition(12);
+        composition.setTerminationMaxCircularity(12);
 
         return composition.get();
     }

@@ -10,6 +10,7 @@
 
         <Logger name="org.springframework" level="warn"/>
 
+        <logger name="org.ringingmaster.engine.parse" level="warn"/>
         <logger name="org.ringingmaster.engine" level="info"/>
         <logger name="org.ringingmaster" level="info"/>
 

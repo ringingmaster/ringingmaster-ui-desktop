@@ -241,7 +241,7 @@ public class CompositionPersistence {
 //			composition.setTerminationMaxParts(CompositionPersist.getTerminationMaxParts());
 //		}
 //		if (CompositionPersist.getTerminationMaxCircularity() != null) {
-//			composition.setTerminationMaxCircularComposition(CompositionPersist.getTerminationMaxCircularity());
+//			composition.setTerminationMaxCircularity(CompositionPersist.getTerminationMaxCircularity());
 //		}
 //		if (CompositionPersist.getTerminationChange() != null) {
 //			composition.setTerminationChange(MethodBuilder.parse(composition.getNumberOfBells(), CompositionPersist.getTerminationChange()));

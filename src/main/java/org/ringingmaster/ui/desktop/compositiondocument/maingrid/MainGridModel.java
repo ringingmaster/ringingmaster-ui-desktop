@@ -71,7 +71,7 @@ public class MainGridModel extends SkeletalGridModel implements GridModel {
         else if (outOfBoundCol || outOfBoundRow) {
             return new ExpansionCellModel(compositionDocument.getMutableComposition(), row, compositionColumn);
         } else {
-            ParsedCell parsedCell = parse.mainBodyCells().get(row, compositionColumn);
+            ParsedCell parsedCell = parse.allCompositionCells().get(row, compositionColumn);
             return new StandardCellModel(
                     compositionDocument.getMutableComposition(),
                     compositionDocument.getCompositionStyle(),

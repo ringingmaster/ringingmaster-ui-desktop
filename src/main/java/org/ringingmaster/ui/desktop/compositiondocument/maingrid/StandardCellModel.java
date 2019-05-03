@@ -22,6 +22,8 @@ import java.util.Optional;
 import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static org.ringingmaster.util.javafx.grid.model.AdditionalStyleType.SUPERSCRIPT;
+import static org.ringingmaster.util.javafx.grid.model.AdditionalStyleType.WIGGLY_UNDERLINE;
 
 /**
  * TODO comments ???
@@ -73,7 +75,13 @@ class StandardCellModel extends SkeletalCellModel implements CellModel {
 
             @Override
             public Font getFont() {
-                return compositionStyle.getFont(CompositionStyle.CompositionStyleFont.MAIN);
+                Optional<Section> sectionAtElementIndex = parsedCell.getSectionAtElementIndex(index);
+                if (sectionAtElementIndex.isPresent() && sectionAtElementIndex.get().getParseType() == ParseType.VARIANCE_DETAIL) {
+                    return compositionStyle.getFont(CompositionStyle.CompositionStyleFont.MAIN_VARIANCE);
+                }
+                else {
+                    return compositionStyle.getFont(CompositionStyle.CompositionStyleFont.MAIN);
+                }
             }
 
             @Override
@@ -89,18 +97,24 @@ class StandardCellModel extends SkeletalCellModel implements CellModel {
 
             @Override
             public Set<AdditionalStyleType> getAdditionalStyle() {
+                EnumSet<AdditionalStyleType> style = EnumSet.noneOf(AdditionalStyleType.class);
                 Optional<Group> groupAtElementIndex = parsedCell.getGroupAtElementIndex(index);
                 if (groupAtElementIndex.isPresent()) {
                     if (!groupAtElementIndex.get().isValid()) {
-                        return EnumSet.of(AdditionalStyleType.WIGGLY_UNDERLINE);
+                        style.add(WIGGLY_UNDERLINE);
                     }
                 }
                 else {
                     if (parsedCell.get(index) != ' ') {
-                        return EnumSet.of(AdditionalStyleType.WIGGLY_UNDERLINE);
+                        style.add(WIGGLY_UNDERLINE);
                     }
                 }
-                return Collections.emptySet();
+
+                Optional<Section> sectionAtElementIndex = parsedCell.getSectionAtElementIndex(index);
+                if (sectionAtElementIndex.isPresent() && sectionAtElementIndex.get().getParseType() == ParseType.VARIANCE_DETAIL) {
+                    style.add(SUPERSCRIPT);
+                }
+                return style;
             }
 
             @Override

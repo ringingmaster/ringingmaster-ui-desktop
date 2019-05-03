@@ -51,7 +51,7 @@ class DefinitionShorthandCell extends SkeletalCellModel implements Iterable<Char
 
             @Override
             public Font getFont() {
-                return compositionDocument.getCompositionStyle().getFont(CompositionStyle.CompositionStyleFont.DEFINITION);
+                return compositionDocument.getCompositionStyle().getFont(CompositionStyle.CompositionStyleFont.MAIN);
             }
 
             @Override

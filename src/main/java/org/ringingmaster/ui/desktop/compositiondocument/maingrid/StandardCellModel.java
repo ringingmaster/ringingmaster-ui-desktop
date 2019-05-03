@@ -16,6 +16,7 @@ import org.ringingmaster.util.javafx.grid.model.SkeletalCellModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.concurrent.Immutable;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.Optional;
@@ -30,6 +31,7 @@ import static org.ringingmaster.util.javafx.grid.model.AdditionalStyleType.WIGGL
  *
  * @author Lake
  */
+@Immutable
 class StandardCellModel extends SkeletalCellModel implements CellModel {
 
     private final Logger log = LoggerFactory.getLogger(StandardCellModel.class);

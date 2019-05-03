@@ -255,7 +255,7 @@ public class PropertySetupWindow extends PropertyEditor {
         ((SelectionPropertyValue) findPropertyByName(COMPOSITION_TYPE_PROPERTY_NAME)).setListener((observable, oldValue, newValue) -> {
             if (newValue.intValue() != UNDEFINED_INDEX) {
                 final CompositionType compositionType = CompositionType.values()[newValue.intValue()];
-//TODO Reactive                updateCompositionIfPresent(composition -> composition.setCompositionCompositionType(compositionType));
+                updateCompositionIfPresent(composition -> composition.setCompositionType(compositionType));
             }
         });
     }

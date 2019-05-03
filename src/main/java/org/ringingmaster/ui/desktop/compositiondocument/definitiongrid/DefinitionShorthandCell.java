@@ -10,6 +10,7 @@ import org.ringingmaster.util.javafx.grid.model.AdditionalStyleType;
 import org.ringingmaster.util.javafx.grid.model.CharacterModel;
 import org.ringingmaster.util.javafx.grid.model.SkeletalCellModel;
 
+import javax.annotation.concurrent.Immutable;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
@@ -21,6 +22,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  *
  * @author Lake
  */
+@Immutable
 class DefinitionShorthandCell extends SkeletalCellModel implements Iterable<CharacterModel> {
 
     private final CompositionDocument compositionDocument;

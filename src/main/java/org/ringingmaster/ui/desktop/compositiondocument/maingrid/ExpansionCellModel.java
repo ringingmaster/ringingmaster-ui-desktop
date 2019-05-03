@@ -6,6 +6,8 @@ import org.ringingmaster.util.javafx.grid.model.CellModel;
 import org.ringingmaster.util.javafx.grid.model.CharacterModel;
 import org.ringingmaster.util.javafx.grid.model.SkeletalCellModel;
 
+import javax.annotation.concurrent.Immutable;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -13,6 +15,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  *
  * @author Lake
  */
+@Immutable
 class ExpansionCellModel extends SkeletalCellModel implements CellModel {
 
     private final MutableComposition mutableComposition;

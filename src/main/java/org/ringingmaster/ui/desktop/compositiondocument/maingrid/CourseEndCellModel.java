@@ -9,6 +9,7 @@ import org.ringingmaster.util.javafx.grid.model.CellModel;
 import org.ringingmaster.util.javafx.grid.model.CharacterModel;
 import org.ringingmaster.util.javafx.grid.model.SkeletalCellModel;
 
+import javax.annotation.concurrent.Immutable;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
@@ -20,6 +21,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  *
  * @author Steve Lake
  */
+@Immutable
 class CourseEndCellModel extends SkeletalCellModel implements CellModel {
 
     private final CompositionStyle compositionStyle;

@@ -155,6 +155,7 @@ public class CompositionDocumentTypeManager implements DocumentTypeManager {
         composition.addCharacters(MAIN_TABLE, 0, 0, "-s");
         composition.addCharacters(MAIN_TABLE, 1, 0, "p 3*");
         composition.addCharacters(MAIN_TABLE, 0, 1, "s-");
+        composition.addCharacters(MAIN_TABLE, 1, 1, "[-os]");
 
         composition.addDefinition("3*", "-s-");
         composition.addDefinition("tr", "sps");
@@ -172,6 +173,9 @@ public class CompositionDocumentTypeManager implements DocumentTypeManager {
                 .setFoldedPalindromeNotationShorthand("-16-16-16", "12")
                 .setCannedCalls()
                 .setSpliceIdentifier("P")
+                .addCallInitiationRow(7)
+                .addMethodCallingPosition("W", 7, 1)
+                .addMethodCallingPosition("H", 7, 2)
                 .build();
     }
 

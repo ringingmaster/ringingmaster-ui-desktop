@@ -1,16 +1,16 @@
-package org.ringingmaster.ui.desktop.compositiondocument.definitiongrid;
-
+package org.ringingmaster.ui.desktop.compositiondocument.maingrid;
 
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import org.ringingmaster.engine.composition.cell.Cell;
+import org.ringingmaster.engine.composition.MutableComposition;
 import org.ringingmaster.ui.common.CompositionStyle;
-import org.ringingmaster.ui.desktop.compositiondocument.CompositionDocument;
 import org.ringingmaster.util.javafx.grid.model.AdditionalStyleType;
+import org.ringingmaster.util.javafx.grid.model.CellModel;
 import org.ringingmaster.util.javafx.grid.model.CharacterModel;
 import org.ringingmaster.util.javafx.grid.model.SkeletalCellModel;
 
 import javax.annotation.concurrent.Immutable;
+
 import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
@@ -20,45 +20,52 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * TODO comments ???
  *
- * @author Lake
+ * @author Steve Lake
  */
 @Immutable
-class DefinitionShorthandCell extends SkeletalCellModel implements Iterable<CharacterModel> {
+class DefinitionEqualsCellModel extends SkeletalCellModel implements CellModel {
 
-    private final CompositionDocument compositionDocument;
-    private final Cell definition;
+    private final MutableComposition mutableComposition;
+    private final CompositionStyle compositionStyle;
 
-    public DefinitionShorthandCell(CompositionDocument compositionDocument, Cell definition) {
-        this.compositionDocument = checkNotNull(compositionDocument);
-        this.definition = checkNotNull(definition);
+
+
+    DefinitionEqualsCellModel(MutableComposition mutableComposition, CompositionStyle compositionStyle) {
+        this.mutableComposition = checkNotNull(mutableComposition);
+        this.compositionStyle = compositionStyle;
     }
 
     @Override
     public int getLength() {
-        //TODO Reactive
-        //	return definition.getShorthand().length() + 3;
         return 1;
     }
 
     @Override
-    public CharacterModel getCharacterModel(final int index) {
+    public void insertCharacter(int index, String character) {
+        // Do nothing
+    }
+
+    @Override
+    public void removeCharacter(int index) {
+        throw new IllegalStateException("Attempt to call removeCharacter on empty ExpansionCellModel");
+    }
+
+    @Override
+    public CharacterModel getCharacterModel(int index) {
         return new CharacterModel() {
             @Override
             public char getCharacter() {
-                //TODO Reactive
-//				final String shorthand = definition.getShorthand() + " = ";
-//				return shorthand.charAt(index);
-                return 'l';
+                return '=';
             }
 
             @Override
             public Font getFont() {
-                return compositionDocument.getCompositionStyle().getFont(CompositionStyle.CompositionStyleFont.MAIN);
+                return compositionStyle.getFont(CompositionStyle.CompositionStyleFont.MAIN);
             }
 
             @Override
             public Color getColor() {
-                return compositionDocument.getCompositionStyle().getColour(CompositionStyle.CompositionStyleColor.DEFINITION);
+                return compositionStyle.getColour(CompositionStyle.CompositionStyleColor.DEFINITION);
             }
 
             @Override
@@ -73,3 +80,4 @@ class DefinitionShorthandCell extends SkeletalCellModel implements Iterable<Char
         };
     }
 }
+

@@ -13,7 +13,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * TODO comments ???
  *
- * @author Lake
+ * @author Steve Lake
  */
 @Immutable
 class ExpansionCellModel extends SkeletalCellModel implements CellModel {

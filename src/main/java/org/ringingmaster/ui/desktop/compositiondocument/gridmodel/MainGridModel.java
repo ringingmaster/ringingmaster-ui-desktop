@@ -1,6 +1,7 @@
 package org.ringingmaster.ui.desktop.compositiondocument.maingrid;
 
 import javafx.scene.paint.Color;
+import org.ringingmaster.engine.composition.TableType;
 import org.ringingmaster.engine.parser.cell.ParsedCell;
 import org.ringingmaster.engine.parser.parse.Parse;
 import org.ringingmaster.ui.common.CompositionStyle;
@@ -16,7 +17,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * TODO comments ???
  *
- * @author Lake
+ * @author Steve Lake
  */
 public class MainGridModel extends SkeletalGridModel implements GridModel {
 
@@ -42,12 +43,15 @@ public class MainGridModel extends SkeletalGridModel implements GridModel {
 
     @Override
     public int getRowSize() {
-        return compositionDocument.getRowSize() + EXTRA_ROW_OR_COLUMN_FOR_EXPANSION;
+        return compositionDocument.getComposition().allCompositionCells().getRowSize()
+                 + EXTRA_ROW_OR_COLUMN_FOR_EXPANSION;
     }
 
     @Override
     public int getColumnSize() {
-        return EXTRA_COLUMN_FOR_COURSEHEADS + compositionDocument.getColumnSize() + EXTRA_ROW_OR_COLUMN_FOR_EXPANSION;
+        return EXTRA_COLUMN_FOR_COURSEHEADS +
+                compositionDocument.getComposition().allCompositionCells().getColumnSize() +
+                EXTRA_ROW_OR_COLUMN_FOR_EXPANSION;
     }
 
     @Override
@@ -75,6 +79,7 @@ public class MainGridModel extends SkeletalGridModel implements GridModel {
             return new StandardCellModel(
                     compositionDocument.getMutableComposition(),
                     compositionDocument.getCompositionStyle(),
+                    TableType.MAIN_TABLE,
                     row, compositionColumn, parsedCell);
         }
     }

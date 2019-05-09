@@ -7,7 +7,7 @@ import java.nio.file.Path;
 /**
  * TODO Comments
  *
- * @author Lake
+ * @author Steve Lake
  */
 public interface Document {
 

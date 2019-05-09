@@ -1,4 +1,4 @@
-package org.ringingmaster.ui.desktop.compositiondocument.maingrid;
+package org.ringingmaster.ui.desktop.compositiondocument.gridmodel;
 
 import org.ringingmaster.engine.composition.MutableComposition;
 import org.ringingmaster.engine.composition.TableType;
@@ -26,10 +26,10 @@ class StandardCellModel extends SkeletalCellModel implements CellModel {
 
     private final CompositionStyle compositionStyle;
     private final MutableComposition mutableComposition;
+    private final TableType tableType;
     private final int column;
     private final int row;
     private final ParsedCell parsedCell;
-    private final TableType tableType;
 
     StandardCellModel(MutableComposition mutableComposition,
                       CompositionStyle compositionStyle,

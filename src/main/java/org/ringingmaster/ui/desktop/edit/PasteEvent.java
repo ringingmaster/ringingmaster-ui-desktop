@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 /**
  * TODO Comments
  *
- * @author Lake
+ * @author Steve Lake
  */
 public class PasteEvent extends SkeletalEventDefinition implements EventDefinition {
 

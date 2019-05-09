@@ -1,4 +1,4 @@
-package org.ringingmaster.ui.desktop.compositiondocument.maingrid;
+package org.ringingmaster.ui.desktop.compositiondocument.gridmodel;
 
 import org.ringingmaster.engine.composition.MutableComposition;
 import org.ringingmaster.engine.composition.TableType;
@@ -19,13 +19,16 @@ import static com.google.common.base.Preconditions.checkNotNull;
 class ExpansionCellModel extends SkeletalCellModel implements CellModel {
 
     private final MutableComposition mutableComposition;
+    private final TableType tableType;
     private final int column;
     private final int row;
 
 
     ExpansionCellModel(MutableComposition mutableComposition,
+                       TableType tableType,
                        int row, int column) {
         this.mutableComposition = checkNotNull(mutableComposition);
+        this.tableType = checkNotNull(tableType);
         this.column = column;
         this.row = row;
     }
@@ -37,7 +40,7 @@ class ExpansionCellModel extends SkeletalCellModel implements CellModel {
 
     @Override
     public void insertCharacter(int index, String character) {
-        mutableComposition.insertCharacters(TableType.MAIN_TABLE, row, column, index, character);
+        mutableComposition.insertCharacters(tableType, row, column, index, character);
     }
 
     @Override

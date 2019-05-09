@@ -12,7 +12,7 @@ import java.util.Optional;
 /**
  * TODO Comments
  *
- * @author Lake
+ * @author Steve Lake
  */
 public class DeleteNotationEvent extends SkeletalEventDefinition implements EventDefinition {
 

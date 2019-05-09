@@ -9,7 +9,7 @@ import javafx.scene.layout.VBox;
 /**
  * TODO Comments
  *
- * @author Lake
+ * @author Steve Lake
  */
 public class MainParentWindow extends VBox {
 
@@ -40,7 +40,7 @@ public class MainParentWindow extends VBox {
         topBottomSplit.setOrientation(Orientation.VERTICAL);
         topBottomSplit.getItems().add(0, leftRightSplit);
         topBottomSplit.getItems().add(1, analysisSplit);
-        topBottomSplit.setDividerPositions(0.6);
+        topBottomSplit.setDividerPositions(0.8);
         SplitPane.setResizableWithParent(analysisSplit, false);
 
         getChildren().add(menuBar);

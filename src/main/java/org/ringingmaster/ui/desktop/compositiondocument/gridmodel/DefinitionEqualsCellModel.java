@@ -1,4 +1,4 @@
-package org.ringingmaster.ui.desktop.compositiondocument.maingrid;
+package org.ringingmaster.ui.desktop.compositiondocument.gridmodel;
 
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;

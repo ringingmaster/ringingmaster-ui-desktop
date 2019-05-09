@@ -13,7 +13,6 @@ import org.ringingmaster.ui.desktop.documentmanager.CompositionPersistence;
 import org.ringingmaster.ui.desktop.documentmanager.Document;
 import org.ringingmaster.ui.desktop.documentmanager.DocumentManager;
 import org.ringingmaster.ui.desktop.documentmanager.DocumentTypeManager;
-import org.ringingmaster.ui.desktop.proof.ProofManager;
 import org.ringingmaster.util.beanfactory.BeanFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +27,7 @@ import static org.ringingmaster.engine.composition.compositiontype.CompositionTy
 /**
  * TODO Comments
  *
- * @author Lake
+ * @author Steve Lake
  */
 public class CompositionDocumentTypeManager implements DocumentTypeManager {
 
@@ -36,7 +35,6 @@ public class CompositionDocumentTypeManager implements DocumentTypeManager {
 
     public static final String DOCUMENT_TYPE_NAME = "Composition";
     private BeanFactory beanFactory;
-    private ProofManager proofManager;
     private DocumentManager documentManager;
     private CompositionPersistence CompositionPersistence = new CompositionPersistence();
     private Optional<CompositionDocument> currentDocument = Optional.empty();
@@ -123,20 +121,13 @@ public class CompositionDocumentTypeManager implements DocumentTypeManager {
 
         //TODO Temp notifications
         observableActiveCompositionDocument().subscribe(compositionDocument -> {
-
             currentDocument = compositionDocument;
-            //currentDocument.parseAndProve();
-
             documentManager.updateTitles();
         });
     }
 
     public void setBeanFactory(BeanFactory beanFactory) {
         this.beanFactory = beanFactory;
-    }
-
-    public void setProofManager(ProofManager proofManager) {
-        this.proofManager = proofManager;
     }
 
     //TODO Make this return a new composition.
@@ -200,7 +191,7 @@ public class CompositionDocumentTypeManager implements DocumentTypeManager {
     }
 
     // TODO remove this
-    public static Notation buildPlainBobMajor() {
+    private static Notation buildPlainBobMajor() {
         return NotationBuilder.getInstance()
                 .setNumberOfWorkingBells(NumberOfBells.BELLS_8)
                 .setName("Plain Bob")

@@ -1,4 +1,4 @@
-package org.ringingmaster.ui.desktop.compositiondocument.maingrid;
+package org.ringingmaster.ui.desktop.compositiondocument.gridmodel;
 
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -22,15 +22,15 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * @author Steve Lake
  */
 @Immutable
-class CourseEndCellModel extends SkeletalCellModel implements CellModel {
+class MainCourseEndCellModel extends SkeletalCellModel implements CellModel {
 
     private final CompositionStyle compositionStyle;
     private final Composition composition;
 
     private final int row;
 
-    CourseEndCellModel(Composition composition, CompositionStyle compositionStyle,
-                              int row) {
+    MainCourseEndCellModel(Composition composition, CompositionStyle compositionStyle,
+                           int row) {
         this.compositionStyle = compositionStyle;
         this.composition = checkNotNull(composition);
         this.row = row;
@@ -74,12 +74,12 @@ class CourseEndCellModel extends SkeletalCellModel implements CellModel {
 
     @Override
     public void insertCharacter(int index, String character) {
-        throw new IllegalStateException("Attempt to call insertCharacter on read only CourseEndCellModel");
+        throw new IllegalStateException("Attempt to call insertCharacter on read only MainCourseEndCellModel");
     }
 
     @Override
     public void removeCharacter(int index) {
-        throw new IllegalStateException("Attempt to call removeCharacter on read only CourseEndCellModel");
+        throw new IllegalStateException("Attempt to call removeCharacter on read only MainCourseEndCellModel");
     }
 
 }

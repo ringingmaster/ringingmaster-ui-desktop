@@ -20,7 +20,7 @@ import static org.ringingmaster.engine.notation.LeadHeadCalculator.LeadHeadValid
 /**
  * TODO Comments
  *
- * @author Lake
+ * @author Steve Lake
  */
 public class LeadHeadTablePane extends ScrollPane {
 

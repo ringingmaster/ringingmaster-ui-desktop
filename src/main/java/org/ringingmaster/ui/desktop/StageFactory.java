@@ -5,7 +5,7 @@ import javafx.stage.Stage;
 /**
  * TODO Comments
  *
- * @author Lake
+ * @author Steve Lake
  */
 public class StageFactory {
 

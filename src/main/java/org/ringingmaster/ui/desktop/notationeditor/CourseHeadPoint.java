@@ -8,7 +8,7 @@ import org.ringingmaster.util.javafx.dialog.EditMode;
 /**
  * TODO Comments
  *
- * @author Lake
+ * @author Steve Lake
  */
 
 

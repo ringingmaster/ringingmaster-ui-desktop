@@ -19,7 +19,7 @@ import org.ringingmaster.util.javafx.namevaluepair.NameValuePairTable;
 /**
  * TODO Comments
  *
- * @author Lake
+ * @author Steve Lake
  */
 public class Status {
 

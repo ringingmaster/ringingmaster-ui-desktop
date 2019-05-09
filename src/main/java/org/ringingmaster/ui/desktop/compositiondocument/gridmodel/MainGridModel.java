@@ -1,4 +1,4 @@
-package org.ringingmaster.ui.desktop.compositiondocument.maingrid;
+package org.ringingmaster.ui.desktop.compositiondocument.gridmodel;
 
 import javafx.scene.paint.Color;
 import org.ringingmaster.engine.composition.TableType;
@@ -70,10 +70,10 @@ public class MainGridModel extends SkeletalGridModel implements GridModel {
         int compositionColumn = column - EXTRA_COLUMN_FOR_COURSEHEADS ;
 
         if (column == 0) {
-            return new CourseEndCellModel( compositionDocument.getComposition(), compositionDocument.getCompositionStyle(), row);
+            return new MainCourseEndCellModel( compositionDocument.getComposition(), compositionDocument.getCompositionStyle(), row);
         }
         else if (outOfBoundCol || outOfBoundRow) {
-            return new ExpansionCellModel(compositionDocument.getMutableComposition(), row, compositionColumn);
+            return new ExpansionCellModel(compositionDocument.getMutableComposition(), TableType.MAIN_TABLE, row, compositionColumn);
         } else {
             ParsedCell parsedCell = parse.allCompositionCells().get(row, compositionColumn);
             return new StandardCellModel(

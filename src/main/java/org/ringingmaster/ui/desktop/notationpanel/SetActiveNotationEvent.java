@@ -12,7 +12,7 @@ import java.util.Optional;
 /**
  * TODO Comments
  *
- * @author Lake
+ * @author Steve Lake
  */
 public class SetActiveNotationEvent extends SkeletalEventDefinition implements EventDefinition {
 

@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 /**
  * TODO Comments
  *
- * @author Lake
+ * @author Steve Lake
  */
 public class PropertyNotationPanel extends NameValuePairTable implements Listenable<PropertyNotationPanelListener> {
 

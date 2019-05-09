@@ -27,7 +27,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * Manages crating and switching of documents.
  *
- * @author Lake
+ * @author Steve Lake
  */
 public class DocumentManager  {
 

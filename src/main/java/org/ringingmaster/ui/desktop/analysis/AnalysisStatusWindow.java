@@ -1,15 +1,13 @@
 package org.ringingmaster.ui.desktop.analysis;
 
-import javafx.application.Platform;
 import org.ringingmaster.engine.analyser.proof.Proof;
-import org.ringingmaster.ui.desktop.proof.ProofManager;
 import org.ringingmaster.util.javafx.namevaluepair.NameValuePairModel;
 import org.ringingmaster.util.javafx.namevaluepair.NameValuePairTable;
 
 /**
  * TODO Comments
  *
- * @author Lake
+ * @author Steve Lake
  */
 public class AnalysisStatusWindow extends NameValuePairTable {
 
@@ -25,29 +23,29 @@ public class AnalysisStatusWindow extends NameValuePairTable {
     public static final String PROOF_TIME_PROPERTY_NAME = "Proof Time";
 
 
-    public void setProofManager(ProofManager proofManager) {
-        proofManager.addListener(proofOptional -> Platform.runLater(() -> {
-            if (proofOptional.isPresent()) {
-                if (getItems().size() == 0) {
-                    buildProperties();
-                }
-
-                Proof proof = proofOptional.get();
-                updateCompositionTrue(proof);
-                updateTermination(proof);
-                updatePartCount(proof);
-                updateLeadCount(proof);
-                updateRowCount(proof);
-                updateCallCount(proof);
-                updateStartRow(proof);
-                updateEndRow(proof);
-                updateEndStroke(proof);
-                updateProofTime(proof);
-            } else {
-                getItems().clear();
-            }
-        }));
-    }
+//TODO REACTIVE    public void setProofManager(ProofManager proofManager) {
+//        proofManager.addListener(proofOptional -> Platform.runLater(() -> {
+//            if (proofOptional.isPresent()) {
+//                if (getItems().size() == 0) {
+//                    buildProperties();
+//                }
+//
+//                Proof proof = proofOptional.get();
+//                updateCompositionTrue(proof);
+//                updateTermination(proof);
+//                updatePartCount(proof);
+//                updateLeadCount(proof);
+//                updateRowCount(proof);
+//                updateCallCount(proof);
+//                updateStartRow(proof);
+//                updateEndRow(proof);
+//                updateEndStroke(proof);
+//                updateProofTime(proof);
+//            } else {
+//                getItems().clear();
+//            }
+//        }));
+//    }
 
     private void buildProperties() {
         getItems().add(new NameValuePairModel(COMPOSITION_TRUE_PROPERTY_NAME));

@@ -35,7 +35,7 @@ import static org.ringingmaster.util.javafx.propertyeditor.SelectionPropertyValu
 /**
  * TODO comments ???
  *
- * @author Lake
+ * @author Steve Lake
  */
 public class PropertySetupWindow extends PropertyEditor {
 

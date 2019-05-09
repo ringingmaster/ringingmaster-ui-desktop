@@ -1,4 +1,4 @@
-package org.ringingmaster.ui.desktop.compositiondocument.maingrid;
+package org.ringingmaster.ui.desktop.compositiondocument.gridmodel;
 
 
 import javafx.scene.paint.Color;
@@ -69,21 +69,21 @@ public class DefinitionGridModel extends SkeletalGridModel implements GridModel 
         checkElementIndex(row, getRowSize());
         checkElementIndex(column, getColumnSize());
         boolean outOfBoundRow = (row >= getRowSize() - EXTRA_ROW_FOR_EXPANSION);
+        int definitionColumn = (column == 0) ? 0 : 1; //Takes account of equals cell in column 1.
 
         if (outOfBoundRow) {
-            return new NewDefinitionCellModel(compositionDocument.getMutableComposition());
+            return new ExpansionCellModel(compositionDocument.getMutableComposition(), TableType.DEFINITION_TABLE, row, definitionColumn);
         }
         else if (column == 1) {
             return new DefinitionEqualsCellModel(compositionDocument.getMutableComposition(), compositionDocument.getCompositionStyle());
         }
         else {
-            int definitionColumn = (column == 0) ? 0 : 1; //Takes account of equals in column 1.
             ParsedCell parsedCell = parse.allDefinitionCells().get(row, definitionColumn);
 
             return new StandardCellModel(
                     compositionDocument.getMutableComposition(),
                     compositionDocument.getCompositionStyle(),
-                    TableType.MAIN_TABLE,
+                    TableType.DEFINITION_TABLE,
                     row, definitionColumn, parsedCell);
         }
     }

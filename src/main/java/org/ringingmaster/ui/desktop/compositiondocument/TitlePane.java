@@ -17,7 +17,7 @@ import org.ringingmaster.util.javafx.color.ColorUtil;
 /**
  * TODO comments ???
  *
- * @author Lake
+ * @author Steve Lake
  */
 public class TitlePane extends VBox {
 
@@ -31,17 +31,14 @@ public class TitlePane extends VBox {
         getStylesheets().add(STYLESHEET);
 
         titleText.setFont(new Font(20));
-        //TODO 	titleText.setFontSmoothingType(FontSmoothingType.LCD);
         getChildren().add(titleText);
 
         authorText.setFont(new Font(14));
-        //TODO authorText.setFontSmoothingType(FontSmoothingType.LCD);
 
         Text space = new Text();
         HBox authorOffset = new HBox(space, authorText);
         authorOffset.setSpacing(20);
         getChildren().add(authorOffset);
-
 
         setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
         setSpacing(2.0);

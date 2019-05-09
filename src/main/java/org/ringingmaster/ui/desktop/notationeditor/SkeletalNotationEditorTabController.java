@@ -9,7 +9,7 @@ import static com.google.common.base.Preconditions.checkState;
 /**
  * TODO Comments
  *
- * @author Lake
+ * @author Steve Lake
  */
 public abstract class SkeletalNotationEditorTabController implements NotationEditorTabController {
 

@@ -7,31 +7,34 @@ import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import org.ringingmaster.engine.NumberOfBells;
 import org.ringingmaster.engine.composition.Composition;
 import org.ringingmaster.engine.composition.DryRun;
 import org.ringingmaster.engine.composition.MutableComposition;
-import org.ringingmaster.engine.method.Stroke;
 import org.ringingmaster.engine.notation.Notation;
 import org.ringingmaster.engine.parser.Parser;
 import org.ringingmaster.engine.parser.parse.Parse;
 import org.ringingmaster.ui.common.CompositionStyle;
-import org.ringingmaster.ui.desktop.compositiondocument.maingrid.MainGridModel;
+import org.ringingmaster.ui.desktop.compositiondocument.gridmodel.DefinitionGridModel;
+import org.ringingmaster.ui.desktop.compositiondocument.gridmodel.MainGridModel;
 import org.ringingmaster.ui.desktop.documentmanager.DefaultDocument;
 import org.ringingmaster.ui.desktop.documentmanager.Document;
-import org.ringingmaster.ui.desktop.proof.ProofManager;
+import org.ringingmaster.util.javafx.color.ColorUtil;
 import org.ringingmaster.util.javafx.grid.canvas.GridPane;
-import org.ringingmaster.util.javafx.grid.model.GridModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Supplier;
@@ -39,20 +42,21 @@ import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static org.ringingmaster.engine.composition.DryRun.DryRunResult.SUCCESS;
-import static org.ringingmaster.engine.composition.MutableComposition.TERMINATION_MAX_PARTS_MAX;
 import static org.ringingmaster.engine.notation.PlaceSetSequence.BY_NUMBER_THEN_NAME;
 
 /**
  * Provides the interface between the engine {@code Composition} and the various
  * UI components.
  *
- * @author Lake
+ * @author Steve Lake
  */
 
 // TODO ALL business logic in this class should be in the engine.
 public class CompositionDocument extends ScrollPane implements Document {
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
+
+    public static final String STYLESHEET = "org/ringingmaster/ui/desktop/documentpanel/titlepane.css"; //TODO using wrong CSS
 
     public static final String SPLICED_TOKEN = "<Spliced>";
 
@@ -62,35 +66,46 @@ public class CompositionDocument extends ScrollPane implements Document {
     private Document documentDelegate = new DefaultDocument();
 
     private MainGridModel mainGridModel;
-    private final List<GridModel> definitionModels = new ArrayList<>();
+    private DefinitionGridModel definitionModel;
 
-    private ProofManager proofManager;
-    private final Parser parser = new Parser();
+    private Observable<Parse> observableParse;
 
 
     // UI components
     private final TitlePane titlePane = new TitlePane();
     private final GridPane gridPane = new GridPane("Main");
-    private final DefinitionPane definitionPane = new DefinitionPane();
+    private final TextField definitionText = new TextField("Definitions"); //TODO separate out
+    private final GridPane definitionPane = new GridPane("Definition");
 
     public CompositionDocument() {
         titlePane.setCompositionStyle(compositionStyle);
     }
 
     public void init(MutableComposition composition) {
-        layoutNodes();
 
         this.composition = composition;
+        observableParse = composition.observable()
+                .map(new Parser()::apply)
+                .replay(1)
+                .autoConnect(1);
 
-        configureDefinitionModels();
-
-        mainGridModel = new MainGridModel(this);
-
-        //TODO is this lot updated?
-        gridPane.setModel(mainGridModel);
-        definitionPane.setModels(definitionModels);
+        layoutNodes();
 
         titlePane.init(composition);
+
+
+        mainGridModel = new MainGridModel(this);
+        gridPane.setModel(mainGridModel);
+
+        definitionText.getStylesheets().add(STYLESHEET);
+        definitionText.setFont(new Font(14));
+        // TODO make style reactive
+        Color titleColor = compositionStyle.getColour(CompositionStyle.CompositionStyleColor.DEFINITION);
+        definitionText.setStyle("-fx-text-inner-color: " + ColorUtil.toWeb(titleColor) + ";");
+
+
+        definitionModel = new DefinitionGridModel(this);
+        definitionPane.setModel(definitionModel);
     }
 
     public Observable<Composition> observableComposition() {
@@ -98,16 +113,23 @@ public class CompositionDocument extends ScrollPane implements Document {
     }
 
     public Observable<Parse> observableParse() {
-        return composition.observable()
-                .map(parser::apply);
+        log.info("get Observableparse");
+        return observableParse;
     }
 
     private void layoutNodes() {
-        VBox verticalLayout = new VBox(titlePane, gridPane, definitionPane);
+
+        HBox definitionLayout = new HBox(10, new Pane(), definitionPane);
+
+        VBox verticalLayout = new VBox(titlePane, gridPane, new Pane(), definitionText, definitionLayout);
         verticalLayout.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
         verticalLayout.setSpacing(20.0);
 
-        setContent(verticalLayout);
+        BorderPane border = new BorderPane(verticalLayout);
+        BorderPane.setMargin(verticalLayout, new Insets(20));
+        border.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
+
+        setContent(border);
         setHbarPolicy(ScrollBarPolicy.AS_NEEDED);
         setVbarPolicy(ScrollBarPolicy.AS_NEEDED);
 
@@ -135,6 +157,7 @@ public class CompositionDocument extends ScrollPane implements Document {
         return composition.get();
     }
 
+    @Deprecated
     public NumberOfBells getNumberOfBells() {
         return composition.get().getNumberOfBells();
     }
@@ -154,6 +177,7 @@ public class CompositionDocument extends ScrollPane implements Document {
         return sortedNotations;
     }
 
+    @Deprecated
     public boolean addNotation(Notation notationToAdd) {
         checkNotNull(notationToAdd);
 
@@ -177,6 +201,7 @@ public class CompositionDocument extends ScrollPane implements Document {
         return mutated;
     }
 
+    @Deprecated
     public void removeNotation(Notation notationToRemove) {
         checkNotNull(notationToRemove);
 
@@ -188,6 +213,7 @@ public class CompositionDocument extends ScrollPane implements Document {
 //	TODO			Also what happens to active method.
     }
 
+    @Deprecated
     public boolean exchangeNotationAfterEdit(Notation originalNotation, Notation replacementNotation) {
         checkNotNull(originalNotation);
         checkNotNull(replacementNotation);
@@ -213,10 +239,12 @@ public class CompositionDocument extends ScrollPane implements Document {
         return mutated;
     }
 
+    @Deprecated
     public Notation getSingleMethodActiveNotation() {
         return composition.get().getNonSplicedActiveNotation().get();
     }
 
+    @Deprecated
     public void setSingleMethodActiveNotation(Notation notation) {
         boolean mutated = false;
         if (!notation.equals(composition.get().getNonSplicedActiveNotation())) {
@@ -238,34 +266,8 @@ public class CompositionDocument extends ScrollPane implements Document {
         setUpdatePoint(() -> (spliced ? "Set spliced" : "Set non spliced"), mutated);
     }
 
-    private void configureDefinitionModels() {
-        //TODO Reactive
-//        final List<CompositionDefinition> definitions = new ArrayList<>(composition.get().getDefinitions());
-//        Collections.sort(definitions, CompositionDefinition.BY_SHORTHAND);
-//
-//        for (CompositionDefinition definition : definitions) {
-//            definitionModels.add(new DefinitionGridModel(this, definition));
-//        }
-    }
-
-    public List<GridModel> getDefinitionGridModels() {
-        return definitionModels;
-    }
-
     public CompositionStyle getCompositionStyle() {
         return compositionStyle;
-    }
-
-    public int getColumnSize() {
-          return composition.get().allCompositionCells().getColumnSize();
-    }
-
-    public int getRowSize() {
-        return composition.get().allCompositionCells().getRowSize();
-    }
-
-    public void setProofManager(ProofManager proofManager) {
-        this.proofManager = proofManager;
     }
 
     @Override

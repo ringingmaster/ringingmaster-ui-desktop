@@ -26,7 +26,7 @@ import java.util.prefs.Preferences;
  * Application class, but does not pass it back (for use in a Spring factory) means that we have to let JavaFX do its
  * thing then hook into the callbacks to glue everything together.
  *
- * @author Lake
+ * @author Steve Lake
  */
 public class RingingMasterDesktopApp extends Application {
 

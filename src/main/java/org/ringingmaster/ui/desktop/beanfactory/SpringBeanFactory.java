@@ -8,7 +8,7 @@ import org.springframework.context.ApplicationContextAware;
 /**
  * Simple Spring implementation. This just hides Spring from the rest of the application.
  *
- * @author Lake
+ * @author Steve Lake
  */
 public class SpringBeanFactory implements BeanFactory, ApplicationContextAware {
 

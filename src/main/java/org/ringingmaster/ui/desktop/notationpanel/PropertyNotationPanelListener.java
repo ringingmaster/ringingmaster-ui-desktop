@@ -7,7 +7,7 @@ import java.util.Optional;
 /**
  * TODO Comments
  *
- * @author Lake
+ * @author Steve Lake
  */
 public interface PropertyNotationPanelListener {
 

@@ -13,6 +13,7 @@ import org.ringingmaster.util.javafx.grid.model.SkeletalGridModel;
 
 import static com.google.common.base.Preconditions.checkElementIndex;
 import static com.google.common.base.Preconditions.checkNotNull;
+import static org.ringingmaster.engine.composition.compositiontype.CompositionType.COURSE_BASED;
 
 /**
  * TODO comments ???
@@ -55,8 +56,47 @@ public class MainGridModel extends SkeletalGridModel implements GridModel {
     }
 
     @Override
-    public Color getGridColor() {
-        return compositionDocument.getCompositionStyle().getColour(CompositionStyle.CompositionStyleColor.GRID);
+    public Color getGridRowColor(int row) {
+        if (row == 1 &&
+                compositionDocument.getComposition().getCompositionType() == COURSE_BASED) {
+            return compositionDocument.getCompositionStyle().getColour(CompositionStyle.CompositionStyleColor.COMPOSITION_GRID_SEPARATOR);
+        }
+        else {
+            return compositionDocument.getCompositionStyle().getColour(CompositionStyle.CompositionStyleColor.COMPOSITION_GRID);
+        }
+    }
+
+    @Override
+    public Color getGridColColor(int col) {
+        if ((col > 0) && (col == (getColumnSize() - 2 - EXTRA_ROW_OR_COLUMN_FOR_EXPANSION)) &&
+                compositionDocument.getComposition().isSpliced()) {
+            return compositionDocument.getCompositionStyle().getColour(CompositionStyle.CompositionStyleColor.COMPOSITION_GRID_SEPARATOR);
+        }
+        else {
+            return compositionDocument.getCompositionStyle().getColour(CompositionStyle.CompositionStyleColor.COMPOSITION_GRID);
+        }
+    }
+
+    @Override
+    public double getGridRowLineWidth(int row) {
+        if (row == 1 &&
+                compositionDocument.getComposition().getCompositionType() == COURSE_BASED) {
+            return 2.0;
+        }
+        else {
+            return 1.0;
+        }
+    }
+
+    @Override
+    public double getGridColLineWidth(int col) {
+        if ((col > 0) && (col == (getColumnSize() - 2 - EXTRA_ROW_OR_COLUMN_FOR_EXPANSION)) &&
+                compositionDocument.getComposition().isSpliced()) {
+            return 2.0;
+        }
+        else {
+            return 1.0;
+        }
     }
 
     @Override

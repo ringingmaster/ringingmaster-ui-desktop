@@ -62,8 +62,33 @@ public class DefinitionGridModel extends SkeletalGridModel implements GridModel 
     }
 
     @Override
-    public Color getGridColor() {
+    public Color getGridRowColor(int row) {
+        if (row > 0 && row < getRowSize()) {
+            return compositionDocument.getCompositionStyle().getColour(CompositionStyle.CompositionStyleColor.DEFINITION_GRID_SEPARATOR);
+        }
+        else {
+            return compositionDocument.getCompositionStyle().getColour(CompositionStyle.CompositionStyleColor.DEFINITION_GRID_SEPARATOR);
+        }
+    }
+
+    @Override
+    public Color getGridColColor(int col) {
         return compositionDocument.getCompositionStyle().getColour(CompositionStyle.CompositionStyleColor.DEFINITION_GRID);
+    }
+
+    @Override
+    public double getGridRowLineWidth(int row) {
+        if (row > 0 && row < getRowSize()) {
+            return 2.0;
+        }
+        else {
+            return 1.0;
+        }
+    }
+
+    @Override
+    public double getGridColLineWidth(int col) {
+        return 1.0;
     }
 
     @Override

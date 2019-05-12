@@ -46,9 +46,9 @@ public class CompositionPersistenceTest {
         composition.addNotation(buildPlainBobMinimus());
         composition.addNotation(buildPlainBobMajor());
 
-        composition.addCharacters(TableType.MAIN_TABLE, 0, 0, "-s");
-        composition.addCharacters(TableType.MAIN_TABLE, 0, 1, "s-");
-        composition.addCharacters(TableType.MAIN_TABLE, 1, 0, "p 3*");
+        composition.addCharacters(TableType.COMPOSITION_TABLE, 0, 0, "-s");
+        composition.addCharacters(TableType.COMPOSITION_TABLE, 0, 1, "s-");
+        composition.addCharacters(TableType.COMPOSITION_TABLE, 1, 0, "p 3*");
 
         composition.addDefinition("3*", "-s-");
         composition.addDefinition("tr", "sps");

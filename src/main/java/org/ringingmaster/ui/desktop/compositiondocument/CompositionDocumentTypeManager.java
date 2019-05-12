@@ -21,7 +21,7 @@ import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Optional;
 
-import static org.ringingmaster.engine.composition.TableType.MAIN_TABLE;
+import static org.ringingmaster.engine.composition.TableType.COMPOSITION_TABLE;
 import static org.ringingmaster.engine.composition.compositiontype.CompositionType.LEAD_BASED;
 
 /**
@@ -143,10 +143,10 @@ public class CompositionDocumentTypeManager implements DocumentTypeManager {
         composition.addNotation(buildPlainBobMinimus());
         composition.addNotation(buildPlainBobMajor());
 
-        composition.addCharacters(MAIN_TABLE, 0, 0, "-s");
-        composition.addCharacters(MAIN_TABLE, 1, 0, "p 3*");
-        composition.addCharacters(MAIN_TABLE, 0, 1, "s-");
-        composition.addCharacters(MAIN_TABLE, 1, 1, "[-os]");
+        composition.addCharacters(COMPOSITION_TABLE, 0, 0, "-s");
+        composition.addCharacters(COMPOSITION_TABLE, 1, 0, "p 3*");
+        composition.addCharacters(COMPOSITION_TABLE, 0, 1, "s-");
+        composition.addCharacters(COMPOSITION_TABLE, 1, 1, "[-os]");
 
         composition.addDefinition("3*", "-s-");
         composition.addDefinition("tr", "sps");

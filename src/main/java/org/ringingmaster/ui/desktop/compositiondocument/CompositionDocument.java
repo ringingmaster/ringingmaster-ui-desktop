@@ -93,16 +93,15 @@ public class CompositionDocument extends ScrollPane implements Document {
 
         titlePane.init(composition);
 
-
         mainGridModel = new MainGridModel(this);
         gridPane.setModel(mainGridModel);
 
+        //TODO package in its own class
         definitionText.getStylesheets().add(STYLESHEET);
         definitionText.setFont(new Font(14));
         // TODO make style reactive
         Color titleColor = compositionStyle.getColour(CompositionStyle.CompositionStyleColor.DEFINITION);
         definitionText.setStyle("-fx-text-inner-color: " + ColorUtil.toWeb(titleColor) + ";");
-
 
         definitionModel = new DefinitionGridModel(this);
         definitionPane.setModel(definitionModel);

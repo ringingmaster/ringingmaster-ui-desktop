@@ -47,7 +47,7 @@ class DefinitionEqualsCellModel extends SkeletalCellModel implements CellModel {
 
     @Override
     public void removeCharacter(int index) {
-        throw new IllegalStateException("Attempt to call removeCharacter on empty ExpansionCellModel");
+        //Do nothing
     }
 
     @Override

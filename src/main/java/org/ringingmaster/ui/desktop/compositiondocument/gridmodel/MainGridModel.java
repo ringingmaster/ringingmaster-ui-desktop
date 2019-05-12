@@ -73,13 +73,13 @@ public class MainGridModel extends SkeletalGridModel implements GridModel {
             return new MainCourseEndCellModel( compositionDocument.getComposition(), compositionDocument.getCompositionStyle(), row);
         }
         else if (outOfBoundCol || outOfBoundRow) {
-            return new ExpansionCellModel(compositionDocument.getMutableComposition(), TableType.MAIN_TABLE, row, compositionColumn);
+            return new ExpansionCellModel(this, compositionDocument.getMutableComposition(), TableType.COMPOSITION_TABLE, row, compositionColumn);
         } else {
             ParsedCell parsedCell = parse.allCompositionCells().get(row, compositionColumn);
             return new StandardCellModel(
                     compositionDocument.getMutableComposition(),
                     compositionDocument.getCompositionStyle(),
-                    TableType.MAIN_TABLE,
+                    TableType.COMPOSITION_TABLE,
                     row, compositionColumn, parsedCell);
         }
     }

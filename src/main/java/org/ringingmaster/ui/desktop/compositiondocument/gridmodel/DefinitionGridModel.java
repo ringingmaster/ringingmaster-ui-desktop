@@ -16,6 +16,9 @@ import org.slf4j.LoggerFactory;
 import static com.google.common.base.Preconditions.checkElementIndex;
 import static com.google.common.base.Preconditions.checkNotNull;
 
+//TODO When adding a new definition through the grid, and typing on the equals column, it does not leave the caret in the correct location
+//TODO When deleting the last shorthand, the definition flips to the shorthand column.
+
 /**
  * TODO comments ???
  *
@@ -27,7 +30,7 @@ public class DefinitionGridModel extends SkeletalGridModel implements GridModel 
 
 
     public static final int EXTRA_ROW_FOR_EXPANSION = 1;
-    public static final int EQUALS_COLUMN = 1;
+    public static final int EXTRA_ROW_FOR_EQUALS = 1;
 
 
     private final CompositionDocument compositionDocument;
@@ -55,8 +58,7 @@ public class DefinitionGridModel extends SkeletalGridModel implements GridModel 
 
     @Override
     public int getColumnSize() {
-        return compositionDocument.getComposition().allDefinitionCells().getColumnSize() +
-                EQUALS_COLUMN;
+        return 3;
     }
 
     @Override
@@ -69,10 +71,14 @@ public class DefinitionGridModel extends SkeletalGridModel implements GridModel 
         checkElementIndex(row, getRowSize());
         checkElementIndex(column, getColumnSize());
         boolean outOfBoundRow = (row >= getRowSize() - EXTRA_ROW_FOR_EXPANSION);
+        boolean outOfBoundCol = column >= compositionDocument.getComposition().allDefinitionCells().getColumnSize() + EXTRA_ROW_FOR_EQUALS;
         int definitionColumn = (column == 0) ? 0 : 1; //Takes account of equals cell in column 1.
 
-        if (outOfBoundRow) {
-            return new ExpansionCellModel(compositionDocument.getMutableComposition(), TableType.DEFINITION_TABLE, row, definitionColumn);
+        if (getRowSize() == 1 && column == 1) { //When there are no definitions, show the equals cell
+            return new DefinitionEqualsCellModel(compositionDocument.getMutableComposition(), compositionDocument.getCompositionStyle());
+        }
+        else if (outOfBoundRow || outOfBoundCol) {
+            return new ExpansionCellModel(this, compositionDocument.getMutableComposition(), TableType.DEFINITION_TABLE, row, definitionColumn);
         }
         else if (column == 1) {
             return new DefinitionEqualsCellModel(compositionDocument.getMutableComposition(), compositionDocument.getCompositionStyle());

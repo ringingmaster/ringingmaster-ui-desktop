@@ -56,11 +56,13 @@
     <bean id="event.deleteNotation" class="org.ringingmaster.ui.desktop.notationpanel.DeleteNotationEvent"
           p:propertyNotationPanel-ref="propertyWindow.notation.panel"/>
     <bean id="event.editNotation" class="org.ringingmaster.ui.desktop.notationpanel.EditNotationEvent"
-          p:propertyNotationPanel-ref="propertyWindow.notation.panel"/>
+          p:propertyNotationPanel-ref="propertyWindow.notation.panel"
+          init-method="init"/>
     <bean id="event.setActiveNotation" class="org.ringingmaster.ui.desktop.notationpanel.SetActiveNotationEvent"
-          p:propertyNotationPanel-ref="propertyWindow.notation.panel"/>
+          p:propertyNotationPanel-ref="propertyWindow.notation.panel"
+          init-method="init"/>
 
     <bean id="propertyWindow.notation.panel" class="org.ringingmaster.ui.desktop.notationpanel.PropertyNotationPanel"
-          p:editNotationEvent-ref="event.editNotation"/>
+          init-method="init"/>
 
 </beans>

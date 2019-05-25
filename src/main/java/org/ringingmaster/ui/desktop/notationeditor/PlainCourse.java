@@ -12,7 +12,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
-import org.controlsfx.control.spreadsheet.StringConverterWithFormat;
 import org.controlsfx.control.textfield.TextFields;
 import org.ringingmaster.engine.NumberOfBells;
 import org.ringingmaster.engine.notation.Notation;
@@ -68,31 +67,19 @@ public class PlainCourse extends SkeletalNotationEditorTabController implements 
         super.init(parent, editMode);
         //TODO Need to write the notation into the main dialog.
         //TODO Also need to get the management of the popu dialog size properly with long names.
-        TextFields.bindAutoCompletion(name,
-                suggestion -> {
-                    NotationLibraryManager notationLibraryManager = parent.getNotationLibraryManager();
-                    if (notationLibraryManager.isLoaded() && !Strings.isNullOrEmpty(suggestion.getUserText())) {
-                        List<LibraryNotationPersist> notationSuggestions = notationLibraryManager.findNotationSuggestions(suggestion.getUserText());
-                        return notationSuggestions.stream()
-                                .filter(notation -> NumberOfBells.valueOf(notation.getNumberOfWorkingBells()).equals(numberOfBells.getSelectionModel().getSelectedItem()))
-                                .map(notation -> notation.getName() + " " + NumberOfBells.valueOf(notation.getNumberOfWorkingBells()).getName())
-                                .sorted()
-                                .collect(Collectors.toList());
-                    } else {
-                        return Collections.emptyList();
-                    }
-                },
-                new StringConverterWithFormat<String>() {
-                    @Override
-                    public String toString(String object) {
-                        return object;
-                    }
-
-                    @Override
-                    public String fromString(String string) {
-                        return string;
-                    }
-                });
+        TextFields.bindAutoCompletion(name, suggestion -> {
+            NotationLibraryManager notationLibraryManager = parent.getNotationLibraryManager();
+                if (notationLibraryManager.isLoaded() && !Strings.isNullOrEmpty(suggestion.getUserText())) {
+                    List<LibraryNotationPersist> notationSuggestions = notationLibraryManager.findNotationSuggestions(suggestion.getUserText());
+                    return notationSuggestions.stream()
+                            .filter(notation -> NumberOfBells.valueOf(notation.getNumberOfWorkingBells()).equals(numberOfBells.getSelectionModel().getSelectedItem()))
+                            .map(notation -> notation.getName()) //Not showing working bells as we are filtering on that + " " + NumberOfBells.valueOf(notation.getNumberOfWorkingBells()).getName())
+                            .sorted()
+                            .collect(Collectors.toList());
+                } else {
+                    return Collections.emptyList();
+                }
+        });
 
         name.setOnKeyReleased(this::keyPressUpdater);
 
@@ -158,7 +145,7 @@ public class PlainCourse extends SkeletalNotationEditorTabController implements 
 
     @FXML
     private void onNotationSearchButton() {
-        log.info("***********");
+        log.info("TODO onNotationSearchButton ***********");
     }
 
 }

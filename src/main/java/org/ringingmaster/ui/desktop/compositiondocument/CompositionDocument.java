@@ -112,7 +112,6 @@ public class CompositionDocument extends ScrollPane implements Document {
     }
 
     public Observable<Parse> observableParse() {
-        log.info("get Observableparse");
         return observableParse;
     }
 
@@ -210,32 +209,6 @@ public class CompositionDocument extends ScrollPane implements Document {
 
 //	TODO			Also do checks thate the notation can be removed
 //	TODO			Also what happens to active method.
-    }
-
-    @Deprecated
-    public boolean exchangeNotationAfterEdit(Notation originalNotation, Notation replacementNotation) {
-        checkNotNull(originalNotation);
-        checkNotNull(replacementNotation);
-
-        boolean mutated = false;
-        DryRun dryRun = composition.dryRunExchangeNotation(originalNotation, replacementNotation);
-
-        if (dryRun.result() == SUCCESS) {
-            //mutated =
-                    composition.exchangeNotation(originalNotation, replacementNotation);
-        } else {
-            String message = dryRun.getMessages().stream().collect(Collectors.joining(System.lineSeparator()));
-            Alert dialog = new Alert(Alert.AlertType.CONFIRMATION, message, ButtonType.OK);
-            dialog.setTitle("Can't update method");
-            dialog.setHeaderText("Can't update '" + originalNotation.getNameIncludingNumberOfBells() + "'" +
-                    (originalNotation.getNameIncludingNumberOfBells().equals(replacementNotation.getNameIncludingNumberOfBells()) ? "" : " to '" + replacementNotation.getNameIncludingNumberOfBells() + "'"));
-            dialog.getDialogPane().setMinHeight(180);
-            dialog.getDialogPane().setMinWidth(360);
-            dialog.showAndWait();
-        }
-
-        setUpdatePoint(() -> String.format("Update method: %s", replacementNotation.getNameIncludingNumberOfBells()), mutated);
-        return mutated;
     }
 
     @Deprecated

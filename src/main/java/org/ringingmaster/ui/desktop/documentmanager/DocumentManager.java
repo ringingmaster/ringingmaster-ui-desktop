@@ -39,14 +39,14 @@ public class DocumentManager  {
     private StartupService startupService;
     private DocumentTypeManager documentTypeManager; //TODO eventually this will be a Set of different document types. It can then control a menulist of document types when creating a new document
 
-    private final BehaviorSubject<Optional<Document>> activeDocumentStream = BehaviorSubject.createDefault(Optional.empty());
+    private final BehaviorSubject<Optional<Document>> observableActiveDocument = BehaviorSubject.createDefault(Optional.empty());
 
 
     public void init() {
         documentWindow.setTabClosingPolicy(TabPane.TabClosingPolicy.ALL_TABS);
         documentWindow.getSelectionModel().selectedItemProperty().addListener((observable, oldTab, newTab) -> {
             updateTitles();
-            activeDocumentStream.onNext(Optional.ofNullable(newTab).map(this::getDocument));
+            observableActiveDocument.onNext(Optional.ofNullable(newTab).map(this::getDocument));
         });
 
         startupService.addListener(this::startup);
@@ -54,7 +54,7 @@ public class DocumentManager  {
     }
 
     public Observable<Optional<Document>> observableActiveDocument() {
-        return activeDocumentStream;
+        return observableActiveDocument;
     }
 
     public void startup() {

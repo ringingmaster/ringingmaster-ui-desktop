@@ -9,7 +9,9 @@ import java.util.Optional;
  *
  * @author Steve Lake
  */
+@Deprecated
 public interface PropertyNotationPanelListener {
 
+    @Deprecated
     void propertyMethod_setSelectedNotation(Optional<Notation> notation);
 }

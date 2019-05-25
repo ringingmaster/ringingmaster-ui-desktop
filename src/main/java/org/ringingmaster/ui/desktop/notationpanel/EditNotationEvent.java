@@ -1,13 +1,20 @@
 package org.ringingmaster.ui.desktop.notationpanel;
 
+import io.reactivex.Observable;
+import io.reactivex.subjects.BehaviorSubject;
 import javafx.event.ActionEvent;
+import org.apache.commons.lang3.tuple.Pair;
+import org.ringingmaster.engine.composition.MutableComposition;
 import org.ringingmaster.engine.notation.Notation;
 import org.ringingmaster.ui.desktop.compositiondocument.CompositionDocumentTypeManager;
 import org.ringingmaster.ui.desktop.notationeditor.NotationEditorDialogFactory;
+import org.ringingmaster.ui.desktop.setuppanel.ExchangeNotationHandler;
 import org.ringingmaster.util.javafx.events.EventDefinition;
 import org.ringingmaster.util.javafx.events.SkeletalEventDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Optional;
 
 /**
  * TODO Comments
@@ -23,42 +30,57 @@ public class EditNotationEvent extends SkeletalEventDefinition implements EventD
     private PropertyNotationPanel propertyNotationPanel;
     private NotationEditorDialogFactory notationEditorDialogFactory;
 
+    private final BehaviorSubject<Boolean> handleEvent = BehaviorSubject.create();
+
 
     public EditNotationEvent() {
         super("/images/edit.png", TOOLTIP_BAST_TEXT);
         tooltipTextProperty().setValue(TOOLTIP_BAST_TEXT);
     }
 
+    public void init() {
+        //Disable
+        propertyNotationPanel.observableSelectedNotation()
+                .subscribe(selectedNotation -> disableProperty().set(selectedNotation.isEmpty()));
+
+        //Tool Tip
+        propertyNotationPanel.observableSelectedNotation()
+                .subscribe(selectedNotation -> {
+                    if (selectedNotation.isPresent()) {
+                        tooltipTextProperty().setValue(TOOLTIP_BAST_TEXT + " '" + selectedNotation.get().getNameIncludingNumberOfBells() + "'");
+                    } else {
+                        tooltipTextProperty().setValue(TOOLTIP_BAST_TEXT);
+                    }
+                });
+
+        // Edit notation
+        Observable<Notation> handleEventNotation =
+                handleEvent.withLatestFrom(propertyNotationPanel.observableSelectedNotation(), (aVoid, notation) -> notation)
+                .filter(Optional::isPresent)
+                .map(Optional::get);
+
+        Observable.merge(handleEventNotation, propertyNotationPanel.observableDoubleClickedNotation())
+                .withLatestFrom(compositionDocumentTypeManager.observableActiveMutableComposition(), Pair::of)
+                .filter(pair -> pair.getRight().isPresent())
+                .map(pair -> Pair.of(pair.getLeft(), pair.getRight().get()))
+                .subscribe(pair -> editNotation(pair.getLeft(), pair.getRight()));
+    }
+
     @Override
     public void handle(ActionEvent event) {
+        handleEvent.onNext(true);
+    }
 
-        if (!compositionDocumentTypeManager.getCurrentDocument().isPresent()) {
-            return;
-        }
-
-        int index = propertyNotationPanel.getSelectionModel().getSelectedIndex();
-        Notation notation = propertyNotationPanel.getNotation(index);
-        if (notation != null) {
-            notationEditorDialogFactory.editNotationShowDialog(notation, result -> {
-                log.info("EditNotationButton - adding [{}]", result.toString());
-                return compositionDocumentTypeManager.getCurrentDocument().get().exchangeNotationAfterEdit(notation, result);
-                //TODO common this code from double click -
-            });
-        }
+    private void editNotation(Notation notation, MutableComposition composition) {
+        notationEditorDialogFactory.editNotationShowDialog(notation, result -> {
+            log.info("EditNotationButton - adding [{}]", result.toString());
+                new ExchangeNotationHandler().handle(composition, notation, result);
+            return true;
+        });
     }
 
     public void setPropertyNotationPanel(PropertyNotationPanel propertyNotationPanel) {
         this.propertyNotationPanel = propertyNotationPanel;
-
-        propertyNotationPanel.addListener(selectedNotation -> {
-            disableProperty().set(!selectedNotation.isPresent());
-
-            if (selectedNotation.isPresent()) {
-                tooltipTextProperty().setValue(TOOLTIP_BAST_TEXT + " '" + selectedNotation.get().getNameIncludingNumberOfBells() + "'");
-            } else {
-                tooltipTextProperty().setValue(TOOLTIP_BAST_TEXT);
-            }
-        });
     }
 
     public void setCompositionDocumentTypeManager(CompositionDocumentTypeManager compositionDocumentTypeManager) {

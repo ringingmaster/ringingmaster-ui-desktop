@@ -45,15 +45,16 @@ public class NotationLibraryManager {
 
     private void loadLibraryAsynch(final Path path) {
         Thread thread = new Thread(() -> {
+            long start = System.currentTimeMillis();
             log.info(">>>> Notation Library load");
             NotationLibraryPersist notationLibraryPersist = new DocumentPersist().readNotationLibrary(path);
             notations = notationLibraryPersist.getNotation();
-            log.info("<<<< Notation Library load");
+            log.info("<<<< Notation Library load. Loaded [{}] notations in [{}]ms", notations.size(), System.currentTimeMillis() - start);
 
+            long startIndex = System.currentTimeMillis();
             log.info(">>>> Build Notation Index");
-            notations.stream()
-                    .forEach(notation -> suffixTreeMap.put(notation.getName().toLowerCase(), notation));
-            log.info("<<<< Build Notation Index");
+            notations.forEach(notation -> suffixTreeMap.put(notation.getName().toLowerCase(), notation));
+            log.info("<<<< Build Notation Index in [{}]ms", System.currentTimeMillis() - startIndex);
 
             loaded.countDown();
 

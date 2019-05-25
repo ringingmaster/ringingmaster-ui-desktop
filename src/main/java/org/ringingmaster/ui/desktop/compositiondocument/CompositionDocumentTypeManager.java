@@ -37,7 +37,6 @@ public class CompositionDocumentTypeManager implements DocumentTypeManager {
     private BeanFactory beanFactory;
     private DocumentManager documentManager;
     private CompositionPersistence CompositionPersistence = new CompositionPersistence();
-    private Optional<CompositionDocument> currentDocument = Optional.empty();
 
     private int docNumber = 0;
 
@@ -113,17 +112,11 @@ public class CompositionDocumentTypeManager implements DocumentTypeManager {
 
     @Deprecated //Use the observables.
     public Optional<CompositionDocument> getCurrentDocument() {
-        return currentDocument;
+        return null;
     }
 
     public void setDocumentManager(DocumentManager documentManager) {
         this.documentManager = documentManager;
-
-        //TODO Temp notifications
-        observableActiveCompositionDocument().subscribe(compositionDocument -> {
-            currentDocument = compositionDocument;
-            documentManager.updateTitles();
-        });
     }
 
     public void setBeanFactory(BeanFactory beanFactory) {
@@ -176,6 +169,7 @@ public class CompositionDocumentTypeManager implements DocumentTypeManager {
                 .setNumberOfWorkingBells(NumberOfBells.BELLS_6)
                 .setName("Little Bob")
                 .setFoldedPalindromeNotationShorthand("-16-14", "12")
+                .setSpliceIdentifier("L")
                 .setCannedCalls()
                 .build();
     }

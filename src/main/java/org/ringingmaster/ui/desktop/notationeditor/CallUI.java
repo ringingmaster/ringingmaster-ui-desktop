@@ -40,7 +40,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * @author Steve Lake
  */
 
-//TODO Reactive - had to rename as Call clashes
+//TODO Reactive - had to rename as Call clashes - also rename the Call.fxml??
 
 public class CallUI extends SkeletalNotationEditorTabController implements NotationEditorTabController {
 

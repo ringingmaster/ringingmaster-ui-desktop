@@ -16,15 +16,15 @@ import java.util.Optional;
  */
 public class DeleteNotationEvent extends SkeletalEventDefinition implements EventDefinition {
 
-    public static final String TOOLTIP_BAST_TEXT = "Remove method";
+    public static final String TOOLTIP_BASE_TEXT = "Remove method";
 
     private CompositionDocumentTypeManager compositionDocumentTypeManager;
     private PropertyNotationPanel propertyNotationPanel;
 
 
     public DeleteNotationEvent() {
-        super("/images/remove.png", TOOLTIP_BAST_TEXT);
-        tooltipTextProperty().setValue(TOOLTIP_BAST_TEXT);
+        super("/images/remove.png", TOOLTIP_BASE_TEXT);
+        tooltipTextProperty().setValue(TOOLTIP_BASE_TEXT);
     }
 
     @Override
@@ -44,9 +44,9 @@ public class DeleteNotationEvent extends SkeletalEventDefinition implements Even
             disableProperty().set(!selectedNotation.isPresent());
 
             if (selectedNotation.isPresent()) {
-                tooltipTextProperty().setValue(TOOLTIP_BAST_TEXT + " '" + selectedNotation.get().getNameIncludingNumberOfBells() + "'");
+                tooltipTextProperty().setValue(TOOLTIP_BASE_TEXT + " '" + selectedNotation.get().getNameIncludingNumberOfBells() + "'");
             } else {
-                tooltipTextProperty().setValue(TOOLTIP_BAST_TEXT);
+                tooltipTextProperty().setValue(TOOLTIP_BASE_TEXT);
             }
 
         });

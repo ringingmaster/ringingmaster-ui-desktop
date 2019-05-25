@@ -1,6 +1,9 @@
 package org.ringingmaster.ui.desktop.notationpanel;
 
+import io.reactivex.Observable;
 import javafx.event.ActionEvent;
+import org.pcollections.PSet;
+import org.ringingmaster.engine.composition.Composition;
 import org.ringingmaster.engine.notation.Notation;
 import org.ringingmaster.ui.desktop.compositiondocument.CompositionDocument;
 import org.ringingmaster.ui.desktop.compositiondocument.CompositionDocumentTypeManager;
@@ -26,7 +29,30 @@ public class SetActiveNotationEvent extends SkeletalEventDefinition implements E
         tooltipTextProperty().setValue(TOOLTIP_BAST_TEXT);
     }
 
-    @Override
+    public void init() {
+        // Disable
+        Observable<Optional<PSet<Notation>>> validNotationsStream = compositionDocumentTypeManager.observableComposition().map(o -> o.map(Composition::getValidNotations));
+        Observable.combineLatest(propertyNotationPanel.observableSelectedNotation(), validNotationsStream,
+                (notation, validNotations) -> notation.isPresent() &&
+                        validNotations.isPresent() &&
+                        validNotations.get().contains(notation.get()))
+                .subscribe(enabled -> disableProperty().set(!enabled));
+
+
+        //Tooltip
+        propertyNotationPanel.observableSelectedNotation()
+                .subscribe(selectedNotation -> {
+                    if (selectedNotation.isPresent()) {??? Need to bring the logic from below.
+
+                        tooltipTextProperty().setValue(TOOLTIP_BAST_TEXT + " '" + selectedNotation.get().getNameIncludingNumberOfBells() + "'");
+                    } else {
+                        tooltipTextProperty().setValue(TOOLTIP_BAST_TEXT);
+                    }
+                });
+
+    }
+
+        @Override
     public void handle(ActionEvent event) {
         int index = propertyNotationPanel.getSelectionModel().getSelectedIndex();
         Notation selectedNotation = propertyNotationPanel.getNotation(index);
@@ -51,9 +77,6 @@ public class SetActiveNotationEvent extends SkeletalEventDefinition implements E
 
         propertyNotationPanel.addListener(selectedNotation -> {
                     Optional<CompositionDocument> currentDocument = compositionDocumentTypeManager.getCurrentDocument();
-                    disableProperty().set(!selectedNotation.isPresent() ||
-                            !currentDocument.isPresent() ||
-                            !currentDocument.get().getSortedValidNotations().contains(selectedNotation.get()));
 
                     pressedProperty().set(selectedNotation.isPresent() &&
                             currentDocument.isPresent() &&

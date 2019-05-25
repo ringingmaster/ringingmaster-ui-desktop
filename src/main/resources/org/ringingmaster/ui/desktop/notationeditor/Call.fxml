@@ -16,7 +16,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import org.ringingmaster.util.javafx.components.PressableButton?>
 <GridPane hgap="10" prefHeight="160.0" prefWidth="668.0" vgap="10.0" xmlns="http://javafx.com/javafx/8"
-          xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.ringingmaster.ui.desktop.notationeditor.Call">
+          xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.ringingmaster.ui.desktop.notationeditor.CallUI">
     <columnConstraints>
         <ColumnConstraints/>
         <ColumnConstraints/>

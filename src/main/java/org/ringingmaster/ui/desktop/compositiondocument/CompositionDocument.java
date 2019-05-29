@@ -4,8 +4,6 @@ import com.google.common.collect.Lists;
 import io.reactivex.Observable;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Background;
@@ -17,9 +15,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import org.ringingmaster.engine.NumberOfBells;
 import org.ringingmaster.engine.composition.Composition;
-import org.ringingmaster.engine.composition.DryRun;
 import org.ringingmaster.engine.composition.MutableComposition;
 import org.ringingmaster.engine.notation.Notation;
 import org.ringingmaster.engine.parser.Parser;
@@ -38,10 +34,8 @@ import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static org.ringingmaster.engine.composition.DryRun.DryRunResult.SUCCESS;
 import static org.ringingmaster.engine.notation.PlaceSetSequence.BY_NUMBER_THEN_NAME;
 
 /**
@@ -85,6 +79,7 @@ public class CompositionDocument extends ScrollPane implements Document {
 
         this.composition = composition;
         observableParse = composition.observable()
+                .distinct()// need this because of renotification
                 .map(new Parser()::apply)
                 .replay(1)
                 .autoConnect(1);
@@ -156,47 +151,10 @@ public class CompositionDocument extends ScrollPane implements Document {
     }
 
     @Deprecated
-    public NumberOfBells getNumberOfBells() {
-        return composition.get().getNumberOfBells();
-    }
-
-
-    @Deprecated
     public List<Notation> getSortedAllNotations() {
         final List<Notation> sortedNotations = Lists.newArrayList(composition.get().getAllNotations());
         Collections.sort(sortedNotations, BY_NUMBER_THEN_NAME);
         return sortedNotations;
-    }
-
-    @Deprecated
-    public List<Notation> getSortedValidNotations() {
-        final List<Notation> sortedNotations = Lists.newArrayList(composition.get().getValidNotations());
-        Collections.sort(sortedNotations, BY_NUMBER_THEN_NAME);
-        return sortedNotations;
-    }
-
-    @Deprecated
-    public boolean addNotation(Notation notationToAdd) {
-        checkNotNull(notationToAdd);
-
-        boolean mutated = false;
-        DryRun dryRun = composition.dryRunAddNotation(notationToAdd);
-
-        if (dryRun.result() == SUCCESS) {
-            //mutated =
-                    composition.addNotation(notationToAdd);
-        } else {
-            String message = dryRun.getMessages().stream().collect(Collectors.joining(System.lineSeparator()));
-            Alert dialog = new Alert(Alert.AlertType.CONFIRMATION, message, ButtonType.OK);
-            dialog.setTitle("Can't add method");
-            dialog.setHeaderText("Can't add '" + notationToAdd.getNameIncludingNumberOfBells() + "'");
-            dialog.getDialogPane().setMinHeight(180);
-            dialog.getDialogPane().setMinWidth(360);
-            dialog.showAndWait();
-        }
-
-        setUpdatePoint(() -> String.format("Add method: %s", notationToAdd.getNameIncludingNumberOfBells()), mutated);
-        return mutated;
     }
 
     @Deprecated
@@ -209,33 +167,6 @@ public class CompositionDocument extends ScrollPane implements Document {
 
 //	TODO			Also do checks thate the notation can be removed
 //	TODO			Also what happens to active method.
-    }
-
-    @Deprecated
-    public Notation getSingleMethodActiveNotation() {
-        return composition.get().getNonSplicedActiveNotation().get();
-    }
-
-    @Deprecated
-    public void setSingleMethodActiveNotation(Notation notation) {
-        boolean mutated = false;
-        if (!notation.equals(composition.get().getNonSplicedActiveNotation())) {
-            //mutated =
-                    composition.setNonSplicedActiveNotation(notation);
-        }
-        setUpdatePoint(() -> String.format("Set active method: %s", notation.getNameIncludingNumberOfBells()), mutated);
-    }
-
-    public boolean isSpliced() {
-        return composition.get().isSpliced();
-    }
-
-    public void setSpliced(boolean spliced) {
-        boolean mutated = false;
-        if (composition.get().isSpliced() != spliced) {
-            composition.setSpliced(spliced);
-        }
-        setUpdatePoint(() -> (spliced ? "Set spliced" : "Set non spliced"), mutated);
     }
 
     public CompositionStyle getCompositionStyle() {

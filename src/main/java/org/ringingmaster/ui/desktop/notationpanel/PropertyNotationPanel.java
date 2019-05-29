@@ -35,8 +35,8 @@ public class PropertyNotationPanel extends NameValuePairTable implements Listena
 
     private final BehaviorSubject<Integer> observableSelectedIndex = BehaviorSubject.createDefault(-1);
     private final BehaviorSubject<Integer> observableDoubleClickIndex = BehaviorSubject.create();
-    private Observable<Optional<Notation>> selectedNotation;
-    private Observable<Notation> doubleClickedNotation;
+    private Observable<Optional<Notation>> selectedNotation; //TODO Reactive combine into RxJav streams
+    private Observable<Notation> doubleClickedNotation; //TODO Reactive combine into RxJava streams
 
 
     public PropertyNotationPanel() {
@@ -129,7 +129,7 @@ public class PropertyNotationPanel extends NameValuePairTable implements Listena
             String name = getStandardDisplayName(notation);
 
             if (notation.getNumberOfWorkingBells().compareTo(composition.get().getNumberOfBells()) > 0) {
-                updateDisplayProperty(name, "Too many bells", true);
+                updateDisplayProperty(name, "Too many bells (> " + composition.get().getNumberOfBells() + ")", true);
             }
             else if (composition.get().isSpliced()) {
                 if (Strings.isNullOrEmpty(notation.getSpliceIdentifier())) {

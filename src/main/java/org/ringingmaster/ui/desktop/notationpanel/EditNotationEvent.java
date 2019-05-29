@@ -72,11 +72,7 @@ public class EditNotationEvent extends SkeletalEventDefinition implements EventD
     }
 
     private void editNotation(Notation notation, MutableComposition composition) {
-        notationEditorDialogFactory.editNotationShowDialog(notation, result -> {
-            log.info("EditNotationButton - adding [{}]", result.toString());
-                new ExchangeNotationHandler().handle(composition, notation, result);
-            return true;
-        });
+        notationEditorDialogFactory.editNotationShowDialog(notation, result -> new ExchangeNotationHandler().handle(composition, notation, result));
     }
 
     public void setPropertyNotationPanel(PropertyNotationPanel propertyNotationPanel) {

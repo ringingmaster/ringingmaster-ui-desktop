@@ -19,7 +19,7 @@
         <ColumnConstraints hgrow="NEVER" maxWidth="120.0" minWidth="120.0" prefWidth="120.0"/>
         <ColumnConstraints hgrow="SOMETIMES" maxWidth="420.0" minWidth="30.0" prefWidth="178.0"/>
         <ColumnConstraints hgrow="NEVER" maxWidth="35.0" minWidth="35.0" prefWidth="89.0"/>
-        <ColumnConstraints maxWidth="200.0" minWidth="30.0" prefWidth="81.0"/>
+        <ColumnConstraints maxWidth="200.0" minWidth="80.0" prefWidth="85.0"/>
         <ColumnConstraints maxWidth="219.0" minWidth="115.0" prefWidth="159.0"/>
     </columnConstraints>
     <rowConstraints>
@@ -33,7 +33,7 @@
     <children>
         <Label text="Name:"/>
         <TextField fx:id="name" GridPane.columnSpan="2" GridPane.rowIndex="1"/>
-        <Label text="Shorthand:" GridPane.columnIndex="3" GridPane.columnSpan="2"/>
+        <Label text="Splice Letter:" GridPane.columnIndex="3" GridPane.columnSpan="2"/>
         <TextField fx:id="spliceIndntifier" GridPane.columnIndex="3" GridPane.rowIndex="1"/>
         <Label text="Number:" GridPane.columnIndex="4"/>
         <ComboBox fx:id="numberOfBells" GridPane.columnIndex="4" GridPane.rowIndex="1"/>

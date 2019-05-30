@@ -21,7 +21,8 @@
 
     <bean id="event.new" class="org.ringingmaster.ui.desktop.documentmanager.NewDocumentEvent"/>
     <bean id="event.open" class="org.ringingmaster.ui.desktop.documentmanager.OpenDocumentEvent"/>
-    <bean id="event.save" class="org.ringingmaster.ui.desktop.documentmanager.SaveDocumentEvent"/>
+    <bean id="event.save" class="org.ringingmaster.ui.desktop.documentmanager.SaveDocumentEvent"
+        init-method="init"/>
 
 
 </beans>

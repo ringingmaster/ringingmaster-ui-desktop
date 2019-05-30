@@ -9,7 +9,6 @@ import org.ringingmaster.engine.composition.MutableComposition;
 import org.ringingmaster.engine.method.MethodBuilder;
 import org.ringingmaster.engine.notation.Notation;
 import org.ringingmaster.engine.notation.NotationBuilder;
-import org.ringingmaster.ui.desktop.documentmanager.CompositionPersistence;
 import org.ringingmaster.ui.desktop.documentmanager.Document;
 import org.ringingmaster.ui.desktop.documentmanager.DocumentManager;
 import org.ringingmaster.ui.desktop.documentmanager.DocumentTypeManager;
@@ -65,15 +64,14 @@ public class CompositionDocumentTypeManager implements DocumentTypeManager {
     public Document createNewDocument() {
         MutableComposition composition = createEmptyComposition();
         final CompositionDocument compositionDocument = buildCompositionDocumentForComposition(composition);
-        compositionDocument.setDocumentName("Untitled " + DOCUMENT_TYPE_NAME + " " + ++docNumber);
+        compositionDocument.setDocumentName("Untitled " + DOCUMENT_TYPE_NAME + " " + ++docNumber); //TODO when we have more than one doc type, lets
         compositionDocument.setDirty(true);
         return compositionDocument;
     }
 
     @Override
     public Document openDocument(Path path) {
-        //TODO reactive
-//        Composition composition = CompositionPersistence.load(path);
+        MutableComposition composition = CompositionPersistence.load(path);
 //        CompositionDocument compositionDocument = buildCompositionDocumentForComposition(composition);
 //        compositionDocument.setPath(path);
 //        return compositionDocument;

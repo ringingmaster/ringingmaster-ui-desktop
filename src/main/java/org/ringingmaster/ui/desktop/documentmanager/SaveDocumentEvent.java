@@ -22,6 +22,10 @@ public class SaveDocumentEvent extends SkeletalEventDefinition implements EventD
         tooltipTextProperty().setValue("Save Composition");
     }
 
+    public void init() {
+        documentManager.observableActiveDocument().subscribe(document -> disableProperty().set(document.isEmpty()));
+    }
+
     @Override
     public void handle(ActionEvent event) {
         documentManager.saveCurrentDocument();
@@ -29,6 +33,5 @@ public class SaveDocumentEvent extends SkeletalEventDefinition implements EventD
 
     public void setDocumentManager(DocumentManager documentManager) {
         this.documentManager = documentManager;
-        documentManager.observableActiveDocument().subscribe(document -> disableProperty().set(document.isPresent()));
     }
 }

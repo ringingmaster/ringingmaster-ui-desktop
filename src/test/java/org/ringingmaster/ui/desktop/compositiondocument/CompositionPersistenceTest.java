@@ -1,4 +1,4 @@
-package org.ringingmaster.ui.desktop.documentmanager;
+package org.ringingmaster.ui.desktop.compositiondocument;
 
 import org.junit.Test;
 import org.ringingmaster.engine.NumberOfBells;

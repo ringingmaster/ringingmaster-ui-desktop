@@ -35,7 +35,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Supplier;
 
-import static com.google.common.base.Preconditions.checkNotNull;
 import static org.ringingmaster.engine.notation.PlaceSetSequence.BY_NUMBER_THEN_NAME;
 
 /**
@@ -157,17 +156,6 @@ public class CompositionDocument extends ScrollPane implements Document {
         return sortedNotations;
     }
 
-    @Deprecated
-    public void removeNotation(Notation notationToRemove) {
-        checkNotNull(notationToRemove);
-
-        boolean mutated = true;
-                composition.removeNotation(notationToRemove);
-        setUpdatePoint(() -> String.format("Remove method: %s", notationToRemove.getNameIncludingNumberOfBells()), mutated);
-
-//	TODO			Also do checks thate the notation can be removed
-//	TODO			Also what happens to active method.
-    }
 
     public CompositionStyle getCompositionStyle() {
         return compositionStyle;

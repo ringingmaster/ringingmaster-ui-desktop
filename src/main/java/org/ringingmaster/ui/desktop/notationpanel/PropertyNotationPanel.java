@@ -10,8 +10,6 @@ import org.ringingmaster.ui.desktop.compositiondocument.CompositionDocument;
 import org.ringingmaster.ui.desktop.compositiondocument.CompositionDocumentTypeManager;
 import org.ringingmaster.util.javafx.namevaluepair.NameValuePairModel;
 import org.ringingmaster.util.javafx.namevaluepair.NameValuePairTable;
-import org.ringingmaster.util.listener.ConcurrentListenable;
-import org.ringingmaster.util.listener.Listenable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,18 +23,16 @@ import java.util.stream.Collectors;
  *
  * @author Steve Lake
  */
-public class PropertyNotationPanel extends NameValuePairTable implements Listenable<PropertyNotationPanelListener> {
+public class PropertyNotationPanel extends NameValuePairTable {
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
-
-    private ConcurrentListenable<PropertyNotationPanelListener> listenableDelegate = new ConcurrentListenable<>();
 
     private CompositionDocumentTypeManager compositionDocumentTypeManager;
 
     private final BehaviorSubject<Integer> observableSelectedIndex = BehaviorSubject.createDefault(-1);
     private final BehaviorSubject<Integer> observableDoubleClickIndex = BehaviorSubject.create();
-    private Observable<Optional<Notation>> selectedNotation; //TODO Reactive combine into RxJav streams
-    private Observable<Notation> doubleClickedNotation; //TODO Reactive combine into RxJava streams
+    private Observable<Optional<Notation>> selectedNotation;
+    private Observable<Notation> doubleClickedNotation;
 
 
     public PropertyNotationPanel() {
@@ -69,14 +65,13 @@ public class PropertyNotationPanel extends NameValuePairTable implements Listena
                 .withLatestFrom(selectedNotation, (i, s) -> s)
                 .filter(Optional::isPresent)
                 .map(Optional::get);
-
     }
 
-    public Observable<Optional<Notation>> observableSelectedNotation() {
+    Observable<Optional<Notation>> observableSelectedNotation() {
         return selectedNotation;
     }
 
-    public Observable<Notation> observableDoubleClickedNotation() {
+    Observable<Notation> observableDoubleClickedNotation() {
         return doubleClickedNotation;
     }
 
@@ -139,7 +134,8 @@ public class PropertyNotationPanel extends NameValuePairTable implements Listena
                     updateDisplayProperty(name, CompositionDocument.SPLICED_TOKEN + " " + notation.getSpliceIdentifier(), false);
                 }
             }
-            else if (notation == composition.get().getNonSplicedActiveNotation().get()) {
+            else if (composition.get().getNonSplicedActiveNotation().isPresent() &&
+                    notation == composition.get().getNonSplicedActiveNotation().get()) {
                 updateDisplayProperty(name, "<Active>", false);
             }
             else {
@@ -161,7 +157,7 @@ public class PropertyNotationPanel extends NameValuePairTable implements Listena
 
     @Deprecated
     public Notation getNotation(int index) {
-        if (!compositionDocumentTypeManager.getCurrentDocument().isPresent()) {
+        if (compositionDocumentTypeManager.getCurrentDocument().isEmpty()) {
             return null;
         }
 
@@ -171,11 +167,6 @@ public class PropertyNotationPanel extends NameValuePairTable implements Listena
         }
 
         return null;
-    }
-
-    @Override
-    public void addListener(PropertyNotationPanelListener listener) {
-        listenableDelegate.addListener(listener);
     }
 
     public void setCompositionDocumentTypeManager(CompositionDocumentTypeManager compositionDocumentTypeManager) {

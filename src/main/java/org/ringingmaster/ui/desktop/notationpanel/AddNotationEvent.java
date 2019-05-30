@@ -24,7 +24,6 @@ public class AddNotationEvent extends SkeletalEventDefinition implements EventDe
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     private CompositionDocumentTypeManager compositionDocumentTypeManager;
-    private PropertyNotationPanel propertyNotationPanel;
     private NotationEditorDialogFactory notationEditorDialogFactory;
 
     private final BehaviorSubject<Boolean> handleEvent = BehaviorSubject.create();
@@ -60,10 +59,6 @@ public class AddNotationEvent extends SkeletalEventDefinition implements EventDe
 
     public void setCompositionDocumentTypeManager(CompositionDocumentTypeManager compositionDocumentTypeManager) {
         this.compositionDocumentTypeManager = compositionDocumentTypeManager;
-    }
-
-    public void setPropertyNotationPanel(PropertyNotationPanel propertyNotationPanel) {
-        this.propertyNotationPanel = propertyNotationPanel;
     }
 
     public void setNotationEditorDialogFactory(NotationEditorDialogFactory notationEditorDialogFactory) {

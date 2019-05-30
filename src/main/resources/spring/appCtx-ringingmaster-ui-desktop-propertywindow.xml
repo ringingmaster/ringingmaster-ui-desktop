@@ -53,10 +53,10 @@
     </bean>
 
     <bean id="event.addNotation" class="org.ringingmaster.ui.desktop.notationpanel.AddNotationEvent"
-          p:propertyNotationPanel-ref="propertyWindow.notation.panel"
           init-method="init"/>
     <bean id="event.deleteNotation" class="org.ringingmaster.ui.desktop.notationpanel.DeleteNotationEvent"
-          p:propertyNotationPanel-ref="propertyWindow.notation.panel"/>
+          p:propertyNotationPanel-ref="propertyWindow.notation.panel"
+          init-method="init"/>
     <bean id="event.editNotation" class="org.ringingmaster.ui.desktop.notationpanel.EditNotationEvent"
           p:propertyNotationPanel-ref="propertyWindow.notation.panel"
           init-method="init"/>

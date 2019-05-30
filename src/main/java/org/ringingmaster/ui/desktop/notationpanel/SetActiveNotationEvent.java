@@ -21,7 +21,7 @@ import java.util.Optional;
  */
 public class SetActiveNotationEvent extends SkeletalEventDefinition implements EventDefinition {
 
-    public static final String TOOLTIP_BAST_TEXT = "Set active method";
+    public static final String TOOLTIP_BASE_TEXT = "Set active method";
 
     private CompositionDocumentTypeManager compositionDocumentTypeManager;
     private PropertyNotationPanel propertyNotationPanel;
@@ -30,8 +30,8 @@ public class SetActiveNotationEvent extends SkeletalEventDefinition implements E
 
 
     public SetActiveNotationEvent() {
-        super("/images/flag.png", TOOLTIP_BAST_TEXT);
-        tooltipTextProperty().setValue(TOOLTIP_BAST_TEXT);
+        super("/images/flag.png", TOOLTIP_BASE_TEXT);
+        tooltipTextProperty().setValue(TOOLTIP_BASE_TEXT);
     }
 
     public void init() {
@@ -65,10 +65,10 @@ public class SetActiveNotationEvent extends SkeletalEventDefinition implements E
                         composition.get().getNonSplicedActiveNotation().equals(selectedNotation)) {
                     tooltipTextProperty().setValue("Set Spliced");
                 } else {
-                    tooltipTextProperty().setValue(TOOLTIP_BAST_TEXT + " '" + selectedNotation.get().getNameIncludingNumberOfBells() + "'");
+                    tooltipTextProperty().setValue(TOOLTIP_BASE_TEXT + " '" + selectedNotation.get().getNameIncludingNumberOfBells() + "'");
                 }
             } else {
-                tooltipTextProperty().setValue(TOOLTIP_BAST_TEXT);
+                tooltipTextProperty().setValue(TOOLTIP_BASE_TEXT);
             }
         });
 

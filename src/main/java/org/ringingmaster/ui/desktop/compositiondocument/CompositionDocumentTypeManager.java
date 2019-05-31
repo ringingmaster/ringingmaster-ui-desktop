@@ -35,7 +35,7 @@ public class CompositionDocumentTypeManager implements DocumentTypeManager {
     public static final String DOCUMENT_TYPE_NAME = "Composition";
     private BeanFactory beanFactory;
     private DocumentManager documentManager;
-    private CompositionPersistence CompositionPersistence = new CompositionPersistence();
+    private CompositionPersistence compositionPersistence = new CompositionPersistence();
 
     private int docNumber = 0;
 
@@ -65,17 +65,15 @@ public class CompositionDocumentTypeManager implements DocumentTypeManager {
         MutableComposition composition = createEmptyComposition();
         final CompositionDocument compositionDocument = buildCompositionDocumentForComposition(composition);
         compositionDocument.setDocumentName("Untitled " + DOCUMENT_TYPE_NAME + " " + ++docNumber); //TODO when we have more than one doc type, lets
-        compositionDocument.setDirty(true);
         return compositionDocument;
     }
 
     @Override
     public Document openDocument(Path path) {
-        MutableComposition composition = CompositionPersistence.load(path);
-//        CompositionDocument compositionDocument = buildCompositionDocumentForComposition(composition);
-//        compositionDocument.setPath(path);
-//        return compositionDocument;
-        return null;
+        MutableComposition composition = compositionPersistence.load(path);
+        CompositionDocument compositionDocument = buildCompositionDocumentForComposition(composition);
+        compositionDocument.setPath(path);
+        return compositionDocument;
     }
 
     @Override
@@ -83,7 +81,7 @@ public class CompositionDocumentTypeManager implements DocumentTypeManager {
         CompositionDocument compositionDocument = (CompositionDocument) document;
         Path path = document.getPath();
         Composition composition = compositionDocument.getComposition();
-        CompositionPersistence.save(path, composition);
+        compositionPersistence.save(path, composition);
         document.setDirty(false);
     }
 
@@ -100,11 +98,6 @@ public class CompositionDocumentTypeManager implements DocumentTypeManager {
     private CompositionDocument buildCompositionDocumentForComposition(MutableComposition composition) {
         final CompositionDocument compositionDocument = beanFactory.build(CompositionDocument.class);
         compositionDocument.init(composition);
-        // this is needed to listen to document updates that are not changed with proof's.
-        // example -> alter the start change to something that will fail, and this will
-        // allow it to be put back to its original value.
-        //TODO Reactive compositionDocument.addListener(compositionDoc -> fireUpdateDocument());
-        compositionDocument.setDirty(false);
         return compositionDocument;
     }
 

@@ -33,7 +33,6 @@ import org.slf4j.LoggerFactory;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
-import java.util.function.Supplier;
 
 import static org.ringingmaster.engine.notation.PlaceSetSequence.BY_NUMBER_THEN_NAME;
 
@@ -83,6 +82,11 @@ public class CompositionDocument extends ScrollPane implements Document {
                 .replay(1)
                 .autoConnect(1);
 
+        composition.observable()
+                .distinct()
+                .subscribe(composition1 ->
+                        setDirty(true));
+
         layoutNodes();
 
         titlePane.init(composition);
@@ -128,16 +132,6 @@ public class CompositionDocument extends ScrollPane implements Document {
         setFitToHeight(true);
         setFitToWidth(true);
         setFocusTraversable(false);
-    }
-
-    @Deprecated
-    public void setUpdatePoint(Supplier<String> updatePointName, boolean mutated) {
-        if (mutated) {
-            log.info("UPDATE: [{}]", updatePointName.get());
-            setDirty(true);
-        } else {
-            log.debug("UPDATE: [{}], [{}]", updatePointName.get(), mutated);
-        }
     }
 
 

@@ -1,12 +1,18 @@
 package org.ringingmaster.ui.desktop.compositiondocument;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Strings;
 import org.ringingmaster.engine.NumberOfBells;
 import org.ringingmaster.engine.arraytable.BackingTableLocationAndValue;
 import org.ringingmaster.engine.arraytable.ImmutableArrayTable;
 import org.ringingmaster.engine.composition.Composition;
 import org.ringingmaster.engine.composition.MutableComposition;
+import org.ringingmaster.engine.composition.TableType;
 import org.ringingmaster.engine.composition.cell.Cell;
+import org.ringingmaster.engine.composition.compositiontype.CompositionType;
+import org.ringingmaster.engine.method.Bell;
+import org.ringingmaster.engine.method.MethodBuilder;
+import org.ringingmaster.engine.method.Stroke;
 import org.ringingmaster.engine.notation.Call;
 import org.ringingmaster.engine.notation.Notation;
 import org.ringingmaster.engine.notation.NotationBuilder;
@@ -28,6 +34,9 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Set;
 
+import static org.ringingmaster.engine.composition.TableType.COMPOSITION_TABLE;
+import static org.ringingmaster.engine.composition.TableType.DEFINITION_TABLE;
+
 /**
  * TODO Comments
  *
@@ -45,9 +54,7 @@ public class CompositionPersistence {
 
         try {
             documentPersist.writeComposition(compositionPersist, path);
-        } catch (IOException e) {
-            log.error("TODO", e);
-        } catch (JAXBException e) {
+        } catch (IOException | JAXBException e) {
             log.error("TODO", e);
         }
     }
@@ -60,76 +67,70 @@ public class CompositionPersistence {
 
     CompositionPersist buildCompositionPersist(Composition composition) {
         //TODO Reactive
-		CompositionPersist compositionPersist = new CompositionPersist();
+        CompositionPersist compositionPersist = new CompositionPersist();
 
-		compositionPersist.setNumberOfBells(composition.getNumberOfBells().toInt());
+        compositionPersist.setNumberOfBells(composition.getNumberOfBells().toInt());
 
-		compositionPersist.setTitle(composition.getTitle());
+        compositionPersist.setTitle(composition.getTitle());
 
-		compositionPersist.setAuthor(composition.getAuthor());
+        compositionPersist.setAuthor(composition.getAuthor());
 
-		compositionPersist.setCompositionType(CompositionTypePersist.fromValue(composition.getCompositionType().toString()));
+        compositionPersist.setCompositionType(CompositionTypePersist.fromValue(composition.getCompositionType().toString()));
 
-		compositionPersist.setCallFrom(composition.getCallFromBell().getZeroBasedBell() + 1);
+        compositionPersist.setCallFrom(composition.getCallFromBell().getZeroBasedBell() + 1);
 
-		if (composition.getNonSplicedActiveNotation().isPresent()) {
-			Notation nonSplicedActiveNotation = composition.getNonSplicedActiveNotation().get();
-			NotationKeyPersist notationKeyPersist = getNotationKeyPersist(nonSplicedActiveNotation);
-			compositionPersist.setNonSplicedActiveNotation(notationKeyPersist);
-		}
+        if (composition.getNonSplicedActiveNotation().isPresent()) {
+            Notation nonSplicedActiveNotation = composition.getNonSplicedActiveNotation().get();
+            NotationKeyPersist notationKeyPersist = buildNotationKeyPersist(nonSplicedActiveNotation);
+            compositionPersist.setNonSplicedActiveNotation(notationKeyPersist);
+        }
 
-		compositionPersist.setSpliced(composition.isSpliced());
+        compositionPersist.setSpliced(composition.isSpliced());
 
-		compositionPersist.setPlainLeadToken(composition.getPlainLeadToken());
+        compositionPersist.setPlainLeadToken(composition.getPlainLeadToken());
 
-//TODO Reactive		Set<CompositionDefinition> definitions = composition.getDefinitions();
-//		for (CompositionDefinition definition : definitions) {
-//			DefinitionPersist definitionPersist = buildDefinitionPersist(definition);
-//			compositionPersist.getDefinition().add(definitionPersist);
-//		}
-
-		for (Notation notation : composition.getAllNotations()) {
-			CompositionNotationPersist notationType = buildCompositionNotationPersist(notation);
-			compositionPersist.getNotation().add(notationType);
-		}
+        for (Notation notation : composition.getAllNotations()) {
+            CompositionNotationPersist notationType = buildCompositionNotationPersist(notation);
+            compositionPersist.getNotation().add(notationType);
+        }
 
         ImmutableArrayTable<Cell> compositionCells = composition.allCompositionCells();
-        CellsTablePersist compositionCellsTablePersist = getCellsPersist(compositionCells);
+        CellsTablePersist compositionCellsTablePersist = buildCellsPersist(compositionCells);
         compositionPersist.setCompositionTable(compositionCellsTablePersist);
 
         ImmutableArrayTable<Cell> definitionsCells = composition.allDefinitionCells();
-        CellsTablePersist definitionCellsTablePersist = getCellsPersist(definitionsCells);
+        CellsTablePersist definitionCellsTablePersist = buildCellsPersist(definitionsCells);
         compositionPersist.setDefinitionTable(definitionCellsTablePersist);
 
-		// Start
-		compositionPersist.setStartChange(composition.getStartChange().getDisplayString(false));
-		compositionPersist.setStartRow(composition.getStartAtRow());
-		compositionPersist.setStartStroke(StrokePersist.fromValue(composition.getStartStroke().toString()));
-		if (composition.getStartNotation().isPresent()) {
-			compositionPersist.setStartNotation((composition.getStartNotation().get().getRawNotationDisplayString(0, true)));
-		}
+        // Start
+        compositionPersist.setStartChange(composition.getStartChange().getDisplayString(false));
+        compositionPersist.setStartRow(composition.getStartAtRow());
+        compositionPersist.setStartStroke(StrokePersist.fromValue(composition.getStartStroke().toString()));
+        if (composition.getStartNotation().isPresent()) {
+            compositionPersist.setStartNotation((composition.getStartNotation().get().getRawNotationDisplayString(0, true)));
+        }
 
-		//Termination
-		compositionPersist.setTerminationMaxRows(composition.getTerminationMaxRows());
+        //Termination
+        compositionPersist.setTerminationMaxRows(composition.getTerminationMaxRows());
 
-		if (composition.getTerminationMaxLeads().isPresent()) {
-			compositionPersist.setTerminationMaxLeads(composition.getTerminationMaxLeads().get());
-		}
+        if (composition.getTerminationMaxLeads().isPresent()) {
+            compositionPersist.setTerminationMaxLeads(composition.getTerminationMaxLeads().get());
+        }
 
-		if (composition.getTerminationMaxParts().isPresent()) {
-			compositionPersist.setTerminationMaxParts(composition.getTerminationMaxParts().get());
-		}
+        if (composition.getTerminationMaxParts().isPresent()) {
+            compositionPersist.setTerminationMaxParts(composition.getTerminationMaxParts().get());
+        }
 
-		compositionPersist.setTerminationMaxCircularity(composition.getTerminationMaxCircularity());
+        compositionPersist.setTerminationMaxCircularity(composition.getTerminationMaxCircularity());
 
-		if (composition.getTerminationChange().isPresent()) {
-			compositionPersist.setTerminationChange(composition.getTerminationChange().get().getDisplayString(false));
-		}
+        if (composition.getTerminationChange().isPresent()) {
+            compositionPersist.setTerminationChange(composition.getTerminationChange().get().getDisplayString(false));
+        }
 
-		return compositionPersist;
+        return compositionPersist;
     }
 
-    private CellsTablePersist getCellsPersist(ImmutableArrayTable<Cell> compositionCells) {
+    private CellsTablePersist buildCellsPersist(ImmutableArrayTable<Cell> compositionCells) {
         CellsTablePersist compositionCellsPersist = new CellsTablePersist();
         compositionCellsPersist.setRows(compositionCells.getRowSize()); //TODO Do we really need to store this?
         compositionCellsPersist.setColumns(compositionCells.getColumnSize()); //TODO Do we really need to store this?
@@ -137,28 +138,20 @@ public class CompositionPersistence {
 
         for (BackingTableLocationAndValue<Cell> cell : compositionCells) {
             CellTablePersist cellPersist = new CellTablePersist();
-				cellPersist.setRow(cell.getRow());
-				cellPersist.setColumn(cell.getCol());
-				cellPersist.setCharacters(cell.getValue().getCharacters());
-				compositionCellsPersist.getCell().add(cellPersist);
+            cellPersist.setRow(cell.getRow());
+            cellPersist.setColumn(cell.getCol());
+            cellPersist.setCharacters(cell.getValue().getCharacters());
+            compositionCellsPersist.getCells().add(cellPersist);
         }
         return compositionCellsPersist;
     }
 
-    private NotationKeyPersist getNotationKeyPersist(Notation nonSplicedActiveNotation) {
+    private NotationKeyPersist buildNotationKeyPersist(Notation nonSplicedActiveNotation) {
         NotationKeyPersist notationKeyPersist = new ObjectFactory().createNotationKeyPersist();
         notationKeyPersist.setNumberOfWorkingBells(nonSplicedActiveNotation.getNumberOfWorkingBells().toInt());
         notationKeyPersist.setName(nonSplicedActiveNotation.getName());
         return notationKeyPersist;
     }
-
-    //TODO Reactive
-//	 private DefinitionPersist buildDefinitionPersist(Definition definition) {
-//		DefinitionPersist definitionPersist = new DefinitionPersist();
-//		definitionPersist.setCharacters(definition.getCharacters());
-//		definitionPersist.setShorthand(definition.getShorthand());
-//		return definitionPersist;
-//	}
 
     private CompositionNotationPersist buildCompositionNotationPersist(Notation notation) {
         CompositionNotationPersist notationPersist = new CompositionNotationPersist();
@@ -173,7 +166,7 @@ public class CompositionPersistence {
         } else {
             Set<Call> calls = notation.getCalls();
             for (Call call : calls) {
-                CallPersist callPersist = convertCall(call, (call == notation.getDefaultCall()));
+                CallPersist callPersist = buildCallPersist(call, (call == notation.getDefaultCall()));
                 notationPersist.getCall().add(callPersist);
             }
         }
@@ -182,7 +175,7 @@ public class CompositionPersistence {
         return notationPersist;
     }
 
-    private CallPersist convertCall(Call call, boolean defaultCall) {
+    private CallPersist buildCallPersist(Call call, boolean defaultCall) {
         CallPersist callPersist = new CallPersist();
         callPersist.setName(call.getName());
         callPersist.setShorthand(call.getNameShorthand());
@@ -193,76 +186,78 @@ public class CompositionPersistence {
     }
 
     @VisibleForTesting
-    protected MutableComposition buildComposition(CompositionPersist CompositionPersist) {
-//TODO Reactive
-// 		int rowCount = CompositionPersist.getCells().getRows();
-//		int columnCount = CompositionPersist.getCells().getColumns();
-//		NumberOfBells numberOfBells = NumberOfBells.valueOf(CompositionPersist.getNumberOfBells());
-//		Composition composition = CompositionBuilder.getInstance(numberOfBells, columnCount, rowCount);
-//
-//		composition.setTitle(CompositionPersist.getTitle());
-//
-//		composition.setAuthor(CompositionPersist.getAuthor());
-//
-//		composition.setCompositionCompositionType(CompositionType.valueOf(CompositionPersist.getCompositionChecking().toString()));
-//
-//		composition.setCallFromBell(Bell.valueOf(CompositionPersist.getCallFrom() - 1));
-//
-//		for (CompositionNotationPersist CompositionPersistNotation : CompositionPersist.getNotation()) {
-//			Notation notation = buildNotation(CompositionPersistNotation);
-//			composition.addNotation(notation);
-//		}
-//
-//		if (CompositionPersist.getNonSplicedActiveNotation() != null) {
-//
-//			NotationKeyPersist nonSplicedActiveNotation = CompositionPersist.getNonSplicedActiveNotation();
-//			List<Notation> allNotations = composition.getAllNotations();
-//			for (Notation notation : allNotations) {
-//				if (notation.getName().equals(nonSplicedActiveNotation.getName()) &&
-//					(notation.getNumberOfWorkingBells().toInt() == nonSplicedActiveNotation.getNumberOfWorkingBells())) {
-//					composition.setNonSplicedActiveNotation(notation);
-//					break;
-//				}
-//			}
-//		}
-//
-//		composition.setPlainLeadToken(CompositionPersist.getPlainLeadToken());
-//
-//		for (DefinitionPersist definitionPersist : CompositionPersist.getDefinition()) {
-//			composition.addDefinition(definitionPersist.getShorthand(), definitionPersist.getCharacters());
-//		}
-//
-//		for (CompositionCellPersist compositionCellPersist : CompositionPersist.getCells().getCell()) {
-//			int row = compositionCellPersist.getRow();
-//			int column = compositionCellPersist.getColumn();
-//			String characters = compositionCellPersist.getCharacters();
-//			composition.addCharacters(column, row, characters);
-//		}
-//
-//		composition.setStartChange(MethodBuilder.parse(composition.getNumberOfBells(), CompositionPersist.getStartChange()));
-//		composition.setStartAtRow(CompositionPersist.getStartRow());
-//		composition.setStartStroke(Stroke.valueOf(CompositionPersist.getStartStroke().name()));
-//		composition.setStartNotation(NotationBuilder.getInstance()
-//				.setNumberOfWorkingBells(composition.getNumberOfBells())
-//				.setUnfoldedNotationShorthand(Strings.nullToEmpty(CompositionPersist.getStartNotation()))
-//				.build());
-//
-//		composition.setTerminationMaxRows(CompositionPersist.getTerminationMaxRows());
-//		if(CompositionPersist.getTerminationMaxLeads() != null) {
-//			composition.setTerminationMaxLeads(CompositionPersist.getTerminationMaxLeads());
-//		}
-//		if (CompositionPersist.getTerminationMaxParts() != null) {
-//			composition.setTerminationMaxParts(CompositionPersist.getTerminationMaxParts());
-//		}
-//		if (CompositionPersist.getTerminationMaxCircularity() != null) {
-//			composition.setTerminationMaxCircularity(CompositionPersist.getTerminationMaxCircularity());
-//		}
-//		if (CompositionPersist.getTerminationChange() != null) {
-//			composition.setTerminationChange(MethodBuilder.parse(composition.getNumberOfBells(), CompositionPersist.getTerminationChange()));
-//		}
-//
-//		return composition;
-        return null;
+    protected MutableComposition buildComposition(CompositionPersist compositionPersist) {
+        MutableComposition composition = new MutableComposition();
+
+        NumberOfBells numberOfBells = NumberOfBells.valueOf(compositionPersist.getNumberOfBells());
+
+        composition.setTitle(compositionPersist.getTitle());
+
+        composition.setAuthor(compositionPersist.getAuthor());
+
+        composition.setNumberOfBells(numberOfBells);
+
+        composition.setCompositionType(CompositionType.valueOf(compositionPersist.getCompositionType().toString()));
+
+        composition.setCallFromBell(Bell.valueOf(compositionPersist.getCallFrom() - 1));
+
+        for (CompositionNotationPersist CompositionPersistNotation : compositionPersist.getNotation()) {
+            Notation notation = buildNotation(CompositionPersistNotation);
+            composition.addNotation(notation);
+        }
+
+        if (compositionPersist.getNonSplicedActiveNotation() != null) {
+
+            NotationKeyPersist nonSplicedActiveNotation = compositionPersist.getNonSplicedActiveNotation();
+            NumberOfBells notationNumberOfBells = NumberOfBells.valueOf(nonSplicedActiveNotation.getNumberOfWorkingBells());
+
+            Set<Notation> allNotations = composition.get().getAllNotations();
+            for (Notation notation : allNotations) {
+                if (notation.getName().equals(nonSplicedActiveNotation.getName()) &&
+                        (notation.getNumberOfWorkingBells() == notationNumberOfBells)) {
+                    composition.setNonSplicedActiveNotation(notation);
+                    break;
+                }
+            }
+        }
+
+        composition.setPlainLeadToken(compositionPersist.getPlainLeadToken());
+
+        buildCells(composition, COMPOSITION_TABLE, compositionPersist.getCompositionTable());
+        buildCells(composition, DEFINITION_TABLE, compositionPersist.getDefinitionTable());
+
+        composition.setStartChange(MethodBuilder.parse(numberOfBells, compositionPersist.getStartChange()));
+        composition.setStartAtRow(compositionPersist.getStartRow());
+        composition.setStartStroke(Stroke.valueOf(compositionPersist.getStartStroke().name()));
+        composition.setStartNotation(NotationBuilder.getInstance()
+                .setNumberOfWorkingBells(numberOfBells)
+                .setUnfoldedNotationShorthand(Strings.nullToEmpty(compositionPersist.getStartNotation()))
+                .build());
+
+        composition.setTerminationMaxRows(compositionPersist.getTerminationMaxRows());
+        if (compositionPersist.getTerminationMaxLeads() != null) {
+            composition.setTerminationMaxLeads(compositionPersist.getTerminationMaxLeads());
+        }
+        if (compositionPersist.getTerminationMaxParts() != null) {
+            composition.setTerminationMaxParts(compositionPersist.getTerminationMaxParts());
+        }
+        if (compositionPersist.getTerminationMaxCircularity() != null) {
+            composition.setTerminationMaxCircularity(compositionPersist.getTerminationMaxCircularity());
+        }
+        if (compositionPersist.getTerminationChange() != null) {
+            composition.setTerminationChange(MethodBuilder.parse(numberOfBells, compositionPersist.getTerminationChange()));
+        }
+
+        return composition;
+    }
+
+    private void buildCells(MutableComposition composition, TableType tableType, CellsTablePersist compositionTable) {
+        for (CellTablePersist cell : compositionTable.getCells()) {
+            int row = cell.getRow();
+            int column = cell.getColumn();
+            String characters = cell.getCharacters();
+            composition.addCharacters(tableType, column, row, characters);
+        }
     }
 
     private Notation buildNotation(CompositionNotationPersist CompositionPersistNotation) {

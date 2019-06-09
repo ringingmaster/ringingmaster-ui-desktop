@@ -1,8 +1,13 @@
 package org.ringingmaster.ui.desktop.analysis;
 
 import org.ringingmaster.engine.analyser.proof.Proof;
+import org.ringingmaster.engine.compiler.compiledcomposition.CompiledComposition;
+import org.ringingmaster.ui.desktop.compositiondocument.CompositionDocumentTypeManager;
+import org.ringingmaster.ui.desktop.util.ColorManager;
 import org.ringingmaster.util.javafx.namevaluepair.NameValuePairModel;
 import org.ringingmaster.util.javafx.namevaluepair.NameValuePairTable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * TODO Comments
@@ -10,6 +15,9 @@ import org.ringingmaster.util.javafx.namevaluepair.NameValuePairTable;
  * @author Steve Lake
  */
 public class AnalysisStatusWindow extends NameValuePairTable {
+
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
+
 
     public static final String COMPOSITION_TRUE_PROPERTY_NAME = "The composition is";
     public static final String TERMINATION_PROPERTY_NAME = "Termination";
@@ -21,6 +29,19 @@ public class AnalysisStatusWindow extends NameValuePairTable {
     public static final String END_ROW_PROPERTY_NAME = "End Row";
     public static final String END_STROKE_PROPERTY_NAME = "End Stroke";
     public static final String PROOF_TIME_PROPERTY_NAME = "Proof Time";
+
+    private CompositionDocumentTypeManager compositionDocumentTypeManager;
+
+    public final void init() {
+
+        buildProperties();
+
+        compositionDocumentTypeManager.observableProof().subscribe(
+                compiledComposition -> {
+                    compiledComposition.ifPresent(this::updateTermination);
+                }
+        );
+    }
 
 
 //TODO REACTIVE    public void setProofManager(ProofManager proofManager) {
@@ -74,35 +95,35 @@ public class AnalysisStatusWindow extends NameValuePairTable {
     }
 
 
-    private void updateTermination(Proof proof) {
-        //TODO Reactive
-//        String terminateReasonDisplayString = proof.getTerminateReasonDisplayString();
-//
-//        switch (proof.getTerminationReason()) {
-//            case SPECIFIED_ROW:
-//                updateDisplayProperty(TERMINATION_PROPERTY_NAME, terminateReasonDisplayString);
-//                break;
-//            case ROW_COUNT:
-//            case LEAD_COUNT:
-//                updateDisplayProperty(TERMINATION_PROPERTY_NAME, terminateReasonDisplayString, ColorManager.getWarnHighlight());
-//                updateDisplayProperty(TERMINATION_PROPERTY_NAME, terminateReasonDisplayString, ColorManager.getWarnHighlight());
-//                break;
-//            case INVALID_COMPOSITION:
-//            case EMPTY_PARTS:
-//                updateDisplayProperty(TERMINATION_PROPERTY_NAME, terminateReasonDisplayString, ColorManager.getErrorHighlight());
-//                break;
-//            // TODO this is from C++
-//            //			case TR_PARTS:
-//            //				str.Format("Part limit (%d)", method->getPartCount());
-//            //				addLine("Termination:", str, RGB(255, 120, 255));
-//            //				break;
-//            //			case TR_CIRCLE:
-//            //				addLine("Termination:", "Aborted - Circular composition", RGB(255, 120, 120));
-//            //				break;
-//
-//            default:
-//                throw new RuntimeException("Please code for termination reason [" + proof.getTerminationReason() + "]");
-//        }
+    private void updateTermination(CompiledComposition compiledComposition) {
+
+        String terminateReasonDisplayString = compiledComposition.getTerminateReasonDisplayString();
+
+        switch (compiledComposition.getTerminationReason()) {
+            case SPECIFIED_ROW:
+                updateDisplayProperty(TERMINATION_PROPERTY_NAME, terminateReasonDisplayString);
+                break;
+            case ROW_COUNT:
+            case LEAD_COUNT:
+                updateDisplayProperty(TERMINATION_PROPERTY_NAME, terminateReasonDisplayString, ColorManager.getWarnHighlight());
+                updateDisplayProperty(TERMINATION_PROPERTY_NAME, terminateReasonDisplayString, ColorManager.getWarnHighlight());
+                break;
+            case INVALID_COMPOSITION:
+            case EMPTY_PARTS:
+                updateDisplayProperty(TERMINATION_PROPERTY_NAME, terminateReasonDisplayString, ColorManager.getErrorHighlight());
+                break;
+            // TODO this is from C++
+            //			case TR_PARTS:
+            //				str.Format("Part limit (%d)", method->getPartCount());
+            //				addLine("Termination:", str, RGB(255, 120, 255));
+            //				break;
+            //			case TR_CIRCLE:
+            //				addLine("Termination:", "Aborted - Circular composition", RGB(255, 120, 120));
+            //				break;
+
+            default:
+                throw new RuntimeException("Please code for termination reason [" + compiledComposition.getTerminationReason() + "]");
+        }
     }
 
     private void updatePartCount(Proof proof) {
@@ -171,4 +192,7 @@ public class AnalysisStatusWindow extends NameValuePairTable {
         // TODO Reactive updateDisplayProperty(PROOF_TIME_PROPERTY_NAME, String.format("%.3f", (proof.getProofTimeMs()) / 1000.0) + " seconds");
     }
 
+    public void setCompositionDocumentTypeManager(CompositionDocumentTypeManager compositionDocumentTypeManager) {
+        this.compositionDocumentTypeManager = compositionDocumentTypeManager;
+    }
 }

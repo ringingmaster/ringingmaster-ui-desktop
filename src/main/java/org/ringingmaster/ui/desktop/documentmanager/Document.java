@@ -1,8 +1,10 @@
 package org.ringingmaster.ui.desktop.documentmanager;
 
+import io.reactivex.Observable;
 import javafx.scene.Node;
 
 import java.nio.file.Path;
+import java.util.Optional;
 
 /**
  * TODO Comments
@@ -11,21 +13,30 @@ import java.nio.file.Path;
  */
 public interface Document {
 
-    boolean hasFileLocation();
-
     boolean isDirty();
+
+    Observable<Boolean> observableDirty();
 
     void setDirty(boolean dirty);
 
-    Path getPath();
+
+    boolean hasFileLocation();
+
+    Optional<Path> getPath();
 
     void setPath(Path path);
 
-    void setDocumentName(String documentName);
+    Observable<Optional<Path>> observablePath();
 
-    String getNameForApplicationTitle();
 
-    String getNameForTab();
+    default Observable<String> observableFallbackName() {
+        return null;
+    }
+
+    default String getFallbackName() {
+        return null;
+    }
+
 
     default Node getNode() {
         return null;

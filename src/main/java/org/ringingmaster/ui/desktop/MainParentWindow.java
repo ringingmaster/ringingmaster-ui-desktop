@@ -32,8 +32,8 @@ public class MainParentWindow extends VBox {
 
         SplitPane analysisSplit = new SplitPane();
         analysisSplit.setOrientation(Orientation.HORIZONTAL);
-//        analysisSplit.getItems().add(0, analysisLeftWindow);
-//        analysisSplit.getItems().add(1, analysisRightWindow);
+        analysisSplit.getItems().add(0, analysisLeftWindow);
+        analysisSplit.getItems().add(1, analysisRightWindow);
         analysisSplit.setDividerPositions(0.5);
 
         SplitPane topBottomSplit = new SplitPane();

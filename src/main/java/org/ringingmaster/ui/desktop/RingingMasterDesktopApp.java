@@ -40,7 +40,7 @@ public class RingingMasterDesktopApp extends Application {
         ThreadUncaughtExceptionHelper.setLoggingDefaultUncaughtException();
         log.info("Starting...");
         launch(RingingMasterDesktopApp.class, args);
-        log.info("Ending...");
+        log.info("Ending. Byeeee...");
     }
 
     @Override

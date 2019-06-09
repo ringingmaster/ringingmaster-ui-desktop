@@ -1,11 +1,12 @@
 package org.ringingmaster.ui.desktop.documentmanager;
 
+import io.reactivex.Observable;
+import io.reactivex.subjects.BehaviorSubject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
-
-import static com.google.common.base.Preconditions.checkState;
+import java.util.Optional;
 
 /**
  * TODO Comments
@@ -16,59 +17,46 @@ public class DefaultDocument implements Document {
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-    private Path path;
-    private String documentName;
-    private boolean dirty;
+    private BehaviorSubject<Optional<Path>> path = BehaviorSubject.createDefault(Optional.empty());
+    private BehaviorSubject<Boolean> dirty = BehaviorSubject.createDefault(false);
+
+    public DefaultDocument() {
+        observableDirty().subscribe(dirty ->
+            log.info("Document [{}] is [{}]", getPath(), dirty ? "dirty" : "clean"));
+    }
 
     @Override
     public boolean hasFileLocation() {
-        return path != null;
+        return path.getValue().isPresent();
     }
 
     @Override
     public boolean isDirty() {
-        return dirty;
+        return dirty.getValue();
+    }
+
+    @Override
+    public Observable<Boolean> observableDirty() {
+        return dirty.distinctUntilChanged();
     }
 
     @Override
     public void setDirty(boolean dirty) {
-        if (this.dirty != dirty) {
-            log.info("Setting document [{}] [{}]", getNameForTab(), dirty ? "dirty" : "clean");
-        }
-        this.dirty = dirty;
+        this.dirty.onNext( dirty);
     }
 
     @Override
-    public Path getPath() {
-        return path;
+    public Optional<Path> getPath() {
+        return path.getValue();
     }
 
     @Override
     public void setPath(Path path) {
-        this.path = path;
-        this.documentName = path.getFileName().toString();
+        this.path.onNext(Optional.of(path));
     }
 
     @Override
-    public void setDocumentName(String documentName) {
-        checkState(path == null, "Once we have a path, then the document name is derived from that.");
-        this.documentName = documentName;
+    public Observable<Optional<Path>> observablePath() {
+        return path;
     }
-
-    @Override
-    public String getNameForApplicationTitle() {
-        if (path != null) {
-            return path.toString();
-        } else if (documentName != null) {
-            return documentName;
-        } else {
-            throw new RuntimeException("Neither path nor document name are set.");
-        }
-    }
-
-    @Override
-    public String getNameForTab() {
-        return documentName;
-    }
-
 }

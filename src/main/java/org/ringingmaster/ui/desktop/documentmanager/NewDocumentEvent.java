@@ -25,7 +25,7 @@ public class NewDocumentEvent extends SkeletalEventDefinition implements EventDe
 
     @Override
     public void handle(ActionEvent event) {
-        documentManager.newDocument();
+        documentManager.createNewDocument();
     }
 
     public void setDocumentManager(DocumentManager documentManager) {

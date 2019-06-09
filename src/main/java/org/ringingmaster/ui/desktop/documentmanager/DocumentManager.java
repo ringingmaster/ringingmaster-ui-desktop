@@ -31,6 +31,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class DocumentManager  {
 
+    public static final String APPLICATION_TITLE = "Ringingmaster Desktop";
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     private TabPane documentWindow;
@@ -45,29 +46,45 @@ public class DocumentManager  {
     public void init() {
         documentWindow.setTabClosingPolicy(TabPane.TabClosingPolicy.ALL_TABS);
         documentWindow.getSelectionModel().selectedItemProperty().addListener((observable, oldTab, newTab) -> {
-            updateTitles();
             observableActiveDocument.onNext(Optional.ofNullable(newTab).map(this::getDocument));
         });
 
-        startupService.addListener(this::startup);
+        startupService.addListener(this::openPreviouslyOpenDocuments);
         shutdownService.addListener(this::shutdown);
+
+        Observable<Optional<Path>> observablePath = observableActiveDocument
+                .switchMap(document -> document.map(Document::observablePath).orElse(Observable.just(Optional.empty())));
+
+        Observable<Boolean> observableDirty = observableActiveDocument
+                .switchMap(document -> document.map(Document::observableDirty).orElse(Observable.just(false)));
+
+        Observable.combineLatest(observablePath, observableDirty, (optionalPath, dirty) ->
+                optionalPath
+                        .map(path -> APPLICATION_TITLE + " - [" + path.toString() + (dirty ? "*" : "") + "]")
+                        .orElse(APPLICATION_TITLE))
+                .subscribe(title -> globalStage.setTitle(title));
+
     }
+
 
     public Observable<Optional<Document>> observableActiveDocument() {
         return observableActiveDocument;
     }
 
-    public void startup() {
+    public void openPreviouslyOpenDocuments() {
         Preferences userPrefs = Preferences.userNodeForPackage(getClass());
         final int docCount = userPrefs.getInt("doc.count", 0);
+        log.info("Reading from user prefs [{}]>[{}]", "doc.count" , docCount);
+
         for (int tabIndex = 0; tabIndex < docCount; tabIndex++) {
             Path path = Paths.get(userPrefs.get("doc." + tabIndex, ""));
-            log.info("Loading document [{}]", path);
+            log.info("Reading from user prefs [{}]>[{}]", "doc." + tabIndex , path);
             try {
                 final Document document = documentTypeManager.openDocument(path);
                 buildTabForDocument(document);
+                document.setDirty(false);
             } catch (RuntimeException e) {
-                log.error("Failed to open document [" + path + "] during startup", e);
+                log.error("Failed to open document [" + path + "] during openPreviouslyOpenDocuments", e);
             }
         }
 
@@ -89,11 +106,15 @@ public class DocumentManager  {
         for (int tabIndex = 0; tabIndex < tabs.size(); tabIndex++) {
             Tab tab = tabs.get(tabIndex);
             Document document = getDocument(tab);
-            if (document.getPath() != null) {
-                userPrefs.put("doc." + docsToRestoreCount, document.getPath().toString());
+            if (document.getPath().isPresent()) {
+                log.info("Writing to user prefs [{}]>[{}]", "doc." + docsToRestoreCount, document.getPath().get().toString());
+
+                userPrefs.put("doc." + docsToRestoreCount, document.getPath().get().toString());
                 docsToRestoreCount++;
             }
         }
+
+        log.info("Writing to user prefs [{}]>[{}]", "doc.count", docsToRestoreCount);
         userPrefs.putInt("doc.count", docsToRestoreCount);
 
         return ShutdownServiceListener.ShutdownOptions.ALLOW_SHUTDOWN;
@@ -102,40 +123,40 @@ public class DocumentManager  {
     private boolean closeDocumentTabAttempt(Tab tab) {
         Document document = getDocument(tab);
 
-        log.info("Checking if [{}] is dirty", document.getNameForApplicationTitle());
+        log.info("Checking if [{}] is dirty", document);
         if (document.isDirty()) {
             //TODO it would be nice if the save dialog could have a don't save option instead of this additional Alert.
-            log.info("Ask user if save required for [{}]", document.getNameForApplicationTitle());
+            log.info("Ask user if save required for [{}]", document);
             Alert dialog = new Alert(Alert.AlertType.CONFIRMATION, "Your changes will be lost if you don't save them." + System.lineSeparator(),
                     ButtonType.YES, ButtonType.NO, ButtonType.CANCEL);
             dialog.setTitle("Save");
             dialog.setHeaderText("Do you want to save the changes made to the document:" + System.lineSeparator() +
-                    "'" + document.getNameForApplicationTitle() + "'?");
+                    "'" + document + "'?");
             dialog.getDialogPane().setMinHeight(10);
             dialog.getDialogPane().setMinWidth(10);
             dialog.getDialogPane().setMaxWidth(500);
             Optional<ButtonType> buttonType = dialog.showAndWait();
 
             if (buttonType.get().equals(ButtonType.YES)) {
-                log.info("User requested save for [{}]", document.getNameForApplicationTitle());
+                log.info("User requested save for [{}]", document);
                 boolean successfulSave = save(tab);
                 return successfulSave;
             } else if (buttonType.get().equals(ButtonType.CANCEL)) {
-                log.info("User cancelled save for [{}]", document.getNameForApplicationTitle());
+                log.info("User cancelled save for [{}]", document);
                 return false;
             } else if (buttonType.get().equals(ButtonType.NO)) {
-                log.info("User declined save for [{}]", document.getNameForApplicationTitle());
+                log.info("User declined save for [{}]", document);
             }
         }
         return true;
     }
 
-    public void newDocument() {
+    public void createNewDocument() {
         Document document = documentTypeManager.createNewDocument();
         buildTabForDocument(document);
     }
 
-    public void openDocument() {
+    public void chooseAndOpenDocument() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open " + documentTypeManager.getDocumentTypeName() + " File");
         fileChooser.getExtensionFilters().addAll(
@@ -172,7 +193,7 @@ public class DocumentManager  {
 
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Save " + documentTypeManager.getDocumentTypeName() + " File");
-            fileChooser.setInitialFileName(document.getNameForTab());
+            fileChooser.setInitialFileName(document.getFallbackName());
             fileChooser.getExtensionFilters().addAll(
                     documentTypeManager.getFileChooserExtensionFilters());
             File selectedFile = fileChooser.showSaveDialog(globalStage);
@@ -184,49 +205,42 @@ public class DocumentManager  {
         }
 
         documentTypeManager.saveDocument(document);
-        updateTitles();
 
         return true;
     }
 
     private void buildTabForDocument(Document document) {
         Tab tab = new Tab();
+
+        Observable.combineLatest(document.observablePath(), document.observableFallbackName(), document.observableDirty(),
+                (optionalPath, fallbackName, dirty) -> {
+                    if (optionalPath.isPresent()) {
+                        return optionalPath.get().getFileName().toString() + (dirty?"*":"");
+                    } else {
+                        return fallbackName + "*";
+                    }
+                })
+                .subscribe(tab::setText);
+
+
         tab.setContent(document.getNode());
         documentWindow.getTabs().add(tab);
         documentWindow.getSelectionModel().select(tab);
         tab.setOnCloseRequest(event -> {
-            log.info("Closing individual tab [{}]", document.getNameForApplicationTitle());
+            log.info("Closing individual tab [{}]", document);
             boolean closeTab = closeDocumentTabAttempt(tab);
             if (!closeTab) {
-                log.info("Prevent close of tab [{}]", document.getNameForApplicationTitle());
+                log.info("Prevent close of tab [{}]", document);
                 // prevent the close by consuming the event
                 event.consume();
             }
         });
 
-        updateTitles();
-    }
-
-    public void updateTitles() {
-        StringBuilder applicationTitle = new StringBuilder();
-        applicationTitle.append("Ringingmaster Desktop");
-
-        Tab tab = getCurrentTab();
-        if (tab != null) {
-            Document document = getDocument(tab);
-            boolean dirty = document.isDirty();
-            tab.setText(document.getNameForTab() + (dirty ? "*" : ""));
-            applicationTitle.append(" - [")
-                    .append(document.getNameForApplicationTitle())
-                    .append(dirty ? "*" : "")
-                    .append("]");
-        }
-
-        globalStage.setTitle(applicationTitle.toString());
+        //TODO remove??  updateApplicationTitle();
     }
 
 
-    private Tab getCurrentTab() {
+    private Tab     getCurrentTab() {
         return documentWindow.getSelectionModel().getSelectedItem();
     }
 

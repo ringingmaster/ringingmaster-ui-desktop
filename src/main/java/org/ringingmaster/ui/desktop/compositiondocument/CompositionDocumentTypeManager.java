@@ -4,11 +4,13 @@ import com.google.common.collect.Lists;
 import io.reactivex.Observable;
 import javafx.stage.FileChooser;
 import org.ringingmaster.engine.NumberOfBells;
+import org.ringingmaster.engine.compiler.compiledcomposition.CompiledComposition;
 import org.ringingmaster.engine.composition.Composition;
 import org.ringingmaster.engine.composition.MutableComposition;
 import org.ringingmaster.engine.method.MethodBuilder;
 import org.ringingmaster.engine.notation.Notation;
 import org.ringingmaster.engine.notation.NotationBuilder;
+import org.ringingmaster.engine.parser.parse.Parse;
 import org.ringingmaster.ui.desktop.documentmanager.Document;
 import org.ringingmaster.ui.desktop.documentmanager.DocumentManager;
 import org.ringingmaster.ui.desktop.documentmanager.DocumentTypeManager;
@@ -19,6 +21,7 @@ import org.slf4j.LoggerFactory;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.ringingmaster.engine.composition.TableType.COMPOSITION_TABLE;
 import static org.ringingmaster.engine.composition.compositiontype.CompositionType.LEAD_BASED;
@@ -36,8 +39,8 @@ public class CompositionDocumentTypeManager implements DocumentTypeManager {
     private BeanFactory beanFactory;
     private DocumentManager documentManager;
     private CompositionPersistence compositionPersistence = new CompositionPersistence();
+    private AtomicInteger docCount = new AtomicInteger(1);
 
-    private int docNumber = 0;
 
     public Observable<Optional<CompositionDocument>> observableActiveCompositionDocument() {
         return documentManager.observableActiveDocument()
@@ -60,11 +63,31 @@ public class CompositionDocumentTypeManager implements DocumentTypeManager {
         });
     }
 
+    public Observable<Optional<Parse>> observableParse() {
+        return observableActiveCompositionDocument().switchMap(compositionDocument -> {
+            if (compositionDocument.isPresent()) {
+                return compositionDocument.get().observableParse().map(Optional::of);
+            } else {
+                return Observable.just(Optional.empty());
+            }
+        });
+    }
+
+    public Observable<Optional<CompiledComposition>> observableProof() {
+        return observableActiveCompositionDocument().switchMap(compositionDocument -> {
+            if (compositionDocument.isPresent()) {
+                return compositionDocument.get().observableCompiledComposition().map(Optional::of);
+            } else {
+                return Observable.just(Optional.empty());
+            }
+        });
+    }
+
+
     @Override
     public Document createNewDocument() {
         MutableComposition composition = createEmptyComposition();
         final CompositionDocument compositionDocument = buildCompositionDocumentForComposition(composition);
-        compositionDocument.setDocumentName("Untitled " + DOCUMENT_TYPE_NAME + " " + ++docNumber); //TODO when we have more than one doc type, lets
         return compositionDocument;
     }
 
@@ -79,7 +102,7 @@ public class CompositionDocumentTypeManager implements DocumentTypeManager {
     @Override
     public void saveDocument(Document document) {
         CompositionDocument compositionDocument = (CompositionDocument) document;
-        Path path = document.getPath();
+        Path path = document.getPath().get();
         Composition composition = compositionDocument.getComposition();
         compositionPersistence.save(path, composition);
         document.setDirty(false);
@@ -114,12 +137,13 @@ public class CompositionDocumentTypeManager implements DocumentTypeManager {
         this.beanFactory = beanFactory;
     }
 
-    //TODO Make this return a new composition.
+
+    //TODO Make this return an empty composition.
     private MutableComposition createEmptyComposition() {
         MutableComposition composition = new MutableComposition();
 
-        composition.setTitle("My Composition");
-        composition.setAuthor("by Stephen");
+        composition.setTitle("Untitled Composition " + docCount.getAndIncrement());
+        composition.setAuthor(System.getProperty("user.name"));
 
         composition.setCompositionType(LEAD_BASED);
         composition.addNotation(buildPlainBobMinor());

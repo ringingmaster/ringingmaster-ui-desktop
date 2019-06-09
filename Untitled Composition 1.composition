@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns2:composition xmlns:ns2="http://www.ringingmaster.org.uk/persist/v1">
+    <documentVersion version="1"/>
+    <numberOfBells>6</numberOfBells>
+    <title>Untitled Composition 1</title>
+    <author>stevelake</author>
+    <compositionType>COURSE_BASED</compositionType>
+    <spliced>false</spliced>
+    <callFrom>6</callFrom>
+    <notation splicedIdentifier="X" foldedPalindrome="true" notation2="12" notation="-18-18-18-18" numberOfWorkingBells="8" name="Plain Bob">
+        <call default="true" notation="145678" shorthand="C" name="MyCall"/>
+        <call default="false" notation="1234" shorthand="O" name="OtherCall"/>
+    </notation>
+    <notation foldedPalindrome="true" notation2="12" notation="-14-14" numberOfWorkingBells="4" name="Little Bob">
+        <useCannedCalls>true</useCannedCalls>
+    </notation>
+    <notation splicedIdentifier="P" foldedPalindrome="true" notation2="12" notation="-16-16-16" numberOfWorkingBells="6" name="Plain Bob">
+        <useCannedCalls>true</useCannedCalls>
+    </notation>
+    <notation splicedIdentifier="L" foldedPalindrome="true" notation2="12" notation="-16-14" numberOfWorkingBells="6" name="Little Bob">
+        <useCannedCalls>true</useCannedCalls>
+    </notation>
+    <nonSplicedActiveNotation numberOfWorkingBells="6" name="Plain Bob"/>
+    <plainLeadToken>p</plainLeadToken>
+    <compositionTable columns="2" rows="2">
+        <cells characters="W" column="0" row="0"/>
+        <cells characters="H" column="1" row="0"/>
+        <cells characters="s" column="0" row="1"/>
+        <cells characters="" column="1" row="1"/>
+    </compositionTable>
+    <definitionTable columns="2" rows="2">
+        <cells characters="3*" column="0" row="0"/>
+        <cells characters="-s-" column="1" row="0"/>
+        <cells characters="tr" column="0" row="1"/>
+        <cells characters="sps" column="1" row="1"/>
+    </definitionTable>
+    <startChange>123456</startChange>
+    <startRow>0</startRow>
+    <startStroke>BACKSTROKE</startStroke>
+    <terminationMaxRows>10000</terminationMaxRows>
+    <terminationMaxCircularity>2</terminationMaxCircularity>
+    <terminationChange>123456</terminationChange>
+</ns2:composition>

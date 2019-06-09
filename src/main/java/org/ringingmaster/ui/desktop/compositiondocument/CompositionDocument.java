@@ -15,6 +15,8 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import org.ringingmaster.engine.compiler.Compiler;
+import org.ringingmaster.engine.compiler.compiledcomposition.CompiledComposition;
 import org.ringingmaster.engine.composition.Composition;
 import org.ringingmaster.engine.composition.MutableComposition;
 import org.ringingmaster.engine.notation.Notation;
@@ -33,6 +35,7 @@ import org.slf4j.LoggerFactory;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static org.ringingmaster.engine.notation.PlaceSetSequence.BY_NUMBER_THEN_NAME;
 
@@ -61,6 +64,7 @@ public class CompositionDocument extends ScrollPane implements Document {
     private DefinitionGridModel definitionModel;
 
     private Observable<Parse> observableParse;
+    private Observable<CompiledComposition> observableCompiledComposition;
 
 
     // UI components
@@ -77,8 +81,13 @@ public class CompositionDocument extends ScrollPane implements Document {
 
         this.composition = composition;
         observableParse = composition.observable()
-                .distinct()// need this because of renotification
+                .distinctUntilChanged()// need this because of renotification
                 .map(new Parser()::apply)
+                .replay(1)
+                .autoConnect(1);
+
+        observableCompiledComposition = observableParse
+                .map(new Compiler()::apply)
                 .replay(1)
                 .autoConnect(1);
 
@@ -111,6 +120,10 @@ public class CompositionDocument extends ScrollPane implements Document {
 
     public Observable<Parse> observableParse() {
         return observableParse;
+    }
+
+    public Observable<CompiledComposition> observableCompiledComposition() {
+        return observableCompiledComposition;
     }
 
     private void layoutNodes() {
@@ -166,12 +179,17 @@ public class CompositionDocument extends ScrollPane implements Document {
     }
 
     @Override
+    public Observable<Boolean> observableDirty() {
+        return documentDelegate.observableDirty();
+    }
+
+    @Override
     public void setDirty(boolean dirty) {
         documentDelegate.setDirty(dirty);
     }
 
     @Override
-    public Path getPath() {
+    public Optional<Path> getPath() {
         return documentDelegate.getPath();
     }
 
@@ -181,22 +199,30 @@ public class CompositionDocument extends ScrollPane implements Document {
     }
 
     @Override
-    public void setDocumentName(String documentName) {
-        documentDelegate.setDocumentName(documentName);
+    public Observable<Optional<Path>> observablePath() {
+        return documentDelegate.observablePath();
     }
 
     @Override
-    public String getNameForApplicationTitle() {
-        return documentDelegate.getNameForApplicationTitle();
+    public Observable<String> observableFallbackName() {
+        return composition.observable().map(Composition::getTitle);
     }
 
     @Override
-    public String getNameForTab() {
-        return documentDelegate.getNameForTab();
+    public String getFallbackName() {
+        return composition.get().getTitle();
     }
 
     @Override
     public Node getNode() {
         return this;
+    }
+
+    @Override
+    public String toString() {
+        return "CompositionDocument{" +
+                "path=" + getPath() +
+                ", title=" + getFallbackName() +
+                '}';
     }
 }

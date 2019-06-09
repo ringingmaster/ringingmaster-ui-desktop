@@ -25,7 +25,7 @@ public class OpenDocumentEvent extends SkeletalEventDefinition implements EventD
 
     @Override
     public void handle(ActionEvent event) {
-        documentManager.openDocument();
+        documentManager.chooseAndOpenDocument();
     }
 
     public void setDocumentManager(DocumentManager documentManager) {

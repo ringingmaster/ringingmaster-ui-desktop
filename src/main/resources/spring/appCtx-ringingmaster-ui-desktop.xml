@@ -17,9 +17,9 @@
           p:statusBar-ref="statusBar"
           p:documentWindow-ref="documentWindow"
           p:propertyWindow-ref="propertyWindow"
+          p:analysisLeftWindow-ref="analysisWindow.left"
+          p:analysisRightWindow-ref="analysisWindow.right"
           init-method="layoutWindows"/>
-    <!--          p:analysisLeftWindow-ref="analysisWindow.left"-->
-    <!--          p:analysisRightWindow-ref="analysisWindow.right"-->
 
     <bean class="org.ringingmaster.ui.desktop.beanfactory.SpringBeanFactory"/>
 

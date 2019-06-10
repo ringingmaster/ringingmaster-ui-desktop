@@ -41,11 +41,8 @@ public class DefinitionGridModel extends SkeletalGridModel implements GridModel 
         this.compositionDocument = checkNotNull(compositionDocument);
 
         compositionDocument.observableParse().subscribe(parse -> {
-            DefinitionGridModel.this.parse = parse;
+            DefinitionGridModel.this.parse = parse; //TODO eventually drive the whole thing from the reactive stream
             fireCellContentsChanged();
-        });
-        compositionDocument.observableParse().subscribe(parse -> {
-            log.info("Got [{}]", parse.getComposition().getActionName());
         });
 
     }

@@ -38,9 +38,11 @@ public class AnalysisStatusWindow extends NameValuePairTable {
 
         compositionDocumentTypeManager.observableProof().subscribe(
                 compiledComposition -> {
+                    compiledComposition.ifPresent(this::updateCompositionTrue);
                     compiledComposition.ifPresent(this::updateTermination);
                 }
         );
+
     }
 
 
@@ -82,20 +84,21 @@ public class AnalysisStatusWindow extends NameValuePairTable {
     }
 
     private void updateCompositionTrue(Proof proof) {
-        //TODO Reactive
-//        if (proof.getAnalysis().isPresent()) {
-//            if (proof.isTrueComposition().getAnalysis().get().isTrueComposition()) {
-//                updateDisplayProperty(COMPOSITION_TRUE_PROPERTY_NAME, "TRUE", ColorManager.getPassHighlight());
-//            } else {
-//                updateDisplayProperty(COMPOSITION_TRUE_PROPERTY_NAME, "FALSE", ColorManager.getErrorHighlight());
-//            }
-//        } else {
+
+//TODO         if (proof.isTrueComposition().getAnalysis().isPresent()) {
+            if (proof.isTrueComposition()) {
+                updateDisplayProperty(COMPOSITION_TRUE_PROPERTY_NAME, "TRUE", ColorManager.getPassHighlight());
+            } else {
+                updateDisplayProperty(COMPOSITION_TRUE_PROPERTY_NAME, "FALSE", ColorManager.getErrorHighlight());
+            }
+//TODO         } else {
 //            updateDisplayProperty(COMPOSITION_TRUE_PROPERTY_NAME, "INVALID", ColorManager.getErrorHighlight());
 //        }
     }
 
 
-    private void updateTermination(CompiledComposition compiledComposition) {
+    private void updateTermination(Proof proof) {
+        CompiledComposition compiledComposition = proof.getCompiledComposition();
 
         String terminateReasonDisplayString = compiledComposition.getTerminateReasonDisplayString();
 
@@ -105,7 +108,6 @@ public class AnalysisStatusWindow extends NameValuePairTable {
                 break;
             case ROW_COUNT:
             case LEAD_COUNT:
-                updateDisplayProperty(TERMINATION_PROPERTY_NAME, terminateReasonDisplayString, ColorManager.getWarnHighlight());
                 updateDisplayProperty(TERMINATION_PROPERTY_NAME, terminateReasonDisplayString, ColorManager.getWarnHighlight());
                 break;
             case INVALID_COMPOSITION:

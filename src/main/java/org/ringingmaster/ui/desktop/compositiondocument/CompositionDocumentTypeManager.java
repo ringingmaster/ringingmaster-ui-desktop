@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import io.reactivex.Observable;
 import javafx.stage.FileChooser;
 import org.ringingmaster.engine.NumberOfBells;
+import org.ringingmaster.engine.analyser.proof.Proof;
 import org.ringingmaster.engine.compiler.compiledcomposition.CompiledComposition;
 import org.ringingmaster.engine.composition.Composition;
 import org.ringingmaster.engine.composition.MutableComposition;
@@ -73,10 +74,20 @@ public class CompositionDocumentTypeManager implements DocumentTypeManager {
         });
     }
 
-    public Observable<Optional<CompiledComposition>> observableProof() {
+    public Observable<Optional<CompiledComposition>> observableCompiledComposition() {
         return observableActiveCompositionDocument().switchMap(compositionDocument -> {
             if (compositionDocument.isPresent()) {
                 return compositionDocument.get().observableCompiledComposition().map(Optional::of);
+            } else {
+                return Observable.just(Optional.empty());
+            }
+        });
+    }
+
+    public Observable<Optional<Proof>> observableProof() {
+        return observableActiveCompositionDocument().switchMap(compositionDocument -> {
+            if (compositionDocument.isPresent()) {
+                return compositionDocument.get().observableProof().map(Optional::of);
             } else {
                 return Observable.just(Optional.empty());
             }

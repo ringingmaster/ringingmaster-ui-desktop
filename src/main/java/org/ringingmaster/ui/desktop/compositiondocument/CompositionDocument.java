@@ -15,6 +15,8 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import org.ringingmaster.engine.analyser.Analyser;
+import org.ringingmaster.engine.analyser.proof.Proof;
 import org.ringingmaster.engine.compiler.Compiler;
 import org.ringingmaster.engine.compiler.compiledcomposition.CompiledComposition;
 import org.ringingmaster.engine.composition.Composition;
@@ -65,6 +67,7 @@ public class CompositionDocument extends ScrollPane implements Document {
 
     private Observable<Parse> observableParse;
     private Observable<CompiledComposition> observableCompiledComposition;
+    private Observable<Proof> observableProof;
 
 
     // UI components
@@ -88,6 +91,11 @@ public class CompositionDocument extends ScrollPane implements Document {
 
         observableCompiledComposition = observableParse
                 .map(new Compiler()::apply)
+                .replay(1)
+                .autoConnect(1);
+
+        observableProof = observableCompiledComposition
+                .map(new Analyser()::apply)
                 .replay(1)
                 .autoConnect(1);
 
@@ -124,6 +132,10 @@ public class CompositionDocument extends ScrollPane implements Document {
 
     public Observable<CompiledComposition> observableCompiledComposition() {
         return observableCompiledComposition;
+    }
+
+    public Observable<Proof> observableProof() {
+        return observableProof;
     }
 
     private void layoutNodes() {

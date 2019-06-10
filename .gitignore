@@ -5,3 +5,4 @@ build
 gradlew*
 gradle
 *.iml
+*.composition

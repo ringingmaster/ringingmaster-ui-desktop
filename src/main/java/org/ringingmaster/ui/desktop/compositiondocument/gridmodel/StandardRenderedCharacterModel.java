@@ -3,12 +3,15 @@ package org.ringingmaster.ui.desktop.compositiondocument.gridmodel;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import org.ringingmaster.engine.parser.assignparsetype.ParseType;
+import org.ringingmaster.engine.parser.callingposition.ValidateCellInColumnWithValidCallPosition;
 import org.ringingmaster.engine.parser.cell.ParsedCell;
 import org.ringingmaster.engine.parser.cell.grouping.Group;
 import org.ringingmaster.engine.parser.cell.grouping.Section;
 import org.ringingmaster.ui.common.CompositionStyle;
 import org.ringingmaster.util.javafx.grid.model.AdditionalStyleType;
 import org.ringingmaster.util.javafx.grid.model.CharacterModel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.EnumSet;
 import java.util.Optional;
@@ -18,6 +21,8 @@ import static org.ringingmaster.util.javafx.grid.model.AdditionalStyleType.SUPER
 import static org.ringingmaster.util.javafx.grid.model.AdditionalStyleType.WIGGLY_UNDERLINE;
 
 public class StandardRenderedCharacterModel implements CharacterModel {
+    private final Logger log = LoggerFactory.getLogger(ValidateCellInColumnWithValidCallPosition.class);
+
     private int index;
     private final ParsedCell parsedCell;
     private final CompositionStyle compositionStyle;
@@ -61,6 +66,7 @@ public class StandardRenderedCharacterModel implements CharacterModel {
         Optional<Group> groupAtElementIndex = parsedCell.getGroupAtElementIndex(index);
         if (groupAtElementIndex.isPresent()) {
             if (!groupAtElementIndex.get().isValid()) {
+                log.warn(groupAtElementIndex.get().getMessage().toString());
                 style.add(WIGGLY_UNDERLINE);
             }
         } else {

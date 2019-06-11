@@ -60,7 +60,7 @@ public class DocumentManager  {
 
         Observable.combineLatest(observablePath, observableDirty, (optionalPath, dirty) ->
                 optionalPath
-                        .map(path -> APPLICATION_TITLE + " - [" + path.toString() + (dirty ? "*" : "") + "]")
+                        .map(path -> APPLICATION_TITLE + " - [" + path.toString() + (dirty ? " *" : "") + "]")
                         .orElse(APPLICATION_TITLE))
                 .subscribe(title -> globalStage.setTitle(title));
 
@@ -215,9 +215,9 @@ public class DocumentManager  {
         Observable.combineLatest(document.observablePath(), document.observableFallbackName(), document.observableDirty(),
                 (optionalPath, fallbackName, dirty) -> {
                     if (optionalPath.isPresent()) {
-                        return optionalPath.get().getFileName().toString() + (dirty?"*":"");
+                        return optionalPath.get().getFileName().toString() + (dirty?" *":"");
                     } else {
-                        return fallbackName + "*";
+                        return fallbackName + " *";
                     }
                 })
                 .subscribe(tab::setText);

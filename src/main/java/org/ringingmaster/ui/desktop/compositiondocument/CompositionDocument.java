@@ -2,6 +2,7 @@ package org.ringingmaster.ui.desktop.compositiondocument;
 
 import com.google.common.collect.Lists;
 import io.reactivex.Observable;
+import io.reactivex.schedulers.Schedulers;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.ScrollPane;
@@ -90,14 +91,18 @@ public class CompositionDocument extends ScrollPane implements Document {
                 .autoConnect(1);
 
         observableCompiledComposition = observableParse
+                .observeOn(Schedulers.computation())
                 .map(new Compiler()::apply)
                 .replay(1)
                 .autoConnect(1);
 
         observableProof = observableCompiledComposition
+                .observeOn(Schedulers.computation())
                 .map(new Analyser()::apply)
                 .replay(1)
                 .autoConnect(1);
+
+
 
         composition.observable()
                 .distinct()

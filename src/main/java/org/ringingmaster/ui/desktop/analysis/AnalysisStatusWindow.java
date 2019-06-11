@@ -9,6 +9,8 @@ import org.ringingmaster.util.javafx.namevaluepair.NameValuePairTable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Optional;
+
 /**
  * TODO Comments
  *
@@ -33,42 +35,9 @@ public class AnalysisStatusWindow extends NameValuePairTable {
     private CompositionDocumentTypeManager compositionDocumentTypeManager;
 
     public final void init() {
-
         buildProperties();
-
-        compositionDocumentTypeManager.observableProof().subscribe(
-                compiledComposition -> {
-                    compiledComposition.ifPresent(this::updateCompositionTrue);
-                    compiledComposition.ifPresent(this::updateTermination);
-                }
-        );
-
+        updateProperties();
     }
-
-
-//TODO REACTIVE    public void setProofManager(ProofManager proofManager) {
-//        proofManager.addListener(proofOptional -> Platform.runLater(() -> {
-//            if (proofOptional.isPresent()) {
-//                if (getItems().size() == 0) {
-//                    buildProperties();
-//                }
-//
-//                Proof proof = proofOptional.get();
-//                updateCompositionTrue(proof);
-//                updateTermination(proof);
-//                updatePartCount(proof);
-//                updateLeadCount(proof);
-//                updateRowCount(proof);
-//                updateCallCount(proof);
-//                updateStartRow(proof);
-//                updateEndRow(proof);
-//                updateEndStroke(proof);
-//                updateProofTime(proof);
-//            } else {
-//                getItems().clear();
-//            }
-//        }));
-//    }
 
     private void buildProperties() {
         getItems().add(new NameValuePairModel(COMPOSITION_TRUE_PROPERTY_NAME));
@@ -83,21 +52,47 @@ public class AnalysisStatusWindow extends NameValuePairTable {
         getItems().add(new NameValuePairModel(PROOF_TIME_PROPERTY_NAME));
     }
 
-    private void updateCompositionTrue(Proof proof) {
+    private void updateProperties() {
+        compositionDocumentTypeManager.observableProof().subscribe(
+                proof -> {
+                    updateCompositionTrue(proof);
+                    updateTermination(proof);
+                    updatePartCount(proof);
+                    updateLeadCount(proof);
+                    updateRowCount(proof);
+                    updateCallCount(proof);
+                    updateStartRow(proof);
+                    updateEndRow(proof);
+                    updateEndStroke(proof);
+                    updateProofTime(proof);
+                }
+        );
+    }
 
-//TODO         if (proof.isTrueComposition().getAnalysis().isPresent()) {
-            if (proof.isTrueComposition()) {
-                updateDisplayProperty(COMPOSITION_TRUE_PROPERTY_NAME, "TRUE", ColorManager.getPassHighlight());
-            } else {
-                updateDisplayProperty(COMPOSITION_TRUE_PROPERTY_NAME, "FALSE", ColorManager.getErrorHighlight());
-            }
-//TODO         } else {
-//            updateDisplayProperty(COMPOSITION_TRUE_PROPERTY_NAME, "INVALID", ColorManager.getErrorHighlight());
-//        }
+    private void updateCompositionTrue(Optional<Proof> optionalProof) {
+        if (optionalProof.isEmpty()) {
+            updateDisplayProperty(COMPOSITION_TRUE_PROPERTY_NAME, "");
+            return;
+        }
+
+        Proof proof = optionalProof.get();
+
+        if (proof.isTrueComposition()) {
+            updateDisplayProperty(COMPOSITION_TRUE_PROPERTY_NAME, "TRUE", ColorManager.getPassHighlight());
+        } else {
+            updateDisplayProperty(COMPOSITION_TRUE_PROPERTY_NAME, "FALSE", ColorManager.getErrorHighlight());
+        }
     }
 
 
-    private void updateTermination(Proof proof) {
+    private void updateTermination(Optional<Proof> optionalProof) {
+        if (optionalProof.isEmpty()) {
+            updateDisplayProperty(TERMINATION_PROPERTY_NAME, "");
+            return;
+        }
+
+        Proof proof = optionalProof.get();
+
         CompiledComposition compiledComposition = proof.getCompiledComposition();
 
         String terminateReasonDisplayString = compiledComposition.getTerminateReasonDisplayString();
@@ -128,7 +123,14 @@ public class AnalysisStatusWindow extends NameValuePairTable {
         }
     }
 
-    private void updatePartCount(Proof proof) {
+    private void updatePartCount(Optional<Proof> optionalProof) {
+        if (optionalProof.isEmpty()) {
+            updateDisplayProperty(PART_COUNT_PROPERTY_NAME, "");
+            return;
+        }
+
+        Proof proof = optionalProof.get();
+
         if (proof.getCompiledComposition().getMethod().isPresent()) {
             updateDisplayProperty(PART_COUNT_PROPERTY_NAME, "TODO");
         } else {
@@ -136,7 +138,14 @@ public class AnalysisStatusWindow extends NameValuePairTable {
         }
     }
 
-    private void updateLeadCount(Proof proof) {
+    private void updateLeadCount(Optional<Proof> optionalProof) {
+        if (optionalProof.isEmpty()) {
+            updateDisplayProperty(LEAD_COUNT_PROPERTY_NAME, "");
+            return;
+        }
+
+        Proof proof = optionalProof.get();
+
         if (proof.getCompiledComposition().getMethod().isPresent()) {
             updateDisplayProperty(LEAD_COUNT_PROPERTY_NAME, Integer.toString(proof.getCompiledComposition().getMethod().get().getLeadCount()));
         } else {
@@ -144,7 +153,14 @@ public class AnalysisStatusWindow extends NameValuePairTable {
         }
     }
 
-    private void updateRowCount(Proof proof) {
+    private void updateRowCount(Optional<Proof> optionalProof) {
+        if (optionalProof.isEmpty()) {
+            updateDisplayProperty(ROW_COUNT_PROPERTY_NAME, "");
+            return;
+        }
+
+        Proof proof = optionalProof.get();
+
         if (proof.getCompiledComposition().getMethod().isPresent()) {
             updateDisplayProperty(ROW_COUNT_PROPERTY_NAME, Integer.toString(proof.getCompiledComposition().getMethod().get().getRowCount()));
         } else {
@@ -152,7 +168,14 @@ public class AnalysisStatusWindow extends NameValuePairTable {
         }
     }
 
-    private void updateCallCount(Proof proof) {
+    private void updateCallCount(Optional<Proof> optionalProof) {
+        if (optionalProof.isEmpty()) {
+            updateDisplayProperty(CALL_COUNT_PROPERTY_NAME, "");
+            return;
+        }
+
+        Proof proof = optionalProof.get();
+
         if (proof.getCompiledComposition().getMethod().isPresent()) {
             updateDisplayProperty(CALL_COUNT_PROPERTY_NAME, "TODO");
 
@@ -166,7 +189,14 @@ public class AnalysisStatusWindow extends NameValuePairTable {
         }
     }
 
-    private void updateStartRow(Proof proof) {
+    private void updateStartRow(Optional<Proof> optionalProof) {
+        if (optionalProof.isEmpty()) {
+            updateDisplayProperty(START_ROW_PROPERTY_NAME, "");
+            return;
+        }
+
+        Proof proof = optionalProof.get();
+
         if (proof.getCompiledComposition().getMethod().isPresent()) {
             updateDisplayProperty(START_ROW_PROPERTY_NAME, proof.getCompiledComposition().getMethod().get().getFirstRow().get().getDisplayString(true));
         } else {
@@ -174,7 +204,14 @@ public class AnalysisStatusWindow extends NameValuePairTable {
         }
     }
 
-    private void updateEndRow(Proof proof) {
+    private void updateEndRow(Optional<Proof> optionalProof) {
+        if (optionalProof.isEmpty()) {
+            updateDisplayProperty(END_ROW_PROPERTY_NAME, "");
+            return;
+        }
+
+        Proof proof = optionalProof.get();
+
         if (proof.getCompiledComposition().getMethod().isPresent()) {
             updateDisplayProperty(END_ROW_PROPERTY_NAME, proof.getCompiledComposition().getMethod().get().getLastRow().get().getDisplayString(true));
         } else {
@@ -182,7 +219,14 @@ public class AnalysisStatusWindow extends NameValuePairTable {
         }
     }
 
-    private void updateEndStroke(Proof proof) {
+    private void updateEndStroke(Optional<Proof> optionalProof) {
+        if (optionalProof.isEmpty()) {
+            updateDisplayProperty(END_STROKE_PROPERTY_NAME, "");
+            return;
+        }
+
+        Proof proof = optionalProof.get();
+
         if (proof.getCompiledComposition().getMethod().isPresent()) {
             updateDisplayProperty(END_STROKE_PROPERTY_NAME, proof.getCompiledComposition().getMethod().get().getLastRow().get().getStroke().getDisplayString());
         } else {
@@ -190,8 +234,15 @@ public class AnalysisStatusWindow extends NameValuePairTable {
         }
     }
 
-    private void updateProofTime(Proof proof) {
-        // TODO Reactive updateDisplayProperty(PROOF_TIME_PROPERTY_NAME, String.format("%.3f", (proof.getProofTimeMs()) / 1000.0) + " seconds");
+    private void updateProofTime(Optional<Proof> optionalProof) {
+        if (optionalProof.isEmpty()) {
+            updateDisplayProperty(PROOF_TIME_PROPERTY_NAME, "");
+            return;
+        }
+
+        Proof proof = optionalProof.get();
+
+        updateDisplayProperty(PROOF_TIME_PROPERTY_NAME, String.format("TODO %.3f", (proof.getParse().getElapsedMs()) / 1000.0) + " seconds");
     }
 
     public void setCompositionDocumentTypeManager(CompositionDocumentTypeManager compositionDocumentTypeManager) {

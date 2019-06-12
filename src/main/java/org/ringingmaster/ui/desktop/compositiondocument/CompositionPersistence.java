@@ -33,6 +33,7 @@ import javax.xml.bind.JAXBException;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static org.ringingmaster.engine.composition.TableType.COMPOSITION_TABLE;
 import static org.ringingmaster.engine.composition.TableType.DEFINITION_TABLE;
@@ -137,11 +138,14 @@ public class CompositionPersistence {
 
 
         for (BackingTableLocationAndValue<Cell> cell : compositionCells) {
-            CellTablePersist cellPersist = new CellTablePersist();
-            cellPersist.setRow(cell.getRow());
-            cellPersist.setColumn(cell.getCol());
-            cellPersist.setCharacters(cell.getValue().getCharacters());
-            compositionCellsPersist.getCells().add(cellPersist);
+            String characters = cell.getValue().getCharacters();
+            if (characters.length() > 0) {
+                CellTablePersist cellPersist = new CellTablePersist();
+                cellPersist.setRow(cell.getRow());
+                cellPersist.setColumn(cell.getCol());
+                cellPersist.setCharacters(characters);
+                compositionCellsPersist.getCells().add(cellPersist);
+            }
         }
         return compositionCellsPersist;
     }
@@ -251,13 +255,18 @@ public class CompositionPersistence {
         return composition;
     }
 
-    private void buildCells(MutableComposition composition, TableType tableType, CellsTablePersist compositionTable) {
-        for (CellTablePersist cell : compositionTable.getCells()) {
-            int row = cell.getRow();
-            int column = cell.getColumn();
-            String characters = cell.getCharacters();
-            composition.addCharacters(tableType, column, row, characters);
-        }
+    private void buildCells(MutableComposition composition, TableType tableType, CellsTablePersist table) {
+
+        Set<BackingTableLocationAndValue<String>> cells = table.getCells().stream()
+                .map(cell -> {
+                    int row = cell.getRow();
+                    int column = cell.getColumn();
+                    String characters = cell.getCharacters();
+                    return new BackingTableLocationAndValue<>(characters, row, column);
+                })
+                .collect(Collectors.toSet());
+
+        composition.bulkSetCharacters(tableType, cells);
     }
 
     private Notation buildNotation(CompositionNotationPersist CompositionPersistNotation) {

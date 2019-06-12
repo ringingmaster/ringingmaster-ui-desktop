@@ -61,7 +61,7 @@ public class DocumentManager  {
         Observable.combineLatest(observablePath, observableDirty, (optionalPath, dirty) ->
                 optionalPath
                         .map(path -> APPLICATION_TITLE + " - [" + path.toString() + (dirty ? " *" : "") + "]")
-                        .orElse(APPLICATION_TITLE))
+                        .orElse(APPLICATION_TITLE))//TODO Reactive need the fallback doc name when no save path
                 .subscribe(title -> globalStage.setTitle(title));
 
     }
@@ -154,6 +154,7 @@ public class DocumentManager  {
     public void createNewDocument() {
         Document document = documentTypeManager.createNewDocument();
         buildTabForDocument(document);
+        document.setDirty(false);
     }
 
     public void chooseAndOpenDocument() {
@@ -213,13 +214,8 @@ public class DocumentManager  {
         Tab tab = new Tab();
 
         Observable.combineLatest(document.observablePath(), document.observableFallbackName(), document.observableDirty(),
-                (optionalPath, fallbackName, dirty) -> {
-                    if (optionalPath.isPresent()) {
-                        return optionalPath.get().getFileName().toString() + (dirty?" *":"");
-                    } else {
-                        return fallbackName + " *";
-                    }
-                })
+                (optionalPath, fallbackName, dirty) -> optionalPath
+                        .map(path -> path.getFileName().toString() + (dirty ? " *" : "")).orElseGet(() -> fallbackName + (dirty ? " *" : "")))
                 .subscribe(tab::setText);
 
 

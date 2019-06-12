@@ -133,9 +133,6 @@ public class CompositionPersistence {
 
     private CellsTablePersist buildCellsPersist(ImmutableArrayTable<Cell> compositionCells) {
         CellsTablePersist compositionCellsPersist = new CellsTablePersist();
-        compositionCellsPersist.setRows(compositionCells.getRowSize()); //TODO Do we really need to store this?
-        compositionCellsPersist.setColumns(compositionCells.getColumnSize()); //TODO Do we really need to store this?
-
 
         for (BackingTableLocationAndValue<Cell> cell : compositionCells) {
             String characters = cell.getValue().getCharacters();

@@ -18,6 +18,7 @@ import org.ringingmaster.engine.notation.Notation;
 import org.ringingmaster.engine.notation.NotationBuilder;
 import org.ringingmaster.persist.DocumentPersist;
 import org.ringingmaster.persist.generated.v1.CallPersist;
+import org.ringingmaster.persist.generated.v1.CallingPositionPersist;
 import org.ringingmaster.persist.generated.v1.CellTablePersist;
 import org.ringingmaster.persist.generated.v1.CellsTablePersist;
 import org.ringingmaster.persist.generated.v1.CompositionNotationPersist;
@@ -171,6 +172,17 @@ public class CompositionPersistence {
                 notationPersist.getCall().add(callPersist);
             }
         }
+        notationPersist.getCallInitiationRows().addAll(notation.getCallInitiationRows());
+        notationPersist.getCallingPositions().addAll(
+                notation.getCallingPositions().stream().map(c -> {
+                    CallingPositionPersist callingPositionPersist = new CallingPositionPersist();
+                    callingPositionPersist.setName(c.getName());
+                    callingPositionPersist.setCallInitiationRow(c.getCallInitiationRow());
+                    callingPositionPersist.setLeadOfTenor(c.getLeadOfTenor());
+                    return callingPositionPersist;
+                }).collect(Collectors.toSet())
+        );
+
         notationPersist.setSplicedIdentifier(notation.getSpliceIdentifier());
 
         return notationPersist;
@@ -282,6 +294,15 @@ public class CompositionPersistence {
             for (CallPersist callPersist : CompositionPersistNotation.getCall()) {
                 notationBuilder.addCall(callPersist.getName(), callPersist.getShorthand(), callPersist.getNotation(), callPersist.isDefault());
             }
+        }
+        for (Integer callInitiationRow : CompositionPersistNotation.getCallInitiationRows()) {
+            notationBuilder.addCallInitiationRow(callInitiationRow);
+        }
+        for (CallingPositionPersist callingPosition : CompositionPersistNotation.getCallingPositions()) {
+            notationBuilder.addMethodCallingPosition(callingPosition.getName(), callingPosition.getCallInitiationRow(), callingPosition.getLeadOfTenor());
+        }
+        for (Integer callInitiationRow : CompositionPersistNotation.getCallInitiationRows()) {
+            notationBuilder.addCallInitiationRow(callInitiationRow);
         }
         notationBuilder.setSpliceIdentifier(CompositionPersistNotation.getSplicedIdentifier());
 

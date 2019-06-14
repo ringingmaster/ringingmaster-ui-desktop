@@ -10,8 +10,11 @@ import org.ringingmaster.engine.method.Stroke;
 import org.ringingmaster.engine.notation.Notation;
 import org.ringingmaster.engine.notation.NotationBuilder;
 import org.ringingmaster.persist.generated.v1.CompositionPersist;
+import org.ringingmaster.util.smartcompare.SmartCompare;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.ringingmaster.engine.composition.compositiontype.CompositionType.LEAD_BASED;
 
 /**
@@ -21,6 +24,9 @@ import static org.ringingmaster.engine.composition.compositiontype.CompositionTy
  */
 public class CompositionPersistenceTest {
 
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
+
+
     @Test
     public void canRebuildComposition() {
         CompositionPersistence CompositionPersistence = new CompositionPersistence();
@@ -29,7 +35,16 @@ public class CompositionPersistenceTest {
         CompositionPersist CompositionPersist = CompositionPersistence.buildCompositionPersist(originalComposition);
         Composition recreatedComposition = CompositionPersistence.buildComposition(CompositionPersist).get();
 
-        assertEquals(originalComposition.toString(), recreatedComposition.toString());
+        final SmartCompare smartCompare = new SmartCompare("", "> ")
+                .ignorePaths("actionName")
+                .ignorePaths("sequenceNumber");
+
+
+        String s = smartCompare.stringDifferences(originalComposition, recreatedComposition);
+
+        log.info(s);
+
+        assertTrue(s.isEmpty());
     }
 
 
@@ -103,9 +118,12 @@ public class CompositionPersistenceTest {
         return NotationBuilder.getInstance()
                 .setNumberOfWorkingBells(NumberOfBells.BELLS_8)
                 .setName("Plain Bob")
+                .setCannedCalls()
                 .setFoldedPalindromeNotationShorthand("-18-18-18-18", "12")
-                .addCall("MyCall", "C", "145678", true)
-                .addCall("OtherCall", "O", "1234", false)
+                .addCallInitiationRow(7)
+                .addCallInitiationRow(9)
+                .addMethodCallingPosition("W", 7, 1)
+                .addMethodCallingPosition("H", 7, 2)
                 .setSpliceIdentifier("X")
                 .build();
     }

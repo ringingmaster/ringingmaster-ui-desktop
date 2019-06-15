@@ -242,7 +242,13 @@ public class AnalysisStatusWindow extends NameValuePairTable {
 
         Proof proof = optionalProof.get();
 
-        updateDisplayProperty(PROOF_TIME_PROPERTY_NAME, String.format("TODO %.3f", (proof.getParse().getElapsedMs()) / 1000.0) + " seconds");
+        long parseElapsedMs = proof.getParse().getEndMs() - proof.getParse().getStartMs();
+        long compiledCompositionElapsedMs = proof.getCompiledComposition().getEndMs() - proof.getCompiledComposition().getStartMs();
+        long proofElapsedMs = proof.getStartMs() - proof.getStartMs();
+
+        long wallClockElapsedMs =  proof.getStartMs() - proof.getParse().getStartMs();
+
+        updateDisplayProperty(PROOF_TIME_PROPERTY_NAME, String.format("%.3f (%.3f) seconds",wallClockElapsedMs / 1_000.0,  (parseElapsedMs+compiledCompositionElapsedMs+proofElapsedMs) / 1_000.0));
     }
 
     public void setCompositionDocumentTypeManager(CompositionDocumentTypeManager compositionDocumentTypeManager) {

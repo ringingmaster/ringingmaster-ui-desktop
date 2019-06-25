@@ -123,7 +123,7 @@ public class CompositionPersistence {
             compositionPersist.setTerminationMaxParts(composition.getTerminationMaxParts().get());
         }
 
-        compositionPersist.setTerminationMaxCircularity(composition.getTerminationMaxCircularity());
+        compositionPersist.setTerminationMaxPartCircularity(composition.getTerminationMaxPartCircularity());
 
         if (composition.getTerminationChange().isPresent()) {
             compositionPersist.setTerminationChange(composition.getTerminationChange().get().getDisplayString(false));
@@ -254,8 +254,8 @@ public class CompositionPersistence {
         if (compositionPersist.getTerminationMaxParts() != null) {
             composition.setTerminationMaxParts(compositionPersist.getTerminationMaxParts());
         }
-        if (compositionPersist.getTerminationMaxCircularity() != null) {
-            composition.setTerminationMaxCircularity(compositionPersist.getTerminationMaxCircularity());
+        if (compositionPersist.getTerminationMaxPartCircularity() != null) {
+            composition.setTerminationMaxPartCircularity(compositionPersist.getTerminationMaxPartCircularity());
         }
         if (compositionPersist.getTerminationChange() != null) {
             composition.setTerminationChange(MethodBuilder.parse(numberOfBells, compositionPersist.getTerminationChange()));

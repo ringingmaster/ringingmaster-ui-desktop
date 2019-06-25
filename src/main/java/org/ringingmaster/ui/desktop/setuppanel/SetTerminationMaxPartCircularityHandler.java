@@ -8,21 +8,21 @@ import org.ringingmaster.engine.composition.MutableComposition;
  *
  * @author Steve Lake
  */
-public class SetTerminationMaxCircularityHandler {
+public class SetTerminationMaxPartCircularityHandler {
 
-    void setTerminationMaxCircularity(MutableComposition composition, Integer terminationMaxCircularity) {
-        if (terminationMaxCircularity == null) {
+    void setTerminationMaxCircularity(MutableComposition composition, Integer terminationMaxPartCircularity) {
+        if (terminationMaxPartCircularity == null) {
             composition.renotify();
             return;
         }
 
-        DryRun dryRun = composition.dryRunSetTerminationMaxCircularity(terminationMaxCircularity);
+        DryRun dryRun = composition.dryRunSetTerminationMaxPartCircularity(terminationMaxPartCircularity);
         switch (dryRun.result()) {
             case SUGGESTED_ALTERATIVE:
-                composition.setTerminationMaxCircularity((Integer)dryRun.getSuggestedAlternative());
+                composition.setTerminationMaxPartCircularity((Integer)dryRun.getSuggestedAlternative());
                 break;
             case SUCCESS:
-                composition.setTerminationMaxCircularity(terminationMaxCircularity);
+                composition.setTerminationMaxPartCircularity(terminationMaxPartCircularity);
                 break;
             case FAIL:
             case NO_CHANGE:

@@ -27,7 +27,7 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static org.ringingmaster.engine.composition.MutableComposition.TERMINATION_MAX_CIRCULARITY_INITIAL_VALUE;
+import static org.ringingmaster.engine.composition.MutableComposition.TERMINATION_MAX_PART_CIRCULARITY_INITIAL_VALUE;
 import static org.ringingmaster.engine.composition.MutableComposition.TERMINATION_MAX_ROWS_INITIAL_VALUE;
 import static org.ringingmaster.engine.composition.compositiontype.CompositionType.COURSE_BASED;
 import static org.ringingmaster.util.javafx.propertyeditor.SelectionPropertyValue.UNDEFINED_INDEX;
@@ -398,12 +398,12 @@ public class PropertySetupWindow extends PropertyEditor {
     private void buildTerminationMaxCircularity() {
         add(TERMINATION_GROUP_NAME, new IntegerPropertyValue(TERMINATION_MAX_CIRCULARITY_PROPERTY_NAME));
         ((IntegerPropertyValue) findPropertyByName(TERMINATION_MAX_CIRCULARITY_PROPERTY_NAME)).setListener((observable, oldValue, newValue) ->
-                updateCompositionIfPresent(composition -> new SetTerminationMaxCircularityHandler().setTerminationMaxCircularity(composition, newValue)), CallbackStyle.WHEN_FINISHED);
+                updateCompositionIfPresent(composition -> new SetTerminationMaxPartCircularityHandler().setTerminationMaxCircularity(composition, newValue)), CallbackStyle.WHEN_FINISHED);
     }
 
     private void updateTerminationMaxCircularity(Optional<Composition> composition) {
-        int terminationMaxCircularity = composition.map(Composition::getTerminationMaxCircularity).orElse(TERMINATION_MAX_CIRCULARITY_INITIAL_VALUE);
-        ((IntegerPropertyValue) findPropertyByName(TERMINATION_MAX_CIRCULARITY_PROPERTY_NAME)).setValue(terminationMaxCircularity);
+        int terminationMaxPartCircularity = composition.map(Composition::getTerminationMaxPartCircularity).orElse(TERMINATION_MAX_PART_CIRCULARITY_INITIAL_VALUE);
+        ((IntegerPropertyValue) findPropertyByName(TERMINATION_MAX_CIRCULARITY_PROPERTY_NAME)).setValue(terminationMaxPartCircularity);
     }
 
 

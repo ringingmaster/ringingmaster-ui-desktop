@@ -9,15 +9,21 @@ import org.ringingmaster.engine.parser.cell.grouping.Section;
 import org.ringingmaster.ui.common.CompositionStyle;
 import org.ringingmaster.util.javafx.grid.model.AdditionalStyleType;
 import org.ringingmaster.util.javafx.grid.model.CharacterModel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.EnumSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static org.ringingmaster.util.javafx.grid.model.AdditionalStyleType.SUPERSCRIPT;
 import static org.ringingmaster.util.javafx.grid.model.AdditionalStyleType.WIGGLY_UNDERLINE;
 
 public class StandardRenderedCharacterModel implements CharacterModel {
+
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 
     private int index;
@@ -80,14 +86,26 @@ public class StandardRenderedCharacterModel implements CharacterModel {
 
     @Override
     public Optional<String> getTooltipText() {
-        //TODO Reactive
-        //                if (index >= cell.getLength()) {
-        //                    return Optional.empty();
-        //                }
-        //
-        //                String tooltipText = cell.get(index).getParseType().name();
-        //                return Optional.of(tooltipText);
-        //TODO Reactive
-        return Optional.empty();
+
+        if (index >= parsedCell.size()) {
+            return Optional.empty();
+        }
+
+        Optional<Group> groupAtElementIndex = parsedCell.getGroupAtElementIndex(index);
+
+        // When no parsed group, then we just indicate an unrecognised character .
+        if (groupAtElementIndex.isEmpty()) {
+            char c = parsedCell.get(index);
+            return Optional.of("Unrecognised '" + c + "'");
+        }
+
+        //NOTE: There should be no further special handling here - just add messages into parse structure.
+
+        List<String> messages = groupAtElementIndex.get().getMessages();
+        if (messages.isEmpty()) {
+            return Optional.empty();
+        }
+
+        return Optional.of(messages.stream().collect(Collectors.joining(", ")));
     }
 }

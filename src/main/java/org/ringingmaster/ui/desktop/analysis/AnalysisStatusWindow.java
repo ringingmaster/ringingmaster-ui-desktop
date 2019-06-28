@@ -2,6 +2,7 @@ package org.ringingmaster.ui.desktop.analysis;
 
 import org.ringingmaster.engine.analyser.proof.Proof;
 import org.ringingmaster.engine.compiler.compiledcomposition.CompiledComposition;
+import org.ringingmaster.engine.method.Method;
 import org.ringingmaster.ui.desktop.compositiondocument.CompositionDocumentTypeManager;
 import org.ringingmaster.ui.desktop.util.ColorManager;
 import org.ringingmaster.util.javafx.namevaluepair.NameValuePairModel;
@@ -124,48 +125,27 @@ public class AnalysisStatusWindow extends NameValuePairTable {
     }
 
     private void updatePartCount(Optional<Proof> optionalProof) {
-        if (optionalProof.isEmpty()) {
-            updateDisplayProperty(PART_COUNT_PROPERTY_NAME, "");
-            return;
-        }
-
-        Proof proof = optionalProof.get();
-
-        if (proof.getCompiledComposition().getMethod().isPresent()) {
-            updateDisplayProperty(PART_COUNT_PROPERTY_NAME, "TODO");
-        } else {
-            updateDisplayProperty(PART_COUNT_PROPERTY_NAME, "");
-        }
+        updateDisplayProperty(PART_COUNT_PROPERTY_NAME,
+                optionalProof
+                .flatMap(proof -> proof.getCompiledComposition().getMethod())
+                .map(Method::getPartCount)
+                .map(Object::toString).orElse(""));
     }
 
     private void updateLeadCount(Optional<Proof> optionalProof) {
-        if (optionalProof.isEmpty()) {
-            updateDisplayProperty(LEAD_COUNT_PROPERTY_NAME, "");
-            return;
-        }
-
-        Proof proof = optionalProof.get();
-
-        if (proof.getCompiledComposition().getMethod().isPresent()) {
-            updateDisplayProperty(LEAD_COUNT_PROPERTY_NAME, Integer.toString(proof.getCompiledComposition().getMethod().get().getLeadCount()));
-        } else {
-            updateDisplayProperty(LEAD_COUNT_PROPERTY_NAME, "");
-        }
+        updateDisplayProperty(LEAD_COUNT_PROPERTY_NAME,
+                optionalProof
+                        .flatMap(proof -> proof.getCompiledComposition().getMethod())
+                        .map(Method::getLeadCount)
+                        .map(Object::toString).orElse(""));
     }
 
     private void updateRowCount(Optional<Proof> optionalProof) {
-        if (optionalProof.isEmpty()) {
-            updateDisplayProperty(ROW_COUNT_PROPERTY_NAME, "");
-            return;
-        }
-
-        Proof proof = optionalProof.get();
-
-        if (proof.getCompiledComposition().getMethod().isPresent()) {
-            updateDisplayProperty(ROW_COUNT_PROPERTY_NAME, Integer.toString(proof.getCompiledComposition().getMethod().get().getRowCount()));
-        } else {
-            updateDisplayProperty(ROW_COUNT_PROPERTY_NAME, "");
-        }
+        updateDisplayProperty(ROW_COUNT_PROPERTY_NAME,
+                optionalProof
+                        .flatMap(proof -> proof.getCompiledComposition().getMethod())
+                        .map(Method::getRowCount)
+                        .map(Object::toString).orElse(""));
     }
 
     private void updateCallCount(Optional<Proof> optionalProof) {

@@ -38,6 +38,9 @@ dependencies {
     // Other
     compile 'org.controlsfx:controlsfx:11.0.0'
     compile 'org.apache.commons:commons-lang3:3.9'
+    compile 'io.reactivex:rxjavafx:2.0.2'
+    compile 'io.reactivex.rxjava2:rxjavafx:2.2.2'
+
 
     // Logging
     runtime 'org.apache.logging.log4j:log4j-core:2.8.2'

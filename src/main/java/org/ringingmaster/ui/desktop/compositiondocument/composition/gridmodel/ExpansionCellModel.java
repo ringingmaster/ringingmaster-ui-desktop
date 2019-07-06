@@ -1,4 +1,4 @@
-package org.ringingmaster.ui.desktop.compositiondocument.gridmodel;
+package org.ringingmaster.ui.desktop.compositiondocument.composition.gridmodel;
 
 import org.ringingmaster.engine.composition.MutableComposition;
 import org.ringingmaster.engine.composition.TableType;

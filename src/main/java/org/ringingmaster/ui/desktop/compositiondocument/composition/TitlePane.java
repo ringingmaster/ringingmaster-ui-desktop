@@ -1,4 +1,4 @@
-package org.ringingmaster.ui.desktop.compositiondocument;
+package org.ringingmaster.ui.desktop.compositiondocument.composition;
 
 import javafx.geometry.Insets;
 import javafx.scene.control.TextField;
@@ -21,7 +21,7 @@ import org.ringingmaster.util.javafx.color.ColorUtil;
  */
 public class TitlePane extends VBox {
 
-    public static final String STYLESHEET = "org/ringingmaster/ui/desktop/documentpanel/titlepane.css";
+    public static final String STYLESHEET = "org/ringingmaster/ui/desktop/compositiondocument/composition/titlepane.css";
 
     private final TextField titleText = new TextField();
     private final TextField authorText = new TextField();

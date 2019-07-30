@@ -17,12 +17,10 @@ import org.ringingmaster.engine.notation.Notation;
 import org.ringingmaster.engine.parser.Parser;
 import org.ringingmaster.engine.parser.parse.Parse;
 import org.ringingmaster.ui.common.CompositionStyle;
-import org.ringingmaster.ui.desktop.blueline.BlueLineViewportDrawer;
 import org.ringingmaster.ui.desktop.compositiondocument.composition.CompositionPane;
 import org.ringingmaster.ui.desktop.compositiondocument.method.MethodPane;
 import org.ringingmaster.ui.desktop.documentmanager.DefaultDocument;
 import org.ringingmaster.ui.desktop.documentmanager.Document;
-import org.ringingmaster.util.javafx.virtualcanvas.VirtualCanvas;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -98,14 +96,6 @@ public class CompositionDocument extends TabPane implements Document {
         setSide(Side.BOTTOM);
         getStylesheets().add(TAB_STYLESHEET);
         setTabClosingPolicy(TabClosingPolicy.UNAVAILABLE);
-
-        VirtualCanvas virtualCanvas = new VirtualCanvas(new BlueLineViewportDrawer());
-
-        virtualCanvas.setMinWidth(1500);
-        virtualCanvas.setMinHeight(1500);
-
-
-        getTabs().add(new Tab("TOOD", virtualCanvas));
         getTabs().add(new Tab("Blue Line", methodPane));
         getTabs().add(new Tab("Composition", compositionPane));
 

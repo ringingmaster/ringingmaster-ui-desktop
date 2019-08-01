@@ -1,5 +1,6 @@
 package org.ringingmaster.ui.desktop.methodrenderer.methodstyle;
 
+import javafx.geometry.Insets;
 import org.ringingmaster.engine.NumberOfBells;
 import org.ringingmaster.engine.method.Bell;
 
@@ -27,11 +28,12 @@ class DefaultMethodStyle implements MethodStyle {
     private final int bellHorizontalSpacing;
     private final int rowVerticalSpacing;
 
+    private final Insets border;
     private final Optional<Integer> leadsPerColumn;
 
     DefaultMethodStyle(BellStyle[] fromTreble, BellStyle[] fromTenor, boolean[] fromTenorActive,
                        int leadHorizontalSpacing, int bellHorizontalSpacing, int rowVerticalSpacing,
-                       Optional<Integer> leadsPerColumn) {
+                       Insets border, Optional<Integer> leadsPerColumn) {
         this.fromTreble = checkNotNull(fromTreble);
         checkArgument(fromTreble.length == NumberOfBells.MAX.toInt());
         for (int i=0;i<fromTreble.length;i++) {
@@ -56,10 +58,17 @@ class DefaultMethodStyle implements MethodStyle {
         checkArgument(rowVerticalSpacing > 0);
         this.rowVerticalSpacing = rowVerticalSpacing;
 
+        this.border = checkNotNull(border);
+
         this.leadsPerColumn = checkNotNull(leadsPerColumn);
         leadsPerColumn.ifPresent(leadCount -> checkState(leadCount > 0));
     }
 
+
+    @Override
+    public Insets getBorder() {
+        return border;
+    }
 
     @Override
     public int getLeadHorizontalSpacing() {

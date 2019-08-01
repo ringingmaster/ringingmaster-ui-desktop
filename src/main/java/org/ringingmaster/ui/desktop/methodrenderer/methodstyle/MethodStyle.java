@@ -1,5 +1,6 @@
 package org.ringingmaster.ui.desktop.methodrenderer.methodstyle;
 
+import javafx.geometry.Insets;
 import org.ringingmaster.engine.NumberOfBells;
 import org.ringingmaster.engine.method.Bell;
 
@@ -19,8 +20,8 @@ public interface MethodStyle {
 // TODO From C++   CString _name;
 
     //layout
+    Insets getBorder();
     int getLeadHorizontalSpacing();
-// TODO From C++   int _top;
     int getBellHorizontalSpacing();
     int getRowVerticalSpacing();
     Optional<Integer> getLeadsPerColumn();

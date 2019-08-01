@@ -1,5 +1,6 @@
 package org.ringingmaster.ui.desktop.methodrenderer.methodstyle;
 
+import javafx.geometry.Insets;
 import javafx.scene.paint.Color;
 import org.ringingmaster.engine.NumberOfBells;
 
@@ -23,6 +24,7 @@ public class MethodStyleBuilder {
     private int bellHorizontalSpacing = 10;
     private int rowVerticalSpacing = 14;
 
+    private Insets border = Insets.EMPTY;
     private final Optional<Integer> leadsPerColumn = Optional.of(3);
 
 
@@ -35,6 +37,8 @@ public class MethodStyleBuilder {
 
         fromTreble[0] = new DefaultBellStyle(true, Color.RED, 1, false, Color.RED);
         fromTreble[1] = new DefaultBellStyle(true, Color.BLUE, 2, false, Color.BLUE);
+
+        border = new Insets(15);
 
         return this;
     }
@@ -57,7 +61,7 @@ public class MethodStyleBuilder {
     public MethodStyle build() {
         return new DefaultMethodStyle(fromTreble, fromTenor, fromTenorActive,
             leadHorizontalSpacing, bellHorizontalSpacing, rowVerticalSpacing,
-                leadsPerColumn);
+                border, leadsPerColumn);
     }
 
 }

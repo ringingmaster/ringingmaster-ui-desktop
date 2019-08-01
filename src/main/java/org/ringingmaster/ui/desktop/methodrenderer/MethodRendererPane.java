@@ -41,14 +41,14 @@ public class MethodRendererPane extends VirtualCanvas {
     private final DimensionBuilder dimensionBuilder = new DimensionBuilder();
 
 
-    private final ViewportDrawer viewportDrawer = (gc, viewport) -> {
-        gc.setFontSmoothingType(FontSmoothingType.LCD);
+    private final ViewportDrawer methodLayer = (gc, viewport) -> {
+        gc.setFontSmoothingType(FontSmoothingType.LCD); 
         clearBackground(gc);
 
         method.ifPresent(leads -> draw(leads, dimension, style, gc, viewport));
     };
 
-    private final ViewportDrawer viewportDrawer1 = (gc, viewport) -> {
+    private final ViewportDrawer dummyLayer = (gc, viewport) -> {
         gc.setFontSmoothingType(FontSmoothingType.LCD);
         clearBackground(gc);
 
@@ -57,8 +57,7 @@ public class MethodRendererPane extends VirtualCanvas {
 
 
     public MethodRendererPane() {
-
-        setViewportDrawers(viewportDrawer, viewportDrawer1);
+        setLayers(methodLayer, dummyLayer);
     }
 
 

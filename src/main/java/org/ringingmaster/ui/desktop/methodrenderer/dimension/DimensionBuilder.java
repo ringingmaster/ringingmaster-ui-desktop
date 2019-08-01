@@ -23,12 +23,14 @@ public class DimensionBuilder {
 
         BoundingBox[] leadBounds = calculationLeadBounds(method, style);
 
-        int width =  (int)leadBounds[leadBounds.length-1].getMaxX();
+        int width =  (int)leadBounds[leadBounds.length-1].getMaxX() +
+                (int)(style.getBorder().getLeft() + style.getBorder().getRight());
 
         int height = (int)Arrays.stream(leadBounds)
                 .mapToDouble(Bounds::getMaxY)
                 .max()
-                .orElse(10);
+                .orElse(10) +
+                    (int)(style.getBorder().getTop() + style.getBorder().getBottom());
 
         return new DefaultDimension(width, height,
                 style.getBellHorizontalSpacing(), style.getRowVerticalSpacing(),
@@ -39,8 +41,8 @@ public class DimensionBuilder {
         BoundingBox[] leadBounds = new BoundingBox[method.getLeadCount()];
         int width = method.getNumberOfBells().toInt() * style.getBellHorizontalSpacing();
 
-        int top = 0;
-        int left = 0;
+        int top = (int)style.getBorder().getTop();
+        int left = (int)style.getBorder().getLeft();
         int leadIndexForColumn = 0;
 
 
@@ -55,7 +57,7 @@ public class DimensionBuilder {
                     leadIndexForColumn >= style.getLeadsPerColumn().get()) {
                 // Roll over columns
                 leadIndexForColumn = 0;
-                top = 0;
+                top = (int)style.getBorder().getLeft();
                 left += (width + style.getLeadHorizontalSpacing());
             }
             else {

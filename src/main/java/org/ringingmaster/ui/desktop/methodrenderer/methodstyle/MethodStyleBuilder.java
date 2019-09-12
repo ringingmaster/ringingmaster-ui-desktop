@@ -24,7 +24,7 @@ public class MethodStyleBuilder {
     private int bellHorizontalSpacing = 10;
     private int rowVerticalSpacing = 14;
 
-    private Insets border = Insets.EMPTY;
+    private Insets border = new Insets(15);
     private final Optional<Integer> leadsPerColumn = Optional.of(3);
 
 
@@ -38,7 +38,7 @@ public class MethodStyleBuilder {
         fromTreble[0] = new DefaultBellStyle(true, Color.RED, 1, false, Color.RED);
         fromTreble[1] = new DefaultBellStyle(true, Color.BLUE, 2, false, Color.BLUE);
 
-        border = new Insets(15);
+
 
         return this;
     }

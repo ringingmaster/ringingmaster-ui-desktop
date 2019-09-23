@@ -16,7 +16,7 @@ import org.ringingmaster.engine.method.Stroke;
 import org.ringingmaster.engine.notation.Call;
 import org.ringingmaster.engine.notation.Notation;
 import org.ringingmaster.engine.notation.NotationBuilder;
-import org.ringingmaster.persist.DocumentPersist;
+import org.ringingmaster.persist.NotationLibraryPersister;
 import org.ringingmaster.persist.generated.v1.CallPersist;
 import org.ringingmaster.persist.generated.v1.CallingPositionPersist;
 import org.ringingmaster.persist.generated.v1.CellTablePersist;
@@ -48,21 +48,21 @@ public class CompositionPersistence {
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-    private DocumentPersist documentPersist = new DocumentPersist();
+    private NotationLibraryPersister notationLibraryPersister = new NotationLibraryPersister();
 
     public void save(Path path, Composition composition) {
 
         CompositionPersist compositionPersist = buildCompositionPersist(composition);
 
         try {
-            documentPersist.writeComposition(compositionPersist, path);
+            notationLibraryPersister.writeComposition(compositionPersist, path);
         } catch (IOException | JAXBException e) {
             log.error("TODO", e);
         }
     }
 
     public MutableComposition load(Path path) {
-        CompositionPersist CompositionPersist = documentPersist.readComposition(path);
+        CompositionPersist CompositionPersist = notationLibraryPersister.readComposition(path);
         MutableComposition composition = buildComposition(CompositionPersist);
         return composition;
     }
@@ -164,12 +164,12 @@ public class CompositionPersistence {
         notationPersist.setNotation2(notation.getRawNotationDisplayString(1, true));
 
         if (notation.isCannedCalls()) {
-            notationPersist.setUseCannedCalls(true);
+            notationPersist.getCalls().setUseCannedCalls(true);
         } else {
             Set<Call> calls = notation.getCalls();
             for (Call call : calls) {
                 CallPersist callPersist = buildCallPersist(call, (call == notation.getDefaultCall()));
-                notationPersist.getCall().add(callPersist);
+                notationPersist.getCalls().getCall().add(callPersist);
             }
         }
         notationPersist.getCallInitiationRow().addAll(notation.getCallInitiationRows());
@@ -278,30 +278,30 @@ public class CompositionPersistence {
         composition.bulkSetCharacters(tableType, cells);
     }
 
-    private Notation buildNotation(CompositionNotationPersist CompositionPersistNotation) {
+    private Notation buildNotation(CompositionNotationPersist compositionNotationPersist) {
         NotationBuilder notationBuilder = NotationBuilder.getInstance()
-                .setNumberOfWorkingBells(NumberOfBells.valueOf(CompositionPersistNotation.getNumberOfWorkingBells()))
-                .setName(CompositionPersistNotation.getName());
-        if (CompositionPersistNotation.isFoldedPalindrome()) {
-            notationBuilder.setFoldedPalindromeNotationShorthand(CompositionPersistNotation.getNotation(), CompositionPersistNotation.getNotation2());
+                .setNumberOfWorkingBells(NumberOfBells.valueOf(compositionNotationPersist.getNumberOfWorkingBells()))
+                .setName(compositionNotationPersist.getName());
+        if (compositionNotationPersist.isFoldedPalindrome()) {
+            notationBuilder.setFoldedPalindromeNotationShorthand(compositionNotationPersist.getNotation(), compositionNotationPersist.getNotation2());
         } else {
-            notationBuilder.setUnfoldedNotationShorthand(CompositionPersistNotation.getNotation());
+            notationBuilder.setUnfoldedNotationShorthand(compositionNotationPersist.getNotation());
         }
 
-        if (CompositionPersistNotation.isUseCannedCalls() != null && CompositionPersistNotation.isUseCannedCalls()) {
+        if (compositionNotationPersist.getCalls() != null && compositionNotationPersist.getCalls().isUseCannedCalls()) {
             notationBuilder.setCannedCalls();
         } else {
-            for (CallPersist callPersist : CompositionPersistNotation.getCall()) {
+            for (CallPersist callPersist : compositionNotationPersist.getCalls().getCall()) {
                 notationBuilder.addCall(callPersist.getName(), callPersist.getShorthand(), callPersist.getNotation(), callPersist.isDefault());
             }
         }
-        for (Integer callInitiationRow : CompositionPersistNotation.getCallInitiationRow()) {
+        for (Integer callInitiationRow : compositionNotationPersist.getCallInitiationRow()) {
             notationBuilder.addCallInitiationRow(callInitiationRow);
         }
-        for (CallingPositionPersist callingPosition : CompositionPersistNotation.getCallingPosition()) {
+        for (CallingPositionPersist callingPosition : compositionNotationPersist.getCallingPosition()) {
             notationBuilder.addMethodCallingPosition(callingPosition.getName(), callingPosition.getCallInitiationRow(), callingPosition.getLeadOfTenor());
         }
-        notationBuilder.setSpliceIdentifier(CompositionPersistNotation.getSplicedIdentifier());
+        notationBuilder.setSpliceIdentifier(compositionNotationPersist.getSplicedIdentifier());
 
         return notationBuilder.build();
     }

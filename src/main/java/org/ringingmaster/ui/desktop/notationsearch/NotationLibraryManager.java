@@ -1,6 +1,6 @@
 package org.ringingmaster.ui.desktop.notationsearch;
 
-import org.ringingmaster.persist.DocumentPersist;
+import org.ringingmaster.persist.NotationLibraryPersister;
 import org.ringingmaster.persist.generated.v1.LibraryNotationPersist;
 import org.ringingmaster.persist.generated.v1.NotationLibraryPersist;
 import org.ringingmaster.util.radixtree.map.SuffixTreeMap;
@@ -47,7 +47,7 @@ public class NotationLibraryManager {
         Thread thread = new Thread(() -> {
             long start = System.currentTimeMillis();
             log.info(">>>> Notation Library load");
-            NotationLibraryPersist notationLibraryPersist = new DocumentPersist().readNotationLibrary(path);
+            NotationLibraryPersist notationLibraryPersist = new NotationLibraryPersister().readNotationLibrary(path);
             notations = notationLibraryPersist.getNotation();
             log.info("<<<< Notation Library load. Loaded [{}] notations in [{}]ms", notations.size(), System.currentTimeMillis() - start);
 

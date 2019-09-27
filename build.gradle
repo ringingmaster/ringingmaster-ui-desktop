@@ -55,9 +55,3 @@ dependencies {
     testRuntime 'org.apache.logging.log4j:log4j-core:2.8.2'
     testRuntime 'org.apache.logging.log4j:log4j-slf4j-impl:2.8.2'
 }
-
-
-task runRingingmasterDesktop(group: 'ringingmaster', type: JavaExec) {
-    classpath = sourceSets.main.runtimeClasspath
-    main = 'org.ringingmaster.ui.desktop.RingingMasterDesktopApp'
-}

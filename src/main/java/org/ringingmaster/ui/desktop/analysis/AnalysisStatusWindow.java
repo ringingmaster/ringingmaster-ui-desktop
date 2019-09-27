@@ -99,7 +99,7 @@ public class AnalysisStatusWindow extends NameValuePairTable {
         String terminateReasonDisplayString = compiledComposition.getTerminateReasonDisplayString();
 
         switch (compiledComposition.getTerminationReason()) {
-            case SPECIFIED_ROW:
+            case SPECIFIED_CHANGE:
                 updateDisplayProperty(TERMINATION_PROPERTY_NAME, terminateReasonDisplayString);
                 break;
             case ROW_COUNT:

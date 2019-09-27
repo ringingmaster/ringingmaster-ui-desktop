@@ -58,11 +58,11 @@ public class PropertySetupWindow extends PropertyEditor {
     public static final String START_NOTATION_PROPERTY_NAME = "Start Notation";
 
     public static final String TERMINATION_GROUP_NAME = "Termination";
-    public static final String TERMINATION_CHANGE_PROPERTY_NAME = "Termination Change";
+    public static final String TERMINATION_CHANGE_PROPERTY_NAME = "Change";
     public static final String TERMINATION_MAX_ROWS_PROPERTY_NAME = "Row Limit";
     public static final String TERMINATION_MAX_LEADS_PROPERTY_NAME = "Lead Limit";
     public static final String TERMINATION_MAX_PARTS_PROPERTY_NAME = "Part Limit";
-    public static final String TERMINATION_MAX_CIRCULARITY_PROPERTY_NAME = "Circular Composition Limit";
+    public static final String TERMINATION_MAX_CIRCULARITY_PROPERTY_NAME = "Circularity Limit";
 
     private CompositionDocumentTypeManager compositionTypeManager;
 
@@ -354,7 +354,7 @@ public class PropertySetupWindow extends PropertyEditor {
 
     private void updateTerminationChange(Optional<Composition> composition) {
         final String terminationChange = composition.flatMap(Composition::getTerminationChange)
-                .map(row -> row.getDisplayString(true)).orElse("");
+                .map(row -> row.getChange().getDisplayString(true)).orElse("");
         ((TextPropertyValue) findPropertyByName(TERMINATION_CHANGE_PROPERTY_NAME)).setValue(terminationChange);
     }
 

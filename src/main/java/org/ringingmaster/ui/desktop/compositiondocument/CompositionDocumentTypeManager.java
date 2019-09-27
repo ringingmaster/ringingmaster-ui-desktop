@@ -25,6 +25,7 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.ringingmaster.engine.composition.TableType.COMPOSITION_TABLE;
+import static org.ringingmaster.engine.composition.TerminationChange.Location.ANYWHERE;
 import static org.ringingmaster.engine.composition.compositiontype.CompositionType.LEAD_BASED;
 
 /**
@@ -170,7 +171,7 @@ public class CompositionDocumentTypeManager implements DocumentTypeManager {
         composition.addDefinition("3*", "-s-");
         composition.addDefinition("tr", "sps");
 
-        composition.setTerminationChange(MethodBuilder.buildRoundsRow(composition.get().getNumberOfBells()));
+        composition.setTerminationChange(MethodBuilder.buildRoundsRow(composition.get().getNumberOfBells()), ANYWHERE);
 
         return composition;
     }

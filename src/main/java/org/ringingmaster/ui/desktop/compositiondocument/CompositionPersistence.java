@@ -12,21 +12,13 @@ import org.ringingmaster.engine.composition.cell.Cell;
 import org.ringingmaster.engine.composition.compositiontype.CompositionType;
 import org.ringingmaster.engine.method.Bell;
 import org.ringingmaster.engine.method.MethodBuilder;
+import org.ringingmaster.engine.method.Row;
 import org.ringingmaster.engine.method.Stroke;
 import org.ringingmaster.engine.notation.Call;
 import org.ringingmaster.engine.notation.Notation;
 import org.ringingmaster.engine.notation.NotationBuilder;
 import org.ringingmaster.persist.NotationLibraryPersister;
-import org.ringingmaster.persist.generated.v1.CallPersist;
-import org.ringingmaster.persist.generated.v1.CallingPositionPersist;
-import org.ringingmaster.persist.generated.v1.CellTablePersist;
-import org.ringingmaster.persist.generated.v1.CellsTablePersist;
-import org.ringingmaster.persist.generated.v1.CompositionNotationPersist;
-import org.ringingmaster.persist.generated.v1.CompositionPersist;
-import org.ringingmaster.persist.generated.v1.CompositionTypePersist;
-import org.ringingmaster.persist.generated.v1.NotationKeyPersist;
-import org.ringingmaster.persist.generated.v1.ObjectFactory;
-import org.ringingmaster.persist.generated.v1.StrokePersist;
+import org.ringingmaster.persist.generated.v1.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,6 +30,7 @@ import java.util.stream.Collectors;
 
 import static org.ringingmaster.engine.composition.TableType.COMPOSITION_TABLE;
 import static org.ringingmaster.engine.composition.TableType.DEFINITION_TABLE;
+import static org.ringingmaster.engine.composition.TerminationChange.Location.ANYWHERE;
 
 /**
  * TODO Comments
@@ -126,7 +119,8 @@ public class CompositionPersistence {
         compositionPersist.setTerminationMaxPartCircularity(composition.getTerminationMaxPartCircularity());
 
         if (composition.getTerminationChange().isPresent()) {
-            compositionPersist.setTerminationChange(composition.getTerminationChange().get().getDisplayString(false));
+            //TODO persist the Location  info.
+            compositionPersist.setTerminationChange(composition.getTerminationChange().get().getChange().getDisplayString(false));
         }
 
         return compositionPersist;
@@ -258,7 +252,8 @@ public class CompositionPersistence {
             composition.setTerminationMaxPartCircularity(compositionPersist.getTerminationMaxPartCircularity());
         }
         if (compositionPersist.getTerminationChange() != null) {
-            composition.setTerminationChange(MethodBuilder.parse(numberOfBells, compositionPersist.getTerminationChange()));
+            Row change = MethodBuilder.parse(numberOfBells, compositionPersist.getTerminationChange());
+            composition.setTerminationChange(change, ANYWHERE);
         }
 
         return composition;

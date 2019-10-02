@@ -5,6 +5,7 @@ import javafx.application.Platform;
 import org.ringingmaster.engine.NumberOfBells;
 import org.ringingmaster.engine.composition.Composition;
 import org.ringingmaster.engine.composition.MutableComposition;
+import org.ringingmaster.engine.composition.TerminationChange;
 import org.ringingmaster.engine.composition.compositiontype.CompositionType;
 import org.ringingmaster.engine.method.Bell;
 import org.ringingmaster.engine.method.Stroke;
@@ -59,6 +60,7 @@ public class PropertySetupWindow extends PropertyEditor {
 
     public static final String TERMINATION_GROUP_NAME = "Termination";
     public static final String TERMINATION_CHANGE_PROPERTY_NAME = "Change";
+    public static final String TERMINATION_CHANGE_POSITION_PROPERTY_NAME = "Change Position";
     public static final String TERMINATION_MAX_ROWS_PROPERTY_NAME = "Row Limit";
     public static final String TERMINATION_MAX_LEADS_PROPERTY_NAME = "Lead Limit";
     public static final String TERMINATION_MAX_PARTS_PROPERTY_NAME = "Part Limit";
@@ -85,6 +87,7 @@ public class PropertySetupWindow extends PropertyEditor {
         showGroupByName(START_GROUP_NAME, false); // TODO save state in app
 
         buildTerminationChange();
+        buildTerminationChangePosition();
         buildTerminationMaxRows();
         buildTerminstionMaxLeads();
         buildTerminationMaxParts();
@@ -110,6 +113,7 @@ public class PropertySetupWindow extends PropertyEditor {
             updateStartNotation(composition);
 
             updateTerminationChange(composition);
+            updateTerminationChangePosition(composition);
             updateTerminationMaxRows(composition);
             updateTerminationMaxLeads(composition);
             updateTerminationMaxParts(composition);
@@ -358,6 +362,38 @@ public class PropertySetupWindow extends PropertyEditor {
         ((TextPropertyValue) findPropertyByName(TERMINATION_CHANGE_PROPERTY_NAME)).setValue(terminationChange);
     }
 
+    private void buildTerminationChangePosition() {
+        add(TERMINATION_GROUP_NAME, new SelectionPropertyValue(TERMINATION_CHANGE_POSITION_PROPERTY_NAME));
+        ((SelectionPropertyValue) findPropertyByName(TERMINATION_CHANGE_POSITION_PROPERTY_NAME)).setListener((observable, oldValue, newValue) -> {
+            if (newValue.intValue() != UNDEFINED_INDEX) {
+                final TerminationChange.Location location = TerminationChange.Location.values()[newValue.intValue()];
+                updateCompositionIfPresent(composition -> {
+                    composition.setTerminationChange(??);
+                });
+            }
+        });
+        final List<String> locationItems = new ArrayList<>();
+        for (TerminationChange.Location location : TerminationChange.Location.values()) {
+            locationItems.add(location.getDisplayString());
+        }
+        ((SelectionPropertyValue) findPropertyByName(TERMINATION_CHANGE_POSITION_PROPERTY_NAME)).setItems(locationItems);
+
+//
+//
+//
+//
+//        ((TextPropertyValue) findPropertyByName(TERMINATION_CHANGE_POSITION_PROPERTY_NAME)).setListener((observable, oldValue, newValue) ->
+//                updateCompositionIfPresent(composition -> new SetTerminationChangeHandler().setTerminationChange(composition, newValue)), CallbackStyle.WHEN_FINISHED);
+    }
+
+    private void updateTerminationChangePosition(Optional<Composition> composition) {
+//        final String terminationChange = composition.flatMap(Composition::getTerminationChange)
+//                .map(row -> row.getChange().getDisplayString(true)).orElse("");
+//        ((TextPropertyValue) findPropertyByName(TERMINATION_CHANGE_PROPERTY_NAME)).setValue(terminationChange);
+        findPropertyByName(TERMINATION_CHANGE_POSITION_PROPERTY_NAME).setDisable(composition.isPresent() &&
+                composition.get().getTerminationChange().isEmpty());
+
+    }
 
     private void buildTerminationMaxRows() {
         add(TERMINATION_GROUP_NAME, new IntegerPropertyValue(TERMINATION_MAX_ROWS_PROPERTY_NAME));

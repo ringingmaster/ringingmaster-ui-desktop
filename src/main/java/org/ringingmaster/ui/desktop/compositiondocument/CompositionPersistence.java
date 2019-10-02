@@ -8,6 +8,7 @@ import org.ringingmaster.engine.arraytable.ImmutableArrayTable;
 import org.ringingmaster.engine.composition.Composition;
 import org.ringingmaster.engine.composition.MutableComposition;
 import org.ringingmaster.engine.composition.TableType;
+import org.ringingmaster.engine.composition.TerminationChange;
 import org.ringingmaster.engine.composition.cell.Cell;
 import org.ringingmaster.engine.composition.compositiontype.CompositionType;
 import org.ringingmaster.engine.method.Bell;
@@ -119,8 +120,13 @@ public class CompositionPersistence {
         compositionPersist.setTerminationMaxPartCircularity(composition.getTerminationMaxPartCircularity());
 
         if (composition.getTerminationChange().isPresent()) {
-            //TODO persist the Location  info.
-            compositionPersist.setTerminationChange(composition.getTerminationChange().get().getChange().getDisplayString(false));
+            TerminationChange terminationChange = composition.getTerminationChange().get();
+
+            TerminationChangePersist terminationChangePersist = new TerminationChangePersist();
+            terminationChangePersist.setChange(terminationChange.getChange().getDisplayString(false));
+            terminationChangePersist.setLocation(TerminationChangeLocationPersist.fromValue(terminationChange.getLocation().toString()));
+
+            compositionPersist.setTerminationChange(terminationChangePersist);
         }
 
         return compositionPersist;
@@ -157,15 +163,8 @@ public class CompositionPersistence {
         notationPersist.setNotation(notation.getRawNotationDisplayString(0, true));
         notationPersist.setNotation2(notation.getRawNotationDisplayString(1, true));
 
-        if (notation.isCannedCalls()) {
-            notationPersist.getCalls().setUseCannedCalls(true);
-        } else {
-            Set<Call> calls = notation.getCalls();
-            for (Call call : calls) {
-                CallPersist callPersist = buildCallPersist(call, (call == notation.getDefaultCall()));
-                notationPersist.getCalls().getCall().add(callPersist);
-            }
-        }
+        notationPersist.setCalls(buildCallPersist(notation));
+
         notationPersist.getCallInitiationRow().addAll(notation.getCallInitiationRows());
         notationPersist.getCallingPosition().addAll(
                 notation.getCallingPositions().stream().map(c -> {
@@ -180,6 +179,20 @@ public class CompositionPersistence {
         notationPersist.setSplicedIdentifier(notation.getSpliceIdentifier());
 
         return notationPersist;
+    }
+
+    private CallsPersist buildCallPersist(Notation notation) {
+        CallsPersist callsPersist = new CallsPersist();
+        if (notation.isCannedCalls()) {
+            callsPersist.setUseCannedCalls(true);
+        } else {
+            Set<Call> calls = notation.getCalls();
+            for (Call call : calls) {
+                CallPersist callPersist = buildCallPersist(call, (call == notation.getDefaultCall()));
+                callsPersist.getCall().add(callPersist);
+            }
+        }
+        return callsPersist;
     }
 
     private CallPersist buildCallPersist(Call call, boolean defaultCall) {
@@ -252,7 +265,9 @@ public class CompositionPersistence {
             composition.setTerminationMaxPartCircularity(compositionPersist.getTerminationMaxPartCircularity());
         }
         if (compositionPersist.getTerminationChange() != null) {
-            Row change = MethodBuilder.parse(numberOfBells, compositionPersist.getTerminationChange());
+            TerminationChangePersist terminationChangePersist = compositionPersist.getTerminationChange();
+            Row change = MethodBuilder.parse(numberOfBells, terminationChangePersist.getChange());
+            TerminationChange.Location location = TerminationChange.Location.valueOf(terminationChangePersist.getLocation().toString()) ;
             composition.setTerminationChange(change, ANYWHERE);
         }
 

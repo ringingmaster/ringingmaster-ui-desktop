@@ -262,15 +262,16 @@ public class PropertySetupWindow extends PropertyEditor {
                 updateCompositionIfPresent(composition -> composition.setCompositionType(compositionType));
             }
         });
-    }
 
-    private void updateCheckingType(Optional<Composition> composition) {
         final List<String> compositionTypes = new ArrayList<>();
         for (CompositionType compositionType : CompositionType.values()) {
             compositionTypes.add(compositionType.getName());
         }
         ((SelectionPropertyValue) findPropertyByName(COMPOSITION_TYPE_PROPERTY_NAME)).setItems(compositionTypes);
-        final int compositionTypeIndex = composition.map(value -> value.getCompositionType().ordinal()).orElse(UNDEFINED_INDEX);
+    }
+
+    private void updateCheckingType(Optional<Composition> composition) {
+        final int compositionTypeIndex = composition.map(comp -> comp.getCompositionType().ordinal()).orElse(UNDEFINED_INDEX);
         ((SelectionPropertyValue) findPropertyByName(COMPOSITION_TYPE_PROPERTY_NAME)).setSelectedIndex(compositionTypeIndex);
     }
 
@@ -367,9 +368,8 @@ public class PropertySetupWindow extends PropertyEditor {
         ((SelectionPropertyValue) findPropertyByName(TERMINATION_CHANGE_POSITION_PROPERTY_NAME)).setListener((observable, oldValue, newValue) -> {
             if (newValue.intValue() != UNDEFINED_INDEX) {
                 final TerminationChange.Location location = TerminationChange.Location.values()[newValue.intValue()];
-                updateCompositionIfPresent(composition -> {
-                    composition.setTerminationChange(??);
-                });
+                updateCompositionIfPresent(composition ->
+                        new SetTerminationChangeHandler().setTerminationLocation(composition, location));
             }
         });
         final List<String> locationItems = new ArrayList<>();
@@ -377,22 +377,12 @@ public class PropertySetupWindow extends PropertyEditor {
             locationItems.add(location.getDisplayString());
         }
         ((SelectionPropertyValue) findPropertyByName(TERMINATION_CHANGE_POSITION_PROPERTY_NAME)).setItems(locationItems);
-
-//
-//
-//
-//
-//        ((TextPropertyValue) findPropertyByName(TERMINATION_CHANGE_POSITION_PROPERTY_NAME)).setListener((observable, oldValue, newValue) ->
-//                updateCompositionIfPresent(composition -> new SetTerminationChangeHandler().setTerminationChange(composition, newValue)), CallbackStyle.WHEN_FINISHED);
     }
 
     private void updateTerminationChangePosition(Optional<Composition> composition) {
-//        final String terminationChange = composition.flatMap(Composition::getTerminationChange)
-//                .map(row -> row.getChange().getDisplayString(true)).orElse("");
-//        ((TextPropertyValue) findPropertyByName(TERMINATION_CHANGE_PROPERTY_NAME)).setValue(terminationChange);
-        findPropertyByName(TERMINATION_CHANGE_POSITION_PROPERTY_NAME).setDisable(composition.isPresent() &&
-                composition.get().getTerminationChange().isEmpty());
-
+        final int terminationChangePositionIndex = composition.flatMap(comp -> comp.getTerminationChange().map(a -> a.getLocation().ordinal())).orElse(UNDEFINED_INDEX);;
+//        final int terminationChangePositionIndex = composition.map(comp -> comp.getTerminationChange().map(a -> a.getLocation().ordinal())).orElse(UNDEFINED_INDEX);
+        ((SelectionPropertyValue) findPropertyByName(TERMINATION_CHANGE_POSITION_PROPERTY_NAME)).setSelectedIndex(terminationChangePositionIndex);
     }
 
     private void buildTerminationMaxRows() {

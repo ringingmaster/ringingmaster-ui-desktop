@@ -3,6 +3,7 @@ package org.ringingmaster.ui.desktop.setuppanel;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import org.ringingmaster.engine.composition.MutableComposition;
+import org.ringingmaster.engine.composition.TerminationChange;
 import org.ringingmaster.engine.method.MethodBuilder;
 import org.ringingmaster.engine.method.Row;
 
@@ -19,6 +20,8 @@ public class SetTerminationChangeHandler {
     public void setTerminationChange(MutableComposition composition, String terminationChangeText) {
         checkNotNull(terminationChangeText);
 
+        TerminationChange.Location existingLocation = composition.get().getTerminationChange().map(TerminationChange::getLocation).orElse(ANYWHERE);
+
         // first look for removal
         if (terminationChangeText.isEmpty()) {
             composition.removeTerminationChange();
@@ -26,13 +29,13 @@ public class SetTerminationChangeHandler {
         // then look for rounds token
         else if (terminationChangeText.toLowerCase().contains(Row.ROUNDS_TOKEN.toLowerCase())) {
             final Row rounds = MethodBuilder.buildRoundsRow(composition.get().getNumberOfBells());
-            composition.setTerminationChange(rounds, ANYWHERE);//TODO Add handler for TerminationChange.Location
+            composition.setTerminationChange(rounds, existingLocation);
         }
         // Now check for valid row
         else {
             try {
                 final Row parsedRow = MethodBuilder.parse(composition.get().getNumberOfBells(), terminationChangeText);
-                composition.setTerminationChange(parsedRow, ANYWHERE);//TODO Add handler for TerminationChange.Location
+                composition.setTerminationChange(parsedRow, existingLocation);
             } catch (RuntimeException e) {
 
                 String msg = "Changing the termination change to '" +
@@ -53,5 +56,16 @@ public class SetTerminationChangeHandler {
                 composition.renotify();
             }
         }
+    }
+
+    public void setTerminationLocation(MutableComposition composition, TerminationChange.Location location) {
+        checkNotNull(location);
+
+        Row existingTerminationChange = composition.get().getTerminationChange().map(TerminationChange::getChange).orElse(
+                MethodBuilder.buildRoundsRow(composition.get().getNumberOfBells())
+        );
+
+        composition.setTerminationChange(existingTerminationChange, location);
+
     }
 }

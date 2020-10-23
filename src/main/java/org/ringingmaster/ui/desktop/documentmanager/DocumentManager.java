@@ -131,7 +131,7 @@ public class DocumentManager  {
                     ButtonType.YES, ButtonType.NO, ButtonType.CANCEL);
             dialog.setTitle("Save");
             dialog.setHeaderText("Do you want to save the changes made to the document:" + System.lineSeparator() +
-                    "'" + document + "'?");
+                    "'" + document.getPath().orElse(Path.of("")).toString() + "' ?");
             dialog.getDialogPane().setMinHeight(10);
             dialog.getDialogPane().setMinWidth(10);
             dialog.getDialogPane().setMaxWidth(500);

@@ -75,12 +75,7 @@ public class DefinitionGridModel extends SkeletalGridModel implements GridModel 
 
     @Override
     public double getGridRowLineWidth(int row) {
-        if (row > 0 && row < getRowSize()) {
-            return 2.0;
-        }
-        else {
-            return 1.0;
-        }
+        return 2.0;
     }
 
     @Override

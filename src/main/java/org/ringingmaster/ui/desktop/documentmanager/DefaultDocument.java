@@ -42,7 +42,7 @@ public class DefaultDocument implements Document {
 
     @Override
     public void setDirty(boolean dirty) {
-        this.dirty.onNext( dirty);
+        this.dirty.onNext(dirty);
     }
 
     @Override

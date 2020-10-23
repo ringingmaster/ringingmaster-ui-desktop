@@ -87,6 +87,7 @@ public class CompositionDocument extends TabPane implements Document {
 
         composition.observable()
                 .distinct()
+                .skip(1) // So we dont get callback for the initial state on subscription .
                 .subscribe(composition1 ->
                         setDirty(true));
 

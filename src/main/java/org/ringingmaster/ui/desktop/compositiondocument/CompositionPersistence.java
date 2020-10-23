@@ -42,7 +42,7 @@ public class CompositionPersistence {
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-    private NotationLibraryPersister notationLibraryPersister = new NotationLibraryPersister();
+    private final NotationLibraryPersister notationLibraryPersister = new NotationLibraryPersister();
 
     public void save(Path path, Composition composition) {
 
@@ -268,7 +268,7 @@ public class CompositionPersistence {
             TerminationChangePersist terminationChangePersist = compositionPersist.getTerminationChange();
             Row change = MethodBuilder.parse(numberOfBells, terminationChangePersist.getChange());
             TerminationChange.Location location = TerminationChange.Location.valueOf(terminationChangePersist.getLocation().toString()) ;
-            composition.setTerminationChange(change, ANYWHERE);
+            composition.setTerminationChange(change, location);
         }
 
         return composition;

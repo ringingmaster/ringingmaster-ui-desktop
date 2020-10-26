@@ -6,7 +6,7 @@ import org.ringingmaster.engine.parser.assignparsetype.ParseType;
 import org.ringingmaster.engine.parser.cell.ParsedCell;
 import org.ringingmaster.engine.parser.cell.grouping.Group;
 import org.ringingmaster.engine.parser.cell.grouping.Section;
-import org.ringingmaster.ui.common.CompositionStyle;
+import org.ringingmaster.ui.desktop.style.CompositionStyle;
 import org.ringingmaster.util.javafx.grid.model.AdditionalStyleType;
 import org.ringingmaster.util.javafx.grid.model.CharacterModel;
 import org.slf4j.Logger;

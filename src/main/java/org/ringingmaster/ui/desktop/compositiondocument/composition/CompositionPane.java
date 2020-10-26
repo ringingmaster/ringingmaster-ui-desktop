@@ -12,7 +12,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import org.ringingmaster.ui.common.CompositionStyle;
+import org.ringingmaster.ui.desktop.style.CompositionStyle;
 import org.ringingmaster.ui.desktop.compositiondocument.CompositionDocument;
 import org.ringingmaster.ui.desktop.compositiondocument.composition.gridmodel.DefinitionGridModel;
 import org.ringingmaster.ui.desktop.compositiondocument.composition.gridmodel.MainGridModel;

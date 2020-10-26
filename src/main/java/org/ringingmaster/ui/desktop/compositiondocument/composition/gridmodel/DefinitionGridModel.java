@@ -5,7 +5,7 @@ import javafx.scene.paint.Color;
 import org.ringingmaster.engine.composition.TableType;
 import org.ringingmaster.engine.parser.cell.ParsedCell;
 import org.ringingmaster.engine.parser.parse.Parse;
-import org.ringingmaster.ui.common.CompositionStyle;
+import org.ringingmaster.ui.desktop.style.CompositionStyle;
 import org.ringingmaster.ui.desktop.compositiondocument.CompositionDocument;
 import org.ringingmaster.util.javafx.grid.model.CellModel;
 import org.ringingmaster.util.javafx.grid.model.GridModel;

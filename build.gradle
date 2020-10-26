@@ -29,7 +29,6 @@ dependencies {
 
     // Internal
     compile 'org.ringingmaster:ringingmaster-engine:1.0.0'
-    compile 'org.ringingmaster:ringingmaster-ui-common:1.0.0'
     compile 'org.ringingmaster:ringingmaster-util-javafx:1.0.0'
 
     // Spring

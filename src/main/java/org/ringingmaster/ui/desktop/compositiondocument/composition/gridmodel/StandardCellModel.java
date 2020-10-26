@@ -3,7 +3,7 @@ package org.ringingmaster.ui.desktop.compositiondocument.composition.gridmodel;
 import org.ringingmaster.engine.composition.MutableComposition;
 import org.ringingmaster.engine.composition.TableType;
 import org.ringingmaster.engine.parser.cell.ParsedCell;
-import org.ringingmaster.ui.common.CompositionStyle;
+import org.ringingmaster.ui.desktop.style.CompositionStyle;
 import org.ringingmaster.util.javafx.grid.model.CellModel;
 import org.ringingmaster.util.javafx.grid.model.CharacterModel;
 import org.ringingmaster.util.javafx.grid.model.SkeletalCellModel;

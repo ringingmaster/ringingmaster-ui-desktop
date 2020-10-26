@@ -3,7 +3,7 @@ package org.ringingmaster.ui.desktop.compositiondocument.composition.gridmodel;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import org.ringingmaster.engine.composition.Composition;
-import org.ringingmaster.ui.common.CompositionStyle;
+import org.ringingmaster.ui.desktop.style.CompositionStyle;
 import org.ringingmaster.util.javafx.grid.model.AdditionalStyleType;
 import org.ringingmaster.util.javafx.grid.model.CellModel;
 import org.ringingmaster.util.javafx.grid.model.CharacterModel;

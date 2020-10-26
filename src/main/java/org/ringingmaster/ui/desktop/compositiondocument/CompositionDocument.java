@@ -16,7 +16,7 @@ import org.ringingmaster.engine.composition.MutableComposition;
 import org.ringingmaster.engine.notation.Notation;
 import org.ringingmaster.engine.parser.Parser;
 import org.ringingmaster.engine.parser.parse.Parse;
-import org.ringingmaster.ui.common.CompositionStyle;
+import org.ringingmaster.ui.desktop.style.CompositionStyle;
 import org.ringingmaster.ui.desktop.compositiondocument.composition.CompositionPane;
 import org.ringingmaster.ui.desktop.compositiondocument.method.MethodPane;
 import org.ringingmaster.ui.desktop.documentmanager.DefaultDocument;

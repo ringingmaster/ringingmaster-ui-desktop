@@ -66,7 +66,7 @@ public class RingingMasterDesktopApp extends Application {
         height = Math.max(100, height);
 
         // TODO need to test on duel monitors - preferably with different sizes.
-        // Make sure the width and height is no bigget than the screen.
+        // Make sure the width and height is no bigger than the screen.
         Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
         width = Math.min(primaryScreenBounds.getWidth(), width);
         height = Math.min(primaryScreenBounds.getHeight(), height);

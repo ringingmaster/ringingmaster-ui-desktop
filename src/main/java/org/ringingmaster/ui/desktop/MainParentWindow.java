@@ -27,7 +27,7 @@ public class MainParentWindow extends VBox {
         leftRightSplit.setOrientation(Orientation.HORIZONTAL);
         leftRightSplit.getItems().add(0, propertyWindow);
         leftRightSplit.getItems().add(1, documentWindow);
-        leftRightSplit.setDividerPositions(0.3);
+        leftRightSplit.setDividerPositions(0.2);
         SplitPane.setResizableWithParent(propertyWindow, false);
 
         SplitPane analysisSplit = new SplitPane();
@@ -40,7 +40,7 @@ public class MainParentWindow extends VBox {
         topBottomSplit.setOrientation(Orientation.VERTICAL);
         topBottomSplit.getItems().add(0, leftRightSplit);
         topBottomSplit.getItems().add(1, analysisSplit);
-        topBottomSplit.setDividerPositions(0.8);
+        topBottomSplit.setDividerPositions(0.7);
         SplitPane.setResizableWithParent(analysisSplit, false);
 
         getChildren().add(menuBar);

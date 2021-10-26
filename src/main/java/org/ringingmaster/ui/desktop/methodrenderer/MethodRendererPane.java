@@ -82,7 +82,7 @@ public class MethodRendererPane extends VirtualCanvas {
 
             Bounds leadBound = dim.getLeadBounds()[leadIndex];
             if (leadBound.intersects(viewport)) {
-//                drawHorizontalGrid(lead, dim, style, gc, leadBound);
+                drawHorizontalGrid(lead, dim, style, gc, leadBound);
                 drawBellTextForLead(lead, dim, style, gc, leadBound);
                 drawBellLinesForLead(lead, dim, style, gc, leadBound);
             }
@@ -109,6 +109,7 @@ public class MethodRendererPane extends VirtualCanvas {
 
         Row firstRow = lead.getFirstRow();
 
+        // We draw all of each bell in turn to give consistent overwriting.
         for (Bell bell : firstRow) {
             int verticalPosition = (int)leadBound.getMinY() +
                     dim.getRowVerticalSpacing() +

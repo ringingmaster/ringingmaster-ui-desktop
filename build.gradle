@@ -1,7 +1,9 @@
+// REMEMBER: This must be run using the Gradle tas application:run
+
 plugins {
     id 'java'
     id 'application'
-    id 'org.openjfx.javafxplugin' version '0.0.7'
+    id 'org.openjfx.javafxplugin' version '0.0.10'
 }
 
 group 'org.ringingmaster'
@@ -15,7 +17,7 @@ compileJava {
 repositories {
     mavenCentral()
 }
-
+// REMEMBER: This must be run using the Gradle tas application:run
 javafx {
     version = "12"
     modules = [ 'javafx.controls', 'javafx.fxml', 'javafx.graphics', 'javafx.base' ]

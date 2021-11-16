@@ -23,7 +23,6 @@ import org.ringingmaster.persist.generated.v1.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.xml.bind.JAXBException;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Set;
@@ -50,7 +49,7 @@ public class CompositionPersistence {
 
         try {
             notationLibraryPersister.writeComposition(compositionPersist, path);
-        } catch (IOException | JAXBException e) {
+        } catch (IOException e) {
             log.error("TODO", e);
         }
     }

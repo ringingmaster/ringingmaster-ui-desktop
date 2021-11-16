@@ -30,29 +30,38 @@ applicationDefaultJvmArgs = ['--add-exports=javafx.base/com.sun.javafx.event=ALL
 dependencies {
 
     // Internal
-    compile 'org.ringingmaster:ringingmaster-engine:1.0.0'
-    compile 'org.ringingmaster:ringingmaster-util-javafx:1.0.0'
+    implementation 'org.ringingmaster:ringingmaster-engine:1.0.0'
+    implementation 'org.ringingmaster:ringingmaster-util:1.0.0'
+    implementation 'org.ringingmaster:ringingmaster-persist:1.0.0'
+    implementation 'org.ringingmaster:ringingmaster-util-javafx:1.0.0'
+
+    // General
+    implementation 'com.google.guava:guava:27.1-jre'
+    implementation 'org.pcollections:pcollections:2.1.2'
 
     // Spring
-    compile 'org.springframework:spring-context:4.3.10.RELEASE'
+    implementation 'org.springframework:spring-context:4.3.10.RELEASE'
 
     // Other
-    compile 'org.controlsfx:controlsfx:11.0.0'
-    compile 'org.apache.commons:commons-lang3:3.9'
-    compile 'io.reactivex:rxjavafx:2.0.2'
-    compile 'io.reactivex.rxjava2:rxjavafx:2.2.2'
-
+    implementation 'org.controlsfx:controlsfx:11.0.0'
+    implementation 'org.apache.commons:commons-lang3:3.9'
+    implementation 'io.reactivex:rxjavafx:2.0.2'
+    implementation 'io.reactivex.rxjava2:rxjavafx:2.2.2'
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.8'
 
     // Logging
-    runtime 'org.apache.logging.log4j:log4j-core:2.8.2'
-    runtime 'org.apache.logging.log4j:log4j-slf4j-impl:2.8.2'
-    runtime 'org.apache.logging.log4j:log4j-jcl:2.8.2' //Needed for Spring
+    implementation 'org.slf4j:slf4j-api:1.7.25'
+
+    // Logging
+    runtimeOnly 'org.apache.logging.log4j:log4j-core:2.8.2'
+    runtimeOnly 'org.apache.logging.log4j:log4j-slf4j-impl:2.8.2'
+    runtimeOnly 'org.apache.logging.log4j:log4j-jcl:2.8.2' //Needed for Spring
 
     // TEST: General
-    testCompile 'junit:junit:4.12'
-    testCompile 'org.mockito:mockito-core:2.8.47'
+    testImplementation 'junit:junit:4.12'
+    testImplementation 'org.mockito:mockito-core:2.8.47'
 
     // TEST: Logging
-    testRuntime 'org.apache.logging.log4j:log4j-core:2.8.2'
-    testRuntime 'org.apache.logging.log4j:log4j-slf4j-impl:2.8.2'
+    testRuntimeOnly 'org.apache.logging.log4j:log4j-core:2.8.2'
+    testRuntimeOnly 'org.apache.logging.log4j:log4j-slf4j-impl:2.8.2'
 }
